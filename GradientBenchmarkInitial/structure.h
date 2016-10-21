@@ -262,25 +262,6 @@ struct Potential
 	double sigma; // sigma
 };
 
-/* @brief Contains the information of the lens potentials under
- * SoA form instead of AoS form for better  memory acess by the
- * processor.
- */
-
-struct PotentialSet
-{
-	int     *type; // 1=PIEMD ; 2=NFW; 3=SIES, 4=point mass
-	double  *x;		//x position
-	double 	*y;		//y position
-	double  *b0; // Impact parameter
-	double  *ellipticity_angle; // orientation of the clump
-	double  *ellipticity; // ellipticity of the mass distribition
-	double  *ellipticity_potential; //ellipticity of the potential
-	double  *rcore;  // core radius
-	double  *rcut; // cut radius
-	double  *z; // redshift of the clump
-};
-
 /*****************************************************************/
 /*                               */
 /*      Control structure definition        */

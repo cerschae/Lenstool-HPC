@@ -17,8 +17,8 @@
 static struct point rotateCoordinateSystem(struct point P, double theta);
 
 /** gradient **/
-struct point module_potentialDerivatives_totalGradient(const runmode_param *runmode, const struct point *pImage, PotentialSet *lens );
-static struct point grad_halo(const struct point *pImage, int iterator,PotentialSet *lens);
+struct point module_potentialDerivatives_totalGradient(const runmode_param *runmode, const struct point *pImage, const struct Potential *lens);
+static struct point grad_halo(const struct point *pImage, const struct Potential *lens);
 
 /** PIEMD **/
 static complex piemd_1derivatives_ci05(double x, double y, double eps, double rc);
@@ -72,43 +72,12 @@ for (int i = 0; i <big; ++i){
 
 }
 
-/** SoA part  **/
-
-//Init PotentialSet
-
-PotentialSet lenses;
-lenses.type = 	new int[big];
-lenses.x  = 	new double[big];
-lenses.y = 		new double[big];
-lenses.b0 = 	new double[big];
-lenses.ellipticity_angle = new double[big];
-lenses.ellipticity = new double[big];
-lenses.ellipticity_potential = new double[big];
-lenses.rcore = 	new double[big];
-lenses.rcut = 	new double[big];
-lenses.z = 		new double[big];
-
-for (int i = 0; i <big; ++i){
-	lenses.type[i] = 	lens[i].type;
-	lenses.x[i]  = 		lens[i].position.x;
-	lenses.y[i] = 		lens[i].position.y;
-	lenses.b0[i] = 		lens[i].b0;
-	lenses.ellipticity_angle[i] = lens[i].ellipticity_angle;
-	lenses.ellipticity[i] = lens[i].ellipticity;
-	lenses.ellipticity_potential[i] = lens[i].ellipticity_potential;
-	lenses.rcore[i] = 	lens[i].rcore;
-	lenses.rcut[i] = 	lens[i].rcut;
-	lenses.z[i] = 		lens[i].z;
-
-}
-
-
 gettimeofday(&t1, 0);
-module_potentialDerivatives_totalGradient(&runmodesmall,&image, &lenses);
+module_potentialDerivatives_totalGradient(&runmodesmall,&image, lens);
 gettimeofday(&t2, 0);
-module_potentialDerivatives_totalGradient(&runmodemedium,&image, &lenses);
+module_potentialDerivatives_totalGradient(&runmodemedium,&image, lens);
 gettimeofday(&t3, 0);
-module_potentialDerivatives_totalGradient(&runmodebig,&image, &lenses);
+module_potentialDerivatives_totalGradient(&runmodebig,&image, lens);
 gettimeofday(&t4, 0);
 
 double time1 = (1000000.0*(t2.tv_sec-t1.tv_sec) + t2.tv_usec-t1.tv_usec)/1000000.0;
@@ -130,13 +99,13 @@ myfile.close();
 
 }
 
-struct point module_potentialDerivatives_totalGradient(const runmode_param *runmode, const struct point *pImage, PotentialSet *lens )
+struct point module_potentialDerivatives_totalGradient(const runmode_param *runmode, const struct point *pImage, const struct Potential *lens)
 {
     struct point grad, clumpgrad;
 	grad.x=0;
 	grad.y=0;
 	for(int i=0; i<runmode->nhalos; i++){
-		clumpgrad=grad_halo(pImage,i,lens);  //compute gradient for each clump separately
+		clumpgrad=grad_halo(pImage,&lens[i]);  //compute gradient for each clump separately
 		if(clumpgrad.x == clumpgrad.x or clumpgrad.y == clumpgrad.y){ //nan check
 		grad.x+=clumpgrad.x;
 		grad.y+=clumpgrad.y;
@@ -155,7 +124,7 @@ struct point module_potentialDerivatives_totalGradient(const runmode_param *runm
  * @param lens		mass distribution
  */
  
-static struct point grad_halo(const struct point *pImage, int iterator,PotentialSet *lens)
+static struct point grad_halo(const struct point *pImage, const struct Potential *lens)
 {
     struct point true_coord, true_coord_rotation, result;
     double R, angular_deviation;
@@ -164,34 +133,34 @@ static struct point grad_halo(const struct point *pImage, int iterator,Potential
     result.x = result.y = 0.;
 
     /*positionning at the potential center*/
-    true_coord.x = pImage->x - lens->x[iterator];  // Change the origin of the coordinate system to the center of the clump
-    true_coord.y = pImage->y - lens->y[iterator];
+    true_coord.x = pImage->x - lens->position.x;  // Change the origin of the coordinate system to the center of the clump
+    true_coord.y = pImage->y - lens->position.y;
 
-    switch (lens->type[iterator])
+    switch (lens->type)
     {
 
 	    
 	case(5): /*Elliptical Isothermal Sphere*/
 			/*rotation of the coordiante axes to match the potential axes*/
-			true_coord_rotation = rotateCoordinateSystem(true_coord, lens->ellipticity_angle[iterator]);
+			true_coord_rotation = rotateCoordinateSystem(true_coord, lens->ellipticity_angle);
 
-			R=sqrt(true_coord_rotation.x*true_coord_rotation.x*(1-lens->ellipticity[iterator]/3.)+true_coord_rotation.y*true_coord_rotation.y*(1+lens->ellipticity[iterator]/3.));	//ellippot = ellipmass/3
-			result.x=(1-lens->ellipticity[iterator]/3.)*lens->b0[iterator]*true_coord_rotation.x/(R);
-			result.y=(1+lens->ellipticity[iterator]/3.)*lens->b0[iterator]*true_coord_rotation.y/(R);
+			R=sqrt(true_coord_rotation.x*true_coord_rotation.x*(1-lens->ellipticity/3.)+true_coord_rotation.y*true_coord_rotation.y*(1+lens->ellipticity/3.));	//ellippot = ellipmass/3
+			result.x=(1-lens->ellipticity/3.)*lens->b0*true_coord_rotation.x/(R);
+			result.y=(1+lens->ellipticity/3.)*lens->b0*true_coord_rotation.y/(R);
 	    break;
 	    
 	case(8): /* PIEMD */
 	    /*rotation of the coordiante axes to match the potential axes*/
-    	true_coord_rotation = rotateCoordinateSystem(true_coord, lens->ellipticity_angle[iterator]);
+    	true_coord_rotation = rotateCoordinateSystem(true_coord, lens->ellipticity_angle);
     	/*Doing something....*/
-	    zis = piemd_1derivatives_ci05(true_coord_rotation.x, true_coord_rotation.y, lens->ellipticity_potential[iterator], lens->rcore[iterator]);
+	    zis = piemd_1derivatives_ci05(true_coord_rotation.x, true_coord_rotation.y, lens->ellipticity_potential, lens->rcore);
             
-	    result.x=lens->b0[iterator] * zis.re;
-	    result.y=lens->b0[iterator] * zis.im;
+	    result.x=lens->b0 * zis.re;
+	    result.y=lens->b0 * zis.im;
         break;
 
 	default:
-            std::cout << "ERROR: Grad 1 profil type of clump unknown : "<< lens->type[iterator] << std::endl;
+            std::cout << "ERROR: Grad 1 profil type of clump "<< lens->name << " unknown : "<< lens->type << std::endl;
 		break;
     };
     return result;
