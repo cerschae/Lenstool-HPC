@@ -2,3 +2,5 @@
 .project
 .metadata
 .cproject
+.settings
+.o
