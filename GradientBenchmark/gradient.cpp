@@ -17,10 +17,9 @@
  * @param lens		mass distribution
  */
 
-
+//
 /// Useful functions
 //
-
 //static
 complex
 piemd_1derivatives_ci05(double x, double y, double eps, double rc)
@@ -29,7 +28,7 @@ piemd_1derivatives_ci05(double x, double y, double eps, double rc)
         complex zci, znum, zden, zis, zres;
         double norm;
         //
-        std::cout << "piemd_lderivatives" << std::endl;
+        //std::cout << "piemd_lderivatives" << std::endl;
         sqe  = sqrt(eps);
         cx1  = (1. - eps) / (1. + eps);
         cxro = (1. + eps) * (1. + eps);
@@ -71,6 +70,8 @@ piemd_1derivatives_ci05(double x, double y, double eps, double rc)
 ////         *    |  /  theta
 ////           *  | /
 ////             *|--------->x
+//
+inline
 static struct point rotateCoordinateSystem(struct point P, double theta)
 {
 	struct  point   Q;
@@ -89,7 +90,7 @@ grad_halo(const struct point *pImage, const struct Potential *lens)
 	double R, angular_deviation;
 	complex zis;
 	//
-	std::cout << "grad_halo " << lens->type << std::endl;
+	//std::cout << "grad_halo..." << lens->type << std::endl;
 	result.x = result.y = 0.;
 	//
 	/*positionning at the potential center*/
@@ -102,7 +103,7 @@ grad_halo(const struct point *pImage, const struct Potential *lens)
 		case(5): /*Elliptical Isothermal Sphere*/
 			/*rotation of the coordiante axes to match the potential axes*/
 			true_coord_rotation = rotateCoordinateSystem(true_coord, lens->ellipticity_angle);
-
+			//
 			R=sqrt(true_coord_rotation.x*true_coord_rotation.x*(1 - lens->ellipticity/3.) + true_coord_rotation.y*true_coord_rotation.y*(1 + lens->ellipticity/3.));	//ellippot = ellipmass/3
 			result.x = (1 - lens->ellipticity/3.)*lens->b0*true_coord_rotation.x/(R);
 			result.y = (1 + lens->ellipticity/3.)*lens->b0*true_coord_rotation.y/(R);
@@ -112,7 +113,7 @@ grad_halo(const struct point *pImage, const struct Potential *lens)
 			true_coord_rotation = rotateCoordinateSystem(true_coord, lens->ellipticity_angle);
 			/*Doing something....*/
 			zis = piemd_1derivatives_ci05(true_coord_rotation.x, true_coord_rotation.y, lens->ellipticity_potential, lens->rcore);
-
+			//
 			result.x = lens->b0*zis.re;
 			result.y = lens->b0*zis.im;
 			break;
@@ -137,8 +138,9 @@ grad_halo(const struct point *pImage, const struct Potential *lens)
  * @param lens: mass distribution for which to calculate parameters
  */
 
-void module_readParameters_calculatePotentialparameter(Potential *lens){
-
+void module_readParameters_calculatePotentialparameter(Potential *lens)
+{
+	//std::cout << "module_readParameters_calculatePotentialparameter..." << std::endl;
 	switch (lens->type)
 	{
 
@@ -174,26 +176,69 @@ void module_readParameters_calculatePotentialparameter(Potential *lens){
 			//printf( "ERROR: LENSPARA profil type of clump %s unknown : %d\n",lens->name, lens->type);
 			break;
 	};
-
 }
+
+//
 
 struct point module_potentialDerivatives_totalGradient(const runmode_param *runmode, const struct point *pImage, const struct Potential *lens)
 {
         struct point grad, clumpgrad;
         grad.x = 0;
         grad.y = 0;
+	std::cout << "nhalos = " << runmode->nhalos << std::endl;
         for(int i = 0; i < runmode->nhalos; i++)
         {
-                clumpgrad = grad_halo(pImage,&lens[i]);  //compute gradient for each clump separately
+                clumpgrad = grad_halo(pImage, &lens[i]);  //compute gradient for each clump separately
+		//nan check
+		//std::cout << clumpgrad.x << " " << clumpgrad.y << std::endl;
                 if(clumpgrad.x == clumpgrad.x or clumpgrad.y == clumpgrad.y)
-                { //nan check
+                { 
+			// add the gradients
                         grad.x += clumpgrad.x;
                         grad.y += clumpgrad.y;
-                }  // add the gradients
+                }  
         }
         //
         return(grad);
 }
-
-
-
+//
+//
+//
+struct point potentialDerivatives_totalGradient(const runmode_param *runmode, const struct point *pImage, const struct Potential *lens)
+{
+        struct point grad, clumpgrad;
+        grad.x = 0;
+        grad.y = 0;
+        std::cout << "nhalos = " << runmode->nhalos << std::endl;
+        for(int i = 0; i < runmode->nhalos; i++)
+        {
+                clumpgrad = grad_halo(pImage,&lens[i]);  //compute gradient for each clump separately
+                struct point true_coord, true_coord_rotation, result;
+                double R, angular_deviation;
+                complex zis;
+                //
+                //result.x = result.y = 0.;
+                //
+                true_coord.x = pImage->x - lens->position.x;
+                true_coord.y = pImage->y - lens->position.y;
+                //
+                //std::cout << "grad_halo..." << lens->type << std::endl;
+                //
+                /*positionning at the potential center*/
+                // Change the origin of the coordinate system to the center of the clump
+                true_coord_rotation = rotateCoordinateSystem(true_coord, lens->ellipticity_angle);
+                zis = piemd_1derivatives_ci05(true_coord_rotation.x, true_coord_rotation.y, lens->ellipticity_potential, lens->rcore);
+                //
+                clumpgrad.x = lens->b0*zis.re;
+                clumpgrad.y = lens->b0*zis.im;
+                //nan check
+                if(clumpgrad.x == clumpgrad.x or clumpgrad.y == clumpgrad.y)
+                {
+                        // add the gradients
+                        grad.x += clumpgrad.x;
+                        grad.y += clumpgrad.y;
+                }
+        }
+        //
+        return(grad);
+}

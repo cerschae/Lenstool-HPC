@@ -19,6 +19,8 @@ static struct point rotateCoordinateSystem(struct point P, double theta);
 
 /** gradient **/
 struct point module_potentialDerivatives_totalGradient(const runmode_param *runmode, const struct point *pImage, const struct Potential *lens);
+struct point potentialDerivatives_totalGradient(const runmode_param *runmode, const struct point *pImage, const struct Potential *lens);
+//
 static struct point grad_halo(const struct point *pImage, const struct Potential *lens);
 
 /** PIEMD **/
@@ -75,11 +77,11 @@ int main()
 	}
 	//
 	//gettimeofday(&t1, 0);
-	//module_potentialDerivatives_totalGradient(&runmodesmall,&image, lens);
+	module_potentialDerivatives_totalGradient(&runmodesmall,&image, lens);
 	//gettimeofday(&t2, 0);
-	//module_potentialDerivatives_totalGradient(&runmodemedium,&image, lens);
+	module_potentialDerivatives_totalGradient(&runmodemedium,&image, lens);
 	gettimeofday(&t3, 0);
-	module_potentialDerivatives_totalGradient(&runmodebig,&image, lens);
+	point grad = module_potentialDerivatives_totalGradient(&runmodebig, &image, lens);
 	gettimeofday(&t4, 0);
 	//
 	double time1 = (1000000.0*(t2.tv_sec-t1.tv_sec) + t2.tv_usec-t1.tv_usec)/1000000.0;
@@ -87,9 +89,9 @@ int main()
 	double time3 = (1000000.0*(t4.tv_sec-t3.tv_sec) + t4.tv_usec-t3.tv_usec)/1000000.0;
 
 	std::cout << "Benchmark for Gradient Calculation "<< std::endl;
-	std::cout << "Sample size " << small << ": " << time1 << std::endl;
-	std::cout << "Sample size " << medium << ": " << time2 << std::endl;
-	std::cout << "Sample size " << big << ": " << time3 << std::endl;
+	//std::cout << "Sample size " << small << ": " << time1 << std::endl;
+	//std::cout << "Sample size " << medium << ": " << time2 << std::endl;
+	std::cout << "Sample size " << big << ": " << time3 << "s., point = " << grad.x << " " << grad.y << std::endl;
 
 	std::ofstream myfile;
 	myfile.open ("BenchmarkGrad.txt");
