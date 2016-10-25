@@ -7,7 +7,6 @@
 
 #include <iostream>
 #include <string.h>
-#include <cuda_runtime.h>
 #include "structure.h"
 #include <math.h>
 #include <sys/time.h>
@@ -54,7 +53,7 @@ image.x = image.y = 2;
 
 for (int i = 0; i <big; ++i){
 	ilens = &lens[i];
-	
+	ilens->vdisp = 1.;
     ilens->position.x = ilens->position.y = 0.;
     ilens->type = 8;
     ilens->ellipticity = 0.11;

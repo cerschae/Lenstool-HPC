@@ -7,7 +7,6 @@
 
 #include <iostream>
 #include <string.h>
-#include <cuda_runtime.h>
 #include "structure.h"
 #include <math.h>
 #include <sys/time.h>
@@ -60,6 +59,7 @@ for (int i = 0; i <big; ++i){
     ilens->ellipticity = 0.11;
     ilens->ellipticity_potential = 0.;
     ilens->ellipticity_angle = 0.;
+    ilens->vdisp = 1.;
     ilens->rcut = 5.;
     ilens->rcore = 1;
     ilens->weight = 0;
@@ -115,14 +115,14 @@ double time1 = (1000000.0*(t2.tv_sec-t1.tv_sec) + t2.tv_usec-t1.tv_usec)/1000000
 double time2 = (1000000.0*(t3.tv_sec-t2.tv_sec) + t3.tv_usec-t2.tv_usec)/1000000.0;
 double time3 = (1000000.0*(t4.tv_sec-t3.tv_sec) + t4.tv_usec-t3.tv_usec)/1000000.0;
 
-std::cout << "Benchmark for Gradient Calculation "<< std::endl;
+std::cout << "Benchmark for Gradient SOA Calculation "<< std::endl;
 std::cout << "Sample size " << small << ": " << time1 << std::endl;
 std::cout << "Sample size " << medium << ": " << time2 << std::endl;
 std::cout << "Sample size " << big << ": " << time3 << std::endl;
 
 std::ofstream myfile;
 myfile.open ("BenchmarkGradSoA.txt");
-myfile << "Benchmark for Gradient Calculation "<< std::endl;
+myfile << "Benchmark for Gradient SOA Calculation "<< std::endl;
 myfile << "Sample size " << small << ": " << time1 << std::endl;
 myfile << "Sample size " << medium << ": " << time2 << std::endl;
 myfile << "Sample size " << big << ": " << time3 << std::endl;
