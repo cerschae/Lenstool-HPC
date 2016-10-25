@@ -89,7 +89,7 @@ std::cout << "Sample size " << medium << ": " << time2 << std::endl;
 std::cout << "Sample size " << big << ": " << time3 << std::endl;
 
 std::ofstream myfile;
-myfile.open ("BenchmarkGradSoA.txt");
+myfile.open ("BenchmarkGrad.txt");
 myfile << "Benchmark for Gradient Calculation "<< std::endl;
 myfile << "Sample size " << small << ": " << time1 << std::endl;
 myfile << "Sample size " << medium << ": " << time2 << std::endl;
