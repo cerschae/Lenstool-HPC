@@ -1,6 +1,46 @@
 #include <GradTest.h>
 #include <structure.h>
 
+
+complex piemd_1derivatives(double x, double y, double eps, double rc)
+{
+    double  sqe, cx1, cxro, cyro, rem2;
+    complex zci, znum, zden, zis, zres;
+    double norm;
+
+    sqe = sqrt(eps);
+    cx1 = (1. - eps) / (1. + eps);
+    cxro = (1. + eps) * (1. + eps);
+    cyro = (1. - eps) * (1. - eps);
+    rem2 = x * x / cxro + y * y / cyro;
+    /*zci=cpx(0.,-0.5*(1.-eps*eps)/sqe);
+    znum=cpx(cx1*x,(2.*sqe*sqrt(rc*rc+rem2)-y/cx1));
+    zden=cpx(x,(2.*rc*sqe-y));
+    zis=pcpx(zci,lncpx(dcpx(znum,zden)));
+    zres=pcpxflt(zis,b0);*/
+
+    // --> optimized code
+    zci.re = 0;
+    zci.im = -0.5 * (1. - eps * eps) / sqe;
+    znum.re = cx1 * x;
+    znum.im = 2.*sqe * sqrt(rc * rc + rem2) - y / cx1;
+    zden.re = x;
+    zden.im = 2.*rc * sqe - y;
+    norm = zden.re * zden.re + zden.im * zden.im;     // zis = znum/zden
+    zis.re = (znum.re * zden.re + znum.im * zden.im) / norm;
+    zis.im = (znum.im * zden.re - znum.re * zden.im) / norm;
+    norm = zis.re;
+    zis.re = log(sqrt(norm * norm + zis.im * zis.im));  // ln(zis) = ln(|zis|)+i.Arg(zis)
+    zis.im = atan2(zis.im, norm);
+//  norm = zis.re;
+    zres.re = zci.re * zis.re - zci.im * zis.im;   // Re( zci*ln(zis) )
+    zres.im = zci.im * zis.re + zis.im * zci.re;   // Im( zci*ln(zis) )
+    //zres.re = zis.re*b0;
+    //zres.im = zis.im*b0;
+
+    return(zres);
+}
+
 void gradtest()
 {
 	/** Testing for Gradient function **/
@@ -24,7 +64,7 @@ void gradtest()
 
 
 	//Doing something....
-    zis = piemd_1derivatives_ci05(image.x, image.y, ellipticity_potential, 1);
+    zis = piemd_1derivatives(image.x, image.y, ellipticity_potential, 1);
 
     gradtheo.x=b0* zis.re;
     gradtheo.y=b0 * zis.im;
