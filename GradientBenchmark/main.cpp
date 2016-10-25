@@ -33,6 +33,10 @@ int small(10);
 int medium(100);
 int big(1000);
 
+//Number of SIS and PIEMD
+int Nsis(0);
+int Npiemd(0);
+
 //Variable creation
 struct timeval t1, t2, t3, t4;
 runmode_param runmodesmall;
@@ -51,11 +55,20 @@ runmodemedium.nhalos = medium;
 runmodebig.nhalos = big;
 image.x = image.y = 2;
 
+
 for (int i = 0; i <big; ++i){
+
 	ilens = &lens[i];
 	
     ilens->position.x = ilens->position.y = 0.;
-    ilens->type = 8;
+    if ( i < small ){
+    	ilens->type = 5;
+    	Nsis +=1;
+    }
+    else{
+    	ilens->type = 8;
+    	Npiemd +=1;
+    }
     ilens->ellipticity = 0.11;
     ilens->ellipticity_potential = 0.;
     ilens->ellipticity_angle = 0.;
@@ -72,37 +85,72 @@ for (int i = 0; i <big; ++i){
 
 }
 
-/** SoA part  **/
+/** SoA part + Sorting by lens type:**/
+
+/** Sorting by lens type will remove an if condition from our loop.
+ * Putting "if" inside loops prevents certain types of optimization like e.g. loop unrolling to expose
+ * Instruction Level Parallelism. This is particularly true for GPUs. **/
 
 //Init PotentialSet
 
-PotentialSet lenses;
-lenses.type = 	new int[big];
-lenses.x  = 	new double[big];
-lenses.y = 		new double[big];
-lenses.b0 = 	new double[big];
-lenses.ellipticity_angle = new double[big];
-lenses.ellipticity = new double[big];
-lenses.ellipticity_potential = new double[big];
-lenses.rcore = 	new double[big];
-lenses.rcut = 	new double[big];
-lenses.z = 		new double[big];
+PotentialSet lensespiemd;
+PotentialSet lensessis;
+PotentialSet  *ilenses;
+
+lensespiemd.type = 	new int[Npiemd];
+lensespiemd.x  = 	new double[Npiemd];
+lensespiemd.y = 		new double[Npiemd];
+lensespiemd.b0 = 	new double[Npiemd];
+lensespiemd.ellipticity_angle = new double[Npiemd];
+lensespiemd.ellipticity = new double[Npiemd];
+lensespiemd.ellipticity_potential = new double[Npiemd];
+lensespiemd.rcore = 	new double[Npiemd];
+lensespiemd.rcut = 	new double[Npiemd];
+lensespiemd.z = 		new double[Npiemd];
+
+lensessis.type = 	new int[Nsis];
+lensessis.x  = 	new double[Nsis];
+lensessis.y = 		new double[Nsis];
+lensessis.b0 = 	new double[Nsis];
+lensessis.ellipticity_angle = new double[Nsis];
+lensessis.ellipticity = new double[Nsis];
+lensessis.ellipticity_potential = new double[Nsis];
+lensessis.rcore = 	new double[Nsis];
+lensessis.rcut = 	new double[Nsis];
+lensessis.z = 		new double[Nsis];
+
+int i_sis(0), i_piemd(0);
+int *i_point;
 
 for (int i = 0; i <big; ++i){
-	lenses.type[i] = 	lens[i].type;
-	lenses.x[i]  = 		lens[i].position.x;
-	lenses.y[i] = 		lens[i].position.y;
-	lenses.b0[i] = 		lens[i].b0;
-	lenses.ellipticity_angle[i] = lens[i].ellipticity_angle;
-	lenses.ellipticity[i] = lens[i].ellipticity;
-	lenses.ellipticity_potential[i] = lens[i].ellipticity_potential;
-	lenses.rcore[i] = 	lens[i].rcore;
-	lenses.rcut[i] = 	lens[i].rcut;
-	lenses.z[i] = 		lens[i].z;
+	if (lens[i].type == 5){
+		ilenses = &lensessis;
+		i_point = &i_sis;
+	}
+	else{
+		ilenses = &lensespiemd;
+		i_point = &i_piemd;
+	}
+	//std::cout << *i_point << std::endl;
+	ilenses->x[*i_point]  = 		lens[i].position.x;
+	ilenses->y[*i_point] = 		lens[i].position.y;
+	ilenses->b0[*i_point] = 		lens[i].b0;
+	ilenses->ellipticity_angle[*i_point] = lens[i].ellipticity_angle;
+	ilenses->ellipticity[*i_point] = lens[i].ellipticity;
+	ilenses->ellipticity_potential[*i_point] = lens[i].ellipticity_potential;
+	ilenses->rcore[*i_point] = 	lens[i].rcore;
+	ilenses->rcut[*i_point] = 	lens[i].rcut;
+	ilenses->z[*i_point] = 		lens[i].z;
+	if (lens[i].type == 5){
+		i_sis +=1;
+	}
+	else{
+		i_piemd +=1;
+	}
 
 }
 
-
+/*
 gettimeofday(&t1, 0);
 module_potentialDerivatives_totalGradient(&runmodesmall,&image, &lenses);
 gettimeofday(&t2, 0);
@@ -127,7 +175,7 @@ myfile << "Sample size " << small << ": " << time1 << std::endl;
 myfile << "Sample size " << medium << ": " << time2 << std::endl;
 myfile << "Sample size " << big << ": " << time3 << std::endl;
 myfile.close();
-
+*/
 }
 
 struct point module_potentialDerivatives_totalGradient(const runmode_param *runmode, const struct point *pImage, PotentialSet *lens )
