@@ -16,8 +16,9 @@
 static struct point rotateCoordinateSystem(struct point P, double theta);
 
 /** gradient **/
-struct point module_potentialDerivatives_totalGradient(const runmode_param *runmode, const struct point *pImage, PotentialSet *lens );
-static struct point grad_halo(const struct point *pImage, int iterator,PotentialSet *lens);
+struct point module_potentialDerivatives_totalGradient(const int *Nlens, const struct point *pImage, PotentialSet *lens );
+static struct point grad_halo_sis(const struct point *pImage, int iterator,PotentialSet *lens);
+static struct point grad_halo_piemd(const struct point *pImage, int iterator,PotentialSet *lens);
 
 /** PIEMD **/
 static complex piemd_1derivatives_ci05(double x, double y, double eps, double rc);
@@ -39,9 +40,6 @@ int Npiemd(0);
 
 //Variable creation
 struct timeval t1, t2, t3, t4;
-runmode_param runmodesmall;
-runmode_param runmodemedium;
-runmode_param runmodebig;
 
 point image;
 
@@ -50,18 +48,14 @@ Potential lens[big];
 
 //Initialisation
 
-runmodesmall.nhalos = small;
-runmodemedium.nhalos = medium;
-runmodebig.nhalos = big;
 image.x = image.y = 2;
-
 
 for (int i = 0; i <big; ++i){
 
 	ilens = &lens[i];
 	
     ilens->position.x = ilens->position.y = 0.;
-    if ( i < small ){
+    if ( i < 0 ){
     	ilens->type = 5;
     	Nsis +=1;
     }
@@ -92,7 +86,10 @@ for (int i = 0; i <big; ++i){
  * Instruction Level Parallelism. This is particularly true for GPUs. **/
 
 //Init PotentialSet
-
+PotentialSet lenses[2];
+int Nlensessmall[2];
+int Nlensesmedium[2];
+int Nlensesbig[2];
 PotentialSet lensespiemd;
 PotentialSet lensessis;
 PotentialSet  *ilenses;
@@ -150,23 +147,58 @@ for (int i = 0; i <big; ++i){
 
 }
 
-/*
+lenses[0] = lensessis;
+lenses[1] = lensespiemd;
+
+if(Nsis < small){
+	Nlensessmall[0] = Nsis;
+	Nlensessmall[1] = small-Nsis;
+}
+else{
+	Nlensessmall[0] = small;
+	Nlensessmall[1] = 0;
+}
+
+if(Nsis < medium){
+	Nlensesmedium[0] = Nsis;
+	Nlensesmedium[1] = medium-Nsis;
+}
+else{
+	Nlensesmedium[0] = medium;
+	Nlensesmedium[1] = 0;
+}
+
+if(Nsis < big){
+	Nlensesbig[0] = Nsis;
+	Nlensesbig[1] = big-Nsis;
+}
+else{
+	Nlensesbig[0] = big;
+	Nlensesbig[1] = 0;
+}
+
+std::cout  << Nlensessmall[0] << " " << Nlensessmall[1] << std::endl;
+std::cout  << Nlensesmedium[0] << " " << Nlensesmedium[1] << std::endl;
+std::cout  << Nlensesbig[0] << " " << Nlensesbig[1] << std::endl;
+
 gettimeofday(&t1, 0);
-module_potentialDerivatives_totalGradient(&runmodesmall,&image, &lenses);
+module_potentialDerivatives_totalGradient(Nlensessmall,&image, lenses);
 gettimeofday(&t2, 0);
-module_potentialDerivatives_totalGradient(&runmodemedium,&image, &lenses);
+module_potentialDerivatives_totalGradient(Nlensesmedium,&image, lenses);
 gettimeofday(&t3, 0);
-module_potentialDerivatives_totalGradient(&runmodebig,&image, &lenses);
+point grad = module_potentialDerivatives_totalGradient(Nlensesbig,&image, lenses);
 gettimeofday(&t4, 0);
 
 double time1 = (1000000.0*(t2.tv_sec-t1.tv_sec) + t2.tv_usec-t1.tv_usec)/1000000.0;
 double time2 = (1000000.0*(t3.tv_sec-t2.tv_sec) + t3.tv_usec-t2.tv_usec)/1000000.0;
 double time3 = (1000000.0*(t4.tv_sec-t3.tv_sec) + t4.tv_usec-t3.tv_usec)/1000000.0;
 
+std::cout.precision(10);
 std::cout << "Benchmark for Gradient SOA Calculation "<< std::endl;
 std::cout << "Sample size " << small << ": " << time1 << std::endl;
 std::cout << "Sample size " << medium << ": " << time2 << std::endl;
 std::cout << "Sample size " << big << ": " << time3 << std::endl;
+std::cout << "Sample Grad " << grad.x << " " << grad.y << std::endl;
 
 std::ofstream myfile;
 myfile.open ("BenchmarkGradSoA.txt");
@@ -175,16 +207,34 @@ myfile << "Sample size " << small << ": " << time1 << std::endl;
 myfile << "Sample size " << medium << ": " << time2 << std::endl;
 myfile << "Sample size " << big << ": " << time3 << std::endl;
 myfile.close();
-*/
+
+
 }
 
-struct point module_potentialDerivatives_totalGradient(const runmode_param *runmode, const struct point *pImage, PotentialSet *lens )
+struct point module_potentialDerivatives_totalGradient(const int *Nlens, const struct point *pImage, PotentialSet *lens )
 {
     struct point grad, clumpgrad;
 	grad.x=0;
 	grad.y=0;
-	for(int i=0; i<runmode->nhalos; i++){
-		clumpgrad=grad_halo(pImage,i,lens);  //compute gradient for each clump separately
+
+	//This here could be done with function pointer to better acomodate future ass distributions functions
+	// However I'm unsure of the time of function pointers -> ask gilles
+	//for the moment lens and Nlens is organised the following way :  1. SIS, 2. PIEMD
+
+	//SIS is the first
+	for(int i=0; i<Nlens[0]; i++){
+		clumpgrad=grad_halo_sis(pImage,i,&lens[0]);  //compute gradient for each clump separately
+
+		if(clumpgrad.x == clumpgrad.x or clumpgrad.y == clumpgrad.y){ //nan check
+		grad.x+=clumpgrad.x;
+		grad.y+=clumpgrad.y;
+		}  // add the gradients
+	}
+
+	//PIEMD is the second
+	for(int i=0; i<Nlens[1]; i++){
+		clumpgrad=grad_halo_piemd(pImage,i,&lens[1]);  //compute gradient for each clump separately
+
 		if(clumpgrad.x == clumpgrad.x or clumpgrad.y == clumpgrad.y){ //nan check
 		grad.x+=clumpgrad.x;
 		grad.y+=clumpgrad.y;
@@ -194,16 +244,15 @@ struct point module_potentialDerivatives_totalGradient(const runmode_param *runm
     return(grad);
 }
 
- /**@brief Return the gradient of the projected lens potential for one clump
-  * !!! You have to multiply by dlsds to obtain the true gradient
- * for the expressions, see the papers : JP Kneib & P Natarajan, Cluster Lenses, The Astronomy and Astrophysics Review (2011) for 1 and 2
- * and JP Kneib PhD (1993) for 3
- * 
- * @param pImage 	point where the result is computed in the lens plane
- * @param lens		mass distribution
- */
+/**@brief Return the gradient of the projected lens potential for one PIEMD clump. Uses SoA insteand of AoS lenses for speed
+ *!!! You have to multiply by dlsds to obtain the true gradient for the expressions, see the papers :
+ *JP Kneib & P Natarajan, Cluster Lenses, The Astronomy and Astrophysics Review (2011) for 1 and 2 and JP Kneib PhD (1993) for 3
+*
+* @param pImage 	point where the result is computed in the lens plane
+* @param lens		mass distribution
+*/
  
-static struct point grad_halo(const struct point *pImage, int iterator,PotentialSet *lens)
+static struct point grad_halo_piemd(const struct point *pImage, int iterator,PotentialSet *lens)
 {
     struct point true_coord, true_coord_rotation, result;
     double R, angular_deviation;
@@ -215,33 +264,47 @@ static struct point grad_halo(const struct point *pImage, int iterator,Potential
     true_coord.x = pImage->x - lens->x[iterator];  // Change the origin of the coordinate system to the center of the clump
     true_coord.y = pImage->y - lens->y[iterator];
 
-    switch (lens->type[iterator])
-    {
 
-	    
-	case(5): /*Elliptical Isothermal Sphere*/
-			/*rotation of the coordiante axes to match the potential axes*/
-			true_coord_rotation = rotateCoordinateSystem(true_coord, lens->ellipticity_angle[iterator]);
+	 /* PIEMD */
+	/*rotation of the coordiante axes to match the potential axes*/
+	true_coord_rotation = rotateCoordinateSystem(true_coord, lens->ellipticity_angle[iterator]);
+	/*Doing something....*/
+	zis = piemd_1derivatives_ci05(true_coord_rotation.x, true_coord_rotation.y, lens->ellipticity_potential[iterator], lens->rcore[iterator]);
 
-			R=sqrt(true_coord_rotation.x*true_coord_rotation.x*(1-lens->ellipticity[iterator]/3.)+true_coord_rotation.y*true_coord_rotation.y*(1+lens->ellipticity[iterator]/3.));	//ellippot = ellipmass/3
-			result.x=(1-lens->ellipticity[iterator]/3.)*lens->b0[iterator]*true_coord_rotation.x/(R);
-			result.y=(1+lens->ellipticity[iterator]/3.)*lens->b0[iterator]*true_coord_rotation.y/(R);
-	    break;
-	    
-	case(8): /* PIEMD */
-	    /*rotation of the coordiante axes to match the potential axes*/
-    	true_coord_rotation = rotateCoordinateSystem(true_coord, lens->ellipticity_angle[iterator]);
-    	/*Doing something....*/
-	    zis = piemd_1derivatives_ci05(true_coord_rotation.x, true_coord_rotation.y, lens->ellipticity_potential[iterator], lens->rcore[iterator]);
-            
-	    result.x=lens->b0[iterator] * zis.re;
-	    result.y=lens->b0[iterator] * zis.im;
-        break;
+	result.x=lens->b0[iterator] * zis.re;
+	result.y=lens->b0[iterator] * zis.im;
 
-	default:
-            std::cout << "ERROR: Grad 1 profil type of clump unknown : "<< lens->type[iterator] << std::endl;
-		break;
-    };
+    return result;
+}
+
+/**@brief Return the gradient of the projected lens potential for one SIS clump. Uses SoA insteand of AoS lenses for speed
+ *!!! You have to multiply by dlsds to obtain the true gradient for the expressions, see the papers :
+ *JP Kneib & P Natarajan, Cluster Lenses, The Astronomy and Astrophysics Review (2011) for 1 and 2 and JP Kneib PhD (1993) for 3
+*
+* @param pImage 	point where the result is computed in the lens plane
+* @param lens		mass distribution
+*/
+
+static struct point grad_halo_sis(const struct point *pImage, int iterator,PotentialSet *lens)
+{
+    struct point true_coord, true_coord_rotation, result;
+    double R, angular_deviation;
+    complex zis;
+
+    result.x = result.y = 0.;
+
+    /*positionning at the potential center*/
+    true_coord.x = pImage->x - lens->x[iterator];  // Change the origin of the coordinate system to the center of the clump
+    true_coord.y = pImage->y - lens->y[iterator];
+
+    /*Elliptical Isothermal Sphere*/
+	/*rotation of the coordiante axes to match the potential axes*/
+	true_coord_rotation = rotateCoordinateSystem(true_coord, lens->ellipticity_angle[iterator]);
+
+	R=sqrt(true_coord_rotation.x*true_coord_rotation.x*(1-lens->ellipticity[iterator]/3.)+true_coord_rotation.y*true_coord_rotation.y*(1+lens->ellipticity[iterator]/3.));	//ellippot = ellipmass/3
+	result.x=(1-lens->ellipticity[iterator]/3.)*lens->b0[iterator]*true_coord_rotation.x/(R);
+	result.y=(1+lens->ellipticity[iterator]/3.)*lens->b0[iterator]*true_coord_rotation.y/(R);
+
     return result;
 }
 
