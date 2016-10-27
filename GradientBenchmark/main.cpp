@@ -12,7 +12,6 @@
 #include <sys/time.h>
 #include <fstream>
 #include <Grad.h>
-#include <GradTest.h>
 
 
 int main()
@@ -112,8 +111,6 @@ std::cout << "Sample size " << small << ": " << time1 << std::endl;
 std::cout << "Sample size " << medium << ": " << time2 << std::endl;
 std::cout << "Sample size " << big << ": " << time3 << std::endl;
 std::cout << "Grad " << grad.x << " and " << grad.y << std::endl;
-
-gradtest();
 
 std::ofstream myfile;
 myfile.open ("BenchmarkGradSoA.txt");

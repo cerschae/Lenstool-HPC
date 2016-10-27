@@ -1,5 +1,10 @@
-#include <GradTest.h>
-#include <structure.h>
+#include <iostream>
+#include <string.h>
+#include "structure.h"
+#include <math.h>
+#include <sys/time.h>
+#include <fstream>
+#include <../GradientBenchmark/Grad.h>
 
 complex piemd_1derivatives(double x, double y, double eps, double rc);
 
@@ -7,7 +12,7 @@ void rotatecoordinatestest();
 void piemdtest();
 void sistest();
 
-void gradtest()
+int main()
 {
 
 	//Rotation of coordinates
