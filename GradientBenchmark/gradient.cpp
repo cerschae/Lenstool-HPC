@@ -4,6 +4,7 @@
 #include <math.h>
 #include <sys/time.h>
 #include <fstream>
+#include <immintrin.h>
 
 
 #include "structure.h"
@@ -63,6 +64,50 @@ void module_readParameters_calculatePotentialparameter(Potential *lens)
                         break;
         };
 }
+//
+//
+//
+void module_readParameters_calculatePotentialparameter_SOA(Potential_SOA *lens, int ii)
+{
+        //std::cout << "module_readParameters_calculatePotentialparameter..." << std::endl;
+        switch (lens->type[ii])
+        {
+
+                case(5): /*Elliptical Isothermal Sphere*/
+                        //impact parameter b0
+                        lens->b0[ii] = 4* pi_c2 * lens->vdisp[ii] * lens->vdisp[ii] ;
+                        //ellipticity_potential 
+                        lens->ellipticity_potential[ii] = lens->ellipticity[ii]/3 ;
+                        break;
+
+                case(8): /* PIEMD */
+                        //impact parameter b0
+                        lens->b0[ii] = 6.*pi_c2 * lens->vdisp[ii] * lens->vdisp[ii];
+                        //ellipticity_parameter
+                        if ( lens->ellipticity[ii] == 0. && lens->ellipticity_potential[ii] != 0. ){
+                                // emass is (a2-b2)/(a2+b2)
+                                lens->ellipticity[ii] = 2.*lens->ellipticity_potential[ii] / (1. + lens->ellipticity_potential[ii] * lens->ellipticity_potential[ii]);
+                                //printf("1 : %f %f \n",lens->ellipticity[ii],lens->ellipticity_potential[ii]);
+                        }
+                        else if ( lens->ellipticity[ii] == 0. && lens->ellipticity_potential[ii] == 0. ){
+                                lens->ellipticity_potential[ii] = 0.00001;
+                                //printf("2 : %f %f \n",lens->ellipticity[ii],lens->ellipticity_potential[ii]);
+                        }
+                        else{
+                                // epot is (a-b)/(a+b)
+                                lens->ellipticity_potential[ii] = (1. - sqrt(1 - lens->ellipticity[ii] * lens->ellipticity[ii])) / lens->ellipticity[ii];
+                                //printf("3 : %f %f \n",lens->ellipticity[ii],lens->ellipticity_potential[ii]);
+                        }
+                        break;
+
+                default:
+                        std::cout << "ERROR: LENSPARA profil type of clump "<< lens->name << " unknown : "<< lens->type << std::endl;
+                        //printf( "ERROR: LENSPARA profil type of clump %s unknown : %d\n",lens->name, lens->type);
+                        break;
+        };
+}
+
+
 //
 /**@brief Return the gradient of the projected lens potential for one clump
  * !!! You have to multiply by dlsds to obtain the true gradient
@@ -206,7 +251,7 @@ struct point module_potentialDerivatives_totalGradient(const runmode_param *runm
 //
 //
 //
-struct point potentialDerivatives_totalGradient(const runmode_param *runmode, const struct point *pImage, const struct Potential *lens, int nhalos)
+struct point module_potentialDerivatives_totalGradient_SOA(const runmode_param *runmode, const struct point *pImage, const struct Potential_SOA *lens, int nhalos)
 {
         struct point grad, clumpgrad;
         grad.x = 0;
@@ -216,7 +261,7 @@ struct point potentialDerivatives_totalGradient(const runmode_param *runmode, co
         for(int i = 0; i < runmode->nhalos; i++)
         {
 		//
-                //clumpgrad = grad_halo(pImage,&lens[i]);  //compute gradient for each clump separately
+                // clumpgrad = grad_halo(pImage,&lens[i]);  //compute gradient for each clump separately
 		//
                 struct point true_coord, true_coord_rotation; //, result;
                 double       R, angular_deviation;
@@ -224,36 +269,33 @@ struct point potentialDerivatives_totalGradient(const runmode_param *runmode, co
                 //
                 //result.x = result.y = 0.;
                 //
-                true_coord.x = pImage->x - lens->position.x;
-                true_coord.y = pImage->y - lens->position.y;
+                true_coord.x = pImage->x - lens->position_x[i];
+                true_coord.y = pImage->y - lens->position_y[i];
                 //
-                //std::cout << "grad_halo..." << lens->type << std::endl;
+                // std::cout << "grad_halo..." << lens->type << std::endl;
                 //
                 /*positionning at the potential center*/
                 // Change the origin of the coordinate system to the center of the clump
-                true_coord_rotation = rotateCoordinateSystem(true_coord, lens->ellipticity_angle);
+                true_coord_rotation = rotateCoordinateSystem(true_coord, lens->ellipticity_angle[i]);
+                // std::cout << i << ": " << true_coord.x << " " << true_coord.y << " -> "
+		//	<< true_coord_rotation.x << " " << true_coord_rotation.y << std::endl;
 		//
-		//zis = piemd_1derivatives_ci05(true_coord_rotation.x, true_coord_rotation.y, lens->ellipticity_potential, lens->rcore);
-		// prototype: piemd_1derivatives_ci05(double x, double y, double eps, double rc)
-		//
-		double  sqe, cx1, cxro, cyro, rem2;
-		complex zci, znum, zden, zres;
-		double norm;
+		//double  sqe, cx1, cxro, cyro, rem2;
 		//
 		double x   = true_coord_rotation.x;
 		double y   = true_coord_rotation.y;
-		double eps = lens->ellipticity_potential;
-		double rc  = lens->rcore;
+		double eps = lens->ellipticity_potential[i];
+		double rc  = lens->rcore[i];
 		//
 		//std::cout << "piemd_lderivatives" << std::endl;
 		//
-		sqe  = sqrt(eps);
+		double sqe  = sqrt(eps);
 		//
-		cx1  = (1. - eps)/(1. + eps);
-		cxro = (1. + eps)*(1. + eps);
-		cyro = (1. - eps)*(1. - eps);
+		double cx1  = (1. - eps)/(1. + eps);
+		double cxro = (1. + eps)*(1. + eps);
+		double cyro = (1. - eps)*(1. - eps);
 		//
-		rem2 = x*x/cxro + y*y/cyro;
+		double rem2 = x*x/cxro + y*y/cyro;
 		//
 		/*zci=cpx(0.,-0.5*(1.-eps*eps)/sqe);
 		  znum=cpx(cx1*x,(2.*sqe*sqrt(rc*rc+rem2)-y/cx1));
@@ -261,13 +303,19 @@ struct point potentialDerivatives_totalGradient(const runmode_param *runmode, co
 		  zis=pcpx(zci,lncpx(dcpx(znum,zden)));
 		  zres=pcpxflt(zis,b0);*/
 		// --> optimized code
+		complex zci, znum, zden, zres;
+		double norm;
+		//	
 		zci.re  = 0;
-		zci.im  = - 0.5*(1. - eps*eps)/sqe;
+		zci.im  = -0.5*(1. - eps*eps)/sqe;
+		//
 		znum.re = cx1*x;
 		znum.im = 2.*sqe*sqrt(rc*rc + rem2) - y/cx1;
+		//
 		zden.re = x;
 		zden.im = 2.*rc*sqe - y;
 		norm    = (zden.re*zden.re + zden.im*zden.im);     // zis = znum/zden
+		//
 		zis.re  = (znum.re*zden.re + znum.im*zden.im)/norm;
 		zis.im  = (znum.im*zden.re - znum.re*zden.im)/norm;
 		norm    = zis.re;
@@ -284,8 +332,8 @@ struct point potentialDerivatives_totalGradient(const runmode_param *runmode, co
 		//zres.im = zis.im*b0;
 		//
 		//
-		clumpgrad.x = lens->b0*zis.re;
-		clumpgrad.y = lens->b0*zis.im;
+		clumpgrad.x = lens->b0[i]*zis.re;
+		clumpgrad.y = lens->b0[i]*zis.im;
 		//nan check
 		if(clumpgrad.x == clumpgrad.x or clumpgrad.y == clumpgrad.y)
 		{
@@ -296,4 +344,153 @@ struct point potentialDerivatives_totalGradient(const runmode_param *runmode, co
 	}
 	//
 	return(grad);
+}
+
+
+struct point module_potentialDerivatives_totalGradient_SOA_AVX(const runmode_param *runmode, const struct point *pImage, const struct Potential_SOA *lens, int nhalos)
+{
+        struct point grad, clumpgrad;
+        grad.x = 0;
+        grad.y = 0;
+        std::cout << "optimized gradient: nhalos = " << runmode->nhalos << std::endl;
+        //
+        // smearing the image coordinates on registers
+        __m256d image_x = _mm256_set1_pd(pImage->x);
+        __m256d image_y = _mm256_set1_pd(pImage->y);
+        //
+        for(int i = 0; i < runmode->nhalos; i = i + 4)
+        {
+	
+                //
+                // clumpgrad = grad_halo(pImage,&lens[i]);  //compute gradient for each clump separately
+                //
+                struct point true_coord, true_coord_rotation; //, result;
+                double       R, angular_deviation;
+                //
+                //result.x = result.y = 0.;
+                //
+                //true_coord.x = pImage->x - lens->position_x[i];
+                //true_coord.y = pImage->y - lens->position_y[i];
+                __m256d true_coord_x = _mm256_sub_pd(image_x, _mm256_loadu_pd(&lens->position_x[i]));
+                __m256d true_coord_y = _mm256_sub_pd(image_y, _mm256_loadu_pd(&lens->position_y[i]));
+                __m256d eps          = _mm256_loadu_pd(&lens->ellipticity_potential[i]);
+                __m256d rc           = _mm256_loadu_pd(&lens->rcore[i]);
+		__m256d b0           = _mm256_loadu_pd(&lens->b0[i]);
+		//
+                double theta = lens->ellipticity_angle[i];
+                //true_coord.x = pImage->x - lens->position_x[i];
+                //true_coord.y = pImage->y - lens->position_y[i];
+                //
+                // std::cout << "grad_halo..." << lens->type << std::endl;
+                //
+                /*positionning at the potential center*/
+                // Change the origin of the coordinate system to the center of the clump
+                //true_coord_rotation = rotateCoordinateSystem(true_coord, lens->ellipticity_angle[i]);
+		//Q.x = P.x*cos(theta) + P.y*sin(theta);
+		//Q.y = P.y*cos(theta) - P.x*sin(theta);
+
+		// smear the angle on a register
+		__m256d cos_theta = _mm256_set1_pd(cos(theta));		
+		__m256d sin_theta = _mm256_set1_pd(sin(theta));		
+		// and rotate
+		// 6 ops
+		__m256d true_coord_rotation_x = _mm256_add_pd(_mm256_mul_pd(true_coord_x, cos_theta), _mm256_mul_pd(true_coord_y, sin_theta));
+		__m256d true_coord_rotation_y = _mm256_sub_pd(_mm256_mul_pd(true_coord_y, cos_theta), _mm256_mul_pd(true_coord_x, sin_theta));
+		//
+                // std::cout << i << ": " << true_coord.x << " " << true_coord.y << " -> "
+                //      << true_coord_rotation.x << " " << true_coord_rotation.y << std::endl;
+                //
+                //double  sqe, cx1, cxro, cyro, rem2;
+                //
+                __m256d x   = true_coord_rotation_x;
+                __m256d y   = true_coord_rotation_y;
+                //
+                //std::cout << "piemd_lderivatives" << std::endl;
+                //
+                __m256d sqe   = _mm256_sqrt_pd(eps);
+		__m256d one   = _mm256_set1_pd(1.);
+		__m256d zero  = _mm256_set1_pd(0.);
+                //
+		// (1. - eps)/(1. + eps); 3 ops
+                __m256d cx1  = _mm256_div_pd(_mm256_sub_pd(one, eps), _mm256_add_pd(one, eps));
+		// (1. + eps)*(1. + eps); 3 ops
+                __m256d cxro = _mm256_mul_pd(_mm256_add_pd(one, eps), _mm256_add_pd(one, eps));
+		// (1. - eps)*(1. - eps); 3 ops
+                __m256d cyro = _mm256_mul_pd(_mm256_sub_pd(one, eps), _mm256_sub_pd(one, eps)); 
+                // 5 ops
+                __m256d rem2 = x*x/cxro + y*y/cyro;
+                //
+                /*zci=cpx(0.,-0.5*(1.-eps*eps)/sqe);
+                  znum=cpx(cx1*x,(2.*sqe*sqrt(rc*rc+rem2)-y/cx1));
+                  zden=cpx(x,(2.*rc*sqe-y));
+                  zis=pcpx(zci,lncpx(dcpx(znum,zden)));
+                  zres=pcpxflt(zis,b0);*/
+                // --> optimized code
+                //complex zci, znum, zden, zres;
+                __m256d zci_re, zci_im, znum_re, znum_im, zden_re, zden_im, zres_re, zres_im;
+                __m256d norm;
+                //      
+                //zci.re  = 0;
+                //zci.im  = -0.5*(1. - eps*eps)/sqe;
+                zci_re  = zero;
+		// 4 ops
+                zci_im  = _mm256_mul_pd(_mm256_div_pd(_mm256_set1_pd(-0.5),sqe), _mm256_sub_pd(one, _mm256_mul_pd(eps, eps)));
+                // cx1*x
+             	//  2.*sqe*sqrt(rc*rc + rem2) - y/cx1 
+             	//  7 ops
+                znum_re = _mm256_mul_pd(cx1, x);
+                znum_im = _mm256_mul_pd(_mm256_set1_pd(2.), _mm256_mul_pd(sqe, _mm256_sqrt_pd(_mm256_add_pd(_mm256_mul_pd(rc, rc), rem2))));
+		znum_im = _mm256_sub_pd(znum_im, _mm256_div_pd(y, cx1)); 
+                //
+                zden_re = x;
+                //zden_im = 2.*rc*sqe - y; 3 ops
+                zden_im = _mm256_mul_pd(_mm256_set1_pd(2.), _mm256_mul_pd(rc, sqe)); 
+		zden_im = _mm256_sub_pd(zden_im, y);
+		//
+                //norm    = (zden.re*zden.re + zden.im*zden.im); 3 ops
+                norm    = (zden_re*zden_re + zden_im*zden_im);     
+		// zis = znum/zden
+                __m256d zis_re, zis_im;
+                zis_re  = (znum_re*zden_re + znum_im*zden_im)/norm; // 3 ops
+                zis_im  = (znum_im*zden_re - znum_re*zden_im)/norm; // 3 ops
+                norm    = zis_re;
+                zis_re  = _mm256_log_pd(_mm256_sqrt_pd(norm*norm + zis_im*zis_im));  // 3 ops// ln(zis) = ln(|zis|)+i.Arg(zis)
+                zis_im  = _mm256_atan2_pd(zis_im, norm); //
+                //  norm = zis.re;
+                zres_re = zci_re*zis_re - zci_im*zis_im;   // Re( zci*ln(zis) ) 3 ops
+                zres_im = zci_im*zis_re + zis_im*zci_re;   // Im( zci*ln(zis) ) 3 ops
+                //
+                zis_re  = zres_re;
+                zis_im  = zres_im;
+                //
+                //zres.re = zis.re*b0;
+                //zres.im = zis.im*b0;
+                //
+                //
+		//0*zis_re;
+		__m256d b0_x, b0_y;
+		//
+		b0_x = _mm256_mul_pd(b0, zis_re);    // 1 ops
+                clumpgrad.x  = ((double*) &b0_x)[0];
+                clumpgrad.x += ((double*) &b0_x)[1];
+                clumpgrad.x += ((double*) &b0_x)[2];
+                clumpgrad.x += ((double*) &b0_x)[3];
+		//
+		b0_y = _mm256_mul_pd(b0, zis_im);    // 1 ops
+                clumpgrad.y  = ((double*) &b0_y)[0];
+                clumpgrad.y += ((double*) &b0_y)[1];
+                clumpgrad.y += ((double*) &b0_y)[2];
+                clumpgrad.y += ((double*) &b0_y)[3];
+		//
+                //clumpgrad.y = b0*zis_im;
+                //nan check
+                if(clumpgrad.x == clumpgrad.x or clumpgrad.y == clumpgrad.y)
+                {
+                        // add the gradients
+                        grad.x += clumpgrad.x;
+                        grad.y += clumpgrad.y;
+                }
+        }
+        //
+        return(grad);
 }

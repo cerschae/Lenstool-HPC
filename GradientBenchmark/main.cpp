@@ -12,6 +12,9 @@
 #include <sys/time.h>
 #include <fstream>
 //
+#include <mm_malloc.h>
+#define MM_MALLOC(nelems) _mm_malloc(nelems, 32)
+//
 #include "structure.h"
 #include "timer.h"
 //
@@ -20,7 +23,10 @@ static struct point rotateCoordinateSystem(struct point P, double theta);
 
 /** gradient **/
 struct point module_potentialDerivatives_totalGradient(const runmode_param *runmode, const struct point *pImage, const struct Potential *lens);
-struct point potentialDerivatives_totalGradient(const runmode_param *runmode, const struct point *pImage, const struct Potential *lens, int nhalos);
+struct point module_potentialDerivatives_totalGradient_SOA(const runmode_param *runmode, const struct point *pImage, const struct Potential_SOA *lens, int nhalos);
+struct point module_potentialDerivatives_totalGradient_SOA_AVX(const runmode_param *runmode, const struct point *pImage, const struct Potential_SOA *lens, int nhalos);
+//struct point potentialDerivatives_totalGradient(const runmode_param *runmode, const struct point *pImage, const struct Potential *lens, int nhalos);
+//struct point potentialDerivatives_totalGradient_SOA(const runmode_param *runmode, const struct point *pImage, const struct Potential *lens, int nhalos);
 //
 static struct point grad_halo(const struct point *pImage, const struct Potential *lens);
 
@@ -29,6 +35,7 @@ static complex piemd_1derivatives_ci05(double x, double y, double eps, double rc
 
 /** Potential **/
 void module_readParameters_calculatePotentialparameter(Potential *lens);
+void module_readParameters_calculatePotentialparameter_SOA(Potential_SOA *lens, int i);
 
 int main()
 {
@@ -42,11 +49,11 @@ int main()
 	runmode_param runmodesmall;
 	runmode_param runmodemedium;
 	runmode_param runmodebig;
-
+	//
 	point image;
+	image.x = image.y = 2;
 
-	Potential  *ilens;
-	Potential lens[big];
+	//
 	//
 	//Initialisation
 	//
@@ -54,11 +61,13 @@ int main()
 	runmodemedium.nhalos = medium;
 	runmodebig.nhalos    = big;
 	//
-	image.x = image.y = 2;
+	// Setting up the AOS potential 
 	//
-	for (int i = 0; i <big; ++i)
+	Potential   lens[big];
+	Potential* ilens = &lens[0];
+	for (int i = 0; i < big; ++i, ++ilens)
 	{
-		ilens = &lens[i];
+		//ilens = &lens[i];
 		//
 		ilens->vdisp       = 1.;
 		ilens->position.x  = ilens->position.y = 0.;
@@ -66,7 +75,7 @@ int main()
 		ilens->ellipticity = 0.11;
 		ilens->ellipticity_potential = 0.;
 		ilens->ellipticity_angle = 0.;
-		ilens->rcut 	   = 5.;
+		ilens->rcut        = 5.;
 		ilens->rcore       = 1;
 		ilens->weight      = 0;
 		ilens->rscale      = 0;
@@ -75,6 +84,58 @@ int main()
 		ilens->einasto_kappacritic = 0;
 		ilens->z           = 0.4;
 		module_readParameters_calculatePotentialparameter(ilens);
+	}	
+	//
+	// Setting up the SOA potential
+	//
+	Potential_SOA lens_soa;
+	for (int i = 0; i < big; ++i)
+	{
+		lens_soa.type       = (int*) malloc(big*sizeof(int));
+		lens_soa.vdisp      = (double*) malloc(big*sizeof(double));
+		//
+		lens_soa.position_x = (double*) malloc(big*sizeof(double));
+		lens_soa.position_y = (double*) malloc(big*sizeof(double));
+		lens_soa.weight = (double*) malloc(big*sizeof(double));
+                lens_soa.b0 = (double*) malloc(big*sizeof(double));
+                lens_soa.vdisp = (double*) malloc(big*sizeof(double));
+                lens_soa.ellipticity_angle = (double*) malloc(big*sizeof(double));
+                lens_soa.ellipticity = (double*) malloc(big*sizeof(double));
+                lens_soa.ellipticity_potential = (double*) malloc(big*sizeof(double));
+                lens_soa.rcore = (double*) malloc(big*sizeof(double));
+                lens_soa.rcut = (double*) malloc(big*sizeof(double));
+                lens_soa.rscale = (double*) malloc(big*sizeof(double));
+                lens_soa.exponent = (double*) malloc(big*sizeof(double));
+                lens_soa.alpha = (double*) malloc(big*sizeof(double));
+                lens_soa.einasto_kappacritic = (double*) malloc(big*sizeof(double));
+                lens_soa.z = (double*) malloc(big*sizeof(double));
+                lens_soa.mag = (double*) malloc(big*sizeof(double));
+                lens_soa.lum = (double*) malloc(big*sizeof(double));
+                lens_soa.theta = (double*) malloc(big*sizeof(double));
+                lens_soa.sigma = (double*) malloc(big*sizeof(double));
+	}
+	//
+	for (int i = 0; i < big; ++i)
+	{
+		//ilens = &lens[i];
+		//
+		lens_soa.vdisp[i]         	  = 1.;
+		//ilens->position.x  = ilens->position.y = 0.;
+		lens_soa.position_x[i]            = 0.;
+		lens_soa.position_y[i]  	  = 0.;
+		lens_soa.type[i]        	  = 8;
+		lens_soa.ellipticity[i] 	  = 0.11;
+		lens_soa.ellipticity_potential[i] = 0.;
+		lens_soa.ellipticity_angle[i]     = 0.;
+		lens_soa.rcut[i] 	          = 5.;
+		lens_soa.rcore[i]                 = 1;
+		lens_soa.weight[i]                = 0;
+		lens_soa.rscale[i]                = 0;
+		lens_soa.exponent[i]              = 0;
+		lens_soa.alpha[i]                 = 0.;
+		lens_soa.einasto_kappacritic[i]   = 0;
+		lens_soa.z[i]                     = 0.4;
+		module_readParameters_calculatePotentialparameter_SOA(&lens_soa, i);
 	}
 	//
 	std::cout << "Benchmark for Gradient Calculation "<< std::endl;
@@ -91,7 +152,7 @@ int main()
 	std::cout << "Sample size " << big << ": " << t1 << "s., point = " << grad.x << " " << grad.y << std::endl;
 	//
 	t1 = -myseconds();
-	grad = potentialDerivatives_totalGradient(&runmodebig, &image, lens, big);
+	grad = module_potentialDerivatives_totalGradient_SOA_AVX(&runmodebig, &image, &lens_soa, big);
 	t1 += myseconds();
 	std::cout << "Sample size " << big << ": " << t1 << "s., point = " << grad.x << " " << grad.y << std::endl;
 	//

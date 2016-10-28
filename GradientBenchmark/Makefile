@@ -25,7 +25,8 @@ program_INCLUDE_LIBS += /users/fgilles/Projects/Libs/cfitsio/lib #Include librar
 # Compiler flags
 CPPFLAGS += $(foreach includedir,$(program_INCLUDE_DIRS),-I$(includedir))
 CPPFLAGS += $(foreach includelib,$(program_INCLUDE_LIBS),-L$(includelib) -lcfitsio)
-CXXFLAGS += -qopt-report -g -O3 -std=c++0x -Wall -pedantic
+CXXFLAGS += -march=core-avx2 -fp-model fast -qopt-report -g -O3 -std=c++0x -Wall -pedantic
+#CXXFLAGS += -g -O3 -std=c++0x -Wall 
 #
 GEN_SM35 := -gencode=arch=compute_35,code=\"sm_35,compute_35\" #Target CC 3.5, for example
 NVFLAGS := -O3 -g -G -rdc=true #rdc=true needed for separable compilation
