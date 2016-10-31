@@ -6,8 +6,14 @@
 #include <fstream>
 #include <immintrin.h>
 
+#include "simd_math.h"
 
 #include "structure.h"
+#include "iacaMarks.h"
+
+//#define __INV RCP
+//#define __INV RCP_1NR
+#define __INV RCP_2NR
 
 //
 //
@@ -260,11 +266,12 @@ struct point module_potentialDerivatives_totalGradient_SOA(const runmode_param *
 	//
         for(int i = 0; i < runmode->nhalos; i++)
         {
+		//IACA_START;
 		//
                 // clumpgrad = grad_halo(pImage,&lens[i]);  //compute gradient for each clump separately
 		//
                 struct point true_coord, true_coord_rotation; //, result;
-                double       R, angular_deviation;
+                //double       R, angular_deviation;
                 complex      zis;
                 //
                 //result.x = result.y = 0.;
@@ -342,6 +349,7 @@ struct point module_potentialDerivatives_totalGradient_SOA(const runmode_param *
 			grad.y += clumpgrad.y;
 		}
 	}
+	//IACA_END;
 	//
 	return(grad);
 }
@@ -358,107 +366,92 @@ struct point module_potentialDerivatives_totalGradient_SOA_AVX(const runmode_par
         __m256d image_x = _mm256_set1_pd(pImage->x);
         __m256d image_y = _mm256_set1_pd(pImage->y);
         //
+//#pragma unroll
         for(int i = 0; i < runmode->nhalos; i = i + 4)
         {
-	
+		//IACA_START;
                 //
                 // clumpgrad = grad_halo(pImage,&lens[i]);  //compute gradient for each clump separately
                 //
-                struct point true_coord, true_coord_rotation; //, result;
-                double       R, angular_deviation;
-                //
-                //result.x = result.y = 0.;
-                //
-                //true_coord.x = pImage->x - lens->position_x[i];
-                //true_coord.y = pImage->y - lens->position_y[i];
-                __m256d true_coord_x = _mm256_sub_pd(image_x, _mm256_loadu_pd(&lens->position_x[i]));
-                __m256d true_coord_y = _mm256_sub_pd(image_y, _mm256_loadu_pd(&lens->position_y[i]));
-                __m256d eps          = _mm256_loadu_pd(&lens->ellipticity_potential[i]);
-                __m256d rc           = _mm256_loadu_pd(&lens->rcore[i]);
-		__m256d b0           = _mm256_loadu_pd(&lens->b0[i]);
-		//
-                double theta = lens->ellipticity_angle[i];
-                //true_coord.x = pImage->x - lens->position_x[i];
-                //true_coord.y = pImage->y - lens->position_y[i];
-                //
-                // std::cout << "grad_halo..." << lens->type << std::endl;
-                //
-                /*positionning at the potential center*/
-                // Change the origin of the coordinate system to the center of the clump
-                //true_coord_rotation = rotateCoordinateSystem(true_coord, lens->ellipticity_angle[i]);
-		//Q.x = P.x*cos(theta) + P.y*sin(theta);
-		//Q.y = P.y*cos(theta) - P.x*sin(theta);
-
-		// smear the angle on a register
-		__m256d cos_theta = _mm256_set1_pd(cos(theta));		
-		__m256d sin_theta = _mm256_set1_pd(sin(theta));		
-		// and rotate
-		// 6 ops
-		__m256d true_coord_rotation_x = _mm256_add_pd(_mm256_mul_pd(true_coord_x, cos_theta), _mm256_mul_pd(true_coord_y, sin_theta));
-		__m256d true_coord_rotation_y = _mm256_sub_pd(_mm256_mul_pd(true_coord_y, cos_theta), _mm256_mul_pd(true_coord_x, sin_theta));
-		//
-                // std::cout << i << ": " << true_coord.x << " " << true_coord.y << " -> "
-                //      << true_coord_rotation.x << " " << true_coord_rotation.y << std::endl;
-                //
-                //double  sqe, cx1, cxro, cyro, rem2;
-                //
-                __m256d x   = true_coord_rotation_x;
-                __m256d y   = true_coord_rotation_y;
-                //
-                //std::cout << "piemd_lderivatives" << std::endl;
-                //
-                __m256d sqe   = _mm256_sqrt_pd(eps);
+                //struct point true_coord, true_coord_rotation; //, result;
+                //double       R, angular_deviation;
 		__m256d one   = _mm256_set1_pd(1.);
 		__m256d zero  = _mm256_set1_pd(0.);
                 //
-		// (1. - eps)/(1. + eps); 3 ops
-                __m256d cx1  = _mm256_div_pd(_mm256_sub_pd(one, eps), _mm256_add_pd(one, eps));
-		// (1. + eps)*(1. + eps); 3 ops
-                __m256d cxro = _mm256_mul_pd(_mm256_add_pd(one, eps), _mm256_add_pd(one, eps));
-		// (1. - eps)*(1. - eps); 3 ops
-                __m256d cyro = _mm256_mul_pd(_mm256_sub_pd(one, eps), _mm256_sub_pd(one, eps)); 
-                // 5 ops
-                __m256d rem2 = x*x/cxro + y*y/cyro;
+		// 2 loads
+                __m256d true_coord_x = _mm256_sub_pd(image_x, _mm256_loadu_pd(&lens->position_x[i]));
+                __m256d true_coord_y = _mm256_sub_pd(image_y, _mm256_loadu_pd(&lens->position_y[i]));
+		// 2 loafs
+                __m256d rc        = _mm256_loadu_pd(&lens->rcore[i]);
+		__m256d b0        = _mm256_loadu_pd(&lens->b0[i]);
+		// 2 loads
+                __m256d eps          = _mm256_loadu_pd(&lens->ellipticity_potential[i]);
+		//
+		__m256d one_minus_eps     = _mm256_sub_pd(one, eps);
+		__m256d one_plus_eps      = _mm256_add_pd(one, eps);
+		__m256d one_plus_eps_rcp  = __INV(one_plus_eps);
+		//
+                //double theta = lens->ellipticity_angle[i];
+                // 1 load
+                __m256d theta = _mm256_loadu_pd(&lens->ellipticity_angle[i]);
+                // std::cout << "grad_halo..." << lens->type << std::endl;
+                /*positionning at the potential center*/
+		__m256d cos_theta = _mm256_cos_pd(theta);		
+		__m256d sin_theta = _mm256_sin_pd(theta);		
+		// rotation: 6 ops
+		__m256d x = _mm256_add_pd(_mm256_mul_pd(true_coord_x, cos_theta), _mm256_mul_pd(true_coord_y, sin_theta));
+		__m256d y = _mm256_sub_pd(_mm256_mul_pd(true_coord_y, cos_theta), _mm256_mul_pd(true_coord_x, sin_theta));
+		//
+                __m256d sqe   = _mm256_sqrt_pd(eps);
                 //
+		// (1. - eps)/(1. + eps); 3 ops
+                __m256d cx1  = _mm256_mul_pd(one_minus_eps, one_plus_eps_rcp);
+		// (1. + eps)*(1. + eps); 3 ops
+                __m256d cxro = _mm256_mul_pd(one_plus_eps, one_plus_eps);
+		// (1. - eps)*(1. - eps); 3 ops
+                __m256d cyro = _mm256_mul_pd(one_minus_eps, one_minus_eps);
+                //
+                // 5 ops
+                //
+                __m256d rem2 = x*x*__INV(cxro) + y*y*__INV(cyro);
                 /*zci=cpx(0.,-0.5*(1.-eps*eps)/sqe);
                   znum=cpx(cx1*x,(2.*sqe*sqrt(rc*rc+rem2)-y/cx1));
                   zden=cpx(x,(2.*rc*sqe-y));
                   zis=pcpx(zci,lncpx(dcpx(znum,zden)));
                   zres=pcpxflt(zis,b0);*/
                 // --> optimized code
-                //complex zci, znum, zden, zres;
-                __m256d zci_re, zci_im, znum_re, znum_im, zden_re, zden_im, zres_re, zres_im;
-                __m256d norm;
                 //      
                 //zci.re  = 0;
                 //zci.im  = -0.5*(1. - eps*eps)/sqe;
-                zci_re  = zero;
+                __m256d zci_re  = zero;
 		// 4 ops
-                zci_im  = _mm256_mul_pd(_mm256_div_pd(_mm256_set1_pd(-0.5),sqe), _mm256_sub_pd(one, _mm256_mul_pd(eps, eps)));
+                //__m256d zci_im  = _mm256_mul_pd(_mm256_div_pd(_mm256_set1_pd(-0.5), sqe), _mm256_sub_pd(one, _mm256_mul_pd(eps, eps)));
+                __m256d zci_im  = _mm256_mul_pd(_mm256_mul_pd(_mm256_set1_pd(-0.5), __INV(sqe)), _mm256_sub_pd(one, _mm256_mul_pd(eps, eps)));
                 // cx1*x
              	//  2.*sqe*sqrt(rc*rc + rem2) - y/cx1 
              	//  7 ops
-                znum_re = _mm256_mul_pd(cx1, x);
-                znum_im = _mm256_mul_pd(_mm256_set1_pd(2.), _mm256_mul_pd(sqe, _mm256_sqrt_pd(_mm256_add_pd(_mm256_mul_pd(rc, rc), rem2))));
-		znum_im = _mm256_sub_pd(znum_im, _mm256_div_pd(y, cx1)); 
+                __m256d znum_re = _mm256_mul_pd(cx1, x);
+                __m256d znum_im = _mm256_mul_pd(_mm256_set1_pd(2.), _mm256_mul_pd(sqe, _mm256_sqrt_pd(_mm256_add_pd(_mm256_mul_pd(rc, rc), rem2))));
+		//znum_im = _mm256_sub_pd(znum_im, _mm256_div_pd(y, cx1)); 
+		znum_im = _mm256_sub_pd(znum_im, _mm256_mul_pd(y, __INV(cx1))); 
                 //
-                zden_re = x;
+                __m256d zden_re = x;
                 //zden_im = 2.*rc*sqe - y; 3 ops
-                zden_im = _mm256_mul_pd(_mm256_set1_pd(2.), _mm256_mul_pd(rc, sqe)); 
+                __m256d zden_im = _mm256_mul_pd(_mm256_set1_pd(2.), _mm256_mul_pd(rc, sqe)); 
 		zden_im = _mm256_sub_pd(zden_im, y);
 		//
                 //norm    = (zden.re*zden.re + zden.im*zden.im); 3 ops
-                norm    = (zden_re*zden_re + zden_im*zden_im);     
+                __m256d norm    = (zden_re*zden_re + zden_im*zden_im);     
 		// zis = znum/zden
-                __m256d zis_re, zis_im;
-                zis_re  = (znum_re*zden_re + znum_im*zden_im)/norm; // 3 ops
-                zis_im  = (znum_im*zden_re - znum_re*zden_im)/norm; // 3 ops
-                norm    = zis_re;
+                __m256d zis_re  = (znum_re*zden_re + znum_im*zden_im)/norm; // 3 ops
+                __m256d zis_im  = (znum_im*zden_re - znum_re*zden_im)/norm; // 3 ops
+                norm    	= zis_re;
+		//
                 zis_re  = _mm256_log_pd(_mm256_sqrt_pd(norm*norm + zis_im*zis_im));  // 3 ops// ln(zis) = ln(|zis|)+i.Arg(zis)
                 zis_im  = _mm256_atan2_pd(zis_im, norm); //
                 //  norm = zis.re;
-                zres_re = zci_re*zis_re - zci_im*zis_im;   // Re( zci*ln(zis) ) 3 ops
-                zres_im = zci_im*zis_re + zis_im*zci_re;   // Im( zci*ln(zis) ) 3 ops
+                __m256d zres_re = zci_re*zis_re - zci_im*zis_im;   // Re( zci*ln(zis) ) 3 ops
+                __m256d zres_im = zci_im*zis_re + zis_im*zci_re;   // Im( zci*ln(zis) ) 3 ops
                 //
                 zis_re  = zres_re;
                 zis_im  = zres_im;
@@ -491,6 +484,7 @@ struct point module_potentialDerivatives_totalGradient_SOA_AVX(const runmode_par
                         grad.y += clumpgrad.y;
                 }
         }
+	//IACA_END;
         //
         return(grad);
 }

@@ -1,4 +1,5 @@
 PROGRAM_NAME := GradienBenchmark
+#CXX=g++ -lm -ffast-math -ftree-loop-vectorize 
 CXX=icpc
 
 program_CXX_SRCS := $(wildcard *.cpp)
@@ -17,7 +18,8 @@ program_CU_OBJS := ${program_CU_SRCS:.cu=.cuo}
 #
 program_INCLUDE_DIRS := . /usr/local/cuda/include/ #C++ Include directories
 program_INCLUDE_DIRS += /users/fgilles/Projects/Libs/cfitsio/include
-#program_CU_INCLUDE_DIRS := /home/users/amclaugh/CUB/cub-1.3.2/ #CUDA Include directories
+program_INCLUDE_DIRS += /users/fgilles/bin/iaca-lin32/include
+program_CU_INCLUDE_DIRS := /home/users/amclaugh/CUB/cub-1.3.2/ #CUDA Include directories
 #
 program_INCLUDE_LIBS := /usr/lib64/ #Include libraries
 program_INCLUDE_LIBS += /users/fgilles/Projects/Libs/cfitsio/lib #Include libraries
@@ -25,7 +27,7 @@ program_INCLUDE_LIBS += /users/fgilles/Projects/Libs/cfitsio/lib #Include librar
 # Compiler flags
 CPPFLAGS += $(foreach includedir,$(program_INCLUDE_DIRS),-I$(includedir))
 CPPFLAGS += $(foreach includelib,$(program_INCLUDE_LIBS),-L$(includelib) -lcfitsio)
-CXXFLAGS += -march=core-avx2 -fp-model fast -qopt-report -g -O3 -std=c++0x -Wall -pedantic
+CXXFLAGS += -march=core-avx2 -g -O3 -std=c++0x -Wall -pedantic
 #CXXFLAGS += -g -O3 -std=c++0x -Wall 
 #
 GEN_SM35 := -gencode=arch=compute_35,code=\"sm_35,compute_35\" #Target CC 3.5, for example
