@@ -1,4 +1,4 @@
-PROGRAM_NAME := GradienBenchmark
+PROGRAM_NAME := GradientBenchmark
 #CXX=g++ -lm -ffast-math -ftree-loop-vectorize 
 CXX=icpc
 
