@@ -6,6 +6,7 @@
  */
 
 #include <iostream>
+#include <iomanip>
 #include <string.h>
 #include <cuda_runtime.h>
 #include <math.h>
@@ -130,12 +131,12 @@ int main()
 	t1 = -myseconds();
 	grad = module_potentialDerivatives_totalGradient(&runmodebig, &image, lens);
 	t1 += myseconds();
-	std::cout << "Sample size " << big << ": " << t1 << "s., point = " << grad.x << " " << grad.y << std::endl;
+	std::cout << "Sample size " << big << ": " << std::setprecision(5) << t1 << "s., point = " << std::setprecision(15) << grad.x << " " << std::setprecision(15) << grad.y << std::endl;
 	//
 	t1 = -myseconds();
 	grad = module_potentialDerivatives_totalGradient_SOA_AVX(&runmodebig, &image, &lens_soa, big);
 	t1 += myseconds();
-	std::cout << "Sample size " << big << ": " << t1 << "s., point = " << grad.x << " " << grad.y << std::endl;
+	std::cout << "Sample size " << big << ": " << std::setprecision(5) << t1 << "s., point = " << std::setprecision(15) << grad.x << " " << std::setprecision(15) << grad.y << std::endl;
 	//
 #if 0
 	std::ofstream myfile;
