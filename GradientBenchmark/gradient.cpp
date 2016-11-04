@@ -19,6 +19,14 @@
 //#define __SQRT SQRT_1NR
 #define __SQRT SQRT_2NR
 
+#ifdef __INTEL_COMPILER
+inline __m256d operator + (__m256d a, __m256d b) {return _mm256_add_pd(a, b);}
+inline __m256d operator - (__m256d a, __m256d b) {return _mm256_sub_pd(a, b);}
+inline __m256d operator * (__m256d a, __m256d b) {return _mm256_mul_pd(a, b);}
+inline __m256d operator / (__m256d a, __m256d b) {return _mm256_div_pd(a, b);}
+#endif
+
+
 //
 //
 //
