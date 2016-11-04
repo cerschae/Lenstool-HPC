@@ -6,6 +6,8 @@
 #include <fstream>
 #include <../GradientBenchmark/Grad.h>
 
+#define EPS 	0.000000000000001
+
 complex piemd_1derivatives(double x, double y, double eps, double rc);
 
 void rotatecoordinatestest();
@@ -47,6 +49,9 @@ void rotatecoordinatestest(){
 void piemdtest() {
 	//////Setting the problem
 	int big(1);
+	int N[2];
+	N[0] = 0;
+	N[1] = 1;
 	runmode_param runmode;
 	point image;
 	runmode.nhalos = big;
@@ -121,14 +126,15 @@ void piemdtest() {
 	point gradtheo, grad, true_coord, true_coord_rot;
 	grad.x = grad.y = 0;
 	//Computation
-    true_coord.x = image.x + 1;  // Change the origin of the coordinate system to the center of the clump
-    true_coord.y = image.y + 1;
-    true_coord_rot = rotateCoordinateSystem(true_coord,0.4);
+    	true_coord.x = image.x + 1;  // Change the origin of the coordinate system to the center of the clump
+    	true_coord.y = image.y + 1;
+    	true_coord_rot = rotateCoordinateSystem(true_coord,0.4);
 	ztheo = piemd_1derivatives(true_coord_rot.x, true_coord_rot.y, ellipticity_potential, 1);
 	gradtheo.x = b0 * ztheo.re;
 	gradtheo.y = b0 * ztheo.im;
 	///////Computation
 	//Init SoA
+	PotentialSet L[2];
 	PotentialSet lenses;
 	lenses.type = new int[big];
 	lenses.x = new double[big];
@@ -153,13 +159,15 @@ void piemdtest() {
 		lenses.z[i] = lens[i].z;
 	}
 	// Computation
-	grad = module_potentialDerivatives_totalGradient(&runmode, &image, &lenses);
-	if (gradtheo.x != grad.x) {
+	L[1]=lenses;
+	grad = module_potentialDerivatives_totalGradient(N, &image, L);
+	//std::cerr << big << std::endl;
+	if (fabs(gradtheo.x - grad.x ) > EPS) {
 		std::cerr << "PIEMD grad.x: Theoretically we should have " << gradtheo.x
 				<< "  and  " << grad.x << std::endl;
 		exit(0);
 	}
-	if (gradtheo.y != grad.y) {
+	if (fabs(gradtheo.y - grad.y) > EPS) {
 		std::cerr << "PIEMD grad.y: Theoretically we should have " << gradtheo.y
 				<< "  and  " << grad.y << std::endl;
 		exit(0);
@@ -170,6 +178,9 @@ void piemdtest() {
 void sistest() {
 	//////Setting the problem
 	int big(1);
+	int N[2];
+	N[0] = 1;
+	N[1] = 0;
 	runmode_param runmode;
 	point image;
 	runmode.nhalos = big;
@@ -238,6 +249,7 @@ void sistest() {
 
 	///////Computation
 	//Init SoA
+	PotentialSet L[2];
 	PotentialSet lenses;
 	lenses.type = new int[big];
 	lenses.x = new double[big];
@@ -261,14 +273,15 @@ void sistest() {
 		lenses.rcut[i] = lens[i].rcut;
 		lenses.z[i] = lens[i].z;
 	}
+	L[0]=lenses;
 	// Computation
-	grad = module_potentialDerivatives_totalGradient(&runmode, &image, &lenses);
-	if (gradtheo.x != grad.x) {
+	grad = module_potentialDerivatives_totalGradient(N, &image, L);
+	if (fabs(gradtheo.x - grad.x) > EPS) {
 		std::cerr << "SIS grad.x: Theoretically we should have " << gradtheo.x
 				<< "  and  " << grad.x << std::endl;
 		exit(0);
 	}
-	if (gradtheo.y != grad.y) {
+	if (fabs(gradtheo.y - grad.y) > EPS) {
 		std::cerr << "SIS grad.y: Theoretically we should have " << gradtheo.y
 				<< "  and  " << grad.y << std::endl;
 		exit(0);

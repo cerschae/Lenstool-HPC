@@ -3,7 +3,7 @@ PROGRAM_NAME := GradientTest
 
 program_CXX_SRCS := $(wildcard *.cpp)
 program_CXX_SRCS += $(wildcard ../GradientBenchmark/*.cpp) #Find C++ source files from additonal directories
-program_CXX_SRCS := $(filter-out *main, $(program_CXX_SRCS))
+program_CXX_SRCS := $(filter-out ../GradientBenchmark/main.cpp, $(program_CXX_SRCS))
 
 program_CXX_OBJS := ${program_CXX_SRCS:.cpp=.o}
 

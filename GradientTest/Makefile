@@ -31,7 +31,7 @@ OBJECTS = $(program_CXX_OBJS) $(program_C_OBJS)
 all: $(PROGRAM_NAME) 
 
 $(PROGRAM_NAME): $(OBJECTS) 
-	g++ $(CPPFLAGS) -o $@ $(program_CXX_OBJS) $(program_C_OBJS)
+	icpc $(CPPFLAGS) -o $@ $(program_CXX_OBJS) $(program_C_OBJS)
 	
 
 clean:

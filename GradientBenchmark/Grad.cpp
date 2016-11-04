@@ -1,13 +1,31 @@
 #include <Grad.h>
 
 
-struct point module_potentialDerivatives_totalGradient(const runmode_param *runmode, const struct point *pImage, PotentialSet *lens )
+
+struct point module_potentialDerivatives_totalGradient(const int *Nlens, const struct point *pImage, PotentialSet *lens )
 {
     struct point grad, clumpgrad;
 	grad.x=0;
 	grad.y=0;
-	for(int i=0; i<runmode->nhalos; i++){
-		clumpgrad=grad_halo(pImage,i,lens);  //compute gradient for each clump separately
+
+	//This here could be done with function pointer to better acomodate future ass distributions functions
+	// However I'm unsure of the time of function pointers -> ask gilles
+	//for the moment lens and Nlens is organised the following way :  1. SIS, 2. PIEMD
+
+	//SIS is the first
+	for(int i=0; i<Nlens[0]; i++){
+		clumpgrad=grad_halo_sis(pImage,i,&lens[0]);  //compute gradient for each clump separately
+
+		if(clumpgrad.x == clumpgrad.x or clumpgrad.y == clumpgrad.y){ //nan check
+		grad.x+=clumpgrad.x;
+		grad.y+=clumpgrad.y;
+		}  // add the gradients
+	}
+
+	//PIEMD is the second
+	for(int i=0; i<Nlens[1]; i++){
+		clumpgrad=grad_halo_piemd(pImage,i,&lens[1]);  //compute gradient for each clump separately
+
 		if(clumpgrad.x == clumpgrad.x or clumpgrad.y == clumpgrad.y){ //nan check
 		grad.x+=clumpgrad.x;
 		grad.y+=clumpgrad.y;
@@ -17,16 +35,15 @@ struct point module_potentialDerivatives_totalGradient(const runmode_param *runm
     return(grad);
 }
 
- /**@brief Return the gradient of the projected lens potential for one clump
-  * !!! You have to multiply by dlsds to obtain the true gradient
- * for the expressions, see the papers : JP Kneib & P Natarajan, Cluster Lenses, The Astronomy and Astrophysics Review (2011) for 1 and 2
- * and JP Kneib PhD (1993) for 3
- *
- * @param pImage 	point where the result is computed in the lens plane
- * @param lens		mass distribution
- */
+/**@brief Return the gradient of the projected lens potential for one PIEMD clump. Uses SoA insteand of AoS lenses for speed
+ *!!! You have to multiply by dlsds to obtain the true gradient for the expressions, see the papers :
+ *JP Kneib & P Natarajan, Cluster Lenses, The Astronomy and Astrophysics Review (2011) for 1 and 2 and JP Kneib PhD (1993) for 3
+*
+* @param pImage 	point where the result is computed in the lens plane
+* @param lens		mass distribution
+*/
 
-struct point grad_halo(const struct point *pImage, int iterator,PotentialSet *lens)
+struct point grad_halo_piemd(const struct point *pImage, int iterator,PotentialSet *lens)
 {
     struct point true_coord, true_coord_rotation, result;
     double R, angular_deviation;
@@ -38,33 +55,47 @@ struct point grad_halo(const struct point *pImage, int iterator,PotentialSet *le
     true_coord.x = pImage->x - lens->x[iterator];  // Change the origin of the coordinate system to the center of the clump
     true_coord.y = pImage->y - lens->y[iterator];
 
-    switch (lens->type[iterator])
-    {
 
+	 /* PIEMD */
+	/*rotation of the coordiante axes to match the potential axes*/
+	true_coord_rotation = rotateCoordinateSystem(true_coord, lens->ellipticity_angle[iterator]);
+	/*Doing something....*/
+	zis = piemd_1derivatives_ci05(true_coord_rotation.x, true_coord_rotation.y, lens->ellipticity_potential[iterator], lens->rcore[iterator]);
 
-	case(5): /*Elliptical Isothermal Sphere*/
-			/*rotation of the coordiante axes to match the potential axes*/
-			true_coord_rotation = rotateCoordinateSystem(true_coord, lens->ellipticity_angle[iterator]);
+	result.x=lens->b0[iterator] * zis.re;
+	result.y=lens->b0[iterator] * zis.im;
 
-			R=sqrt(true_coord_rotation.x*true_coord_rotation.x*(1-lens->ellipticity[iterator]/3.)+true_coord_rotation.y*true_coord_rotation.y*(1+lens->ellipticity[iterator]/3.));	//ellippot = ellipmass/3
-			result.x=(1-lens->ellipticity[iterator]/3.)*lens->b0[iterator]*true_coord_rotation.x/(R);
-			result.y=(1+lens->ellipticity[iterator]/3.)*lens->b0[iterator]*true_coord_rotation.y/(R);
-	    break;
+    return result;
+}
 
-	case(8): /* PIEMD */
-	    /*rotation of the coordiante axes to match the potential axes*/
-    	true_coord_rotation = rotateCoordinateSystem(true_coord, lens->ellipticity_angle[iterator]);
-    	/*Doing something....*/
-	    zis = piemd_1derivatives_ci05(true_coord_rotation.x, true_coord_rotation.y, lens->ellipticity_potential[iterator], lens->rcore[iterator]);
+/**@brief Return the gradient of the projected lens potential for one SIS clump. Uses SoA insteand of AoS lenses for speed
+ *!!! You have to multiply by dlsds to obtain the true gradient for the expressions, see the papers :
+ *JP Kneib & P Natarajan, Cluster Lenses, The Astronomy and Astrophysics Review (2011) for 1 and 2 and JP Kneib PhD (1993) for 3
+*
+* @param pImage 	point where the result is computed in the lens plane
+* @param lens		mass distribution
+*/
 
-	    result.x=lens->b0[iterator] * zis.re;
-	    result.y=lens->b0[iterator] * zis.im;
-        break;
+struct point grad_halo_sis(const struct point *pImage, int iterator,PotentialSet *lens)
+{
+    struct point true_coord, true_coord_rotation, result;
+    double R, angular_deviation;
+    complex zis;
 
-	default:
-            std::cout << "ERROR: Grad 1 profil type of clump unknown : "<< lens->type[iterator] << std::endl;
-		break;
-    };
+    result.x = result.y = 0.;
+
+    /*positionning at the potential center*/
+    true_coord.x = pImage->x - lens->x[iterator];  // Change the origin of the coordinate system to the center of the clump
+    true_coord.y = pImage->y - lens->y[iterator];
+
+    /*Elliptical Isothermal Sphere*/
+	/*rotation of the coordiante axes to match the potential axes*/
+	true_coord_rotation = rotateCoordinateSystem(true_coord, lens->ellipticity_angle[iterator]);
+
+	R=sqrt(true_coord_rotation.x*true_coord_rotation.x*(1-lens->ellipticity[iterator]/3.)+true_coord_rotation.y*true_coord_rotation.y*(1+lens->ellipticity[iterator]/3.));	//ellippot = ellipmass/3
+	result.x=(1-lens->ellipticity[iterator]/3.)*lens->b0[iterator]*true_coord_rotation.x/(R);
+	result.y=(1+lens->ellipticity[iterator]/3.)*lens->b0[iterator]*true_coord_rotation.y/(R);
+
     return result;
 }
 
