@@ -2,6 +2,13 @@
 #define SIMD_MATH_
 //
 #include <immintrin.h>
+
+#ifdef __INTEL_COMPILER
+inline __m256d operator + (__m256d a, __m256d b) {return _mm256_add_pd(a, b);}
+inline __m256d operator - (__m256d a, __m256d b) {return _mm256_sub_pd(a, b);}
+inline __m256d operator * (__m256d a, __m256d b) {return _mm256_mul_pd(a, b);}
+inline __m256d operator / (__m256d a, __m256d b) {return _mm256_div_pd(a, b);}
+#endif
 //
 inline __m256d RCP(const __m256d d)
 {

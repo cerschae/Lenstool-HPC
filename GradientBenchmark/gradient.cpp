@@ -1,6 +1,6 @@
 #include <iostream>
 #include <string.h>
-#include <cuda_runtime.h>
+//#include <cuda_runtime.h>
 #include <math.h>
 #include <sys/time.h>
 #include <fstream>
@@ -9,7 +9,7 @@
 #include "simd_math.h"
 
 #include "structure.h"
-#include "iacaMarks.h"
+//#include "iacaMarks.h"
 
 //#define __INV RCP
 //#define __INV RCP_1NR
@@ -19,12 +19,6 @@
 //#define __SQRT SQRT_1NR
 #define __SQRT SQRT_2NR
 
-#ifdef __INTEL_COMPILER
-inline __m256d operator + (__m256d a, __m256d b) {return _mm256_add_pd(a, b);}
-inline __m256d operator - (__m256d a, __m256d b) {return _mm256_sub_pd(a, b);}
-inline __m256d operator * (__m256d a, __m256d b) {return _mm256_mul_pd(a, b);}
-inline __m256d operator / (__m256d a, __m256d b) {return _mm256_div_pd(a, b);}
-#endif
 
 
 //
