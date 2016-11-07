@@ -538,7 +538,7 @@ struct point module_potentialDerivatives_totalGradient_SOA_AVX(const int *Nlens,
 	}
 
 	clumpgrad = grad_halo_piemd_SOA_AVX(Nlens[1],pImage,&lens[1]);
-	std::cout << clumpgrad.x << "   " << clumpgrad.y << "   " << Nlens[1] <<std::endl;
+	//std::cout << clumpgrad.x << "   " << clumpgrad.y << "   " << Nlens[1] <<std::endl;
 	grad.x+=clumpgrad.x;
 	grad.y+=clumpgrad.y;
 
