@@ -1,17 +1,24 @@
 /**
-* @file   main.cpp
-* @Author Christoph Schaaefer, EPFL (christophernstrerne.schaefer@epfl.ch)
-* @date   October 2016
-* @brief  Benchmark for gradhalo function
-*/
+ * @file   main.cpp
+ * @Author Christoph Schaaefer, EPFL (christophernstrerne.schaefer@epfl.ch)
+ * @date   October 2016
+ * @brief  Benchmark for gradhalo function
+ */
 
 #include <iostream>
+#include <iomanip>
 #include <string.h>
-#include "structure.h"
 #include <math.h>
 #include <sys/time.h>
 #include <fstream>
-#include <Grad.h>
+//
+#include <mm_malloc.h>
+//
+#include "structure.h"
+#include "timer.h"
+#include "gradient.hpp"
+
+#define NSIS 0
 
 int main()
 {
@@ -24,6 +31,9 @@ int big(1000);
 //Number of SIS and PIEMD
 int Nsis(0);
 int Npiemd(0);
+
+runmode_param runmodebig;
+runmodebig.nhalos = big;
 
 //Variable creation
 struct timeval t1, t2, t3, t4;
@@ -42,7 +52,7 @@ for (int i = 0; i <big; ++i){
 	ilens = &lens[i];
 	
     ilens->position.x = ilens->position.y = 0.;
-    if ( i < 0 ){
+    if ( i < NSIS ){
     	ilens->type = 5;
     	Nsis +=1;
     }
@@ -72,18 +82,18 @@ for (int i = 0; i <big; ++i){
  * Putting "if" inside loops prevents certain types of optimization like e.g. loop unrolling to expose
  * Instruction Level Parallelism. This is particularly true for GPUs. **/
 
-//Init PotentialSet
-PotentialSet lenses[2];
+//Init Potential_SOA
+Potential_SOA lenses[2];
 int Nlensessmall[2];
 int Nlensesmedium[2];
 int Nlensesbig[2];
-PotentialSet lensespiemd;
-PotentialSet lensessis;
-PotentialSet  *ilenses;
+Potential_SOA lensespiemd;
+Potential_SOA lensessis;
+Potential_SOA  *ilenses;
 
 lensespiemd.type = 	new int[Npiemd];
-lensespiemd.x  = 	new double[Npiemd];
-lensespiemd.y = 		new double[Npiemd];
+lensespiemd.position_x  = 	new double[Npiemd];
+lensespiemd.position_y = 		new double[Npiemd];
 lensespiemd.b0 = 	new double[Npiemd];
 lensespiemd.ellipticity_angle = new double[Npiemd];
 lensespiemd.ellipticity = new double[Npiemd];
@@ -93,8 +103,8 @@ lensespiemd.rcut = 	new double[Npiemd];
 lensespiemd.z = 		new double[Npiemd];
 
 lensessis.type = 	new int[Nsis];
-lensessis.x  = 	new double[Nsis];
-lensessis.y = 		new double[Nsis];
+lensessis.position_x  = 	new double[Nsis];
+lensessis.position_y = 		new double[Nsis];
 lensessis.b0 = 	new double[Nsis];
 lensessis.ellipticity_angle = new double[Nsis];
 lensessis.ellipticity = new double[Nsis];
@@ -116,8 +126,8 @@ for (int i = 0; i <big; ++i){
 		i_point = &i_piemd;
 	}
 	//std::cout << *i_point << std::endl;
-	ilenses->x[*i_point]  = 		lens[i].position.x;
-	ilenses->y[*i_point] = 		lens[i].position.y;
+	ilenses->position_x[*i_point]  = 		lens[i].position.x;
+	ilenses->position_y[*i_point] = 		lens[i].position.y;
 	ilenses->b0[*i_point] = 		lens[i].b0;
 	ilenses->ellipticity_angle[*i_point] = lens[i].ellipticity_angle;
 	ilenses->ellipticity[*i_point] = lens[i].ellipticity;
@@ -169,11 +179,11 @@ std::cout  << Nlensesmedium[0] << " " << Nlensesmedium[1] << std::endl;
 std::cout  << Nlensesbig[0] << " " << Nlensesbig[1] << std::endl;
 
 gettimeofday(&t1, 0);
-module_potentialDerivatives_totalGradient(Nlensessmall,&image, lenses);
+module_potentialDerivatives_totalGradient_SOA(Nlensessmall,&image, lenses);
 gettimeofday(&t2, 0);
-module_potentialDerivatives_totalGradient(Nlensesmedium,&image, lenses);
+module_potentialDerivatives_totalGradient_SOA(Nlensesmedium,&image, lenses);
 gettimeofday(&t3, 0);
-point grad = module_potentialDerivatives_totalGradient(Nlensesbig,&image, lenses);
+point grad = module_potentialDerivatives_totalGradient_SOA(Nlensesbig,&image, lenses);
 gettimeofday(&t4, 0);
 
 double time1 = (1000000.0*(t2.tv_sec-t1.tv_sec) + t2.tv_usec-t1.tv_usec)/1000000.0;
@@ -187,15 +197,39 @@ std::cout << "Sample size " << small << ": " << time1 << std::endl;
 std::cout << "Sample size " << medium << ": " << time2 << std::endl;
 std::cout << "Sample size " << big << ": " << time3 << std::endl;
 std::cout << "Sample Grad " << grad.x << " " << grad.y << std::endl;
+grad = module_potentialDerivatives_totalGradient(&runmodebig, &image, lens);
+std::cout << "Old Grad " << grad.x << " " << grad.y << std::endl;
+std::cout << "Comparison for Gradient Calculation big =  "<< big << std::endl;
+//
+//gettimeofday(&t1, 0);
+//
+//module_potentialDerivatives_totalGradient(&runmodesmall,&image, lens);
+//
 
+double t_1(0);
+t_1 = -myseconds();
+grad = module_potentialDerivatives_totalGradient(&runmodebig, &image, lens);
+t_1 += myseconds();
+std::cout << "Sample size " << big << ": " << std::setprecision(5) << t_1 << "s., point = " << std::setprecision(15) << grad.x << " " << std::setprecision(15) << grad.y << std::endl;
+//
+t_1 = -myseconds();
+grad = module_potentialDerivatives_totalGradient_SOA(Nlensesbig, &image, lenses);
+t_1 += myseconds();
+std::cout << "Sample size " << big << ": " << std::setprecision(5) << t_1 << "s., point = " << std::setprecision(15) << grad.x << " " << std::setprecision(15) << grad.y << std::endl;
+//
+t_1 = -myseconds();
+grad = module_potentialDerivatives_totalGradient_SOA_AVX(Nlensesbig, &image, lenses);
+t_1 += myseconds();
+std::cout << "Sample size " << big << ": " << std::setprecision(5) << t_1 << "s., point = " << std::setprecision(15) << grad.x << " " << std::setprecision(15) << grad.y << std::endl;
+
+#if 0
 std::ofstream myfile;
-myfile.open ("BenchmarkGradSoA.txt");
-myfile << "Benchmark for Gradient SOA Calculation "<< std::endl;
+myfile.open ("BenchmarkGrad.txt");
+myfile << "Benchmark for Gradient Calculation "<< std::endl;
 myfile << "Sample size " << small << ": " << time1 << std::endl;
 myfile << "Sample size " << medium << ": " << time2 << std::endl;
 myfile << "Sample size " << big << ": " << time3 << std::endl;
 myfile.close();
-
-
+#endif
 
 }

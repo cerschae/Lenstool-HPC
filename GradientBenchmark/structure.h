@@ -237,48 +237,56 @@ struct potentialoptimization  // block or free variable for the MCMC for the pot
  * @param z: redshift
  */
 
-struct Potential
+struct Potential_SOA
 {
-	int     type; // 1=PIEMD ; 2=NFW; 3=SIES, 4=point mass
-	char type_name[10]; // PIEMD, NFW, SIES, point
+	int*    type; // 1=PIEMD ; 2=NFW; 3=SIES, 4=point mass
+	char    type_name[10]; // PIEMD, NFW, SIES, point
 	char    name[20]; // name of the clump (e.g. name of the galaxy) : not compulsory
-	struct point position; // position of the center of the halo
-	double  weight; // weight of the clump (the projected mass sigma0 for PIEMD, the density rhoscale for NFW)
-	double  b0; // Impact parameter
-	double 	vdisp;	//Dispersion velocity
-	double  ellipticity_angle; // orientation of the clump
-	double  ellipticity; // ellipticity of the mass distribition
-	double  ellipticity_potential; //ellipticity of the potential
-	double  rcore;  // core radius
-	double  rcut; // cut radius
-	double  rscale; // scale radius for NFW, Einasto
-	double	exponent; // exponent for Einasto
-	double alpha; // exponent for general NFW
-	double  einasto_kappacritic; // critical kappa for Einasto profile
-	double  z; // redshift of the clump
-	double mag; //magnitude
-	double lum; //luminosity
-	double  theta; //theta
-	double sigma; // sigma
+	//struct point position; // position of the center of the halo
+	double* position_x; // position of the center of the halo
+	double* position_y; // position of the center of the halo
+	double* weight; // weight of the clump (the projected mass sigma0 for PIEMD, the density rhoscale for NFW)
+	double* b0; // Impact parameter
+	double*	vdisp;	//Dispersion velocity
+	double* ellipticity_angle; // orientation of the clump
+	double* ellipticity; // ellipticity of the mass distribition
+	double* ellipticity_potential; //ellipticity of the potential
+	double* rcore;  // core radius
+	double* rcut; // cut radius
+	double* rscale; // scale radius for NFW, Einasto
+	double*	exponent; // exponent for Einasto
+	double* alpha; // exponent for general NFW
+	double* einasto_kappacritic; // critical kappa for Einasto profile
+	double* z; // redshift of the clump
+	double* mag; //magnitude
+	double* lum; //luminosity
+	double* theta; //theta
+	double* sigma; // sigma
 };
 
-/* @brief Contains the information of the lens potentials under
- * SoA form instead of AoS form for better  memory acess by the
- * processor.
- */
-
-struct PotentialSet
+struct Potential
 {
-	int     *type; // 1=PIEMD ; 2=NFW; 3=SIES, 4=point mass
-	double  *x;		//x position
-	double 	*y;		//y position
-	double  *b0; // Impact parameter
-	double  *ellipticity_angle; // orientation of the clump
-	double  *ellipticity; // ellipticity of the mass distribition
-	double  *ellipticity_potential; //ellipticity of the potential
-	double  *rcore;  // core radius
-	double  *rcut; // cut radius
-	double  *z; // redshift of the clump
+       int    type; // 1=PIEMD ; 2=NFW; 3=SIES, 4=point mass
+       char    type_name[10]; // PIEMD, NFW, SIES, point
+       char    name[20]; // name of the clump (e.g. name of the galaxy) : not compulsory
+       struct  point position; // position of the center of the halo
+       double  weight; // weight of the clump (the projected mass sigma0 for PIEMD, the density rhoscale for NFW)
+       double  b0; // Impact parameter
+       double  vdisp;  //Dispersion velocity
+       double  ellipticity_angle; // orientation of the clump
+       double  ellipticity; // ellipticity of the mass distribition
+       double  ellipticity_potential; //ellipticity of the potential
+       double  rcore;  // core radius
+       double  rcut; // cut radius
+       double  rscale; // scale radius for NFW, Einasto
+       double  exponent; // exponent for Einasto
+       double  alpha; // exponent for general NFW
+       double  einasto_kappacritic; // critical kappa for Einasto profile
+       double  z; // redshift of the clump
+       double  mag; //magnitude
+       double  lum; //luminosity
+       double  theta; //theta
+       double  sigma; // sigma
 };
 
 /*****************************************************************/
