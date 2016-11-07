@@ -172,6 +172,19 @@ void piemdtest() {
 				<< "  and  " << grad.y << std::endl;
 		exit(0);
 	}
+	
+	grad = module_potentialDerivatives_totalGradient_SOA_AVX(N, &image, L);
+	//std::cerr << big << std::endl;
+	if (fabs(gradtheo.x - grad.x ) > EPS) {
+		std::cerr << "PIEMD AVX grad.x: Theoretically we should have " << gradtheo.x
+				<< "  and  " << grad.x << std::endl;
+		exit(0);
+	}
+	if (fabs(gradtheo.y - grad.y) > EPS) {
+		std::cerr << "PIEMD AVX grad.y: Theoretically we should have " << gradtheo.y
+				<< "  and  " << grad.y << std::endl;
+		exit(0);
+	}
 	std::cout << "PIEMD Everythings fine, No test failed " << std::endl;
 }
 

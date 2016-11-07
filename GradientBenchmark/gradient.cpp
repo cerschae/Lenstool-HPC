@@ -416,6 +416,7 @@ struct point grad_halo_piemd_SOA_AVX(const int Nlens, const struct point *pImage
         {
 		//IACA_START;
                 //
+                //std::cout << "starting loop " << std::endl;
 		__m256d two   = _mm256_set1_pd(2.);
 		__m256d one   = _mm256_set1_pd(1.);
 		__m256d zero  = _mm256_set1_pd(0.);
@@ -503,6 +504,18 @@ struct point grad_halo_piemd_SOA_AVX(const int Nlens, const struct point *pImage
                         grad.y += clumpgrad.y;
                 }
         }
+        for(int i = Nlens - Nlens%4; i < Nlens; ++i){
+        	std::cout << i << std::endl;
+        	clumpgrad=grad_halo_piemd_SOA(pImage,i,&lens[1]);  //compute gradient for each clump separately
+        	if(clumpgrad.x == clumpgrad.x or clumpgrad.y == clumpgrad.y)
+        	{ //nan check
+        		grad.x+=clumpgrad.x;
+        		grad.y+=clumpgrad.y;
+        	}
+
+
+
+        }
 	//IACA_END;
         //
         return(grad);
@@ -525,7 +538,7 @@ struct point module_potentialDerivatives_totalGradient_SOA_AVX(const int *Nlens,
 	}
 
 	clumpgrad = grad_halo_piemd_SOA_AVX(Nlens[1],pImage,&lens[1]);
-
+	std::cout << clumpgrad.x << "   " << clumpgrad.y << "   " << Nlens[1] <<std::endl;
 	grad.x+=clumpgrad.x;
 	grad.y+=clumpgrad.y;
 
