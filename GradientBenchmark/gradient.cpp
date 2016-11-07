@@ -505,7 +505,7 @@ struct point grad_halo_piemd_SOA_AVX(const int Nlens, const struct point *pImage
                 }
         }
         for(int i = Nlens - Nlens%4; i < Nlens; ++i){
-        	std::cout << i << std::endl;
+        	//std::cout << i << std::endl;
         	clumpgrad=grad_halo_piemd_SOA(pImage,i,&lens[1]);  //compute gradient for each clump separately
         	if(clumpgrad.x == clumpgrad.x or clumpgrad.y == clumpgrad.y)
         	{ //nan check
