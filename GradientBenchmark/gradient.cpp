@@ -184,8 +184,7 @@ piemd_1derivatives_ci05(double x, double y, double eps, double rc)
 ////           *  | /
 ////             *|--------->x
 //
-inline
-static struct point rotateCoordinateSystem(struct point P, double theta)
+struct point rotateCoordinateSystem(struct point P, double theta)
 {
 	struct  point   Q;
 

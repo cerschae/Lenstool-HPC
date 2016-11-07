@@ -4,7 +4,7 @@
 #include <math.h>
 #include <sys/time.h>
 #include <fstream>
-#include <../GradientBenchmark/Grad.h>
+#include <../GradientBenchmark/gradient.hpp>
 
 #define EPS 	0.000000000000001
 
@@ -134,11 +134,11 @@ void piemdtest() {
 	gradtheo.y = b0 * ztheo.im;
 	///////Computation
 	//Init SoA
-	PotentialSet L[2];
-	PotentialSet lenses;
+	Potential_SOA L[2];
+	Potential_SOA lenses;
 	lenses.type = new int[big];
-	lenses.x = new double[big];
-	lenses.y = new double[big];
+	lenses.position_x = new double[big];
+	lenses.position_y = new double[big];
 	lenses.b0 = new double[big];
 	lenses.ellipticity_angle = new double[big];
 	lenses.ellipticity = new double[big];
@@ -148,8 +148,8 @@ void piemdtest() {
 	lenses.z = new double[big];
 	for (int i = 0; i < big; ++i) {
 		lenses.type[i] = lens[i].type;
-		lenses.x[i] = lens[i].position.x;
-		lenses.y[i] = lens[i].position.y;
+		lenses.position_x[i] = lens[i].position.x;
+		lenses.position_y[i] = lens[i].position.y;
 		lenses.b0[i] = lens[i].b0;
 		lenses.ellipticity_angle[i] = lens[i].ellipticity_angle;
 		lenses.ellipticity[i] = lens[i].ellipticity;
@@ -160,7 +160,7 @@ void piemdtest() {
 	}
 	// Computation
 	L[1]=lenses;
-	grad = module_potentialDerivatives_totalGradient(N, &image, L);
+	grad = module_potentialDerivatives_totalGradient_SOA(N, &image, L);
 	//std::cerr << big << std::endl;
 	if (fabs(gradtheo.x - grad.x ) > EPS) {
 		std::cerr << "PIEMD grad.x: Theoretically we should have " << gradtheo.x
@@ -249,11 +249,11 @@ void sistest() {
 
 	///////Computation
 	//Init SoA
-	PotentialSet L[2];
-	PotentialSet lenses;
+	Potential_SOA L[2];
+	Potential_SOA lenses;
 	lenses.type = new int[big];
-	lenses.x = new double[big];
-	lenses.y = new double[big];
+	lenses.position_x = new double[big];
+	lenses.position_y = new double[big];
 	lenses.b0 = new double[big];
 	lenses.ellipticity_angle = new double[big];
 	lenses.ellipticity = new double[big];
@@ -263,8 +263,8 @@ void sistest() {
 	lenses.z = new double[big];
 	for (int i = 0; i < big; ++i) {
 		lenses.type[i] = lens[i].type;
-		lenses.x[i] = lens[i].position.x;
-		lenses.y[i] = lens[i].position.y;
+		lenses.position_x[i] = lens[i].position.x;
+		lenses.position_y[i] = lens[i].position.y;
 		lenses.b0[i] = lens[i].b0;
 		lenses.ellipticity_angle[i] = lens[i].ellipticity_angle;
 		lenses.ellipticity[i] = lens[i].ellipticity;
@@ -275,7 +275,7 @@ void sistest() {
 	}
 	L[0]=lenses;
 	// Computation
-	grad = module_potentialDerivatives_totalGradient(N, &image, L);
+	grad = module_potentialDerivatives_totalGradient_SOA(N, &image, L);
 	if (fabs(gradtheo.x - grad.x) > EPS) {
 		std::cerr << "SIS grad.x: Theoretically we should have " << gradtheo.x
 				<< "  and  " << grad.x << std::endl;

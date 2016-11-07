@@ -5,7 +5,7 @@
 #include "structure.h"
 
 /** for both gradient and second derivatives **/
-static struct point rotateCoordinateSystem(struct point P, double theta);
+struct point rotateCoordinateSystem(struct point P, double theta);
 
 /** gradient **/
 struct point module_potentialDerivatives_totalGradient(const runmode_param *runmode, const struct point *pImage, const struct Potential *lens);
@@ -21,7 +21,7 @@ struct point grad_halo_sis_SOA_AVX(const struct point *pImage, int iterator,Pote
 struct point grad_halo_piemd_SOA_AVX(const struct point *pImage, int iterator,Potential_SOA *lens);
 
 /** PIEMD **/
-static complex piemd_1derivatives_ci05(double x, double y, double eps, double rc);
+complex piemd_1derivatives_ci05(double x, double y, double eps, double rc);
 
 /** Potential **/
 void module_readParameters_calculatePotentialparameter(Potential *lens);
