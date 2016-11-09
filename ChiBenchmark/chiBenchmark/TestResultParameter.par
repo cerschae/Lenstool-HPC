@@ -1,21 +1,32 @@
+#The user defines which mode of lenstool he wants to run here
 runmode
-        reference 3  109.3982  37.745778
-        verbose 0 
-	NOmass  3   400 0.54 mass.fits
-        inverse 0 0.12 350
-        chi2 1
-        end
-grille
-        nlens 96
-        nlens_opt 4
-        end
-image
-	NOarcletstat 6 0 wl.cons
-        NOsigell 0.3
-	multfile    3 theoretical_images_time.txt
-	wcs	1
-        forme       -1
-        end
+	source 0 sources.cat										
+	image 1	theoretical_images_time.txt
+	#inverse 0
+	grid 1 22 1.5  									
+	poten 1 1000 1.5 
+	mass 1 1000 0.4 1.5
+	dpl 1 1000 1.5
+	amplif 1 1000 1.5
+	nbgridcells 100
+	Debug   										# true activates debug mode
+	end
+frame  
+	#dmax 45										#either dmax or x and y have to be declared when a grid is used
+	xmin     -50.000
+	xmax     50.000
+	ymin     -50.000
+	ymax     50.000
+	end
+cosmology												
+	model	  1
+	H0        70.000
+	omegaM    0.300
+	omegaX    0.700
+	omegaK	  0.000
+	wA	  0.000
+	wX        -1.000
+	end
 potentiel 1
 	profil     8									#Profile: 5 SIS, 8 PIEMD
 	x_centre     0.000								#X Position [arcsec]
@@ -766,12 +777,20 @@ potentiel 30
 	rcore 	1										#Core radius (PIEMD distribution)
 	z_lens     0.4									#Redshift of lens
 	end
-cosmology
-        H0        70.0
-        omega     0.3
-        lambda    0.7
-        end
-champ
-	dmax 400.
-        end
-fini
+limit 1
+    x_centre           1 -1.0  1.0 0.01000
+    y_centre           1 -1.0  1.0 0.010000
+    ellipticity        1  0.05  0.75 0.01
+    angle_pos          0 0. 180.0 0.1
+    rcore     0 0.1 4. 0.100000
+    rcut      0  1.0 20.0 0.10000
+    v_disp          0 200.0 1000.0  0.10000
+    end
+cline
+	nplan     1 1.5
+	dmax	50
+	limitLow	0.2
+	limitHigh	10
+	nbgridcells	1000
+	end
+finish
