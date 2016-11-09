@@ -1,0 +1,82 @@
+Basic Installation
+==================
+The simplest way to compile this package is:
+
+  1. `cd' to the directory containing the package's source code
+  
+  2. Type `./configure' to configure the package for your system.
+
+  3. Type `make' to compile the package.
+
+If configure does not find the cfitsio, the wcs or the pgplot libraries in the
+standard libraries, it asks the user for them. You have to enter the absolute 
+path to those libraries. 
+Example : 
+ /home/user/cfitsio 
+ /home/user/wcstool-3.6.2/libwcs
+ /home/user/pgplot
+
+Once compiled, the binary file is called lenstool and is located in the src 
+directory.
+
+The lenstool_tab binary is located in the table_src directory.
+
+I added also 2 tools : Histogram and Histogram2D, from the McAdam package of 
+Phil Marshall. You can use them to visualise the MCMC results (the files 
+bayes_*.dat). Once compiled, they are located in the utils directory.
+
+The distribution has been tested on :
+	- Linux Fedora Core 3, Suse 
+	- Mac Tiger 10.4
+	- Mac OS X
+
+Requirements
+============
+
+   Lenstool requires the wcstools, the cfitsio and the pgplot libraries. They 
+can be downloaded at : 
+
+	- http://tdc-www.harvard.edu/software/wcstools/wcstools-3.6.3.tar.gz
+	- http://heasarc.gsfc.nasa.gov/docs/software/fitsio/fitsio.html
+	- ftp://ftp.astro.caltech.edu/pub/pgplot/pgplot5.2.tar.gz
+
+   cfitsio library version must be greater than 2.510.
+
+   To compile the tools in the ./utils directory, you will need the following 
+   standard packages :
+        - X11-dev
+        - png-dev
+        - g77
+        - pgplot
+
+Toubleshoots
+============
+
+I got the following error when I launch Histogram or Histogram2D :
+
+./Histogram: error while loading shared libraries: libpgplot.so: cannot open shared object file: No such file or directory
+
+This means that your LD_LIBRARY_PATH environment variable doesn't point to the directory containing the libpgplot.so file. You may set the variable with this commands :
+
+with the bash shell : 
+export LD_LIBRARY_PATH=<directory containing libpgplot.so>
+
+with the csh shell :
+setenv LD_LIBRARY_PATH <directory containing libpgplot.so>
+
+
+
+I got a compilation error with the fortran files. 
+
+Your F77 global variable may be initialized with a wrong value. For instance, IRAF initialize the F77 global
+environment variable to /iraf/iraf/unix/hlib//f77.sh.
+
+In csh shell, just unset the variable F77 :
+unsetenv F77
+
+In bash shell,
+export -n F77
+
+
+
+

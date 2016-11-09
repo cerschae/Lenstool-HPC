@@ -1,0 +1,66 @@
+runmode
+	reference     3 0.000000 0.000000
+	source    3 cusp_left.cat
+	#source    3 cusp.cat
+	#source    3 cusp_top.cat
+	#source    3 fold.cat
+	#source	  3 single.cat
+	mass      3 200 0.2 mass.fits
+	pixel	  1 200 pixel.fits
+	shearfield  1 0.600 shear.dat
+	end
+grille
+	nombre      100
+	polaire     0
+	nlentille   1
+	end
+source
+	z_source     1.000
+	end
+potentiel O1
+	profil     81
+	x_centre     0.000
+	y_centre     0.000
+	ellipticite     0.100
+	angle_pos     0.000
+	core_radius  4.000
+	core_radius_kpc     12.549
+	cut_radius  300.000
+	cut_radius_kpc     941.161
+	v_disp     1232.411
+	z_lens     0.200
+	end
+cline
+	nplan    1 0.600  
+	algorithm   MARCHINGSQUARES
+	limitHigh   10.0
+	limitLow    1.000
+	end
+observ
+	binning     1  4
+	seeing	    1 1.
+	bruit       1
+	dispersion  2
+	sky	    100
+	end
+grande
+	iso         1 200 0.100 0.000 0.000
+	vitesse     1
+	name        best
+	profil      0 0
+	contour     0 0
+	large_dist  3.000
+	end
+cosmologie
+	H0        70.000
+	omegaM    0.7
+	omegaX    0.3
+	wX        -1.
+	end
+champ
+	xmin     -80.000
+	xmax     80.000
+	ymin     -70.000
+	ymax     70.000
+	end
+fini

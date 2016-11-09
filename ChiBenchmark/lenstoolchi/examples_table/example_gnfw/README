@@ -1,0 +1,16 @@
+I have used test_gnfw.par to produce the files mass_nfw.fits and mass_gnfw.fits
+respectively by commenting and uncommenting the alpha keyword.
+
+I have produced the catalogs of sources source.cat and image image.cat, with 
+the NFW profile.
+runmode
+	source 0 source.cat -->  source 3 source.cat
+	image 0 image.cat --> image 3 image.cat
+
+Then I have recovered the slope, concentration and scale radius with the
+generalised NFW profile. 
+runmode
+	inverse 0 0.1 200 --> inverse 3 0.1 200
+
+
+

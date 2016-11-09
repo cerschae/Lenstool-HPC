@@ -1,0 +1,165 @@
+Jan 4  2006	Add the AST library to compute source inversion.
+
+Jan 17 2006     Replace the AST library by the wcslib library.
+Jan 17 2006     Change the galaxy index n in all structure from int to char*
+	        and adapt lenstool to this new type. Its possible now to 
+                specify the arclet index in a familly of arclets by just 
+                modifying the last letter of its name (eg C12a, C12b, etc).
+Jan 27 2006	Include the Bayesys optimisation functions in Lenstool .
+Feb 1  2006	Change the version to 6. The name of the executable file is now 		lenstool.
+Feb 6  2006	Update the code to POSIX standard. The global functions are 
+		written in the <fonction.h> header.
+Feb 7  2006	Change the USAGE help line.
+Feb 9  2006	Insert the table tool in the distribution.
+		Change the architecture of the distribution.
+		Concatenate specific source files into other more general 
+		already existing source files in lenstool. Files that 
+		have been deleted :
+		- e_magshear.c, f1dim.c, formatrix.c, linmin.c, mag.c, 
+		  medstat.c, mnbrak.c, o_shape_rond.c, permutation.c,
+		  readlist.c, rotelip.c, sp_comp.c, sp_cx.c, sp_cxy.c,
+		  sp_cxy.c, sp_dx.c, spint.c, spint_x.c, sp_ix.c, 
+		  sp_ixx.c, sp_iy.c, sp_iyy.c, st_ez.c, w_clump.c,
+		  wr_sof.c
+Feb 10  2006	Add the grid, draw and frames.pl  perl scripts to the 
+		distribution.
+Feb 14	2006	Correction for the BUG in the reading of old images input file.
+Feb 20  2006	Integration of the Histogram and Histogram2D tools.
+Mar 16  2006	Modify the Bayesian output files (b0->sigma, epot->emass) so 
+		that they were not dependant of the potential type.
+Mar 23  2006    Add bayesResults.pl to the perl tools. Once the bayesian 
+		optimisation has finished, it shows the final parameters values
+		with their 3 sigma error bars.
+Apr 17  2006	Release of a distribution.
+Apr 27  2006	Add the reference and cosmolimit keyword and section to the 
+		bestopt.par output file.
+Apr 28  2006	Increase the limit number of lenses from 200 to 300.
+Apr 28  2006	Change all the float variables to double.
+Apr 28  2006	Append the potfile ftype 4. Same as ftype 2 but in absolute WCS
+		coordinates.
+May  3  2006    Change the behavior of the nlentille keyword. If there is less
+		potentials than nlentille then nlentille is given the effective
+		number of potentials. This correct a recurrent QROMB error.
+May  3  2006    Correction in f_shape_abs() to handle the errors produced 
+		while reading the multiple images files in WCS coordinates.
+May 16  2006	Correction of a BUG that was appearing when some keyword 
+		arguments where missing in a .par file. In general, the next
+		keyword was not considered.
+May 16  2006	Correction : In the best.par file, the type argument of the
+		reference keyword was always 0. Now it corresponds to its 
+		original value.
+May 23  2006    New algorithm Marching Squares for the computation of critical
+		lines. (cf. Manual)
+May 23  2006    Code optimisation of the potential computation for PIEMD 
+		potential. Speed improved by 10%.
+May 24  2006    Release of Lenstool-6.1
+May 31  2006    Implement the -3 mode in g_ampli.c to compute the sensitivity
+		map in the source plane.
+May 31  2006    Change the name of  the pi global variable to imFrame.
+Jun  8  2006    Improve the Marching Square algorithm for critical lines 
+		computation. Computation of the segment positions by linear
+		interpolation of the amplifications.
+Jun 14  2006    Improve the optimisation speed by a factor 10. Compute only
+		the potential of the optimised clumps and keep in memory the
+		potential influence of the not optimised clumps. Create 3 new
+		functions e_grad_gal(), e_grad2_gal(), e_mag_gal().
+Jun 14  2006    Reorganisation of the set_lens_par() and set_lens() functions.
+		The set_lens_par() is used only once in init_grille() and 
+		display the clumps parameters. It calls the set_lens() function
+		to set the clumps parameters. set_lens() is also called in
+		o_runpot1() and o_runpot2(). No speed improvement noticed.
+Jun 14  2006    Rename the Mcrit and Mcrit12 global constants to MCRIT and 
+		MCRIT12.
+Jun 15  2006    Change the parameters passage from value to pointer for the 
+		functions : e_grad(), e_grad2(), e_amp(), e_dpl() and e_unmag().
+Jun 15  2006    Fix a BUG in wfits.c/wrf_fits(). Change double to float for 
+		the p_ima FITS file buffer.
+Jun 15  2006    Append the bayes speed of calculation as a user defined 
+		parameter in the .par optimisation file. (See User Manual)
+Jun 15  2006    Modify the name of the clumps so that they correspond to the
+		identifier they have in the potfile (if defined). Change the 
+		clump from integer to string.
+Jun 15  2006    For PIEMD, plot Re for the potfile clumps as defined in Hjorth
+		& Kneib Eq 13. Update the pelli Perl script.
+Jun 20  2006	Fix a BUG in the ./configure script with the WCS library where 
+		the library and the headers are not in the same directory.
+Jun 21  2006    Fix a BUG in o_set_lens_bayes.c:setParVal() when setting the
+		ellipticity of a clump.
+Jun 27  2006	Write the image and clump positions with 7 digits precision.
+Jun 27  2006	Release of distribution 6.2
+Jun 28  2006    Append the WCS support when producing simulated images with
+		the "grande" option.
+Jun 28  2006    Fix a BUG in o_runpot1(). 2 arrays that are used only with
+		the SIS model were free() even if the model was not SIS. It
+		was resulting in a malloc error.
+Jun 28  2006    Patch a debility in the configure script. There was an error
+		produced when the headers and the library of the CFITSIO 
+		distribution were not in the same directory.
+Jun 28  2006    Fix a patch in the histogram.f code. There was a shift between
+		the blue points and the gray pixels.
+Jun 29  2006    Fix a BUG in the bestopt.par and best.par for the reference
+		keyword. RA and DEC is always written in double format even 
+		when M.iref was 1. Now M.iref is 3 as soon as a reference 
+		is given.
+Jul 03  2006    Append the total mass to the outputs in pot.dat for the PIEMD 
+Jul 13  2006    Fix a BUG in lenstool_tab.c related to the conversion from 
+		float to double. The sscanf() format used to read the input 
+		parameters was wrong.
+		clumps.
+Jul 18  2006    Fix a BUG when reading the input file and the user change the
+		M.verbose mode to 0 in the runmode section, the para.out file
+		stops to be filled.
+Jul 18  2006    Modify Lenstool and the pelli and pcl script so that they 
+		recognizes the #REFERENCE keyword at the beginning of an input 
+		file. Write the #REFERENCE keyword at the beginning of ce.dat
+		and ci.dat.
+Jul 19  2006    Append the Algorithm and limitHigh/limitLow keyword to the 
+		best.par and bestopt.par output files.
+Jul 21  2006    Remove the WARNING message "alpha is out of bound!!!" and 
+		"xwant is out of bounds!!!" that were appearing during the 
+		NFW potential optimisation. (e_nfwgt.c)
+Jul 25  2006    Fix a BUG in the sig2pos4j.c/sig2pos4j() function. With the new
+		grad_gal() function, the .grad structure of Image had to be
+		initialised to 0.
+Jul 25  2006    Fix a BUG in o_rescale.c/rescaleParam(). The ellipticity of the
+		mass profile was not updated for the NFW profile.
+Jul 31  2006    Set by default alpha to 0 in every models.
+Jul 31  2006	Fix a BUG in o_rescale.c/setParVal() for the cosmological 
+		parameters bayesian optimisation. There were missing break; 
+		commands.
+Jul 31  2006	Fix a BUG in o_rescale/rescaleCube_1Atom(), bayesapp.c/Monitor()
+		and o_run_bayes.c/o_run_bayes(). In the loop that select the 
+		clumps to optimise, change G.nlens to G.no_lens. 
+Aug 02  2006 	Fix a BUG in o_print_res() when writing the bestopt.par file. 
+	 	When writing the CL.algorithm, we were writting in <best> file
+		descriptor instead of in <besto>.
+Aug 16  2006    Implement the error mass computation as the new option 5 to the
+		mass keyword in the runmode section.
+Aug 17  2006	Extend the flexibility in the choice of arclet names. It is 
+		possible to have a name with a final integer. Ex A2, A3 pertains
+		to the same family.
+Aug 31  2006    Increase the allowed number of multiple images systems from 11 
+		to 30 systems.
+Sep 05  2006	Increase the precision of the WCS keywords in the fits files
+		produced by lenstool.
+Oct 09  2006    Fix a BUG with several occurance of the file fitsio.h in the 
+		cfitsio distribution version 3.006 
+Oct 11  2006    Fix a BUG in cleanlens. The FITS file in the source plane had
+		a bad header. CRPIX was wrong due to wrong values of the 
+		xmin,xmax,ymin,ymax values.
+Oct 16  2006	Implement new constraints from single image systems.
+Oct 16  2006	Implement optimisation of potfile rcut and sigma parameters.
+Nov 10  2006	Once finished the redshift estimation, put the source redshift
+		that gives the best fit in the source.dat and image.all files.
+Nov 13  2006	Implement rectangular mass maps. The given number of pixels is
+		in the Y direction. The X size is scaled by (xmin,xmax,ymin,
+		ymax) in the 'champ' section of the .par file.
+Nov 20  2006    Implementation of a new sorting for the arcs in dist.dat. With
+		sort = 2  in the runmode section, the arcs are sorted along 
+		the abscissa coordinates.
+Feb 09  2007    Implementation of redshift linked families in z_m_limit.
+Mar 05  2007    Implementation of the Sersic profile.
+Mar 05  2007    Implementation of a optimizable nuisance parameter.
+Mar 19  2007    Correct a BUG in the SIS potential. The orientation of wrong by
+		90 degrees. Change R2=(1+e)x^2+(1-e)y^2 by R2=(1-e)x^2+(1+e)y^2
+Feb 20 2009     SVN test dummy

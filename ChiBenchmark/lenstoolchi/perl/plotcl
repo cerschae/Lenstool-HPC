@@ -1,0 +1,8 @@
+if [ -z $1 ]; then
+	echo "Usage : plotcl <redshift>"
+	exit
+fi
+sed -e "s/nplan.*/nplan    1 $1/" best.par > best2.par
+mv best2.par best.par
+lenstool best -n
+draw

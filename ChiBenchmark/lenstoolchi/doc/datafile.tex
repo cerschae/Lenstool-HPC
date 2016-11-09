@@ -1,0 +1,368 @@
+\input macro.tex
+\chapter{Datafiles}
+
+\section{Input Datafiles}
+
+\subsection{WCS header}
+In every input file, it is possible to set a WCS header to define the coordinates of the objects in the file. \\
+{\sl \#REFERENCE \ } {\sl int \ RA \ DEC} \\
+If \textit{int} = 0 : the positions are in degree WCS aligned.\\
+If \textit{int} = 1 : the positions are in arcsec relative to (RA,DEC) expressed in sexagesimal format (HH:MM:SS DD:MM:SS). \\
+If \textit{int} = 2 : the positions are in pixels relative to the reference pixels. In this case, (RA,DEC) defines the coordinates (X,Y) of the reference pixel. \\
+If \textit{int} = 3 : the positions are in arcsec relative to (RA,DEC) expressed in degrees. \\
+
+\subsection{Object file}
+
+\subsubsection{Definition}
+
+This ascii file contains a list of objects characterized by their position,
+shape parameters and redshift, with the following format.
+
+
+There are 2 formats. The default one specified by the first argument
+in the parameter file {\sl int1} = 1 is  
+
+{\sl int \ \  float1 \ \ \ float2 \ \ \ float3 \ \ \ float4
+\ \ \ float5 \ \ \ float6}
+
+{\sl int \ \ } is a characteristic integer that defines the object.
+
+{\sl float1 \ \ } is the X position of the object expressed in arcsec or in degree.
+
+{\sl float2 \ \ } is the Y position of the object expressed in arcsec or in degree.
+
+{\sl float3 \ \ } is the semi-major-axis $a$ of the equivalent ellipse of the 
+object, expressed in arcsecond.
+
+{\sl float4 \ \ } is the semi-minor-axis $b$ of the equivalent ellipse of the 
+object, expressed in arcsecond.
+
+{\sl float5 \ \ } is the position-angle $\theta$ of the equivalent ellipse of the 
+object, expressed in degree. This give the orientation of the semi-major-axis
+from the horizontal line (counter-clockwise).
+
+{\sl float6 \ \ } is the redshift $z$ of the object. If the redshift is unknown
+this value should be set to $0$.
+
+{\sl float7 \ \ } is the magnitude of the object.
+
+The alternate one specified by the first argument {\sl int1} = 2 (see
+below) is useful in conjunction with keyword arcletstat for weak
+lensing. It is similar to the default format, with the 2 extra columns
+
+{\sl float8 \ \ } is the variance of the E1 ellipticity component
+(ellipticity defined as $E = a^2 - b^2 / a^2 + b^2$.)
+
+{\sl float9 \ \ } is the variance of the E2 ellipticity component.
+
+\subsubsection{Uses}
+
+Such a file can characterize either an arclet file or a source file.
+Here is the list of identifiers which requires such a file:
+
+{\bf runmode \ \ \ \ image \ \ \ } if $z=0$ then the program will use the
+one defined by {\bf source \ \ \ \ z{\_}source \ \ \ }.
+
+{\bf runmode \ \ \ \ source \ \ \ } if $z=0$ then the program will use the
+one defined by {\bf source \ \ \ \ z{\_}source \ \ \ }.
+
+{\bf runmode \ \ \ \ study \ \ \ } the value of $z$ is not used under this
+identifiers.
+
+{\bf image \ \ \ \ multfile \ \ \ } for each image in each set of multiple
+images the characteristic integer and the redshift ($0$ if unknown)
+must be the same.
+
+{\bf image \ \ \ \ arcletstat \ \ \ }
+
+\subsection{Marker file}
+
+This ascii file contains a list of points, with the following format:
+
+{\sl int \ \  float1 \ \ \ float2}
+
+{\sl int \ \ } is a characteristic integer that defines the marker.
+
+{\sl float1 \ \ } is the X position of the marker expressed in arcsec.
+
+{\sl float2 \ \ } is the Y position of the marker expressed in arcsec.
+
+\subsubsection{Uses}
+
+Such a file can characterize only markers that are in the Image Plane.
+There is only one identifier that uses such a file. That is:
+
+{\bf runmode \ \ \ \ marker \ \ \ }
+
+\subsection{IPX pixel-image file}
+
+The IPX format is a simple format for pixel-images. It is made of an
+ASCII header of 4 lines, followed by the data, that can be written
+either in ASCII or in binary.\\
+
+The header is defined in this way:\\
+
+{
+\bf
+\begin{tabular}{lllll}
+2&xmin&xmax&ymin&ymax\\
+nx&&&& \\
+ny&&&& \\
+type&mode&nature&&\\
+comments&&&&\\
+\end{tabular}
+}\\
+
+2 stands for Dimension 2.\\
+xmin, xmax, ymin, ymax are floats value defining the scaling of the image.
+The center of the bottom-left pixel is (xmin,ymin), the center of the 
+upper-right pixel is (xmax,ymax).\\
+nx is the dimension in x, ny in y.\\
+type can be {\sl int} or {\sl float} or {\sl double}, it is the type of the
+pixel-image data.\\
+mode can be {\sl txt} for an ASCII representation of the data, or
+{\sl bin} for a binary representation.\\
+nature is either {\sl real} or {\sl complex}.\\
+comments is at maximum a 1024 long ASCII chain, ended by an EOL character.
+If mode is set to {\sl txt} the data is listed in the file as a column.
+If it is set to {\sl bin} the data can be read line by line.
+
+
+\subsection{FITS pixel-image file}
+
+The program can read FITS pixel-frame. It will read the FITS file and
+convert the data in float (whatever was the type of the data in the file).\\
+
+The pixel-frame has to be scaled.\\
+
+This is done in FITS by modifying the following keywords:\\
+CRVAL2 = x-value of pixel CRPIX2\\
+CRPIX2 = index  $i$ of the reference pixel\\
+CDELT2 = pixel size in the x direction\\
+CRVAL1 = y-value of pixel CRPIX1\\
+CRPIX1 = index  $j$ of the reference pixel\\
+CDELT1 = pixel size in the y direction\\
+
+From this values the program compute the xmin,xmax,ymin,ymax in this way:\\
+
+xmin = CRVAL2 + (CRPIX2-1)*CDELT2\\
+xmax = CRVAL2 + (nx - CRPIX2)*CDELT2\\
+ymin = CRVAL1 + (CRPIX1-1)*CDELT1\\
+ymax = CRVAL1 + (ny - CRPIX1)*CDELT1\\
+
+
+
+\section{Output Datafiles}
+
+{\bf ngrille} can generate a lot of output file, depending on what
+was given in the inputfile. It generates always a "mouchard" file
+{\sl para.out \ }. Where we can find back the different identifiers with their
+values, plus others computed constants.
+
+The following subsections give the complete list of the output file that
+can be created by {\bf ngrille} with their format.
+
+
+\subsection{Potential file}
+
+{\sl pot.dat \ \ \ }
+
+This ascii file is written with the following format:
+
+{\sl int \ \  float1 \ \ \ float2 \ \ \ float3 \ \ \ float4
+\ \ \ float5 \ \ \ float6}
+
+{\sl int \ \ } is a characteristic integer that defines the potential clump.
+
+{\sl float1 \ \ } is the X position of the center of the clump
+expressed in arcsec.
+
+{\sl float2 \ \ } is the X position of the center of the clump
+expressed in arcsec.
+
+{\sl float3 \ \ } is the semi-major-axis $a$ of the ellipse of the 
+line, expressed in arcsecond.
+
+{\sl float4 \ \ } is the semi-minor-axis $b$ of the ellipse of the 
+line, expressed in arcsecond.
+
+{\sl float5 \ \ } is the position-angle $\theta$ of the ellipse of the 
+line, expressed in degree. This give the orientation of the semi-major-axis
+from the horizontal line (counter-clockwise).
+
+{\sl float6 \ \ } is a non-significative constant, in general $0$.
+
+
+The lines represented are the core{\_}radius if any with the ellipticity
+and the orientation of the mass distribution, and the tangential
+critical line of the clump if it was alone (analytic expression).
+Furthermore a cross indicates the center position.
+
+\subsection{Source file}
+
+\subsubsection{\sl source.dat \ \ \ }
+
+This ascii file is written with the following format (Object file format -~see
+Inputfile~-~):
+
+{\sl int \ \  float1 \ \ \ float2 \ \ \ float3 \ \ \ float4
+\ \ \ float5 \ \ \ float6 \ \ \ float7}
+
+n \ \ \ \ x \ \ \ \ \ \ \ \ \ y \ \ \ \ \ \ \ \ \ a \ \ \ \ \ \ \ \ \ 
+b \ \ \ \ \ \ \ \ \ $\theta$ \ \ \ \ \ \ \ \ \ z \ \ \ \ \ \ \ \ mag\\
+
+\subsection{Arclet files}
+
+The following  ascii file are written with the following format
+(Object file format -~see Inputfile~-~):
+
+{\sl int \ \  float1 \ \ \ float2 \ \ \ float3 \ \ \ float4
+\ \ \ float5 \ \ \ float6 \ \ \ float7}
+
+n \ \ \ \ x \ \ \ \ \ \ \ \ \ y \ \ \ \ \ \ \ \ \ a \ \ \ \ \ \ \ \ \ 
+b \ \ \ \ \ \ \ \ \ $\theta$ \ \ \ \ \ \ \ \ \ z \ \ \ \ \ \ \ \ \ mag\\
+\\
+
+
+{\sl image.dat \ \ \ } list the images (arclets), but the arclets
+with distortion larger than {\bf large{\_}dist } are not included.\\
+
+{\sl image.all \ \ \ } list all images (arclets) with no restriction.\\
+
+{\sl sort.dat \ \ \ } list all images (arclets) sorted from high to low
+distortion.
+
+\subsubsection{\sl dist.dat \ \ \ }
+
+This file list some images properties with the following format:
+
+{\sl int \ \  float1 \ \ \ float2 \ \ \ float3 \ \ \ float4
+\ \ \ float5 \ \ \ float6 \ \ \ float7 \ \ \ float8}\\
+
+{\sl int \ \ } is the characteristic integer that defines the object.
+
+{\sl float1 \ \ } is the X position of the object expressed in arcsec.
+
+{\sl float2 \ \ } is the Y position of the object expressed in arcsec.
+
+{\sl float3 \ \ } is the distance of the arclet from the center of the first
+clump.
+
+{\sl float4 \ \ } is the axis-ratio $b/a$ of the equivalent ellipse of the 
+object.
+
+{\sl float5 \ \ } is the ellipticity $\varepsilon$ of the equivalent
+ellipse of the object.
+
+{\sl float6 \ \ } is the deformation $\tau$ of the equivalent
+ellipse of the object.
+
+{\sl float7 \ \ } is the amplification $\mu$ at the center of the arclet.
+
+{\sl float8 \ \ } is the time-delay $\tau_d$ (in year) 
+at the center of the arclet.
+
+
+\subsubsection{\sl gianti.dat }
+
+File with the list of points that defines the shape of the arc or arclet
+when using the  second identifiers {\bf profil} or {\bf contour}.
+The format consist of 4 lines of header and then the data:
+
+{\sl float1 float2}\\
+
+{\sl float1 \ \ \ } give the X position of the point.
+
+{\sl float2 \ \ \ } give the Y position of the point.
+
+\subsubsection{\sl "giant"."n"}
+
+Array file of the image of the arc or arclet when using the
+second identifiers {\bf iso}. The file consist of a header and then the date.
+In the header one can find the number of lines, the number of columns and
+the xmin, xmax, ymin, ymax of the surface covered by the array.
+
+
+\subsection{Critical and caustic lines files}
+
+\subsubsection{\sl ce.dat \ \ \ ci.dat}
+
+These 2 files have the same format, the first one {\sl ce.dat} lists
+the external critical and caustic lines ([+,+]-[+,-] transition),
+the last one {\sl ci .dat} lists the internal ones ([+,-]-[-,-] transition).\\
+
+
+{\sl int \ \ \ float1 \ \ \ float2 \ \ \ float3 \ \ \ float 4}\\
+
+{\sl int \ \ \ } enumerates the different lines
+
+{\sl float1 \ \ \ } give the X position of the critical point.
+
+{\sl float2 \ \ \ } give the Y position of the critical point.
+
+{\sl float3 \ \ \ } give the X position of the correspondent caustic point.
+
+{\sl float4 \ \ \ } give the Y position of the correspondent caustic point.
+
+
+\subsubsection{\sl cr{\_}an.dat \ \ \ }
+
+This file is created if there is only one clump for the mass distribution,
+it is an estimate of the critical lines (external and internal). They are
+approximated by ellipse, hence they are put in an 'ellipse'-like format:\\
+
+{\sl int \ \  float1 \ \ \ float2 \ \ \ float3 \ \ \ float4
+\ \ \ float5 \ \ \ float6}
+
+{\sl int \ \ } non relevant value (1).
+
+{\sl float1 \ \ } is the X position of the center of ellipse expressed
+in arcsec.
+
+{\sl float2 \ \ } is the Y position of the center of ellipse expressed
+in arcsec.
+
+{\sl float3 \ \ } is the semi-major-axis $a$ of the equivalent ellipse of the 
+critical line, expressed in arcsecond.
+
+{\sl float4 \ \ } is the semi-minor-axis $b$ of the equivalent ellipse of the 
+critical line, expressed in arcsecond.
+
+{\sl float5 \ \ } is the position-angle $\theta$ of the equivalent
+ellipse of the critical line, expressed in degree. This give the
+orientation of the semi-major-axis
+from the horizontal line (counter-clockwise).
+
+{\sl float6 \ \ } non relevant value (0.).
+
+\vspace{1cm}
+The first line is the external critical line, the second line the internal
+critical line, both for a Source Plane at redshift {\bf source z\_source}.\\
+
+\subsection{Source marker file}
+
+\subsubsection{\sl marker{\_}s.dat \ \ \ }
+
+Same format as the "Marker file".
+
+\subsection{Prop files}
+
+\subsubsection{\sl "prop".dat \ \ \ }
+
+\subsection{Invert files}
+
+\subsubsection{\sl map.iso \ \ \ }
+
+\subsubsection{\sl map.res \ \ \ }
+
+\subsection{Best file}
+
+\subsubsection{\sl best.par \ \ \ }
+
+\subsubsection{\sl bestopt.par \ \ \ }
+
+\subsection{Bayesian optimisation}
+You can read the bayes.dat files with the \textbf{Histogram} and \textbf{Histogram2D} tools. 
+They plot 1D and 2D histograms of the samples distribution and give an estimate of the 1 or 2 dimensional marginalised distribution. Those tools have no arguments.
+
+

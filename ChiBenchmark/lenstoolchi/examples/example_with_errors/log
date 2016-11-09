@@ -1,0 +1,9 @@
+The fiducial model is given in test_errors.par
+
+The original sources are in source.cat
+The original lensed images are in image.cat
+The Gaussian blured images (0.1") are in image2.cat
+
+Note: This is normal that you do not recover exactly an error position of 0.1"
+because the number of images in image2.cat is not large enough to be 
+statistically significant.

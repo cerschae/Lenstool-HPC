@@ -1,0 +1,77 @@
+runmode
+	reference 3 0 0
+	inverse 3 0.1
+	image 1 1clump_gal.cat
+	source 0 source2.cat
+	mass 3 100 0.3 mass.fits
+	shearfield 1 2.0 shear.dat
+	verbose 1
+	end
+grille
+	number 100
+	polaire 0
+	nlens 4
+	nlens_opt 1
+	end
+image
+	multfile 3 1clump_gal.cat
+	forme -11		# optimization in source plane
+	sigposArcsec 0.1
+	end
+source
+	z_source 1.0
+	end
+potentiel  
+	profil 81
+	x_centre 0.
+	y_centre 0.
+	ellipticity 0.2
+	angle_pos 0.
+	core_radius  16
+	cut_radius  150
+	v_disp    1400.0
+	z_lens 0.3
+	end
+limit
+	x_centre    1 -2. 2. 0.00001
+	y_centre    1 -2. 2. 0.00001
+	ellipticite 0 0. 0.6 0.000001
+	angle_pos   0 -1. 1. 0.001
+	core_radius 0 1. 1000. 0.001
+	cut_radius  1 10. 1000. 0.001
+	v_disp      1 100. 21000. 0.001
+	end
+limit
+	x_centre    0 -2. 2. 0.00001
+	y_centre    0 -2. 2. 0.00001
+	ellipticite 0 0. 0.6 0.000001
+	angle_pos   0 -1. 1. 0.001
+	core_radius 0 1. 1000. 0.001
+	cut_radius  1 1. 100. 0.001
+	v_disp      1 10. 400. 0.001
+	end
+potfile
+	filein	3 cgal.cat
+	type 81
+	zlens  0.3
+	core   0.027
+	cutkpc  3 2.5 0.1
+	sigma   3 150 50.
+	slope 	0 4
+	vdsplot 0 4
+	mag0 16.7
+	end
+cline
+	nplan 1 4.0
+	limitHigh 1
+	limitLow 1
+	end
+cosmology
+	H0 70.
+	omegaM 0.3
+	omegaX 0.7
+	end
+champ
+	dmax 50.
+	end
+fini

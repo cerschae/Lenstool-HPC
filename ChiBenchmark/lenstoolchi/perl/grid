@@ -1,0 +1,141 @@
+#!/usr/bin/perl
+# Plot a grid in the source or in the image plane.
+
+# Perl settings ----------------------------------------
+
+$[ = 0;                 # set array base to 0
+$, = ' ';               # set output field separator
+$\ = "\n";              # set output record separator
+
+# Subprogram declaration
+sub appendGrid;
+
+# Read the arguments
+
+if( @ARGV lt 1 )
+{
+	print "Usage: grid <image|source> [<color>]";
+	exit;
+} 
+
+print ">Usage: grid <image|source> [color] [clean] # $ARGV[0] $ARGV[1] $ARGV[2]";
+
+$igrid=$ARGV[0];
+
+$color=$ARGV[1];
+if ($color eq '') 
+{
+	$color="red";
+}
+
+if ($ARGV[2] eq "clean")
+{
+	system("xpaset -p ds9 regions deleteall");
+}
+
+#---------------------------------------------
+# Read the input file
+if( $igrid eq "image" )  {
+	open($inV,"gi1.dat") || die "Error: gi1.dat not found\n";
+	open($inH,"gi2.dat") || die "Error: gi2.dat not found\n";
+} else {
+	open($inV,"gs1.dat") || die "Error: gs1.dat not found\n";
+	open($inH,"gs2.dat") || die "Error: gs2.dat not found\n";
+}
+
+@fileV=<$inV>;
+@fileH=<$inH>;
+close $inV;
+close $inH;
+
+#----------------------------------------------
+#Set default WCS coordinates values
+$iref = 0;
+$ra = 0;
+$dec = 0;
+# Check if there exists the frames.pl file for compatibility
+do 'frames.pl';
+$iref = 1 if( $type eq 'fk5' );
+
+# Check if the first line contains a WCS reference
+if( $fileV[0] =~ /#REFERENCE/i )
+{
+	print $file[0];
+	chop $file[0];
+	($null,$iref,$ra,$dec) = split / /,$fileV[0];
+}
+
+#If we have the reference coordinates in sexagesimal form
+#convert them to degrees
+if ($iref == 1)
+{
+	($hh,$mm,$ss)=split(':',$ra);
+	($dd,$nn,$tt)=split(':',$dec);
+	$sign=1;
+	if (substr($dec,0,1) eq '-')
+        {
+	        $sign=-1;
+        	$dd=abs($dd);
+	}
+
+	$ra=($hh+$mm/60+$ss/3600)*15;
+	$dec=$sign*($dd+$nn/60+$tt/3600);
+	$pixel=3600;
+	$pixelx=-3600*cos($dec/180*3.1415926);
+	$ds9type = 'fk5';
+}
+elsif( $iref == 2 )
+{
+	$ds9type = 'image';
+	$pixel=$pixelx=1;
+}
+else #( $iref == 3 or $iref == 0 ) default case
+{
+	$pixel=3600;
+	$pixelx=-3600*cos($dec/180*3.1415926);
+	$ds9type = 'fk5';
+}
+#----------------------------------------
+#Main program
+system("rm -f e.reg");
+
+appendGrid \@fileV;
+appendGrid \@fileH;
+
+system("cat e.reg | xpaset ds9 regions");
+
+exit;
+
+#----------------------------------------
+#Subprogram
+sub appendGrid {
+	local( @x, @y, $x1, $y1, $x2, $y2, $i);
+	my $in = shift;
+	my $npt = 0; my $ngrid = 0; my $iold = -1;
+	shift @{$in};
+	for(@{$in}) {
+		($i, $tmpx, $tmpy)  = split;
+		push @x,$tmpx;
+		push @y,$tmpy;
+		$ngrid = $i if( $iold eq $i );
+		$iold = $i; 
+		$npt++;
+	}
+	$ngrid++;
+	
+	open(ds9, ">>e.reg");
+
+	for( $i = 0; $i < $npt - 1; $i++ ) 
+	{
+		$y1 = $y[$i]/$pixel + $dec;
+		$x1 = $x[$i]/$pixelx + $ra;
+		$y2 = $y[$i+1]/$pixel + $dec;
+		$x2 = $x[$i+1]/$pixelx + $ra;
+		printf ds9 "$ds9type;line(%.7f,%.7f,%.7f,%.7f) # line=0 0 color=$color\n",
+			$x1,$y1,$x2,$y2;
+#		printf ds9 "fk5;point(%.7f,%.7f) # point=cross color=$color\n", 
+#			$x[$i], $y[$i];
+	}
+	close ds9;
+}
+	

@@ -1,0 +1,1 @@
+nimage.o: nimage.c

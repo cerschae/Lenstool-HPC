@@ -1,0 +1,149 @@
+#!/usr/bin/perl
+
+$[ = 0;			# set array base to 1
+$, = ' ';		# set output field separator
+$\ = "\n";		# set output record separator
+
+if (@ARGV<1) {
+	print "Usage: ppoint <file> [color] [clean] [coltext]";
+	print "Catalog format : id xc(deg) yc(deg) a(deg) b(deg) theta z mag";
+	exit;
+}
+
+print ">Usage: ppoint <file> [color] [clean] [coltext] # $ARGV[0] $ARGV[1] $ARGV[2] $ARGV[3]";
+
+
+$color=$ARGV[1];
+if ($color eq '') 
+{
+	$color="red";
+}
+$col=$ARGV[3];
+if ($col eq '') 
+{
+	$col=1;
+}
+
+if ($ARGV[2] eq "clean")
+{
+	system("xpaset -p ds9 regions deleteall");
+}
+
+open(ds9,">e.reg");
+
+#----------------------------------------------
+# Read the input file
+if( $ARGV[0] ne "STDIN" )
+{
+	open $in, "$ARGV[0]" or die "ERROR opening $ARGV[0]\n";
+}
+else
+{
+	$in = *STDIN;
+}
+local $\; # établit le mode slurp en local
+@file=<$in>;
+close $in;
+
+#---------------------------------------------
+#Set default WCS coordinates values
+$iref = 0;
+$ra = 0;
+$dec = 0;
+# Check if there exists the frames.pl file for compatibility
+do 'frames.pl';
+$iref = 1 if( $type eq 'fk5' );
+
+# Check if the first line contains a WCS reference
+if( $file[0] =~ /#REFERENCE/i )
+{
+	print $file[0];
+	chop $file[0];
+	($null,$iref,$ra,$dec) = split / /,$file[0];
+}
+
+#If we have the reference coordinates in sexagesimal form
+#convert them to degrees
+if ($iref == 1)
+{
+	($hh,$mm,$ss)=split(':',$ra);
+	($dd,$nn,$tt)=split(':',$dec);
+	$sign=1;
+	if (substr($dec,0,1) eq '-')
+        {
+	        $sign=-1;
+        	$dd=abs($dd);
+	}
+
+	$ra=($hh+$mm/60+$ss/3600)*15;
+	$dec=$sign*($dd+$nn/60+$tt/3600);
+	$pixel=3600;
+	$pixelx=-3600*cos($dec/180*3.1415926);
+	$ds9type = 'fk5';
+}
+elsif( $iref == 2 )
+{
+	$ds9type = 'image';
+	$pixel=$pixelx=1;
+}
+else #( $iref == 3 or $iref == 0 ) default case
+{
+	$pixel=3600;
+	$pixelx=-3600*cos($dec/180*3.1415926);
+	$ds9type = 'fk5';
+}
+
+#---------------------------------------------------
+# Try to not print the ellipse Id 2 times
+$oldId = "";
+
+for( @file ) 
+{
+	chop;	# strip record separator
+	if( $_ =~ "#.*" )
+	{} else 
+	{
+		($id,$xc,$yc,$a,$b,$theta,$z,$mag) = split;
+		@fld=split;
+		# Convert the coordinates to absolute coordinates
+		# iref == 0 means that it's already in WCS coordinates (default)
+		if( $iref == 1 or $iref == 3 )
+		{
+			$xc = $ra + $xc/$pixelx;
+			$yc = $dec + $yc/$pixel;
+		}
+		elsif( $iref == 2 )
+		{
+			$xc += $ra;
+			$yc += $dec;
+		}
+
+		# Print the points
+		printf ds9 "$ds9type;point(%.7f,%.7f) #point=cross color=$color ",$xc,$yc;
+		
+		# Plot the arc ID but not the ID of the 2nd potfile ellipse
+		if( $oldId ne $id or $oldxc != $xc or $oldyc != $yc )
+		{
+			if($col != 0 )
+			{
+				printf ds9 "text={%s} ",$fld[$col-1];
+				printf ds9 "font=\"helvetica 14 normal\" ";
+			}
+		} 
+
+		# If it's the 2nd ellipse of a potfile clump ie sigma
+		if ( $oldId eq $id and $oldxc == $xc and $oldyc == $yc )
+		{
+			printf ds9 "background";
+		}	
+		printf ds9 "\n";
+		$oldId = $id;
+		$oldxc = $xc; $oldyc = $yc;
+	} # end of commented line
+}
+close(ds9);
+
+system("cat e.reg | xpaset ds9 regions");
+exit;
+
+

@@ -1,0 +1,232 @@
+Tue Jul  3 08:46:19 2007
+Source plane optimization
+Chi2tot(dof=6): 0.2474
+Chi2pos: 0.247
+Chi2formex: 0.000
+Chi2formey: 0.000
+Chi2l: 0.000
+log(Evidence) : -19.033
+n_Warning: 0
+runmode
+	reference     3 0.000000 0.000000
+	image     0 1clump_gal.cat
+	source    0 source2.cat
+	mass      3 100 1.000 mass.fits
+	shearfield  1 2.000 shear.dat 25
+	end
+grille
+	nombre      100
+	polaire     0
+	nlentille   13
+	end
+source
+	z_source     1.000
+	end
+potentiel O1
+	profil     81
+	x_centre     0.000
+	y_centre     0.000
+	ellipticite     0.200
+	angle_pos       0.000
+	core_radius         16.000
+	core_radius_kpc     71.269
+	cut_radius         148.480
+	cut_radius_kpc     661.376
+	v_disp     1401.710
+	z_lens     0.300
+	end
+potentiel 1
+	profil     81
+	x_centre     -0.000
+	y_centre     0.000
+	ellipticite     0.117
+	angle_pos       90.000
+	core_radius         0.326
+	core_radius_kpc     1.453
+	cut_radius         6.562
+	cut_radius_kpc     30.195
+	v_disp     525.408
+	mag		  11.290
+	z_lens     0.300
+	end
+potentiel 10
+	profil     81
+	x_centre     -20.000
+	y_centre     0.000
+	ellipticite     0.385
+	angle_pos       350.000
+	core_radius         0.094
+	core_radius_kpc     0.421
+	cut_radius         1.901
+	cut_radius_kpc     8.749
+	v_disp     282.811
+	mag		  13.980
+	z_lens     0.300
+	end
+potentiel 11
+	profil     81
+	x_centre     -0.000
+	y_centre     20.000
+	ellipticite     0.280
+	angle_pos       20.000
+	core_radius         0.133
+	core_radius_kpc     0.594
+	cut_radius         2.686
+	cut_radius_kpc     12.358
+	v_disp     336.122
+	mag		  13.230
+	z_lens     0.300
+	end
+potentiel 12
+	profil     81
+	x_centre     10.010
+	y_centre     30.000
+	ellipticite     0.280
+	angle_pos       20.000
+	core_radius         0.067
+	core_radius_kpc     0.297
+	cut_radius         1.340
+	cut_radius_kpc     6.165
+	v_disp     237.409
+	mag		  14.740
+	z_lens     0.300
+	end
+potentiel 2
+	profil     81
+	x_centre     -20.000
+	y_centre     35.000
+	ellipticite     0.220
+	angle_pos       330.000
+	core_radius         0.086
+	core_radius_kpc     0.384
+	cut_radius         1.734
+	cut_radius_kpc     7.979
+	v_disp     270.083
+	mag		  14.180
+	z_lens     0.300
+	end
+potentiel 3
+	profil     81
+	x_centre     -40.000
+	y_centre     5.000
+	ellipticite     0.385
+	angle_pos       0.000
+	core_radius         0.189
+	core_radius_kpc     0.840
+	cut_radius         3.793
+	cut_radius_kpc     17.456
+	v_disp     399.482
+	mag		  12.480
+	z_lens     0.300
+	end
+potentiel 4
+	profil     81
+	x_centre     -20.000
+	y_centre     -35.000
+	ellipticite     0.724
+	angle_pos       95.000
+	core_radius         0.122
+	core_radius_kpc     0.542
+	cut_radius         2.449
+	cut_radius_kpc     11.270
+	v_disp     320.994
+	mag		  13.430
+	z_lens     0.300
+	end
+potentiel 5
+	profil     81
+	x_centre     -0.000
+	y_centre     -40.000
+	ellipticite     0.600
+	angle_pos       70.000
+	core_radius         0.190
+	core_radius_kpc     0.848
+	cut_radius         3.828
+	cut_radius_kpc     17.617
+	v_disp     401.325
+	mag		  12.460
+	z_lens     0.300
+	end
+potentiel 6
+	profil     81
+	x_centre     20.020
+	y_centre     -25.000
+	ellipticite     0.105
+	angle_pos       50.000
+	core_radius         0.183
+	core_radius_kpc     0.813
+	cut_radius         3.673
+	cut_radius_kpc     16.902
+	v_disp     393.094
+	mag		  12.550
+	z_lens     0.300
+	end
+potentiel 7
+	profil     81
+	x_centre     40.000
+	y_centre     -20.000
+	ellipticite     0.280
+	angle_pos       340.000
+	core_radius         0.067
+	core_radius_kpc     0.297
+	cut_radius         1.340
+	cut_radius_kpc     6.165
+	v_disp     237.409
+	mag		  14.740
+	z_lens     0.300
+	end
+potentiel 8
+	profil     81
+	x_centre     29.990
+	y_centre     10.000
+	ellipticite     0.342
+	angle_pos       0.000
+	core_radius         0.161
+	core_radius_kpc     0.718
+	cut_radius         3.244
+	cut_radius_kpc     14.926
+	v_disp     369.400
+	mag		  12.820
+	z_lens     0.300
+	end
+potentiel 9
+	profil     81
+	x_centre     10.010
+	y_centre     0.000
+	ellipticite     0.471
+	angle_pos       0.000
+	core_radius         0.149
+	core_radius_kpc     0.664
+	cut_radius         2.999
+	cut_radius_kpc     13.802
+	v_disp     355.219
+	mag		  12.990
+	z_lens     0.300
+	end
+cline
+	nplan    1 4.000 
+	dmax     0.000
+	algorithm   MARCHINGSQUARES
+	limitHigh   1.0
+	limitLow    1.000
+	end
+grande
+	iso         0 0 1.000 0.000 0.000
+	name        best
+	profil      0 0
+	contour     0 0
+	large_dist  2.000
+	end
+cosmologie
+	H0        70.000
+	omegaM    0.300
+	omegaX    0.700
+	wX        -1.000
+	end
+champ
+	xmin     -50.000
+	xmax     50.000
+	ymin     -50.000
+	ymax     50.000
+	end
+fini

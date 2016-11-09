@@ -1,0 +1,648 @@
+# ==============================================================================
+# 2006-05-02 (Tuesday) 16:52 PDT
+
+# Installing and testing lenstool with Heidi
+
+setenv LENSTOOL_DIR $WORK_DIR/stronglensing/lenstool
+
+cd $LENSTOOL_DIR
+
+# This is a soft link to a web directory:
+
+http://www.slac.stanford.edu/~pjm/lenstool/
+
+# This is where all the files in $LENSTOOL_DIR can be viewed.
+
+
+# Now, get Marusa's notes!
+
+scp -r ki-rh14:/home/marusa/latex/students/lenstoolman .
+scp -r ki-rh14:/home/marusa/cprogs/SWunitedcats/SWunited1E0657/lenstool marusa
+     
+# First is a directory containing the manual started by Marusa - print and
+# absorb... Second is a directory containing notes and data files, no code. Read
+# notes!
+
+ln -s marusa/notes.sh notes-marusa.sh
+
+# Read and absorb these too..
+
+a2ps notes-marusa.sh
+lj notes-marusa.ps
+
+# Notes from Marusa on how to compile the code:
+
+scp ki-rh14:/home/marusa/progs/lenstool-6/notes.sh notes-marusa-compilation.sh
+a2ps notes-marusa-compilation.sh
+lj notes-marusa-compilation.ps
+
+
+# Download code and unpack:
+
+wget --timestamping --continue http://www.oamp.fr/cosmology/lenstool/lenstool-6.tar.gz
+
+tar xvzf lenstool-6.tar.gz
+
+# Also get the manual and print it:
+
+lj lenstool-6/doc/lenstool.ps
+
+# lenstool needs three libraries - lets find out if we have them:
+
+set ld_dirs = `echo $LD_LIBRARY_PATH | sed s/:/\ /g`
+foreach dir ( $ld_dirs )
+  find $dir | grep libwcs.a
+  find $dir | grep libcfitsio.a
+  find $dir | grep longnam.h
+  find $dir | grep fitsio.h
+  find $dir | grep libpgplot.a
+end
+
+/afs/slac/g/ki/ki01/pgplot/libpgplot.a
+/afs/slac/g/ki/ki01/lib/libwcs.a
+/afs/slac/g/ki/ki01/lib/libcfitsio.a
+
+# Also need these:
+
+/afs/slac/g/ki/ki01/include/fitsio.h
+/afs/slac/g/ki/ki01/include/longnam.h
+
+# Marusa says that the SLAC installation does not work for lenstool - lets try
+# it anyway!
+
+
+cd lenstool-6/
+./configure
+
+# Got this message:
+# ...
+# checking for ffdkopn in -lcfitsio... no
+# Cfitsio library >2.510 absolute path :
+# /afs/slac/g/ki/ki01/lib/libcfitsio.a
+# -L/afs/slac/g/ki/ki01/lib/libcfitsio.a
+# checking for ffdkopn in -lcfitsio... no
+# Error : with the cfitsio library. Check the cfitsio version
+
+# Does libcfitsio have to be reinstalled? What version do we have?
+
+more /afs/slac/g/ki/ki01/src/cfitsio/changes.txt
+
+# Version 2.490 -  11 February 2004
+
+# HACK: copy Marusa's cfitsio library to ~/lib and try that...
+
+scp ki-rh14:/u1/marusa/progs/cfitsio/lib/libcfitsio.a ~/lib/
+scp ki-rh14:/u1/marusa/progs/cfitsio/include/longnam.h ~/lib/
+scp ki-rh14:/u1/marusa/progs/cfitsio/include/fitsio.h ~/lib/
+
+# Re run configure, but use /u/ki/pjm/lib/libcfitsio.a
+# Same problem. Re-install cfitsio!
+
+cd ~/software
+wget --timestamping --continue ftp://heasarc.gsfc.nasa.gov/software/fitsio/c/cfitsio2510.tar.gz 
+
+# No such file, alert Jp/Eric...
+wget --timestamping --continue ftp://heasarc.gsfc.nasa.gov/software/fitsio/c/oldvers/cfitsio2510.tar.gz
+
+# Unpack, compile, cp fil es to ~/lib:
+
+tar xvzf cfitsio2510.tar.gz
+cd cfitsio
+./configure
+make
+cp libcfitsio.a longnam.h fitsio.h ~/lib/
+
+# Try again:
+
+setenv CFITSIO_DIR /u/ki/pjm/lib
+setenv WCS_DIR /afs/slac/g/ki/ki01/lib
+
+cd $LENSTOOL_DIR/lenstool-6/
+./configure
+
+# Now get this message re pgplot:
+
+# checking for cpgend in -lcpgplot... no
+# PGPLOT library absolute path : /afs/slac/g/ki/ki01/pgplot
+# -L/afs/slac/g/ki/ki01/pgplot -L/usr/X11R6/lib -lX11 -lcpgplot -lpgplot
+# checking for cpgend in -lcpgplot... no
+# Error : with the pgplot library.
+ 
+# Try pgplot library in my directory: nope.
+# Try with marusa's pgplot lib:
+
+scp ki-rh14:/u1/marusa/progs/pgplot/libcpgplot.a ~/lib/
+
+# Nope, this didn't work either. This is weird because she claims that she can
+# do this just fine... What is going on here? Alert Jp/Eric...
+
+# Re-install pgplot!
+
+cd ~/software
+wget  ftp://ftp.astro.caltech.edu/pub/pgplot/pgplot5.2.tar.gz
+tar xvzf pgplot5.2.tar.gz
+
+mkdir ~/lib/pgplot
+cp pgplot/drivers.list ~/lib/pgplot/
+pico ~/lib/pgplot/drivers.list
+grep -v '!' ~/lib/pgplot/drivers.list
+
+cd ~/lib/pgplot
+~/software/pgplot/makemake ~/software/pgplot linux g77_gcc
+
+make 
+make clean
+make cpg 
+
+# OK, now try and remake lenstool! May need to reset PGPLOT environment
+# variables?
+
+setenv PGPLOT_DIR /u/ki/pjm/lib/pgplot
+
+# STILL GET SAME ERROR!
+
+nm ~/lib/pgplot/libcpgplot.a | grep cpgend
+
+# cpgend.o:
+# 00000000 T cpgend
+
+# ITS THERE! ITS IN THE LIBRARY! ITS IN MARUSA'S LIBRARY! 
+# Something funny is going on- alert Jp/Eric...
+
+# Found bug - 3rd argument must be g77_gcc NOT g77_gcc_aout
+# Webpage gives correct options, makemake with no 3rd argument is confusing.
+
+# lenstool makefiles are now ready!
+
+# header files are missing!
+
+COPYHEADERS:
+cp /afs/slac/g/ki/ki01/src/wcstools-3.5.3/libwcs/wcs.h include/
+cp /afs/slac/g/ki/ki01/src/wcstools-3.5.3/libwcs/wcslib.h include/
+cp /afs/slac/g/ki/ki01/src/wcstools-3.5.3/libwcs/fitshead.h include/
+
+# Actually, makefile is wrong - the -I flags need setting when header files are
+# not stored with libraries...
+
+# Executable is made, but is in src directory... 
+
+# Run example program as Marusa did...
+
+cd examples
+../src/lenstool test
+
+# Get vi editor, edit pars then quit...
+
+# Conversion Factor 1arcsec == 5.498 kpc
+# Number of Clump used: 1
+# Clump 0: truncated PIEMD Kovner: vdisp=900 rc=1.8 e_m=0.300 r_ct=0.0 r_cr=0.0
+# 0 81 mag:0.00 sig:900.00 L:0.000 M/L:0.00 rc:10.000 rt:500.00
+# --- Lens Tool, Jean-Paul KNEIB, July 1997 ----------------------------------
+# SET: xy_grid 50
+# INFO: Write the pot.dat file
+# COMP1: critic and caustic lines for source plane at z=1.200
+#         nlens=1 npas=1024 x0=1.000 y0=0.200
+# COMP2: critic and caustic lines for source plane at z=1.800
+#         nlens=1 npas=1024 x0=1.000 y0=0.200
+# COMP3: critic and caustic lines for source plane at z=3.200
+#         nlens=1 npas=1024 x0=1.000 y0=0.200
+# SET: sources
+# READ2: source.cat:3
+# READ2: image.cat:3
+# COMP: shear components 0.517201
+# OK 3......
+# COMP: images of the sources
+# COMP: grid at z=1.200 (0.623)
+# COMP: 1: multiplicity: 5 at (-2.776,1.799): found 3 image(s)
+# COMP: grid at z=1.200 (0.623)
+# COMP: 4: multiplicity: 3 at (-1.000,1.000): found 3 image(s)
+# COMP: large distorsion 4 (-1.000,1.000) (0.200,0.100,0.698)
+# COMP: grid at z=1.800 (0.694)
+# COMP: 2: multiplicity: 7 at (2.336,0.746): found 5 image(s)
+# COMP: large distorsion 2 (2.336,0.746) (0.105,0.032,2.317)
+# COMP: grid at z=1.800 (0.694)
+# COMP: 5: multiplicity: 5 at (1.000,-1.000): found 5 image(s)
+# COMP: large distorsion 5 (1.000,-1.000) (0.200,0.100,0.698)
+# COMP: grid at z=3.200 (0.760)
+# COMP: 3: multiplicity: 7 at (-1.171,0.556): found 5 image(s)
+# COMP: large distorsion 3 (-1.171,0.556) (0.207,0.007,0.776)
+# COMP: grid at z=3.200 (0.760)
+# COMP: 6: multiplicity: 5 at (-1.000,-1.000): found 5 image(s)
+# COMP: large distorsion 6 (-1.000,-1.000) (0.200,0.100,0.698)
+
+
+# To do:
+
+# Tell Jp/Eric about other problems
+# Figure out how best to install lenstool globally...
+
+cd ~/tmp
+cp -r $LENSTOOL_DIR/lenstool-6/examples test
+cd test
+$LENSTOOL_DIR/lenstool-6/src/lenstool test
+
+# This works - copy examples directory to local space, then add 
+/u/ki/pjm/public_html/lenstool/lenstool-6/src
+# to your path
+# ==============================================================================
+# 2006-06-05 (Monday) 18:21 PDT
+
+# Putting lenstool into cvs.
+# Start with version 6, and tag as version 6. Then overwrite with version 6.1
+# and tag.
+
+# Download code and unpack:
+
+mkdir -p cvs-setup
+cd cvs-setup
+
+wget --timestamping --continue http://www.oamp.fr/cosmology/lenstool/lenstool-6.tar.gz
+
+tar xvzf lenstool-6.tar.gz
+
+mv lenstool-6 lenstool
+
+# Clean up:
+
+cd doc
+rm *.aux *.dvi *.log lenstool.ps inputfile.tex~ lenstool.tex~ lenstool.toc
+
+# Add cvs instructions
+
+sed s/B1608/lenstool/g $B1608_DIR/doc/instructions-cvs.txt > doc/instructions-cvs.txt
+
+# Add lenstool to cvs repository
+
+cvs -d:pserver:pjm@kipac.stanford.edu:/a9/cvs import \
+-m "Initialisation: Version 6.0" lenstool lenstool start
+
+# No conflicts created by this import
+
+cd ../
+mv lenstool lenstool-6
+
+# And check out the one true version...
+
+cvs -d:pserver:pjm@kipac.stanford.edu:/a9/cvs co lenstool
+
+# Tag the initial version as v6.0:
+
+cd lenstool
+cvs tag "v60"
+
+# Now download v6.1 and cp files into the lenstool module.
+ 
+cd ../
+
+wget --timestamping --continue http://www.oamp.fr/cosmology/lenstool/lenstool-6.1beta.tar.gz
+
+tar xvfz lenstool-6.1beta.tar.gz
+
+# Now copy the files (not the directories) into lenstool and tag it v61:
+
+cd ../
+
+echo "cp lenstool-6.1/* lenstool/"
+foreach dir ( `\ls -l lenstool-6.1/* | grep '/' | grep -v 'rw' | cut -d':' -f1` )
+  echo "cp $dir/* lenstool/$dir:t/"
+end  
+cvs add    src/o_rescale.c       
+cvs add    src/o_set_lens_bayes.c 
+rm         src/rescale.c
+cvs remove src/rescale.c
+cvs add    include/fitshead.h
+cvs add    include/wcs.h     
+cvs add    include/wcslib.h  
+rm         liblt/al_sq_ft.c
+cvs remove liblt/al_sq_ft.c
+cvs add    liblt/al_sq_dbl.c
+rm         liblt/al_ve_ft.c
+cvs remove liblt/al_ve_ft.c
+cvs add    liblt/al_ve_dbl.c 
+rm         liblt/fr_sq_ft.c
+cvs remove liblt/fr_sq_ft.c
+cvs add    liblt/fr_sq_dbl.c 
+
+cvs update
+
+# Only M flags!
+
+cvs ci -m "Version 6.1 beta"
+cvs tag "v61"
+
+# Now move the lenstool to replace my current version... but copy the notes
+# first!
+# ==============================================================================
+# 2006-06-06 (Tuesday) 15:17 PDT
+
+# Now compile new (development) version:
+
+cd $LENSTOOL_DIR/
+./configure
+
+# Errors with autoconf and automake, check we have correct config files checked
+# in... GEt 6.1beta again!
+
+mkdir -p test
+cd test
+wget --timestamping --continue http://www.oamp.fr/cosmology/lenstool/lenstool-6.1beta.tar.gz
+tar xvfz lenstool-6.1beta.tar.gz
+cd lenstool-6.1/
+
+./configure
+make
+
+set files = (\
+Makefile\
+Makefile.am\
+Makefile.in\
+aclocal.m4\
+config.h\
+config.h.in\
+config.log\
+config.status\
+configure\
+configure.in\
+)
+
+foreach file ( $files )
+  set n = `diff $file test/lenstool-6.1/$file | wc -l`
+  if ( $n > 0 ) then 
+    echo "$file is different"
+  endif  
+end  
+
+# Hmm, investigate more:
+
+\ls -R1 lenstool-6.1 | sed s/lenstool-6.1/lenstool/g > web.contents
+\ls -R1 lenstool > cvs.contents
+sdiff web.contents cvs.contents | more
+
+# Generated files:
+
+set genfiles = (\
+Makefile\
+autom4te.cache\
+config.h\
+config.log\
+config.status\
+stamp-h1\
+liblt/.deps\
+liblt/Makefile\
+src/.deps\
+src/Makefile\
+src/lenstool\
+table_src/.deps\
+table_src/Makefile\
+table_src/lenstool_tab\
+utils/Histogram\
+utils/Histogram2D\
+utils/Makefile\
+)
+
+# Compare all files - cvs version still does not check out properly...
+
+cd ../test
+cd lenstool/
+find | cut -d'/' -f 2- > ../files.list
+cd ../
+
+foreach file ( `cat files.list` )
+  set n = `diff lenstool/$file lenstool-6.1/$file | wc -l`
+  if ( $n > 0 ) then 
+    echo "$file is different"
+  endif  
+end
+
+# autoconf/mkinstalldirs is different
+# But this has no effect anyway...
+
+# Here's the problem:
+
+cvs -d:pserver:pjm@kipac.stanford.edu:/a9/cvs co lenstool
+./configure
+make
+
+# cd . && /bin/sh /u/ki/pjm/work/stronglensing/test/lenstool/autoconf/missing --run aclocal-1.9
+# /u/ki/pjm/work/stronglensing/test/lenstool/autoconf/missing: line 46: aclocal-1.9: command not found
+# WARNING: `aclocal-1.9' is missing on your system.  You should only need it if
+#          you modified `acinclude.m4' or `configure.in'.  You might want
+#          to install the `Automake' and `Perl' packages.  Grab them from
+#          any GNU archive site.
+#  cd . && /bin/sh /u/ki/pjm/work/stronglensing/test/lenstool/autoconf/missing --run automake-1.9 --foreign
+# /u/ki/pjm/work/stronglensing/test/lenstool/autoconf/missing: line 46: automake-1.9: command not found
+# WARNING: `automake-1.9' is missing on your system.  You should only need it if
+#          you modified `Makefile.am', `acinclude.m4' or `configure.in'.
+#          You might want to install the `Automake' and `Perl' packages.
+#          Grab them from any GNU archive site.
+# cd . && /bin/sh /u/ki/pjm/work/stronglensing/test/lenstool/autoconf/missing --run autoconf
+# configure.in:7: error: Autoconf version 2.58 or higher is required
+# aclocal.m4:501: AM_INIT_AUTOMAKE is expanded from...
+# configure.in:7: the top level
+# autom4te: /usr/bin/m4 failed with exit status: 1
+# make: *** [configure] Error 1
+
+# Does this occur after a cvs up in $LENSTOOL_DIR?
+
+cd $LENSTOOL_DIR
+cvs up
+
+# The only modified files are the examples/ ones...
+
+./configure
+make
+make clean
+make
+
+# All this is OK!
+
+# Something is wrong with the automake/autoconfigure - compare all files like
+# this one by one between freshly checkd out version and the one that works...
+
+set TEST_LENSTOOL_DIR = /u2/pjm/work/stronglensing/test/lenstool
+
+set files = (\
+Makefile\
+config.h\
+config.log\
+config.status\
+stamp-h1\
+liblt/Makefile\
+)
+
+set files = ( $files \
+INSTALL\
+Makefile.am\
+Makefile.in\
+NEWS\
+README_table\
+aclocal.m4\
+config.h.in\
+configure\
+configure.in\
+)
+
+set files = ( $files \
+autoconf/config.guess\
+autoconf/config.sub\
+autoconf/depcomp\
+autoconf/install-sh\
+autoconf/ltmain.sh\
+autoconf/missing\
+autoconf/mkinstalldirs\
+)
+
+set files = ( $files \
+liblt/Makefile.am\
+liblt/Makefile.in\
+liblt/al_sq_dbl.c\
+liblt/al_sq_int.c\
+liblt/al_ve_dbl.c\
+liblt/fr_sq_dbl.c\
+liblt/fr_sq_int.c\
+liblt/lt.h\
+liblt/nrutil.c\
+liblt/polint.c\
+liblt/printerror.c\
+liblt/qromb.c\
+liblt/rd_ipx.c\
+liblt/rd_ipxs.c\
+liblt/rdf_fits.c\
+liblt/rdf_ipx.c\
+liblt/rdf_ipxs.c\
+liblt/trapzd.c\
+liblt/wfits.c\
+liblt/wr_ipx.c\
+liblt/wr_ipxs.c\
+liblt/wrf_ipx.c\
+)
+
+FILECOMPARISON:
+foreach file ( $files )
+  set test = `diff $LENSTOOL_DIR/$file $TEST_LENSTOOL_DIR/$file |& \
+              grep -v 'diff:' | grep -v 'Common subdirectories' | wc -l`
+  if ( $test > 0 ) echo $file
+end  
+
+# These files are different. Why?!
+set problems = (\
+Makefile\
+config.log\
+config.status\
+liblt/Makefile\
+)
+
+PROBLEMSDIFF:
+foreach file ( $problems )
+  echo "$file.sdiff"
+  sdiff  -w 400 -s $LENSTOOL_DIR/$file $TEST_LENSTOOL_DIR/$file > $file.sdiff
+end
+
+# Makefile sdiff is due just to different path to local module
+# config.log sdiff is due just to differnent temporary files eg /tmp/cckdG6Ii.o(.text+0x11)
+# config.status sdiff is due just to different path to local module
+# liblt/Makefile sdiff is due just to different path to local module
+
+# Hmm - what about hidden files?
+# Sod it - do everything...
+
+cd $LENSTOOL_DIR
+set files = `find . | cut -c 3-`
+# goto FILECOMPARISON; return
+# goto PROBLEMSDIFF; return
+
+# Hmm - dependencies are different:
+
+set problems = (\
+src/.deps/tirer.Po\
+src/.deps/o_run_bayes.Po\
+)
+
+# .deps/*.Po are dummy files in test directory - guess thes would be made
+# properly if automake worked...
+
+# Now repeat this exercise with test directory being the freshly downloaded
+# unpacked tarball...
+
+set TEST_LENSTOOL_DIR = /u2/pjm/work/stronglensing/test/lenstool-6.1
+
+# Checked that confgure and make in this directory are successful...
+# Needed to repeat copy done at COPYHEADERS
+# Build is good. Now repeat above
+# goto FILECOMPARISON; return
+
+# Aha! Here is a genuine difference:
+set problems = (\
+autoconf/mkinstalldirs\
+config.log\
+liblt/Makefile\
+src/Makefile\
+table_src/Makefile\
+utils/Makefile\
+config.status\
+Makefile\
+)
+
+# goto PROBLEMSDIFF; return
+
+# LENSTOOL_DIR       # $Id: notes-phil.txt,v 1.3 2006-07-28 12:47:07 pjm Exp $                                                                                                                          
+# TEST_LENSTOOL_DIR  # $Id: notes-phil.txt,v 1.3 2006-07-28 12:47:07 pjm Exp $
+
+# ie cvs repository has a file made by me, whereas tarball has version from
+# Eric. Try compiling in the test cvs directory with this mkinstalldirs!
+
+cp $TEST_LENSTOOL_DIR/autoconf/mkinstalldirs $LENSTOOL_DIR/autoconf/mkinstalldirs
+set TEST_LENSTOOL_DIR = /u2/pjm/work/stronglensing/test/lenstool
+cp $LENSTOOL_DIR/autoconf/mkinstalldirs $TEST_LENSTOOL_DIR/autoconf/mkinstalldirs
+cd $TEST_LENSTOOL_DIR
+
+# Now I get a different error!
+
+# cd . && /bin/sh /u2/pjm/work/stronglensing/test/lenstool/autoconf/missing --run autoconf
+# configure.in:7: error: Autoconf version 2.58 or higher is required
+# aclocal.m4:501: AM_INIT_AUTOMAKE is expanded from...
+# configure.in:7: the top level
+# autom4te: /usr/bin/m4 failed with exit status: 1
+# make: *** [configure] Error 1
+
+
+
+# Give up - here is a summary of the problem to email to Eric!
+
+# The v6.1 tarball is fine - I can download it, unpack it, do ./configure
+# followed by make and, since I installed the right libraries etc, it compiles
+# just fine.
+# 
+# I added the new files in v6.1 to, and removed the no longer existing ones 
+# from, the cvs repository and checked them in. After a cvs update 
+# my local copy of lenstool compiles fine.
+# 
+# However, if I check out the current version of lenstool from elsewhere and
+# attempt to compile, the configure works fine but I get automake and autoconf
+# errors, namely the following:
+# 
+# cd . && /bin/sh /u/ki/pjm/work/stronglensing/test/lenstool/autoconf/missing --run autoconf
+# configure.in:7: error: Autoconf version 2.58 or higher is required
+# aclocal.m4:501: AM_INIT_AUTOMAKE is expanded from...
+# configure.in:7: the top level
+# autom4te: /usr/bin/m4 failed with exit status: 1
+# make: *** [configure] Error 1
+
+# ==============================================================================
+# 2006-07-18 (Tuesday) 15:52 PDT
+# 
+# Priya calls asking for advice about compilation
+# Mentiosn bug: chi0 does not change when ellipticity of clump is varied..
+# Using verion 2 or 3(!)
+
+# ==============================================================================
+# 2006-07-28 (Friday) 13:14 BST
+
+# Bugs in lenstool 6.2:
+
+# Evidence not printed to screen
+# Nrem set to small no if rate is high
+# Seed not negative
+
+# ==============================================================================
+

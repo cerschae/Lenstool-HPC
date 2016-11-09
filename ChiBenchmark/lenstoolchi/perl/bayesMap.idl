@@ -1,0 +1,28 @@
+names=file_search('tmp/*fits')
+root=(stregex(names[0],'tmp/([A-Za-z]+)',/subexpr,/extract))[1]
+n=n_elements(names)
+print, 'Combine '+strtrim(n,2)+' FITS images in tmp/'
+
+a=mrdfits(names[0],0,h)
+cube=fltarr([(size(a))[1:2], n])
+avg=a
+std=a*a
+for i = 1, n-1 do begin $
+	print, format='(%"Read file %d / %d\r",$)', i+1, n & $
+	ai=mrdfits(names[i], /silent) & $
+	avg += ai & $
+        std += ai*ai & $ 
+endfor
+
+std = std / (n-1.) - avg*avg / n / (n-1.)
+std = sqrt(std>0)
+avg /= n
+sn = avg / std
+
+fmean='mean'+root+'.fits'
+fstd='std'+root+'.fits'
+fsn='sn'+root+'.fits'
+spawn, 'rm -f '+fmean+' '+fstd+' '+fsn
+writefits, fmean, avg, h
+writefits, fstd, std, h
+writefits, fsn, sn, h

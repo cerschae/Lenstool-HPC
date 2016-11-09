@@ -1,0 +1,59 @@
+Fri Jul  6 05:42:20 2007
+Source plane optimization
+Chi2tot(dof=13): 70.7566
+Chi2pos: 4.312
+Chi2formex: 0.000
+Chi2formey: 0.000
+Chi2l: 0.000
+log(Evidence) : 20.238
+n_Warning: 0
+runmode
+	reference     3 133.693580 -1.360320
+	image     0 image2.cat
+	source    0 source.cat
+	end
+grille
+	nombre      100
+	polaire     0
+	nlentille   1
+	end
+potentiel 1
+	profil     81
+	x_centre     0.000
+	y_centre     0.000
+	ellipticite     0.650
+	angle_pos       120.000
+	core_radius         3.000
+	core_radius_kpc     16.119
+	cut_radius         250.000
+	cut_radius_kpc     1343.234
+	v_disp     800.000
+	z_lens     0.400
+	end
+cline
+	nplan    3 0.800  1.000  1.500 
+	dmax     50.000
+	algorithm   MARCHINGSQUARES
+	limitHigh   10.0
+	limitLow    1.000
+	end
+grande
+	iso         0 0 1.000 0.000 0.000
+	name        best
+	profil      0 10
+	contour     0 10
+	large_dist  0.300
+	end
+cosmologie
+	H0        70.000
+	omegaM    0.300
+	omegaX    0.700
+	wX        -1.000
+	end
+champ
+	xmin     -50.000
+	xmax     50.000
+	ymin     -50.000
+	ymax     50.000
+	end
+fini

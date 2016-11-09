@@ -1,0 +1,8 @@
+pcl clean
+pelli arcimJP.mul red
+pelli image.all magenta
+pelli pot.dat yellow
+pelli source.dat green
+pelli shear.dat cyan  noclean 100
+grid source
+

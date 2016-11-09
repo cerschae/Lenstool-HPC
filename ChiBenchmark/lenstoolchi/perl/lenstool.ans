@@ -1,0 +1,56 @@
+# Analyse script for DS9
+#
+
+help Lenstool Help
+w : set the working directory (with the best.par file)
+z : set the redshift of the selected image. (z0;z1;dz means loop format)
+x : plot the counter images according to the best.par model
+p : pause the counter image computation
+r : resume the counter image computation
+s : stop the counter image computation
+d : first time: save the positions of a set of selected images. 
+    second time: compute the distance to a selected image.
+endhelp
+
+param redshift
+z1 entry {Source redshift} 1 {}
+endparam
+
+param wdir
+cd entry {Path to working directory} /home/ejullo/clusters/a1689/cosmo/hexmodel/allsys_120clumps2 {}
+endparam 
+
+My Analysis Task
+*.fits
+bind x
+$env(LENSTOOL_DIR)/perl/counterImage.sh |& $text
+
+zSource
+*.fits
+bind z
+$param(redshift); $env(LENSTOOL_DIR)/perl/counterImage.sh -z$z1 |& $text
+
+Pause
+*.fits
+bind p
+killall -sSIGSTOP counterImage.sh |& $text
+
+Resume
+*.fits
+bind r
+killall -sSIGCONT counterImage.sh |& $text
+
+Stop
+*.fits
+bind s
+killall -sSIGINT counterImage.sh |& $text
+
+Working directory Task
+*.fits
+bind w
+$param(wdir); xpaset -p ds9 cd $cd |& $text
+
+Compute distances
+*.fits
+bind d
+$env(LENSTOOL_DIR)/perl/computeRMS.pl | $text

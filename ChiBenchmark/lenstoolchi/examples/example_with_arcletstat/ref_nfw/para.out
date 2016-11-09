@@ -1,0 +1,68 @@
+runmode
+	reference	3 0 0 0.000000 0.000000
+	shearfield	0 1.240000 phil_wl_shear.txt 1
+	verbose	0
+	inverse	3 0.010000 1000
+	end
+image
+	arcletstat	6 0 phil_wl_wcs.lenstoolcat
+	sigell	0.300000 
+	end
+source
+	grid		0
+	z_source	1.200000
+	elip_max	0.000000
+	end
+grille
+	nlens	1
+	nlens_opt	1
+	end
+potentiel 1
+0
+	profil		12
+	x_centre	0.000000
+	y_centre	0.000000
+	ellipticite	0.150000
+	angle_pos	60.000000
+	scale_radius_kpc	500.000000
+	concentration		5.000000
+	z_lens		0.500000
+	end
+limit 1
+0
+	x_centre	1 -10.000000 10.000000 1.000000
+	y_centre	1 -10.000000 10.000000 1.000000
+	ellipticite	1 0.050000 0.400000 0.010000
+	angle_pos	1 0.000000 3.141593 0.017453
+	scale_radius_kpc	1 50.000000 1000.000000 0.100000
+	concentration		1 0.500000 20.000000 0.100000
+	end
+cosmology
+	H0	70.000000
+	omega	0.300000
+	lambda	0.700000
+	kcourb	0.000000
+	end
+cline
+	nplan		1 0.600000 
+	limitHigh		5.000000
+	limitLow		0.100000
+	end
+champ
+	xmin	-201.000000
+	xmax	200.000000
+	ymin	-201.000000
+	ymax	200.000000
+	end
+fini
+DLS/DS:0.4982
+DLS:0.1990(lt) 852.18(Mpc) DOS:0.3994(lt) 1710.65(Mpc)
+DOL:0.2940(lt) 1259.08(Mpc) DOL_lum:0.6615(lt) 2832.94(Mpc)
+Conversion Factor 1 arcsec == 6.104 kpc
+Number of Clumps: 1
+-------- Clump O1: NFW 
+ Mcrit:4.215907e+11 (Msol)
+ e_m:0.1500 b/a_m:0.9512 e_p:0.0500
+ sigma_s:2409.56(km/s) b0:251.1664
+ rs:81.91(") 500.00(kpc)
+ rhos=2.0e+15 c=5.0 Mvir=3.0e+15

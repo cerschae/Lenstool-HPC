@@ -1,0 +1,181 @@
+#!/usr/bin/perl
+
+$[ = 0;			# set array base to 1
+$, = ' ';		# set output field separator
+$\ = "\n";		# set output record separator
+
+
+print ">Usage: pcl [clean] [ext/int] [critic/caustic] [nplan]";
+
+# Get the first DS9 in the xpans list
+if( ! $ENV{DS9} )
+{
+	eval{ 
+		@xpa = `xpaget xpans`;
+		@xpa = split(/ /,$xpa[0]);
+		$title=$xpa[1];
+	} or do {
+		$title="ds9";
+	}
+}
+else
+{
+	$title=$ENV{DS9};
+}
+
+
+if ($ARGV[0] eq "clean")
+{
+	system("xpaset -p $title regions deleteall");
+}
+
+open(ds9,">e.reg");
+
+#----------------------------------------------
+
+$color="red";
+
+#----------------------------------------------
+# Read the input file
+open $in, "ce.dat" or print "ERROR opening ce.dat";
+local $\; # établit le mode slurp en local
+@file=<$in>;
+close $in;
+
+#Set default WCS coordinates values
+$iref = 0;
+$ra = 0;
+$dec = 0;
+# Check if there exists the frames.pl file for compatibility
+do 'frames.pl';
+$iref = 1 if( $type eq 'fk5' );
+
+# Check if the first line contains a WCS reference
+if( $file[0] =~ /#REFERENCE/i )
+{
+	print $file[0];
+	chop $file[0];
+	($null,$iref,$ra,$dec) = split / /,$file[0];
+}
+
+#If we have the reference coordinates in sexagesimal form
+#convert them to degrees
+if ($iref == 1)
+{
+	($hh,$mm,$ss)=split(':',$ra);
+	($dd,$nn,$tt)=split(':',$dec);
+	$sign=1;
+	if (substr($dec,0,1) eq '-')
+        {
+	        $sign=-1;
+        	$dd=abs($dd);
+	}
+
+	$ra=($hh+$mm/60+$ss/3600)*15;
+	$dec=$sign*($dd+$nn/60+$tt/3600);
+	$pixel=3600;
+	$pixelx=-3600*cos($dec/180*3.1415926);
+	$ds9type = 'fk5';
+}
+elsif( $iref == 2 )
+{
+	$ds9type = 'image';
+}
+else #( $iref == 3 or $iref == 0 ) default case
+{
+	$pixel=3600;
+	$pixelx=-3600*cos($dec/180*3.1415926);
+	$ds9type = 'fk5';
+}
+
+#---------------------------------------------------------
+if ($ARGV[1] ne "ext")
+{
+	$n = 0; $i = 1; $id[0]=-1; 
+	push @nplan, $i;
+	open(in,"ci.dat");
+	while (<in>) 
+	{
+		chop;	# strip record separator
+		($id[$i],$xi,$yi,$xs,$ys) = split;
+		push @nplan, $i if( $id[$i] < $id[$i-1] );
+		$xxi[$i]=$xi/$pixelx+$ra; $yyi[$i]=$yi/$pixel+$dec;
+		$xxs[$i]=$xs/$pixelx+$ra; $yys[$i]=$ys/$pixel+$dec;
+		$i++;
+	}
+	close(in);
+	push @nplan, $i;
+	if( $ARGV[3] eq "" )
+	{
+		$s = 1; $n = $i;
+	} else
+	{
+		$s = $nplan[$ARGV[3]-1];
+		$n = $nplan[$ARGV[3]];
+	}
+	for($i=$s;$i<$n;$i++)
+	{
+		if ($id[$i-1] == $id[$i])
+		{
+			if ($ARGV[2] ne "caustic")
+			{
+				printf ds9 "$ds9type;line(%f,%f,%f,%f) # color=red line=0 0\n",
+				$xxi[$i-1],$yyi[$i-1],$xxi[$i],$yyi[$i];
+			}
+			if ($ARGV[2] ne "critic")
+	                {
+				printf ds9 "$ds9type;line(%f,%f,%f,%f) # color=yellow line=0 0\n",
+				$xxs[$i-1],$yys[$i-1],$xxs[$i],$yys[$i];
+			}
+		}
+	}
+}
+
+# Empty the nplan array
+shift @nplan while( @nplan );
+
+if ($ARGV[1] ne "int")
+{
+	$n = 0; $i = 1; $id[0] = -1;
+	push @nplan, $i;
+	open(in,"ce.dat");
+	while (<in>) 
+	{
+		chop;       # strip record separator
+		($id[$i],$xi,$yi,$xs,$ys) = split;
+		push @nplan, $i if( $id[$i] < $id[$i-1] );
+        	$xxi[$i]=$xi/$pixelx+$ra; $yyi[$i]=$yi/$pixel+$dec;
+	        $xxs[$i]=$xs/$pixelx+$ra; $yys[$i]=$ys/$pixel+$dec;
+	       	$i++;
+	}
+	close(in);
+	push @nplan, $i;
+	if( $ARGV[3] eq "" )
+	{
+		$s = 1; $n = $i;
+	} else
+	{
+		$s = $nplan[$ARGV[3]-1];
+		$n = $nplan[$ARGV[3]];
+	}
+	for($i=$s;$i<$n;$i++)
+	{
+		if ($id[$i-1] == $id[$i])
+		{
+			if ($ARGV[2] ne "caustic")
+                	{
+				printf ds9 "$ds9type;line(%f,%f,%f,%f) # color=red line=0 0\n", 
+				$xxi[$i-1],$yyi[$i-1],$xxi[$i],$yyi[$i];
+                	}
+			if ($ARGV[2] ne "critic")
+			{
+        			printf ds9 "$ds9type;line(%f,%f,%f,%f) # color=yellow line=0 0\n",
+	        		$xxs[$i-1],$yys[$i-1],$xxs[$i],$yys[$i];
+			}
+		}
+	}
+}
+
+close(ds9);
+
+system("cat e.reg | xpaset $title regions");
