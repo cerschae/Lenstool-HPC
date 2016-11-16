@@ -18,6 +18,7 @@
 #include "structure.h"
 #include "timer.h"
 #include "gradient.hpp"
+#include "chi.hpp"
 #include "module_cosmodistances.h"
 #include "module_readParameters.hpp"
 #include "structure.h"
@@ -122,7 +123,7 @@ int main(int argc, char *argv[])
 
 
 
-	// This module function reads in the grid form and its parameters (e.g. NFW)
+	// This module function reads in the grid form and its parameters
 	// Input: input file
 	// Output: grid and its parameters
 
@@ -175,6 +176,16 @@ int main(int argc, char *argv[])
 	}
 
 
+	// Lenstool-GPU Bruteforce
+	//===========================================================================================================
+	double chi2(0);
+	int error(0);
+
+
+	chi_bruteforce(&chi2,&error,&runmode,lenses,&frame,nImagesSet,images);
+
+	std::cout << " Chi Brute Force Benchmark " << std::endl;
+	std::cout << " Chi : " << chi2 <<  std::endl;
 
 
 

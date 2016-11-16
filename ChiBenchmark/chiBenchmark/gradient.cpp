@@ -242,7 +242,7 @@ struct point module_potentialDerivatives_totalGradient(const runmode_param *runm
         struct point grad, clumpgrad;
         grad.x = 0;
         grad.y = 0;
-	std::cout << "nhalos = " << runmode->nhalos << std::endl;
+	//std::cout << "nhalos = " << runmode->nhalos << std::endl;
         for(int i = 0; i < runmode->nhalos; i++)
         {
                 clumpgrad = grad_halo(pImage, &lens[i]);  //compute gradient for each clump separately
