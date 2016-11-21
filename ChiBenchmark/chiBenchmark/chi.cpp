@@ -87,17 +87,18 @@ void chi_bruteforce(double *chi, int *error, runmode_param *runmode, const struc
 						im_index=0;
 						im_position=module_chiClassic_barycenter(&Tsup);
 						im_dist[im_index]=module_chiClassic_dist(im_position,images[index+im_index].center);  // get the distance to the real image
-						for(int i=1; i<nimages_strongLensing[bid]; i++){  // get the distance to each real image and keep the index of the closest real image
+						for(int i=1; i<nimages_strongLensing[source_id]; i++){  // get the distance to each real image and keep the index of the closest real image
 							im_dist[i]=module_chiClassic_dist(im_position,images[index+i].center);
 							if(im_dist[i]<im_dist[im_index]){
 								im_index=i;
 							}
+							//printf(" im_index %d im_dist actual %f im_dist %f \n",im_index, im_dist[im_index], im_dist[i]);
 						}
 						if(DEBUG ==1){
 							//printf(" %d Found something at  x %f y %f by bid %d and tid %d\n", image_id,x_pos,y_pos, bid , tid);
 							//printf("T ax %f ay %f cx %f cy %f Tsour ax %f ay %f cx %f cy %fby bid %d and tid %d\n", Tinf.a.x, Tinf.a.y , Tinf.c.x, Tinf.c.y ,Tinfsource.a.x, Tinfsource.a.y , Tinfsource.c.x, Tinfsource.c.y , bid , tid);
 							//printf(" %d Source x %f y %f by bid %d and tid %d\n", source_id,sources[source_id].center.x, sources[source_id].center.y , bid , tid);
-							printf(" %d Img x %f y %f by bid %d and tid %d\n",image_id, im_position.x, im_position.y , bid , tid);
+							//printf(" %d Img x %f y %f by bid %d and tid %d\n",image_id, im_position.x, im_position.y , bid , tid);
 						}
 					}
 
@@ -106,7 +107,7 @@ void chi_bruteforce(double *chi, int *error, runmode_param *runmode, const struc
 						im_index=0;
 						im_position=module_chiClassic_barycenter(&Tinf);  // get the barycenter of the triangle
 						im_dist[im_index]=module_chiClassic_dist(im_position,images[index+im_index].center);  // get the distance to the real image
-						for(int i=1; i<nimages_strongLensing[bid]; i++){  // get the distance to each real image and keep the index of the closest real image
+						for(int i=1; i<nimages_strongLensing[source_id]; i++){  // get the distance to each real image and keep the index of the closest real image
 
 							im_dist[i]=module_chiClassic_dist(im_position,images[index+i].center);
 							//printf("im_dist[i] %f, im_position %f %f , images[index+im_index].center %f %f\n",im_dist[i], im_position.x,im_position.y, images[index+i].center.x,images[index+i].center.y);
@@ -118,7 +119,7 @@ void chi_bruteforce(double *chi, int *error, runmode_param *runmode, const struc
 							//printf(" %d Found something at  x %f y %f by bid %d and tid %d\n",image_id, x_pos,y_pos, bid , tid);
 							//printf("T ax %f ay %f cx %f cy %f Tsour ax %f ay %f cx %f cy %fby bid %d and tid %d\n", Tinf.a.x, Tinf.a.y , Tinf.c.x, Tinf.c.y ,Tinfsource.a.x, Tinfsource.a.y , Tinfsource.c.x, Tinfsource.c.y , bid , tid);
 							//printf(" %d Source x %f y %f by bid %d and tid %d\n",source_id, sources[source_id].center.x, sources[source_id].center.y , bid , tid);
-							printf(" %d Img x %f y %f by bid %d and tid %d\n",image_id, im_position.x, im_position.y , bid , tid);
+							//printf(" %d Img x %f y %f by bid %d and tid %d\n",image_id, im_position.x, im_position.y , bid , tid);
 						}
 					}
 
@@ -137,7 +138,7 @@ void chi_bruteforce(double *chi, int *error, runmode_param *runmode, const struc
 						}
 						if(skip_image==0){
 									//checking whether a closest image has already been found
-							printf("imagenumber %d im_index %d , im_position.x %f , im_position.y %f \n", image_id, im_index  , im_position.x  , im_position.y);
+							//printf("imagenumber %d im_index %d , im_position.x %f , im_position.y %f \n", image_id, im_index  , im_position.x  , im_position.y);
 							if(nimagesfound[image_id][im_index]==0){ // if no image found up to now
 								tim[image_id][im_index]=im_position;  //image position is allocated to theoretical image
 								nimagesfound[image_id][im_index]++;
@@ -157,14 +158,14 @@ void chi_bruteforce(double *chi, int *error, runmode_param *runmode, const struc
 								// Loop over all images in the set except the closest one
 								// and initialize to the furthest away image
 								second_closest_id=0;
-								for(int i=1; i<nimages_strongLensing[bid] && i!=im_index; i++)
+								for(int i=1; i<nimages_strongLensing[source_id] && i!=im_index; i++)
 								{
 									if(im_dist[i]>im_dist[second_closest_id]) second_closest_id=i;
 								}
 								///////////////////////////////////////////////////////////////
 								// Loop over all images in the set that are not yet allocated to a theoretical image
 								// and allocate the closest one
-								for(int i=0; i<nimages_strongLensing[bid] && nimagesfound[image_id][i]==0; i++) // we search for an observed image not already linked (nimagesfound=0)
+								for(int i=0; i<nimages_strongLensing[source_id] && nimagesfound[image_id][i]==0; i++) // we search for an observed image not already linked (nimagesfound=0)
 								{
 									if(im_dist[i]<im_dist[second_closest_id])
 									{
@@ -192,21 +193,19 @@ void chi_bruteforce(double *chi, int *error, runmode_param *runmode, const struc
 		double chiimage;
 
 		for( int iter = 0; iter < nimages_strongLensing[source_id]*nimages_strongLensing[source_id]; iter++){
-			int i=tid/nimages_strongLensing[iter];
-			int j=tid % nimages_strongLensing[iter];
+			int i=iter/nimages_strongLensing[source_id];
+			int j=iter % nimages_strongLensing[source_id];
+
 			if(i!=j){
 				// In the current method, we get the source in the source plane by ray tracing image in nimagesfound[i][i]. If we ray trace back,
 				// we arrive again at the same position and thus the chi2 from it is 0. Thus we do not calculate the chi2 (-> if i!=j)
 				if(nimagesfound[i][j]>0){
 					chiimage=pow(images[index+j].center.x-tim[i][j].x,2)+pow(images[index+j].center.y-tim[i][j].y,2);  // compute the chi2
 					*chi += chiimage;
-					//printf("chi %f %f %f bid %d tid %d X %f Y %f\n", chi,temp_chi,chiimage,bid,tid ,tim[i][j].x,tim[i][j].y);
 				}
 				else if(nimagesfound[i][j]==0){
 					// If we do not find a correpsonding image, we add a big value to the chi2 to disfavor the model
 					*chi += 100.*nimages_strongLensing[source_id];
-																	//
-					//printf("chi %f %f %f bid %d tid %d X %f Y %f\n", chi,temp_chi,chiimage,bid,tid ,tim[i][j].x,tim[i][j].y);
 				}
 			}
 		}

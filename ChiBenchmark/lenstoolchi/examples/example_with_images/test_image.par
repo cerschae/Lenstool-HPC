@@ -5,13 +5,13 @@ runmode
 	mass      3 100 0.400 mass.fits
 	shearfield  1 2.000 shear.dat
 	grille	  1  100 2.0		# grid in the source plane
-	inverse   3 0.1
+	inverse   0 0.1
 	end
 image
 	multfile  1  image_wcs.cat
 	mult_wcs 1
 	sigposArcsec 0.1
-	forme    0
+	forme    -1
 	end
 grille
 	nombre      100
@@ -25,8 +25,7 @@ source
 potentiel 1
 	profil     81
 	x_centre     0.000
-t
-	y_centre     0.000
+	y_centre     0.000
 	ellipticit     0.65
 	angle_pos     120.
 	core_radius  3.00
