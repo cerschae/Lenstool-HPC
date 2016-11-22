@@ -98,7 +98,7 @@ void chi_bruteforce(double *chi, int *error, runmode_param *runmode, const struc
 							//printf(" %d Found something at  x %f y %f by bid %d and tid %d\n", image_id,x_pos,y_pos, bid , tid);
 							//printf("T ax %f ay %f cx %f cy %f Tsour ax %f ay %f cx %f cy %fby bid %d and tid %d\n", Tinf.a.x, Tinf.a.y , Tinf.c.x, Tinf.c.y ,Tinfsource.a.x, Tinfsource.a.y , Tinfsource.c.x, Tinfsource.c.y , bid , tid);
 							//printf(" %d Source x %f y %f by bid %d and tid %d\n", source_id,sources[source_id].center.x, sources[source_id].center.y , bid , tid);
-							//printf(" %d Img x %f y %f by bid %d and tid %d\n",image_id, im_position.x, im_position.y , bid , tid);
+							printf(" %d Img x %f y %f  im_dist %f and im_index %d\n",image_id, im_position.x, im_position.y , im_dist[im_index] , im_index);
 						}
 					}
 
@@ -119,7 +119,7 @@ void chi_bruteforce(double *chi, int *error, runmode_param *runmode, const struc
 							//printf(" %d Found something at  x %f y %f by bid %d and tid %d\n",image_id, x_pos,y_pos, bid , tid);
 							//printf("T ax %f ay %f cx %f cy %f Tsour ax %f ay %f cx %f cy %fby bid %d and tid %d\n", Tinf.a.x, Tinf.a.y , Tinf.c.x, Tinf.c.y ,Tinfsource.a.x, Tinfsource.a.y , Tinfsource.c.x, Tinfsource.c.y , bid , tid);
 							//printf(" %d Source x %f y %f by bid %d and tid %d\n",source_id, sources[source_id].center.x, sources[source_id].center.y , bid , tid);
-							//printf(" %d Img x %f y %f by bid %d and tid %d\n",image_id, im_position.x, im_position.y , bid , tid);
+							printf(" %d Img x %f y %f  im_dist %f and im_index %d\n",image_id, im_position.x, im_position.y , im_dist[im_index] , im_index);
 						}
 					}
 

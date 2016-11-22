@@ -1,22 +1,26 @@
 #The user defines which mode of lenstool he wants to run here
 runmode
 	source 0 sources.cat										
-	image 1	theoretical_images_time.txt
+	image 0	theoretical_images_time.txt
 	#inverse 0
-	grid 1 22 1.5  									
-	poten 1 1000 1.5 
-	mass 1 1000 0.4 1.5
-	dpl 1 1000 1.5
-	amplif 1 1000 1.5
-	nbgridcells 1000
+	nbgridcells 100
+	chi2 1
 	Debug   										# true activates debug mode
 	end
-frame  
-	#dmax 45										#either dmax or x and y have to be declared when a grid is used
-	xmin     -50.000
-	xmax     50.000
-	ymin     -50.000
-	ymax     50.000
+image
+	multfile  1  theoretical_images_time.txt
+	mult_wcs 1
+	sigposArcsec 0.1
+	forme    -10
+	end
+grille
+	nombre      100
+	polaire     0
+	nlentille   6
+	nlens_opt 1
+	end
+champ
+	dmax     50.
 	end
 cosmology												
 	model	  1
@@ -33,8 +37,8 @@ potentiel 1
 	y_centre     0.000								#Y Position [arcsec]
 	ellipticity     0.11					#Ellipticity
 	v_disp     800.									#Dispersion Velocity [km/s]
-	rcut	500										#Cut radius (PIEMD distribution)
-	rcore 	5										#Core radius (PIEMD distribution)
+	cut_radius	500										#Cut radius (PIEMD distribution)
+	core_radius 	5										#Core radius (PIEMD distribution)
 	z_lens     0.4									#Redshift of lens
 	end
 potentiel 2
@@ -43,8 +47,8 @@ potentiel 2
 	y_centre     20.000								#Y Position [arcsec]
 	ellipticity     0.11							#Ellipticity
 	v_disp     140.									#Dispersion Velocity [km/s]
-	rcut	150										#Cut radius (PIEMD distribution)
-	rcore 	1										#Core radius (PIEMD distribution)
+	cut_radius	150										#Cut radius (PIEMD distribution)
+	core_radius 	1										#Core radius (PIEMD distribution)
 	z_lens     0.4									#Redshift of lens
 	end
 potentiel 4
@@ -53,8 +57,8 @@ potentiel 4
 	y_centre     2.000								#Y Position [arcsec]
 	ellipticity     0.11							#Ellipticity
 	v_disp     130.									#Dispersion Velocity [km/s]
-	rcut	150										#Cut radius (PIEMD distribution)
-	rcore 	1										#Core radius (PIEMD distribution)
+	cut_radius	150										#Cut radius (PIEMD distribution)
+	core_radius 	1										#Core radius (PIEMD distribution)
 	z_lens     0.4									#Redshift of lens
 	end
 potentiel 5
@@ -63,8 +67,8 @@ potentiel 5
 	y_centre     0.000								#Y Position [arcsec]
 	ellipticity     0.11							#Ellipticity
 	v_disp     110.									#Dispersion Velocity [km/s]
-	rcut	150										#Cut radius (PIEMD distribution)
-	rcore 	1										#Core radius (PIEMD distribution)
+	cut_radius	150										#Cut radius (PIEMD distribution)
+	core_radius 	1										#Core radius (PIEMD distribution)
 	z_lens     0.4									#Redshift of lens
 	end
 potentiel 6
@@ -73,8 +77,8 @@ potentiel 6
 	y_centre     -10.000								#Y Position [arcsec]
 	ellipticity     0.11							#Ellipticity
 	v_disp     80.									#Dispersion Velocity [km/s]
-	rcut	150										#Cut radius (PIEMD distribution)
-	rcore 	1										#Core radius (PIEMD distribution)
+	cut_radius	150										#Cut radius (PIEMD distribution)
+	core_radius 	1										#Core radius (PIEMD distribution)
 	z_lens     0.4									#Redshift of lens
 	end
 potentiel 7
@@ -83,24 +87,8 @@ potentiel 7
 	y_centre     -7.000								#Y Position [arcsec]
 	ellipticity     0.11							#Ellipticity
 	v_disp     120.									#Dispersion Velocity [km/s]
-	rcut	150										#Cut radius (PIEMD distribution)
-	rcore 	1										#Core radius (PIEMD distribution)
+	cut_radius	150										#Cut radius (PIEMD distribution)
+	core_radius 	1										#Core radius (PIEMD distribution)
 	z_lens     0.4									#Redshift of lens
 	end
-limit 1
-    x_centre           1 -1.0  1.0 0.01000
-    y_centre           1 -1.0  1.0 0.010000
-    ellipticity        1  0.05  0.75 0.01
-    angle_pos          0 0. 180.0 0.1
-    rcore     0 0.1 4. 0.100000
-    rcut      0  1.0 20.0 0.10000
-    v_disp          0 200.0 1000.0  0.10000
-    end
-cline
-	nplan     1 1.5
-	dmax	50
-	limitLow	0.2
-	limitHigh	10
-	nbgridcells	1000
-	end
-finish
+fini

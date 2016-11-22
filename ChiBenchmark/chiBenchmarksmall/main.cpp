@@ -181,12 +181,14 @@ int main(int argc, char *argv[])
 	double chi2(0);
 	int error(0);
 
-
+	double t_1(0);
+	t_1 = -myseconds();
 	chi_bruteforce(&chi2,&error,&runmode,lenses,&frame,nImagesSet,images);
+	t_1 += myseconds();
 
 	std::cout << " Chi Brute Force Benchmark " << std::endl;
 	std::cout << " Chi : " << chi2 <<  std::endl;
-
+	std::cout << " Time  " << std::setprecision(5) << t_1 << std::endl;
 
 
 
