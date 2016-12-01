@@ -1,0 +1,15 @@
+Lenstool-hpc hierarchy
+
+- src	(source code)
+	- grad	(source code for gradient calculation)
+	- chi	(source code for chi calculation)
+	- etc
+- test	(configuration for tests and benchmarks, unitests and test-results)
+	- configfiles (contains the the parameters and img files for test and benchmarks)
+		- parameter (parameterfiles)
+		- img	(imagesfiles)
+	- results (results against which to compare tests)
+		- chi (results for chi)
+		- grad (results for grad)
+		-
+
