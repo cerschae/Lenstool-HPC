@@ -61,7 +61,7 @@ struct point module_potentialDerivatives_totalGradient_SOA_AVX512(const struct p
                         //
                         __m512d sqe   = __SQRT(eps);
                         //
-                        __m512d cx1  = _mm512_mul_pd(one_minus_eps,one_minus_eps);    // (1. - eps)/(1. + eps); 3 ops
+                        __m512d cx1  = _mm512_mul_pd(one_minus_eps, one_plus_eps_rcp);    // (1. - eps)/(1. + eps); 3 ops
                         //__m512d cx1  = one_minus_eps*one_plus_eps_rcp;    // (1. - eps)/(1. + eps); 3 ops
                         __m512d cxro = one_plus_eps*one_plus_eps;         // (1. + eps)*(1. + eps); 3 ops
                         __m512d cyro = one_minus_eps*one_minus_eps;       // (1. - eps)*(1. - eps); 3 ops
@@ -189,7 +189,7 @@ struct point module_potentialDerivatives_totalGradient_81_SOA_AVX512(const struc
 		//
 		__m512d sqe   = __SQRT(eps);
 		//
-		__m512d cx1  = _mm512_mul_pd(one_minus_eps,one_minus_eps);    // (1. - eps)/(1. + eps); 3 ops
+		__m512d cx1  = _mm512_mul_pd(one_minus_eps,one_plus_eps_rcp);    // (1. - eps)/(1. + eps); 3 ops
 		//__m512d cx1  = one_minus_eps*one_plus_eps_rcp;    // (1. - eps)/(1. + eps); 3 ops
 		__m512d cxro = one_plus_eps*one_plus_eps;         // (1. + eps)*(1. + eps); 3 ops
 		__m512d cyro = one_minus_eps*one_minus_eps;       // (1. - eps)*(1. - eps); 3 ops
