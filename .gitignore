@@ -2,11 +2,9 @@
 .project
 .metadata
 .cproject
-<<<<<<< HEAD
 .settings
-.o
-=======
 *.o
 *.optrpt
 GradienBenchmark
->>>>>>> gilles
+.nfs*
+*.DIST
