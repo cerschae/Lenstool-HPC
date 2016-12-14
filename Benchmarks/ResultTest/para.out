@@ -1,0 +1,132 @@
+runmode
+	source	0 sources.cat
+	image	0 theoretical_images_time.txt
+	chi2	1
+	end
+image
+	multfile	1 theoretical_images_time.txt
+	mult_wcs	1
+	sigposArcsec		0.100000
+	forme		-10
+	end
+grille
+	nombre		100
+	polaire		0
+	nlentille	6
+	nlens_opt	1
+	end
+champ
+	dmax	50.000000
+	end
+cosmology
+	model	1
+	H0	70.000000
+	omegaM	0.300000
+	omegaX	0.700000
+	omegaK	0.000000
+	wX	-1.000000
+	kcourb	0.000000
+	end
+potentiel
+0
+	profil		8
+	x_centre	0.000000
+	y_centre	0.000000
+	ellipticity	0.110000
+	v_disp		800.000000
+	cut_radius	500.000000
+	core_radius	5.000000
+	z_lens		0.400000
+	end
+potentiel
+1
+	profil		8
+	x_centre	25.000000
+	y_centre	20.000000
+	ellipticity	0.110000
+	v_disp		140.000000
+	cut_radius	150.000000
+	core_radius	1.000000
+	z_lens		0.400000
+	end
+potentiel
+2
+	profil		8
+	x_centre	-16.000000
+	y_centre	2.000000
+	ellipticity	0.110000
+	v_disp		130.000000
+	cut_radius	150.000000
+	core_radius	1.000000
+	z_lens		0.400000
+	end
+potentiel
+3
+	profil		8
+	x_centre	-10.000000
+	y_centre	0.000000
+	ellipticity	0.110000
+	v_disp		110.000000
+	cut_radius	150.000000
+	core_radius	1.000000
+	z_lens		0.400000
+	end
+potentiel
+4
+	profil		8
+	x_centre	3.000000
+	y_centre	-10.000000
+	ellipticity	0.110000
+	v_disp		80.000000
+	cut_radius	150.000000
+	core_radius	1.000000
+	z_lens		0.400000
+	end
+potentiel
+5
+	profil		8
+	x_centre	17.000000
+	y_centre	-7.000000
+	ellipticity	0.110000
+	v_disp		120.000000
+	cut_radius	150.000000
+	core_radius	1.000000
+	z_lens		0.400000
+	end
+fini
+For z_s = 0.8000  DLS/DS:0.4434
+DLS:0.1603(lt) 686.74(Mpc) DOS:0.3616(lt) 1548.71(Mpc)
+DOL:0.2588(lt) 1108.25(Mpc) DOL_lum:0.5072(lt) 2172.16(Mpc)
+Mcrit:3.383335e-03 (10^12 Msol/kpc^2)
+Conversion Factor @ z = 0.400000, 1 arcsec == 5.373 kpc
+Number of Clumps: 6
+-------- Clump O1: PIEMD Kovner
+ vdisp:800.00(km/s) b0:27.6863
+ rc:5.00(") 26.86(kpc)
+ rt:500.00(") 2686.47(kpc)
+ r_ct:0.0000 r_cr:0.0000
+-------- Clump 2: PIEMD Kovner
+ vdisp:140.00(km/s) b0:0.8479
+ rc:1.00(") 5.37(kpc)
+ rt:150.00(") 805.94(kpc)
+ r_ct:0.0000 r_cr:0.0000
+-------- Clump 3: PIEMD Kovner
+ vdisp:130.00(km/s) b0:0.7311
+ rc:1.00(") 5.37(kpc)
+ rt:150.00(") 805.94(kpc)
+ r_ct:0.0000 r_cr:0.0000
+-------- Clump 4: PIEMD Kovner
+ vdisp:110.00(km/s) b0:0.5234
+ rc:1.00(") 5.37(kpc)
+ rt:150.00(") 805.94(kpc)
+ r_ct:0.0000 r_cr:0.0000
+-------- Clump 5: PIEMD Kovner
+ vdisp:80.00(km/s) b0:0.2769
+ rc:1.00(") 5.37(kpc)
+ rt:150.00(") 805.94(kpc)
+ r_ct:0.0000 r_cr:0.0000
+-------- Clump 6: PIEMD Kovner
+ vdisp:120.00(km/s) b0:0.6229
+ rc:1.00(") 5.37(kpc)
+ rt:150.00(") 805.94(kpc)
+ r_ct:0.0000 r_cr:0.0000
