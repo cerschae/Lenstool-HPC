@@ -132,11 +132,11 @@ struct point module_potentialDerivatives_totalGradient_SOA_AVX(const struct poin
 		zis_re = b0*zres_re;
 		zis_im = b0*zres_im;
 		//
-                cos_theta = _mm256_cos_pd(- theta);
-                sin_theta = _mm256_sin_pd(- theta);
+                cos_theta = _mm256_cos_pd(zero - theta);
+                sin_theta = _mm256_sin_pd(zero - theta);
                 // rotation: 6 ops
-		__grad_x    += _mm256_add_pd(_mm256_mul_pd(zis_re, cos_theta), _mm256_mul_pd(zis_im, sin_theta));
-		__grad_y    += _mm256_sub_pd(_mm256_mul_pd(zis_im, cos_theta), _mm256_mul_pd(zis_re, sin_theta));
+		__grad_x    = __grad_x + _mm256_add_pd(_mm256_mul_pd(zis_re, cos_theta), _mm256_mul_pd(zis_im, sin_theta));
+		__grad_y    = __grad_y + _mm256_sub_pd(_mm256_mul_pd(zis_im, cos_theta), _mm256_mul_pd(zis_re, sin_theta));
 		//
 		//__grad_x    += _mm256_add_pd(_mm256_mul_pd(zis_re, cos_theta), _mm256_mul_pd(zis_im, sin_theta));
 		//__grad_y    += _mm256_sub_pd(_mm256_mul_pd(zis_im, cos_theta), _mm256_mul_pd(zis_re, sin_theta));
@@ -295,11 +295,11 @@ struct point module_potentialDerivatives_totalGradient_81_SOA_AVX(const struct p
                 zis_re    = t05*(zres_rc_re - zres_rcut_re);
                 zis_im    = t05*(zres_rc_im - zres_rcut_im);
                 //
-                cos_theta   = _mm256_cos_pd(- theta);
-                sin_theta   = _mm256_sin_pd(- theta);
+                cos_theta   = _mm256_cos_pd(zero - theta);
+                sin_theta   = _mm256_sin_pd(zero - theta);
                 // rotation: 6 ops
-                __grad_x   += _mm256_add_pd(_mm256_mul_pd(zis_re, cos_theta), _mm256_mul_pd(zis_im, sin_theta));
-                __grad_y   += _mm256_sub_pd(_mm256_mul_pd(zis_im, cos_theta), _mm256_mul_pd(zis_re, sin_theta));
+                __grad_x   = __grad_x + _mm256_add_pd(_mm256_mul_pd(zis_re, cos_theta), _mm256_mul_pd(zis_im, sin_theta));
+                __grad_y   = __grad_y + _mm256_sub_pd(_mm256_mul_pd(zis_im, cos_theta), _mm256_mul_pd(zis_re, sin_theta));
         }
         //
         //

@@ -72,9 +72,9 @@ int main()
 	t2 = -myseconds();
 	for (int ii = 0; ii < NN; ++ii)
 	{
-		grad_soa = module_potentialDerivatives_totalGradient_81_SOA_AVX512(&image_soa, &lens_soa, nlenses_soa);	 
-		//grad_soa = module_potentialDerivatives_totalGradient_81_SOA_AVX(&image_soa, &lens_soa, nlenses_soa);	 
-		//grad_soa = module_potentialDerivatives_totalGradient_SOA_AVX(&image_soa, &lens_soa, nlenses_soa);	 
+		//grad_soa = module_potentialDerivatives_totalGradient_81_SOA_AVX512(&image_soa, &lens_soa, nlenses_soa);
+		//grad_soa = module_potentialDerivatives_totalGradient_81_SOA_AVX(&image_soa, &lens_soa, nlenses_soa);
+		grad_soa = module_potentialDerivatives_totalGradient_SOA_AVX(&image_soa, &lens_soa, nlenses_soa);
 	}	
 	t2 += myseconds();
 	//
