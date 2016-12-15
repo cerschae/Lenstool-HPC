@@ -20,12 +20,15 @@ program_INCLUDE_DIRS += /usr/include/cfitsio/
 program_INCLUDE_DIRS += /users/fgilles/Projects/Libs/cfitsio/include
 program_INCLUDE_DIRS += /users/fgilles/bin/iaca-lin32/include
 program_INCLUDE_DIRS += /users/fgilles/GPU-Projects/lenstool-master/src
+program_INCLUDE_DIRS += /home/epfl/cerschae/lenstool-hpc/src 
 
 program_CU_INCLUDE_DIRS := /home/users/amclaugh/CUB/cub-1.3.2/ #CUDA Include directories
 #
 program_INCLUDE_LIBS := /usr/lib64/ #Include libraries
 program_INCLUDE_LIBS += /users/fgilles/Projects/Libs/cfitsio/lib #Include libraries
 program_INCLUDE_LIBS += /users/fgilles/GPU-Projects/lenstool-master/src
+program_INCLUDE_LIBS += /home/epfl/cerschae/lenstool-hpc/src 
+program_INCLUDE_LIBS += /home/epfl/cerschae/LENSTOOL/lenstool-6.8.1/src 
 #
 # Compiler flags
 CPPFLAGS += $(foreach includedir,$(program_INCLUDE_DIRS),-I$(includedir))
