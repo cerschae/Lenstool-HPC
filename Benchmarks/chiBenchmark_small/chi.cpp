@@ -732,7 +732,7 @@ void chi_transformImageToSourcePlane(const runmode_param *runmode, const struct 
 {   // dlsds is the distance between lens and source divided by the distance observer-source
     struct point Grad;  // gradient
 
-    //Grad = module_potentialDerivatives_totalGradient_SOA(runmode, image_point, lens);
+    Grad = module_potentialDerivatives_totalGradient(runmode->nhalos, image_point, lens);
     //Grad = module_potentialDerivatives_totalGradient_SOA(image_point, lens, runmode->Nlens);
 
     source_point->x = image_point->x - dlsds * Grad.x;
@@ -746,11 +746,11 @@ void chi_transformImageToSourcePlane_SOA(const int *Nlens, const struct point *i
     //std::cerr << Nlens[0] << Nlens[1] << lens[1].b0[0] << std::endl;
     //Grad = module_potentialDerivatives_totalGradient_SOA_AVX512(Nlens,image_point, lens);
 #ifdef __AVX512F__
-    Grad = module_potentialDerivatives_totalGradient_SOA_AVX512(image_point, lens, *Nlens);
+    Grad = module_potentialDerivatives_totalGradient_SOA_AVX512(image_point, &lens[1], Nlens[1]);
 #else
-    Grad = module_potentialDerivatives_totalGradient_SOA_AVX(image_point, lens, *Nlens);
+    Grad = module_potentialDerivatives_totalGradient_SOA_AVX(image_point, &lens[1], Nlens[1]);
 #endif
-	
+    Grad = module_potentialDerivatives_totalGradient_SOA_AVX(image_point, &lens[1], Nlens[1]);
 
     source_point->x = image_point->x - dlsds * Grad.x;
     source_point->y = image_point->y - dlsds * Grad.y;

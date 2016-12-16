@@ -40,7 +40,7 @@ void rotateCoordinateSystem_avx(__m256d Q_x, __m256d Q_y, const __m256d P_x, con
 //
 //
 //
-struct point module_potentialDerivatives_totalGradient_SOA_AVX(const struct point *pImage, const struct Potential_SOA *lens, int nhalos)
+struct point module_potentialDerivatives_totalGradient_SOA_AVX(const struct point *pImage, const struct Potential_SOA *lens, const int nhalos)
 {
         struct point grad, clumpgrad;
         grad.x = 0;
@@ -173,7 +173,7 @@ struct point module_potentialDerivatives_totalGradient_SOA_AVX(const struct poin
 //
 //
 //
-struct point module_potentialDerivatives_totalGradient_81_SOA_AVX(const struct point *pImage, const struct Potential_SOA *lens, int nhalos)
+struct point module_potentialDerivatives_totalGradient_81_SOA_AVX(const struct point *pImage, const struct Potential_SOA *lens,const int nhalos)
 {
         struct point grad, clumpgrad;
         grad.x = 0;
