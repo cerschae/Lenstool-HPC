@@ -26,8 +26,8 @@ inline __m512d RCP_2NR_AVX512(const __m512d d)
 {
 
 	__m512d x0;
-	//x0 = _mm512_div_pd(_mm512_set1_pd(1.), d);
-	//return x0;
+	x0 = _mm512_div_pd(_mm512_set1_pd(1.), d);
+	return x0;
          x0 = _mm512_rcp28_pd (d);
         //
         x0 = x0 + x0 - d*x0*x0;

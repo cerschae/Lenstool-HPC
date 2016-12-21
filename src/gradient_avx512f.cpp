@@ -181,8 +181,10 @@ struct point module_potentialDerivatives_totalGradient_81_SOA_AVX512(const struc
 		// 1 load
 		__m512d theta     = _mm512_loadu_pd(&lens->ellipticity_angle[i]);
 		/*positionning at the potential center*/
-		__m512d cos_theta = _mm512_cos_pd(theta);
-		__m512d sin_theta = _mm512_sin_pd(theta);
+		//__m512d cos_theta = _mm512_cos_pd(theta);
+		//__m512d sin_theta = _mm512_sin_pd(theta);
+		__m512d cos_theta;
+                __m512d sin_theta = _mm512_sincos_pd(&cos_theta, theta);
 		// rotation: 6 ops
 		__m512d x         = _mm512_add_pd(_mm512_mul_pd(true_coord_x, cos_theta), _mm512_mul_pd(true_coord_y, sin_theta));
 		__m512d y         = _mm512_sub_pd(_mm512_mul_pd(true_coord_y, cos_theta), _mm512_mul_pd(true_coord_x, sin_theta));
@@ -261,8 +263,10 @@ struct point module_potentialDerivatives_totalGradient_81_SOA_AVX512(const struc
 		zis_re = t05*(zres_rc_re - zres_rcut_re);
 		zis_im = t05*(zres_rc_im - zres_rcut_im);
 		//
-		cos_theta = _mm512_cos_pd(zero - theta);
-		sin_theta = _mm512_sin_pd(zero - theta);
+		//cos_theta = _mm512_cos_pd(zero - theta);
+		//sin_theta = _mm512_sin_pd(zero - theta);
+		cos_theta;
+                sin_theta = _mm512_sincos_pd(&cos_theta, zero - theta);
 		// rotation: 6 ops
 		__grad_x    = __grad_x + _mm512_add_pd(_mm512_mul_pd(zis_re, cos_theta), _mm512_mul_pd(zis_im, sin_theta));
 		__grad_y    = __grad_y + _mm512_sub_pd(_mm512_mul_pd(zis_im, cos_theta), _mm512_mul_pd(zis_re, sin_theta));

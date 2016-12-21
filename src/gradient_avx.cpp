@@ -46,6 +46,8 @@ void rotateCoordinateSystem_avx(__m256d Q_x, __m256d Q_y, const __m256d P_x, con
 //
 struct point module_potentialDerivatives_totalGradient_SOA_AVX(const struct point *pImage, const struct Potential_SOA *lens, const int nhalos)
 {
+	asm volatile("# module_potentialDerivatives_totalGradient_SOA_AVX begins");
+	//
         struct point grad, clumpgrad;
         grad.x = 0;
         grad.y = 0;
@@ -81,11 +83,14 @@ struct point module_potentialDerivatives_totalGradient_SOA_AVX(const struct poin
 		__m256d one_minus_eps     = _mm256_sub_pd(one, eps);
 		__m256d one_plus_eps      = _mm256_add_pd(one, eps);
 		__m256d one_plus_eps_rcp  = __INV(one_plus_eps);
+		//__m256d one_plus_eps_rcp  = one/one_plus_eps;
                 // 1 load
                 __m256d theta     = _mm256_loadu_pd(&lens->ellipticity_angle[i]);
                 /*positionning at the potential center*/
-		__m256d cos_theta = _mm256_cos_pd(theta);		
-		__m256d sin_theta = _mm256_sin_pd(theta);		
+		//__m256d cos_theta = _mm256_cos_pd(theta);		
+		//__m256d sin_theta = _mm256_sin_pd(theta);		
+		__m256d cos_theta;
+		__m256d sin_theta = _mm256_sincos_pd(&cos_theta, theta);		
 		// rotation: 6 ops
 		__m256d x         = _mm256_add_pd(_mm256_mul_pd(true_coord_x, cos_theta), _mm256_mul_pd(true_coord_y, sin_theta));
 		__m256d y         = _mm256_sub_pd(_mm256_mul_pd(true_coord_y, cos_theta), _mm256_mul_pd(true_coord_x, sin_theta));
@@ -96,12 +101,15 @@ struct point module_potentialDerivatives_totalGradient_SOA_AVX(const struct poin
                 __m256d cxro = one_plus_eps*one_plus_eps;         // (1. + eps)*(1. + eps); 3 ops
                 __m256d cyro = one_minus_eps*one_minus_eps;       // (1. - eps)*(1. - eps); 3 ops
                 __m256d rem2 = x*x*__INV(cxro) + y*y*__INV(cyro); // x*x/(cxro) + y*y/(cyro); ~5 ops
+                //__m256d rem2 = x*x/(cxro) + y*y/(cyro); // x*x/(cxro) + y*y/(cyro); ~5 ops
                 //      
                 __m256d zci_re  = zero;
                 __m256d zci_im  = mhalf*(one - eps*eps)*__INV(sqe); // ~4 ops
+                //__m256d zci_im  = mhalf*(one - eps*eps)/(sqe); // ~4 ops
              	//  2.*sqe*sqrt(rc*rc + rem2) - y/cx1, 7 ops
                 __m256d znum_re = cx1*x;
                 __m256d znum_im = two*sqe*__SQRT(rc*rc + rem2) - y*__INV(cx1); // ~4 ops
+                //__m256d znum_im = two*sqe*__SQRT(rc*rc + rem2) - y/(cx1); // ~4 ops
                 //
                 __m256d zden_re = x;
                 __m256d zden_im = _mm256_mul_pd(_mm256_set1_pd(2.), _mm256_mul_pd(rc, sqe)); 
@@ -111,6 +119,8 @@ struct point module_potentialDerivatives_totalGradient_SOA_AVX(const struct poin
                 __m256d norm    = (zden_re*zden_re + zden_im*zden_im);     
                 __m256d zis_re  = (znum_re*zden_re + znum_im*zden_im)*__INV(norm); // 3 ops
                 __m256d zis_im  = (znum_im*zden_re - znum_re*zden_im)*__INV(norm); // 3 ops
+                //__m256d zis_re  = (znum_re*zden_re + znum_im*zden_im)/(norm); // 3 ops
+                //__m256d zis_im  = (znum_im*zden_re - znum_re*zden_im)/(norm); // 3 ops
 		//
                 norm    	= zis_re;
 		//
@@ -136,8 +146,9 @@ struct point module_potentialDerivatives_totalGradient_SOA_AVX(const struct poin
 		zis_re = b0*zres_re;
 		zis_im = b0*zres_im;
 		//
-                cos_theta = _mm256_cos_pd(zero - theta);
-                sin_theta = _mm256_sin_pd(zero - theta);
+                //cos_theta = _mm256_cos_pd(zero - theta);
+                //sin_theta = _mm256_sin_pd(zero - theta);
+                sin_theta = _mm256_sincos_pd(&cos_theta, zero - theta);
                 // rotation: 6 ops
 		__grad_x    = __grad_x + _mm256_add_pd(_mm256_mul_pd(zis_re, cos_theta), _mm256_mul_pd(zis_im, sin_theta));
 		__grad_y    = __grad_y + _mm256_sub_pd(_mm256_mul_pd(zis_im, cos_theta), _mm256_mul_pd(zis_re, sin_theta));
@@ -220,8 +231,10 @@ struct point module_potentialDerivatives_totalGradient_81_SOA_AVX(const struct p
                 // 1 load
                 __m256d theta     = _mm256_loadu_pd(&lens->ellipticity_angle[i]);
                 /*positionning at the potential center*/
-                __m256d cos_theta = _mm256_cos_pd(theta);
-                __m256d sin_theta = _mm256_sin_pd(theta);
+                //__m256d cos_theta = _mm256_cos_pd(theta);
+                //__m256d sin_theta = _mm256_sin_pd(theta);
+                __m256d cos_theta;
+                __m256d sin_theta = _mm256_sincos_pd(&cos_theta, theta);
                 // rotation: 6 ops
                 __m256d x         = _mm256_add_pd(_mm256_mul_pd(true_coord_x, cos_theta), _mm256_mul_pd(true_coord_y, sin_theta));
                 __m256d y         = _mm256_sub_pd(_mm256_mul_pd(true_coord_y, cos_theta), _mm256_mul_pd(true_coord_x, sin_theta));
@@ -236,7 +249,7 @@ struct point module_potentialDerivatives_totalGradient_81_SOA_AVX(const struct p
                 __m256d zci_re  = zero;
                 __m256d zci_im  = mhalf*(one - eps*eps)*__INV(sqe); // ~4 ops
 		//
-		__m256d znum_re = zero, znum_im = zero;
+		__m256d znum_re, znum_im;
 		__m256d zden_re = zero, zden_im = zero;
 		__m256d norm;
 		//
@@ -299,8 +312,9 @@ struct point module_potentialDerivatives_totalGradient_81_SOA_AVX(const struct p
                 zis_re    = t05*(zres_rc_re - zres_rcut_re);
                 zis_im    = t05*(zres_rc_im - zres_rcut_im);
                 //
-                cos_theta   = _mm256_cos_pd(zero - theta);
-                sin_theta   = _mm256_sin_pd(zero - theta);
+                //cos_theta   = _mm256_cos_pd(zero - theta);
+                //sin_theta   = _mm256_sin_pd(zero - theta);
+		sin_theta = _mm256_sincos_pd(&cos_theta, zero - theta);
                 // rotation: 6 ops
                 __grad_x   = __grad_x + _mm256_add_pd(_mm256_mul_pd(zis_re, cos_theta), _mm256_mul_pd(zis_im, sin_theta));
                 __grad_y   = __grad_y + _mm256_sub_pd(_mm256_mul_pd(zis_im, cos_theta), _mm256_mul_pd(zis_re, sin_theta));
