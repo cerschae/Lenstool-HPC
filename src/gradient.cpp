@@ -14,6 +14,7 @@
 #endif
 */
 #include "structure_hpc.h"
+#include "gradient.hpp"
 //#include "iacaMarks.h"
 //
 //
@@ -79,8 +80,8 @@ piemd_1derivatives_ci05(double x, double y, double eps, double rc)
 ////         *    |  /  theta
 ////           *  | /
 ////             *|--------->x
-//
-//inline
+/*
+inline
 struct point rotateCoordinateSystem(struct point P, double theta)
 {
 	struct  point   Q;
@@ -90,7 +91,7 @@ struct point rotateCoordinateSystem(struct point P, double theta)
 
 	return(Q);
 }
-//
+*/
 //
 //
 struct point
@@ -204,6 +205,9 @@ struct point module_potentialDerivatives_totalGradient(const int nhalos, const s
 //
 struct point module_potentialDerivatives_totalGradient_SOA(const struct point *pImage, const struct Potential_SOA *lens, int shalos, int nhalos)
 {
+	asm volatile("# module_potentialDerivatives_totalGradient_SOA begins");
+	// 6 DP loads, i.e. 48 Bytes: position_x, position_y, ellipticity_angle, ellipticity_potential, rcore, b0
+	// 
 	struct point grad, clumpgrad;
 	grad.x = 0;
 	grad.y = 0;
@@ -277,12 +281,12 @@ struct point module_potentialDerivatives_totalGradient_SOA(const struct point *p
 		//clumpgrad.x = lens->b0[i]*zis.re;
 		//clumpgrad.y = lens->b0[i]*zis.im;
 		//nan check
-		if(clumpgrad.x == clumpgrad.x or clumpgrad.y == clumpgrad.y)
-		{
+		//if(clumpgrad.x == clumpgrad.x or clumpgrad.y == clumpgrad.y)
+		//{
 			// add the gradients
-			grad.x += clumpgrad.x;
-			grad.y += clumpgrad.y;
-		}
+		grad.x += clumpgrad.x;
+		grad.y += clumpgrad.y;
+		//}
 	}
 	//IACA_END;
 	//

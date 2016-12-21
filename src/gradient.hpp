@@ -2,7 +2,17 @@
 #define __GRAD_HPP__
 /** for both gradient and second derivatives **/
 //inline
-struct point rotateCoordinateSystem(struct point P, double theta);
+//struct point rotateCoordinateSystem(struct point P, double theta);
+inline
+struct point rotateCoordinateSystem(struct point P, double theta)
+{
+        struct  point   Q;
+
+        Q.x = P.x*cos(theta) + P.y*sin(theta);
+        Q.y = P.y*cos(theta) - P.x*sin(theta);
+
+        return(Q);
+}
 
 /** gradient **/
 struct point module_potentialDerivatives_totalGradient(const int nhalos, const struct point *pImage, const struct Potential *lens);

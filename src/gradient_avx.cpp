@@ -24,6 +24,10 @@ void print256(__m256d __reg)
 //
 //
 //
+
+//
+//
+//
 inline
 static 
 void rotateCoordinateSystem_avx(__m256d Q_x, __m256d Q_y, const __m256d P_x, const __m256d P_y, double* angles)

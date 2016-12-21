@@ -1,4 +1,0 @@
-Benchmark for Gradient Calculation 
-Sample size 10: 5.5e-05
-Sample size 100: 8.3e-05
-Sample size 1000: 0.000834

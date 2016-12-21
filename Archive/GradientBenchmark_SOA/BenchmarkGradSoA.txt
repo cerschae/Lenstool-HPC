@@ -1,4 +1,0 @@
-Benchmark for Gradient SOA Calculation 
-Sample size 10: 3e-05
-Sample size 100: 3.9e-05
-Sample size 1000: 0.000409

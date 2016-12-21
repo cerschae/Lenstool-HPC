@@ -32,14 +32,15 @@ program_INCLUDE_LIBS += /home/epfl/cerschae/LENSTOOL/lenstool-6.8.1/src
 CPPFLAGS += $(foreach includedir,$(program_INCLUDE_DIRS),-I$(includedir))
 CPPFLAGS += $(foreach includelib,$(program_INCLUDE_LIBS),-L$(includelib) -lcfitsio)
 #CXXFLAGS += -march=core-avx2 -g -O3 -std=c++0x -Wall -pedantic 
-#CPPFLAGS += -qopenmp -xHost,MIC-AVX512 -g -O3 -std=c++0x -Wall -pedantic
+#CPPFLAGS += -qopt-prefetch-distance=64,8 -qopt-streaming-cache-evict=0 -fPIC -qopenmp -xMIC-AVX512 -fma -g -O3 -std=c++0x -Wall -pedantic
+#CPPFLAGS += -qopt-report=5 -S
 CPPFLAGS += -fPIC -ftz -qopenmp -xHost -fma -g -O3 -std=c++0x -Wall -pedantic
-#CXXFLAGS += -g -O3 -std=c++0x -Wall 
+CXXFLAGS += -g -O3 -std=c++0x -Wall 
 #
-GEN_SM35 := -gencode=arch=compute_35,code=\"sm_35,compute_35\" #Target CC 3.5, for example
-NVFLAGS := -O3 -g -G -rdc=true #rdc=true needed for separable compilation
+#GEN_SM35 := -gencode=arch=compute_35,code=\"sm_35,compute_35\" #Target CC 3.5, for example
+#NVFLAGS := -O3 -g -G -rdc=true #rdc=true needed for separable compilation
 #NVFLAGS += $(GEN_SM35)
-NVFLAGS += $(foreach includedir,$(program_CU_INCLUDE_DIRS),-I$(includedir))
+#NVFLAGS += $(foreach includedir,$(program_CU_INCLUDE_DIRS),-I$(includedir))
 #
 CUO_O_OBJECTS := ${program_CU_OBJS:.cuo=.cuo.o}
 #

@@ -198,7 +198,7 @@ int main(int argc, char *argv[])
 	int error(0);
 
 	double t_1(0),t_2(0),t_3(0);
-#if 1
+#if 0
 	t_1 = -myseconds();
 	chi_bruteforce(&chi2,&error,&runmode,lenses,&frame,nImagesSet,images);
 	t_1 += myseconds();
@@ -208,7 +208,7 @@ int main(int argc, char *argv[])
 	std::cout << " Time  " << std::setprecision(15) << t_1 << std::endl;
 #endif
 
-#if 1
+#if 0
 	t_2 = -myseconds();
 	chi_bruteforce_SOA(&chi2,&error,&runmode,lenses_SOA,&frame,nImagesSet,images);
 	t_2 += myseconds();

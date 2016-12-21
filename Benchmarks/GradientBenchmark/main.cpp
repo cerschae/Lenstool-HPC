@@ -30,7 +30,7 @@
 //
 int main()
 {
-	double t1, t2;
+	double t1, t2, t3;
 	//
 	//Variable creation
 	//
@@ -72,15 +72,30 @@ int main()
 	t2 = -myseconds();
 	for (int ii = 0; ii < NN; ++ii)
 	{
-		//grad_soa = module_potentialDerivatives_totalGradient_81_SOA_AVX512(&image_soa, &lens_soa, nlenses_soa);
-		grad_soa = module_potentialDerivatives_totalGradient_81_SOA_AVX(&image_soa, &lens_soa, nlenses_soa);
-		//grad_soa = module_potentialDerivatives_totalGradient_SOA_AVX(&image_soa, &lens_soa, nlenses_soa);
+		//grad_soa = module_potentialDerivatives_totalGradient_SOA_AVX512(&image_soa, &lens_soa, nlenses_soa);
+		grad_soa = module_potentialDerivatives_totalGradient_SOA_AVX(&image_soa, &lens_soa, nlenses_soa);
+		//grad_soa = module_potentialDerivatives_totalGradient_81_SOA_AVX(&image_soa, &lens_soa, nlenses_soa);
+		//grad_soa = module_potentialDerivatives_totalGradient_SOA(&image_soa, &lens_soa, 0, nlenses_soa);
 	}	
 	t2 += myseconds();
 	//
-	std::cout << " ref sol  = " << std::setprecision(15) << sol_grad_x << " " << std::setprecision(15) << sol_grad_y << std::endl;
-	std::cout << " grad     = " << std::setprecision(15) << grad.x << " " << std::setprecision(15) << grad.y << ", time = " << t1 << " s. " << std::endl;
-	std::cout << " grad avx = " << std::setprecision(15) << grad_soa.x << " " << std::setprecision(15) << grad_soa.y << ", time = " << t2 << " s. " << std::endl;
+	//
+	point grad_soa_avx;
+	t3 = -myseconds();
+        for (int ii = 0; ii < NN; ++ii)
+        {
+		//grad_soa_avx = module_potentialDerivatives_totalGradient_SOA_AVX512(&image_soa, &lens_soa, nlenses_soa);
+		//                grad_soa = module_potentialDerivatives_totalGradient_81_SOA_AVX(&image_soa, &lens_soa, nlenses_soa);
+		//                                //grad_soa = module_potentialDerivatives_totalGradient_81_SOA_AVX(&image_soa, &lens_soa, nlenses_soa);
+		grad_soa_avx = module_potentialDerivatives_totalGradient_SOA(&image_soa, &lens_soa, 0, nlenses_soa);
+	}
+	t3 += myseconds();
+	//
+	//
+	std::cout << " ref sol   = " << std::setprecision(15) << sol_grad_x << " " << std::setprecision(15) << sol_grad_y << std::endl;
+	std::cout << " grad      = " << std::setprecision(15) << grad.x << " " << std::setprecision(15) << grad.y << ", time = " << t1 << " s. " << std::endl;
+	std::cout << " grad HC   = " << std::setprecision(15) << grad_soa.x << " " << std::setprecision(15) << grad_soa.y << ", time = " << t2 << " s. " << std::endl;
+	std::cout << " grad SIMD = " << std::setprecision(15) << grad_soa_avx.x << " " << std::setprecision(15) << grad_soa_avx.y << ", time = " << t3 << " s. " << std::endl;
 	//
 	//
 	//

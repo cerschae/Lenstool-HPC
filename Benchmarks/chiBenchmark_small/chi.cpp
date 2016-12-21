@@ -522,7 +522,7 @@ void chi_bruteforce_SOA_AVX(double *chi, int *error, runmode_param *runmode, con
                         int num_x = (int) (frame->xmax - frame->xmin)/dx;
                         int num_y = (int) (frame->ymax - frame->ymin)/dy;
 			
-#pragma omp parallel for 
+#pragma omp parallel for simd 
                         for (int ii = 0; ii < num_x; ++ii)
                         {
                                 for (int jj = 0; jj < num_y; ++jj)
@@ -682,18 +682,22 @@ void chi_bruteforce_SOA_AVX(double *chi, int *error, runmode_param *runmode, con
 	//////////////////////////////////////computing the local chi square//////////////////////////////////////
 		double chiimage;
 
-		for( int iter = 0; iter < nimages_strongLensing[source_id]*nimages_strongLensing[source_id]; iter++){
+		for( int iter = 0; iter < nimages_strongLensing[source_id]*nimages_strongLensing[source_id]; iter++)
+		{
 			int i=iter/nimages_strongLensing[source_id];
 			int j=iter%nimages_strongLensing[source_id];
 
-			if(i!=j){
+			if(i != j)
+			{
 				// In the current method, we get the source in the source plane by ray tracing image in nimagesfound[i][i]. If we ray trace back,
 				// we arrive again at the same position and thus the chi2 from it is 0. Thus we do not calculate the chi2 (-> if i!=j)
-				if(nimagesfound[i][j]>0){
+				if(nimagesfound[i][j]>0)
+				{
 					chiimage=pow(images[index+j].center.x-tim[i][j].x,2)+pow(images[index+j].center.y-tim[i][j].y,2);  // compute the chi2
 					*chi += chiimage;
 				}
-				else if(nimagesfound[i][j]==0){
+				else if(nimagesfound[i][j]==0)
+				{
 					// If we do not find a correpsonding image, we add a big value to the chi2 to disfavor the model
 					*chi += 100.*nimages_strongLensing[source_id];
 				}

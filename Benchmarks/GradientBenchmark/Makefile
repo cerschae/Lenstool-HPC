@@ -37,7 +37,7 @@ program_INCLUDE_LIBS += /home/epfl/cerschae/LENSTOOL/lenstool-6.8.1/src
 CPPFLAGS += $(foreach includedir,$(program_INCLUDE_DIRS),-I$(includedir))
 CPPFLAGS += $(foreach includelib,$(program_INCLUDE_LIBS),-L$(includelib) -lcfitsio)
 #CXXFLAGS += -march=core-avx2 -g -O3 -std=c++0x -Wall -pedantic 
-#CPPFLAGS += -qopenmp -xHost,MIC-AVX512 -g -O3 -std=c++0x -Wall -pedantic
+#CPPFLAGS += -qopt-prefetch-distance=64,8 -qopt-streaming-cache-evict=0 -qopenmp -xMIC-AVX512 -g -O3 -std=c++0x -Wall -pedantic -llenstoolhpc
 CPPFLAGS += -ftz -qopenmp -xHost -fma -g -O3 -std=c++0x -Wall -pedantic -llenstoolhpc
 #CXXFLAGS += -g -O3 -std=c++0x -Wall 
 #
