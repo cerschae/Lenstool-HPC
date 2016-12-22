@@ -28,6 +28,7 @@
 //
 //struct pot      lens_ref[NLMAX];
 //
+//#include <iitnotify.h>
 int main()
 {
 	double t1, t2, t3;
@@ -69,15 +70,18 @@ int main()
 	//
 	//module_potentialDerivatives_totalGradient(&runmodesmall,&image, lens);
 	//
+	//__SSC_MARK(0x111);
 	t2 = -myseconds();
 	for (int ii = 0; ii < NN; ++ii)
 	{
 		//grad_soa = module_potentialDerivatives_totalGradient_SOA_AVX512(&image_soa, &lens_soa, nlenses_soa);
-		//grad_soa = module_potentialDerivatives_totalGradient_SOA_AVX(&image_soa, &lens_soa, nlenses_soa);
+		//grad_soa = module_potentialDerivatives_totalGradient_8_SOA_AVX(&image_soa, &lens_soa, nlenses_soa);
+		//
 		grad_soa_avx = module_potentialDerivatives_totalGradient_81_SOA_AVX(&image_soa, &lens_soa, nlenses_soa);
 		//grad_soa = module_potentialDerivatives_totalGradient_SOA(&image_soa, &lens_soa, 0, nlenses_soa);
 	}	
 	t2 += myseconds();
+	//__SSC_MARK(0x222);
 	//
 	//
 	point grad_soa;
