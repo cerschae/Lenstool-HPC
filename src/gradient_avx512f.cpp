@@ -13,7 +13,7 @@
 //
 //
 //
-struct point module_potentialDerivatives_totalGradient_SOA_AVX512(const struct point *pImage, const struct Potential_SOA *lens, const int nhalos)
+struct point module_potentialDerivatives_totalGradient_8_SOA_AVX512(const struct point *pImage, const struct Potential_SOA *lens, const int nhalos)
 {
         struct point grad, clumpgrad;
                 grad.x = 0;
@@ -126,7 +126,7 @@ struct point module_potentialDerivatives_totalGradient_SOA_AVX512(const struct p
                 if (nhalos%8 > 0)
                 {
                         struct point grad_peel;
-                        grad_peel = module_potentialDerivatives_totalGradient_SOA(pImage, lens, i, nhalos);
+                        grad_peel = module_potentialDerivatives_totalGradient_8_SOA(pImage, lens, i, nhalos);
                         //
                         grad.x += grad_peel.x;
                         grad.y += grad_peel.y;

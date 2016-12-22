@@ -179,8 +179,6 @@ struct point module_potentialDerivatives_totalGradient(const int nhalos, const s
 	grad.x = 0;
 	grad.y = 0;
 	//
-	//std::cout << "nhalos = " << nhalos << " " << lens[0].type << std::endl;
-	//
 	for(int i = 0; i < nhalos; i++)
 	{
 		clumpgrad = grad_halo(pImage, &lens[i]);  //compute gradient for each clump separately
@@ -191,19 +189,41 @@ struct point module_potentialDerivatives_totalGradient(const int nhalos, const s
 			// add the gradients
 			grad.x += clumpgrad.x;
 			grad.y += clumpgrad.y;
-			//printf("	part grad = %f %f\n", grad.x, grad.y);
-			//printf("	part grad = %f %f\n", grad.x, grad.y);
 		}  
 	}
-	
-	//printf("---> grad = %.15f, %.15f\n", grad.x, grad.y);
-	//
+	//	
 	return(grad);
+}
+//
+// SOA versions, vectorizable
+//
+struct point module_potentialDerivatives_totalGradient_5_SOA(const struct point *pImage, const struct Potential_SOA *lens, int shalos, int nhalos)
+{
+        asm volatile("# module_potentialDerivatives_totalGradient_SIS_SOA begins");
+	//
+	struct point grad, clumpgrad;
+        grad.x = 0;
+        grad.y = 0;
+	for(int i = shalos; i < nhalos; i++)
+	{
+		//
+		struct point true_coord, true_coord_rotation;
+		//
+		true_coord.x = pImage->x - lens->position_x[i];
+                true_coord.y = pImage->y - lens->position_y[i];
+		//
+		true_coord_rotation = rotateCoordinateSystem(true_coord, lens->ellipticity_angle[i]);
+		double R = sqrt(true_coord_rotation.x*true_coord_rotation.x*(1 - lens->ellipticity_potential[i])+true_coord_rotation.y*true_coord_rotation.y*(1 + lens->ellipticity_potential[i]));
+		//
+		grad.x += (1 - lens->ellipticity[i]/3.)*lens->b0[i]*true_coord_rotation.x/R;
+		grad.y += (1 + lens->ellipticity[i]/3.)*lens->b0[i]*true_coord_rotation.y/R;
+	}
+	return grad;
 }
 //
 //
 //
-struct point module_potentialDerivatives_totalGradient_SOA(const struct point *pImage, const struct Potential_SOA *lens, int shalos, int nhalos)
+struct point module_potentialDerivatives_totalGradient_8_SOA(const struct point *pImage, const struct Potential_SOA *lens, int shalos, int nhalos)
 {
 	asm volatile("# module_potentialDerivatives_totalGradient_SOA begins");
 	// 6 DP loads, i.e. 48 Bytes: position_x, position_y, ellipticity_angle, ellipticity_potential, rcore, b0
