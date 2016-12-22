@@ -522,7 +522,7 @@ void chi_bruteforce_SOA_AVX(double *chi, int *error, runmode_param *runmode, con
                         int num_x = (int) (frame->xmax - frame->xmin)/dx;
                         int num_y = (int) (frame->ymax - frame->ymin)/dy;
 			
-#pragma omp parallel for simd 
+#pragma omp parallel for 
                         for (int ii = 0; ii < num_x; ++ii)
                         {
                                 for (int jj = 0; jj < num_y; ++jj)
@@ -750,11 +750,11 @@ void chi_transformImageToSourcePlane_SOA(const int *Nlens, const struct point *i
     //std::cerr << Nlens[0] << Nlens[1] << lens[1].b0[0] << std::endl;
     //Grad = module_potentialDerivatives_totalGradient_SOA_AVX512(Nlens,image_point, lens);
 #ifdef __AVX512F__
-    Grad = module_potentialDerivatives_totalGradient_SOA_AVX512(image_point, &lens[1], Nlens[1]);
+    Grad = module_potentialDerivatives_totalGradient_8_SOA_AVX512(image_point, &lens[1], Nlens[1]);
 #else
-    Grad = module_potentialDerivatives_totalGradient_SOA_AVX(image_point, &lens[1], Nlens[1]);
+    Grad = module_potentialDerivatives_totalGradient_8_SOA_AVX(image_point, &lens[1], Nlens[1]);
 #endif
-    Grad = module_potentialDerivatives_totalGradient_SOA_AVX(image_point, &lens[1], Nlens[1]);
+    //Grad = module_potentialDerivatives_totalGradient_SOA_AVX(image_point, &lens[1], Nlens[1]);
 
     source_point->x = image_point->x - dlsds * Grad.x;
     source_point->y = image_point->y - dlsds * Grad.y;
