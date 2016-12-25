@@ -17,6 +17,7 @@ struct point rotateCoordinateSystem(struct point P, double theta)
 /** gradient **/
 struct point module_potentialDerivatives_totalGradient(const int nhalos, const struct point *pImage, const struct Potential *lens);
 //
+struct point module_potentialDerivatives_totalGradient_SOA(const struct point *pImage, const struct Potential_SOA *lens, int nhalos);
 struct point module_potentialDerivatives_totalGradient_5_SOA(const struct point *pImage, const struct Potential_SOA *lens, int shalos, int nhalos);
 struct point module_potentialDerivatives_totalGradient_8_SOA(const struct point *pImage, const struct Potential_SOA *lens, int shalos, int nhalos);
 struct point module_potentialDerivatives_totalGradient_81_SOA(const struct point *pImage, const struct Potential_SOA *lens, int shalos, int nhalos);

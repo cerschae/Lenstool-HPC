@@ -15,6 +15,7 @@
 */
 #include "structure_hpc.h"
 #include "gradient.hpp"
+#include "utils.hpp"
 //#include "iacaMarks.h"
 //
 //
@@ -27,6 +28,7 @@
  * @param pImage 	point where the result is computed in the lens plane
  * @param lens		mass distribution
  */
+
 
 //
 /// Useful functions
@@ -429,4 +431,40 @@ struct point module_potentialDerivatives_totalGradient_81_SOA(const struct point
         //
         return(grad);
 }
+//
+//
+//
+struct point module_potentialDerivatives_totalGradient_SOA(const struct point *pImage, const struct Potential_SOA *lens, int nhalos)
+{
+        struct point grad, clumpgrad;
+        //
+        grad.x = 0;
+        grad.y = 0;
+	int* p_type = &(lens->type)[0];
+	//
+	quicksort(&(lens->type)[0], nhalos);
+	//
+	for (int i = 0; i < nhalos; i++)
+	{
+		std::cout << lens->type[i] << " ";	
 
+	}
+	std::cout << std::endl;
+	
+
+        //
+        for(int i = 0; i < nhalos; i++)
+        {
+                //clumpgrad = grad_halo(pImage, &lens[i]);  //compute gradient for each clump separately
+                //std::cout << clumpgrad.x << " " << clumpgrad.y << std::endl;
+                //nan check
+                //if(clumpgrad.x == clumpgrad.x or clumpgrad.y == clumpgrad.y)
+                {
+                        // add the gradients
+                        grad.x += clumpgrad.x;
+                        grad.y += clumpgrad.y;
+                }
+        }
+        //      
+        return(grad);
+}
