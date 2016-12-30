@@ -126,7 +126,7 @@ struct point module_potentialDerivatives_totalGradient_8_SOA_AVX512(const struct
                 if (nhalos%8 > 0)
                 {
                         struct point grad_peel;
-                        grad_peel = module_potentialDerivatives_totalGradient_8_SOA(pImage, lens, i, nhalos);
+                        grad_peel = module_potentialDerivatives_totalGradient_8_SOA(pImage, lens, i, nhalos%8);
                         //
                         grad.x += grad_peel.x;
                         grad.y += grad_peel.y;

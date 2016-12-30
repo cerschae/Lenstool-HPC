@@ -5,6 +5,7 @@
 #include <sys/time.h>
 #include <fstream>
 #include <immintrin.h>
+#include <map>
 /*
 #ifdef __AVX__
 #include "simd_math_avx.h"
@@ -206,7 +207,7 @@ struct point module_potentialDerivatives_totalGradient_5_SOA(const struct point 
 	struct point grad, clumpgrad;
         grad.x = 0;
         grad.y = 0;
-	for(int i = shalos; i < nhalos; i++)
+	for(int i = shalos; i < shalos + nhalos; i++)
 	{
 		//
 		struct point true_coord, true_coord_rotation;
@@ -234,7 +235,7 @@ struct point module_potentialDerivatives_totalGradient_8_SOA(const struct point 
 	grad.x = 0;
 	grad.y = 0;
 	//
-	for(int i = shalos; i < nhalos; i++)
+	for(int i = shalos; i < shalos + nhalos; i++)
 	{
 		//IACA_START;
 		//
@@ -319,13 +320,14 @@ struct point module_potentialDerivatives_totalGradient_8_SOA(const struct point 
 struct point module_potentialDerivatives_totalGradient_81_SOA(const struct point *pImage, const struct Potential_SOA *lens, int shalos, int nhalos)
 {
         asm volatile("# module_potentialDerivatives_totalGradient_SOA begins");
+	//std::cout << "# module_potentialDerivatives_totalGradient_SOA begins" << std::endl;
         // 6 DP loads, i.e. 48 Bytes: position_x, position_y, ellipticity_angle, ellipticity_potential, rcore, b0
         // 
         struct point grad, clumpgrad;
         grad.x = 0;
         grad.y = 0;
         //
-        for(int i = shalos; i < nhalos; i++)
+        for(int i = shalos; i < shalos + nhalos; i++)
         {
                 //IACA_START;
                 //
@@ -434,37 +436,54 @@ struct point module_potentialDerivatives_totalGradient_81_SOA(const struct point
 //
 //
 //
+typedef struct point (*halo_func_t) (const struct point *pImage, const struct Potential_SOA *lens, int shalos, int nhalos); 
+halo_func_t halo_func[100] = 
+{
+0, 0, 0, 0,  module_potentialDerivatives_totalGradient_5_SOA, 0, 0,  module_potentialDerivatives_totalGradient_8_SOA, 0, 0,
+0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+0,  module_potentialDerivatives_totalGradient_81_SOA, 0, 0, 0, 0, 0, 0, 0, 0,
+0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+};
+//
+//
+//
 struct point module_potentialDerivatives_totalGradient_SOA(const struct point *pImage, const struct Potential_SOA *lens, int nhalos)
 {
         struct point grad, clumpgrad;
         //
-        grad.x = 0;
-        grad.y = 0;
+        grad.x = clumpgrad.x = 0;
+        grad.y = clumpgrad.y = 0;
+	//
+	int shalos = 0;
+	//
+	//module_potentialDerivatives_totalGradient_81_SOA(pImage, lens, 0, nhalos);
+	//return;
+	/*
 	int* p_type = &(lens->type)[0];
+	int* lens_type = (int*) malloc(nhalos*sizeof(int));
+	memcpy(lens_type, &(lens->type)[0], nhalos*sizeof(int));
+	*/
+	//quicksort(lens_type, nhalos);
 	//
-	quicksort(&(lens->type)[0], nhalos);
-	//
-	for (int i = 0; i < nhalos; i++)
+	while (shalos < nhalos)
 	{
-		std::cout << lens->type[i] << " ";	
+		int lens_type = lens->type[shalos];
+		int count     = 1;
+		while (lens->type[shalos + count] == lens_type) count++;
+		//std::cout << "type = " << lens_type << " " << count << " " << shalos << std::endl;
+		//	
+		clumpgrad = (*halo_func[lens_type])(pImage, lens, shalos, count);
+		//
+		grad.x += clumpgrad.x;
+		grad.y += clumpgrad.y;
+		shalos += count;
+	}	
 
-	}
-	std::cout << std::endl;
-	
-
-        //
-        for(int i = 0; i < nhalos; i++)
-        {
-                //clumpgrad = grad_halo(pImage, &lens[i]);  //compute gradient for each clump separately
-                //std::cout << clumpgrad.x << " " << clumpgrad.y << std::endl;
-                //nan check
-                //if(clumpgrad.x == clumpgrad.x or clumpgrad.y == clumpgrad.y)
-                {
-                        // add the gradients
-                        grad.x += clumpgrad.x;
-                        grad.y += clumpgrad.y;
-                }
-        }
-        //      
         return(grad);
 }

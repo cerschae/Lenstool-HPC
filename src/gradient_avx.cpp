@@ -174,7 +174,7 @@ struct point module_potentialDerivatives_totalGradient_8_SOA_AVX(const struct po
 	if (nhalos%4 > 0)
 	{
 		struct point grad_peel;	
-		grad_peel = module_potentialDerivatives_totalGradient_8_SOA(pImage, lens, i, nhalos); 
+		grad_peel = module_potentialDerivatives_totalGradient_8_SOA(pImage, lens, i, nhalos%4); 
 		//grad_peel = rotateCoordinateSystem(grad_peel, -theta);
 		//
 		grad.x += grad_peel.x;

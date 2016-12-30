@@ -14,6 +14,7 @@ struct point rotateCoordinateSystem(struct point P, double theta)
         return(Q);
 }
 
+
 /** gradient **/
 struct point module_potentialDerivatives_totalGradient(const int nhalos, const struct point *pImage, const struct Potential *lens);
 //
@@ -26,6 +27,8 @@ struct point grad_halo(const struct point *pImage, const struct Potential *lens)
 //
 /** PIEMD **/
 complex piemd_1derivatives_ci05(double x, double y, double eps, double rc);
+//
+//struct point (*halo_func[100])(const struct point *pImage, const struct Potential_SOA *lens, int nhalos);
 
 /** Potential **/
 /*
