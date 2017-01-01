@@ -22,6 +22,7 @@ program_INCLUDE_DIRS += /users/fgilles/bin/iaca-lin32/include
 program_INCLUDE_DIRS += /users/fgilles/Projects/lenstool-6.8.1/include
 program_INCLUDE_DIRS += /users/fgilles/Projects/Libs/gsl-2.2/include
 program_INCLUDE_DIRS += /users/fgilles/GPU-Projects/lenstool-master/src
+program_INCLUDE_DIRS += /users/fgilles/Projects/Libs/gsl-2.2/include/ 
 program_INCLUDE_DIRS += /home/epfl/cerschae/lenstool-hpc/src 
 # 
 program_CU_INCLUDE_DIRS := /home/users/amclaugh/CUB/cub-1.3.2/ #CUDA Include directories
@@ -29,17 +30,23 @@ program_CU_INCLUDE_DIRS := /home/users/amclaugh/CUB/cub-1.3.2/ #CUDA Include dir
 program_INCLUDE_LIBS := /usr/lib64/ #Include libraries
 program_INCLUDE_LIBS += /users/fgilles/Projects/Libs/cfitsio/lib #Include libraries
 program_INCLUDE_LIBS += /users/fgilles/Projects/lenstool-6.8.1/src 
+program_INCLUDE_LIBS += /users/fgilles/Projects/lenstool-6.8.1/liblt 
 program_INCLUDE_LIBS += /users/fgilles/GPU-Projects/lenstool-master/src
+program_INCLUDE_LIBS += /users/fgilles/Projects/Libs/gsl-2.2/lib 
+program_INCLUDE_LIBS += /users/fgilles/Projects/Libs/cfitsio/lib 
+program_INCLUDE_LIBS += /users/fgilles/Projects/Libs/wcstools-3.9.4/libwcs/ 
 program_INCLUDE_LIBS += /home/epfl/cerschae/lenstool-hpc/src 
 program_INCLUDE_LIBS += /home/epfl/cerschae/LENSTOOL/lenstool-6.8.1/src 
+program_INCLUDE_LIBS += /home/epfl/cerschae/LENSTOOL/lenstool-6.8.1/liblt 
 #
 # Compiler flags
 CPPFLAGS += $(foreach includedir,$(program_INCLUDE_DIRS),-I$(includedir))
 CPPFLAGS += $(foreach includelib,$(program_INCLUDE_LIBS),-L$(includelib) -lcfitsio)
 #CPPFLAGS += -qopt-prefetch-distance=64,8 -qopt-streaming-cache-evict=0 -qopenmp -xMIC-AVX512 -pedantic -llenstoolhpc
 #CPPFLAGS += -qopt-streaming-stores=always -qopenmp -xMIC-AVX512 -pedantic -llenstoolhpc
-CPPFLAGS += -ftz -qopenmp -xHost -fma -pedantic -llenstoolhpc
-CXXFLAGS += -g -O3 -std=c++0x -Wall 
+CPPFLAGS += -ftz -qopenmp -xHost -fma -pedantic -llenstoolhpc -llenstool -llt -lcfitsio -lwcs -lgsl -lgslcblas
+CPPFLAGS += -g -O3 -std=c++0x -Wall 
+CPPFLAGS += -D__WITH_LENSTOOL
 #
 GEN_SM35 := -gencode=arch=compute_35,code=\"sm_35,compute_35\" #Target CC 3.5, for example
 NVFLAGS := -O3 -g -G -rdc=true #rdc=true needed for separable compilation
@@ -54,7 +61,7 @@ OBJECTS = $(program_CU_OBJS) $(program_CXX_OBJS) $(program_C_OBJS)
 #
 all: $(PROGRAM_NAME) 
 #
-debug: CXXFLAGS = -g -O0 -std=c++0x -Wall -pedantic -DDEBUG -llenstoolhpc $(EXTRA_FLAGS)
+debug: CXXFLAGS = -g -O0 -std=c++0x -Wall -pedantic -DDEBUG -llenstoolhpc -llenstool $(EXTRA_FLAGS)
 debug: NVFLAGS = -O0 $(GEN_SM35) -g -G 
 debug: NVFLAGS += $(foreach includedir,$(program_CU_INCLUDE_DIRS),-I$(includedir))
 debug: $(PROGRAM_NAME)
@@ -64,7 +71,7 @@ debug: $(PROGRAM_NAME)
 	nvcc $(NVFLAGS) $(CPPFLAGS) -o $@ -dc $<
 
 %.cpp: %.cpp %.h
-	$(CXX) $(CXXFLAGS) $(CPPFLAGS) -o $@ $< 
+	$(CXX) $(CXXFLAGS)  -o $@ $< $(CPPFLAGS) 
 
 # This is pretty ugly...details below
 # The program depends on both C++ and CUDA Objects, but storing CUDA objects as .o files results in circular dependency
@@ -78,7 +85,7 @@ debug: $(PROGRAM_NAME)
 # required by nvcc, calling nvcc, and then converting back to the non .o suffix for future, dependency-based 
 # compilation.
 $(PROGRAM_NAME): $(OBJECTS) 
-	$(CXX) $(CPPFLAGS) -o $@ $(program_CXX_OBJS) $(program_C_OBJS) $(CUO_O_OBJECTS) -llenstool 
+	$(CXX) -o $@ $(program_CXX_OBJS) $(CUO_O_OBJECTS) $(program_C_OBJS) $(CPPFLAGS) 
 
 
 

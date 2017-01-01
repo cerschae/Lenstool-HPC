@@ -8,7 +8,10 @@
 
 //#include "simd_math.h"
 
+//#include "structure.h"
 #include "structure_hpc.h"
+//#ifdef __WITH_LENSTOOL
+//#endif
 //#include "setup.hpp"
 
 extern int num_lenses = 95;
@@ -232,4 +235,50 @@ setup_jauzac(Potential** lens, int* nlenses, double* x, double* y, double* sol_g
         }
 	std::cout << "Setup done..." << std::endl;
 }
+
+#ifdef __WITH_LENSTOOL
+extern struct pot lens[NLMAX];
+void
+//setup_jauzac_LT(struct pot** lens, int* nlenses, double* x, double* y, double* sol_grad_x, double* sol_grad_y)
+setup_jauzac_LT( int* nlenses, double* x, double* y, double* sol_grad_x, double* sol_grad_y)
+{
+        *nlenses    = num_lenses;
+        *sol_grad_x = grad_x;
+        *sol_grad_y = grad_y;
+        *x          = x_c;
+        *y          = y_c;
+        //
+        //*lens = (struct pot*) malloc(sizeof(struct pot)*(*nlenses));
+        //
+        for (int i = 0; i < *nlenses; ++i)
+        {
+                //
+                lens[i].C.x            = pos_x[i];
+                lens[i].C.y            = pos_y[i];
+                //
+                lens[i].sigma                 = 1.; 			// disp
+                lens[i].type                  = lense_type[i];
+                lens[i].emass                 = 0.11;
+                lens[i].epot                  = epot[i];
+                lens[i].theta                 = theta[i];
+                lens[i].rcut                  = rcut[i];
+                lens[i].rc                    = rcore[i];
+                lens[i].b0                    = b0[i];
+                lens[i].masse                 = 0;			// weight
+                //lens[i].rc  	                 = 0;			// rscale
+//               (&lens)[i].exponent              = 0;
+                lens[i].alpha                 = 0.;
+//                (&lens)[i].einasto_kappacritic   = 0;
+                lens[i].z                     = 0.4;
+        }
+        std::cout << "Setup done..." << std::endl;
+}
+#endif
+
+
+
+
+
+
+
 

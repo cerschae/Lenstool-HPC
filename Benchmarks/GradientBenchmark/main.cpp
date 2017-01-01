@@ -13,8 +13,16 @@
 #include <sys/time.h>
 #include <fstream>
 //
+//
 #include <mm_malloc.h>
 //
+#ifdef __WITH_LENSTOOL
+#warning "linking with libtool..."
+#include<fonction.h>
+#include<constant.h>
+#include<dimension.h>
+#include<structure.h>
+#endif
 //#include "../../../Projects/lenstool-6.8.1/include/structure.h"
 //#include "structure.h"
 #include "structure_hpc.h"
@@ -26,12 +34,80 @@
 //
 #define NN 1000
 //
+//
+//
+#ifdef __WITH_LENSTOOL
+struct g_mode   M;
+struct g_pot    P[NPOTFILE];
+struct g_pixel  imFrame, wFrame, ps, PSF;
+struct g_cube   cubeFrame;
+struct g_dyn    Dy;      //   //TV
+
+
+struct g_source S;
+struct g_image  I;
+struct g_grille G;
+struct g_msgrid H;  // multi-scale grid
+struct g_frame  F;
+struct g_large  L;
+struct g_cosmo  C;
+struct g_cline  CL;
+struct g_observ O;
+struct pot      lens[NLMAX];
+struct pot      lmin[NLMAX], lmax[NLMAX], prec[NLMAX];
+struct g_cosmo  clmin, clmax;       /*cosmological limits*/
+struct galaxie  smin[NFMAX], smax[NFMAX];       // limits on source parameters
+struct ipot     ip;
+struct MCarlo   mc;
+struct vfield   vf;
+struct vfield   vfmin,vfmax; // limits on velocity field parameters
+struct cline    cl[NIMAX];
+lensdata *lens_table;
+
+int  block[NLMAX][NPAMAX];      /*switch for the lens optimisation*/
+int  cblock[NPAMAX];                /*switch for the cosmological optimisation*/
+int  sblock[NFMAX][NPAMAX];                /*switch for the source parameters*/
+int  vfblock[NPAMAX];                /*switch for the velocity field parameters*/
+double excu[NLMAX][NPAMAX];
+double excd[NLMAX][NPAMAX];
+/* supplments tableaux de valeurs pour fonctions g pour Einasto
+ *  * Ce sont trois variables globales qu'on pourra utiliser dans toutes les fonctions du projet
+ *  */
+
+#define CMAX 20
+#define LMAX 80
+
+float Tab1[LMAX][CMAX];
+float Tab2[LMAX][CMAX];
+float Tab3[LMAX][CMAX];
+
+
+int      nrline, ntline, flagr, flagt;
+long int  narclet;
+
+struct point    gimage[NGGMAX][NGGMAX], gsource_global[NGGMAX][NGGMAX];
+struct biline   radial[NMAX], tangent[NMAX];
+struct galaxie  arclet[NAMAX], source[NFMAX], image[NFMAX][NIMAX];
+struct galaxie  cimage[NFMAX];
+struct pointgal     gianti[NPMAX][NIMAX];
+
+struct point    SC;
+double elix;
+double alpha_e;
+
+double *v_xx;
+double *v_yy;
+double **map_p;
+double **tmp_p;
+double **map_axx;
+double **map_ayy;
+#endif
 //struct pot      lens_ref[NLMAX];
 //
 //#include <iitnotify.h>
 int main()
 {
-	double t1, t2, t3;
+	double t0, t1, t2, t3;
 	//
 	//Variable creation
 	//
@@ -43,14 +119,41 @@ int main()
         double x, y;
         double sol_grad_x, sol_grad_y;
 	point grad; // store the result
-        //
-        Potential*   lens;
+	//pot* lens;
+#ifdef __WITH_LENSTOOL
+	setup_jauzac_LT(&nlenses, &image.x, &image.y, &sol_grad_x, &sol_grad_y);
 	//
-	setup_jauzac(&lens, &nlenses, &image.x, &image.y, &sol_grad_x, &sol_grad_y);
+	struct point grad_lt, Grad;
+	//printf("Number lenses = %d, b0 = %f\n", nlenses, lens[0].b0);
+	//
+	t0 = -myseconds();	
+	for (int ii = 0; ii < NN; ++ii)
+	{
+		grad_lt.x = grad_lt.y = 0.;
+		for (long int jj = 0; jj < nlenses; ++jj)
+		{
+
+			//printf("%f\n", lens[ii].b0);
+			Grad = e_grad_pot(&image, jj);
+			//
+			grad_lt.x += Grad.x;
+			grad_lt.y += Grad.y;
+			//printf("%f %f\n", grad_lt.x, grad_lt.y);
+		}
+	}
+	t0 += myseconds();
+#endif
+	//
+	//
+	//setup_jauzac(Potential** lens, int* nlenses, double* x, double* y, double* sol_grad_x, double* sol_grad_y)
+	//
+	//
+	Potential*   lens_aos;
+	setup_jauzac(&lens_aos, &nlenses, &image.x, &image.y, &sol_grad_x, &sol_grad_y);
 	t1 = -myseconds();
 	for (int ii = 0; ii < NN; ++ii)
-		grad = module_potentialDerivatives_totalGradient(nlenses, &image, lens);
-        t1 += myseconds();
+		grad = module_potentialDerivatives_totalGradient(nlenses, &image, lens_aos);
+	t1 += myseconds();
 	//printf("---> grad = %f %f\n", grad.x, grad.y);
 	//
 	// Setting up the AOS potential 
@@ -87,8 +190,8 @@ int main()
 	//
 	point grad_soa;
 	t3 = -myseconds();
-        for (int ii = 0; ii < NN; ++ii)
-        {
+	for (int ii = 0; ii < NN; ++ii)
+	{
 		//grad_soa_avx = module_potentialDerivatives_totalGradient_SOA_AVX512(&image_soa, &lens_soa, nlenses_soa);
 		//                grad_soa = module_potentialDerivatives_totalGradient_81_SOA_AVX(&image_soa, &lens_soa, nlenses_soa);
 		//                                //grad_soa = module_potentialDerivatives_totalGradient_81_SOA_AVX(&image_soa, &lens_soa, nlenses_soa);
@@ -96,11 +199,16 @@ int main()
 	}
 	t3 += myseconds();
 	//
-	//
 	std::cout << " ref sol   = " << std::setprecision(15) << sol_grad_x << " " << std::setprecision(15) << sol_grad_y << std::endl;
-	std::cout << " grad      = " << std::setprecision(15) << grad.x << " " << std::setprecision(15) << grad.y << ", time = " << t1 << " s. " << std::endl;
-	std::cout << " grad SIMD = " << std::setprecision(15) << grad_soa.x << " " << std::setprecision(15) << grad_soa.y << ", time = " << t3 << " s. " << std::endl;
-	std::cout << " grad HC   = " << std::setprecision(15) << grad_soa_avx.x << " " << std::setprecision(15) << grad_soa_avx.y << ", time = " << t2 << " s. " << std::endl;
+	//
+#ifdef __WITH_LENSTOOL
+	std::cout << " LT  sol   = " << std::setprecision(15) << grad_lt.x << " " << std::setprecision(15) << grad_lt.y << ", time = " << t0 << " s." << std::endl;
+#endif
+	//
+	std::cout << " grad      = " << std::setprecision(15) << grad.x << " " << std::setprecision(15) << grad.y << ", time = " << t1 << " s., speedup = " << t0/t1 << std::endl;
+	//
+	std::cout << " grad SIMD = " << std::setprecision(15) << grad_soa.x << " " << std::setprecision(15) << grad_soa.y << ", time = " << t3 << " s., speedup = " << t0/t3 << std::endl;
+	std::cout << " grad HC   = " << std::setprecision(15) << grad_soa_avx.x << " " << std::setprecision(15) << grad_soa_avx.y << ", time = " << t2 << " s. speedup = " << t0/t2 << std::endl;
 	//
 	//
 	//
@@ -113,6 +221,6 @@ int main()
 	myfile << "Sample size " << big << ": " << time3 << std::endl;
 	myfile.close();
 #endif
-	free(lens);
+	//free(lens);
 }
 
