@@ -350,6 +350,7 @@ struct point module_potentialDerivatives_totalGradient_81_SOA(const struct point
                 double rcut = lens->rcut[i];
 		double b0   = lens->b0[i];
 		double t05  = b0*rcut/(rcut - rc);
+		//printf("b0 = %f, rcut = %f, rc = %f, t05 = %f\n", b0, rcut, rc, t05);
                 //
                 //std::cout << "piemd_lderivatives" << std::endl;
                 //
@@ -408,6 +409,7 @@ struct point module_potentialDerivatives_totalGradient_81_SOA(const struct point
                 }
 		zis.re  = t05*(zres_rc.re - zres_rcut.re);
 		zis.im  = t05*(zres_rc.im - zres_rcut.im); 
+		//printf("%f %f\n", zis.re, zis.im);
                 //
                 //zres.re = zis.re*b0;
                 //zres.im = zis.im*b0;
@@ -427,6 +429,7 @@ struct point module_potentialDerivatives_totalGradient_81_SOA(const struct point
                         // add the gradients
                 grad.x += clumpgrad.x;
                 grad.y += clumpgrad.y;
+		//printf("grad = %f %f\n", clumpgrad.x, clumpgrad.y);
                 //}
         }
         //IACA_END;

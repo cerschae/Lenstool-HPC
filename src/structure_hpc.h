@@ -11,8 +11,8 @@
 
 
 // Header guard
-#ifndef STRUCTURE_H
-#define STRUCTURE_H
+#ifndef STRUCTURE_HPC_H
+#define STRUCTURE_HPC_H
 
 
 #include <iostream>
@@ -66,6 +66,9 @@
  * @param x: X coordinate
  * @param y: Y coordinate
  */
+#ifdef __WITH_LENSTOOL
+#include "structure.h"
+#else
 struct point    
 {
 	double x;	
@@ -81,7 +84,6 @@ struct complex
 	double re;	
 	double im;
 };
-
 /** @brief Segment: Structure of two points
  */
 struct segment    
@@ -159,6 +161,7 @@ struct galaxy
 	double  dos;          		
 	double  dr;           		
 };
+#endif
 
 /** @brief Contains the information for optimising a parameter in the inverse mode
  * @param block: blockorfree variable (whether a parameter is blocked or free for the mcmc algorithm)
