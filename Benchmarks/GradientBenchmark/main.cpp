@@ -167,6 +167,7 @@ int main()
 	setup_jauzac_SOA(&lens_soa, &nlenses_soa, &image_soa.x, &image_soa.y, &sol_grad_x_soa, &sol_grad_y_soa);
 	//
 	std::cout << "Benchmark for Gradient Calculation using  " << nlenses_soa << " lenses, image: " << image_soa.x << " " << image_soa.y << std::endl;
+	// AVX version
 	point grad_soa_avx; // store the result
 	//
 	//gettimeofday(&t1, 0);
@@ -180,14 +181,14 @@ int main()
 		//grad_soa = module_potentialDerivatives_totalGradient_SOA_AVX512(&image_soa, &lens_soa, nlenses_soa);
 		//grad_soa = module_potentialDerivatives_totalGradient_8_SOA_AVX(&image_soa, &lens_soa, nlenses_soa);
 		//
-		//grad_soa_avx = module_potentialDerivatives_totalGradient_81_SOA_AVX(&image_soa, &lens_soa, nlenses_soa);
-		grad_soa_avx = module_potentialDerivatives_totalGradient_SOA(&image_soa, &lens_soa, nlenses_soa);
+		//grad_soa_avx = module_potentialDerivatives_totalGradient_81_SOA_AVX(&image_soa, &lens_soa, 0, nlenses_soa);
+		grad_soa_avx = module_potentialDerivatives_totalGradient_SOA_AVX(&image_soa, &lens_soa, nlenses_soa);
 		//grad_soa = module_potentialDerivatives_totalGradient_SOA(&image_soa, &lens_soa, 0, nlenses_soa);
 	}	
 	t2 += myseconds();
 	//__SSC_MARK(0x222);
 	//
-	//
+	// autovectorized version
 	point grad_soa;
 	t3 = -myseconds();
 	for (int ii = 0; ii < NN; ++ii)
