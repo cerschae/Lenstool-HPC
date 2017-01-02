@@ -44,7 +44,7 @@ void rotateCoordinateSystem_avx(__m256d Q_x, __m256d Q_y, const __m256d P_x, con
 //
 //
 //
-struct point module_potentialDerivatives_totalGradient_8_SOA_AVX(const struct point *pImage, const struct Potential_SOA *lens, const int nhalos)
+struct point module_potentialDerivatives_totalGradient_8_SOA_AVX(const struct point *pImage, const struct Potential_SOA *lens, const int shalos, const int nhalos)
 {
 	asm volatile("# module_potentialDerivatives_totalGradient_8_SOA_AVX begins");
 	//
@@ -60,8 +60,9 @@ struct point module_potentialDerivatives_totalGradient_8_SOA_AVX(const struct po
 	__m256d __grad_y = _mm256_set1_pd(0.);
         //
         int i;
+	int imax = shalos + nhalos;
 //#pragma unroll
-        for(i = 0; i < nhalos - nhalos%4; i = i + 4)
+        for(i = 0; i < imax - imax%4; i = i + 4)
         {
 		//IACA_START;
                 //
@@ -188,7 +189,7 @@ struct point module_potentialDerivatives_totalGradient_8_SOA_AVX(const struct po
 //
 //
 //
-struct point module_potentialDerivatives_totalGradient_81_SOA_AVX(const struct point *pImage, const struct Potential_SOA *lens,const int nhalos)
+struct point module_potentialDerivatives_totalGradient_81_SOA_AVX(const struct point *pImage, const struct Potential_SOA *lens, const int shalos, const int nhalos)
 {
         struct point grad, clumpgrad;
         grad.x = 0;
@@ -202,8 +203,10 @@ struct point module_potentialDerivatives_totalGradient_81_SOA_AVX(const struct p
         __m256d __grad_y = _mm256_set1_pd(0.);
         //
         int i;
+	int imax = shalos + nhalos;
 //#pragma unroll
-        for(i = 0; i < nhalos - nhalos%4; i = i + 4)
+	for(i = shalos; i < imax - imax%4; i = i + 4)
+        //for(i = 0; i < nhalos - nhalos%4; i = i + 4)
         {
                 //IACA_START;
                 //
@@ -370,3 +373,58 @@ struct point module_potentialDerivatives_totalGradient_81_SOA_AVX(const struct p
         //
         return(grad);
 }
+
+
+typedef struct point (*halo_func_avx_t) (const struct point *pImage, const struct Potential_SOA *lens, int shalos, int nhalos);
+halo_func_avx_t halo_func_avx[100] =
+{
+0, 0, 0, 0,  0, 0, 0,  module_potentialDerivatives_totalGradient_8_SOA_AVX, 0, 0,
+0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+0,   module_potentialDerivatives_totalGradient_81_SOA_AVX, 0, 0, 0, 0, 0, 0, 0, 0,
+0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+};
+//
+//
+//
+struct point module_potentialDerivatives_totalGradient_SOA_AVX(const struct point *pImage, const struct Potential_SOA *lens, int nhalos)
+{
+        struct point grad, clumpgrad;
+        //
+        grad.x = clumpgrad.x = 0;
+        grad.y = clumpgrad.y = 0;
+        //
+        int shalos = 0;
+        //
+        //module_potentialDerivatives_totalGradient_81_SOA(pImage, lens, 0, nhalos);
+        //return;
+        /*
+        int* p_type = &(lens->type)[0];
+        int* lens_type = (int*) malloc(nhalos*sizeof(int));
+        memcpy(lens_type, &(lens->type)[0], nhalos*sizeof(int));
+        */
+        //quicksort(lens_type, nhalos);
+        //
+        while (shalos < nhalos)
+        {
+                int lens_type = lens->type[shalos];
+                int count     = 1;
+                while (lens->type[shalos + count] == lens_type) count++;
+                //std::cout << "type = " << lens_type << " " << count << " " << shalos << std::endl;
+                //
+                clumpgrad = (*halo_func_avx[lens_type])(pImage, lens, shalos, count);
+                //
+                grad.x += clumpgrad.x;
+                grad.y += clumpgrad.y;
+                shalos += count;
+        }
+
+        return(grad);
+}
+
+
