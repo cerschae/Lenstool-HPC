@@ -1,0 +1,171 @@
+runmode
+        reference 3  109.3982  37.745778
+        verbose 0 
+	NOmass  3   400 0.54 mass.fits
+        inverse 0 0.12 350
+        chi2 1
+        end
+grille
+        nlens 96
+        nlens_opt 4
+        end
+image
+	NOarcletstat 6 0 wl.cons
+        NOsigell 0.3
+	multfile    3 imawcs.mul
+	wcs	1
+	z_m_limit 1 5 1 3.2 5.0 0.1
+	z_m_limit 2 34 1 1.0 5.0 0.1
+        z_m_limit 4 7 1 1.5 4.0 0.1
+        z_m_limit 5 8 1 2.0 3.5 0.1
+        z_m_limit 6 18 1 1.8 4.2 0.1
+        z_m_limit 8 16 1 2.6 4.5 0.1
+        z_m_limit 9 17 1 2.2 3.7 0.1
+        z_m_limit 10 2 1 1.5 4.5 0.1
+        z_m_limit 11 20 1 0.6 5.0 0.1
+        z_m_limit 12 25 1 2.6 4.3 0.1
+        z_m_limit 13 29 1 1.4 2.2 0.1
+        z_m_limit 14 31 1 1.6 2.0 0.1
+        z_m_limit 15 32 1 2.1 3.4 0.1
+        z_m_limit 16 33 1 2.6 4.6 0.1
+        z_m_limit 17 37 1 1.6 5.0 0.1
+        z_m_limit 18 49 1 2.6 5.0 0.1
+        z_m_limit 19 50 1 2.6 5.0 0.1
+        z_m_limit 20 52 1 2.4 4.0 0.1
+        z_m_limit 23 27 1 0.6 5.0 0.1
+        z_m_limit 24 36 1 2.0 4.0 0.1
+        z_m_limit 25 39 1 2.7 5.0 0.1
+        z_m_limit 26 45 1 2.0 3.4 0.1
+        z_m_limit 27 55 1 1.4 3.4 0.1
+        z_m_limit 28 56 1 2.2 3.6 0.1
+        z_m_limit 29 57 1 1.5 2.0 0.1
+        z_m_limit 30 58 1 0.6 7.0 0.1
+        z_m_limit 31 59 1 2.0 6.0 0.1
+        z_m_limit 33 62 1 1.0 4.2 0.1
+        z_m_limit 34 63 1 0.7 3.4 0.1
+        z_m_limit 35 64 1 1.0 4.5 0.1
+        z_m_limit 36 65 1 3.5 6.5 0.1
+        z_m_limit 37 66 1 4.0 8.0 0.1
+        z_m_limit 38 67 1 2.0 7.0 0.1
+        z_m_limit 39 69 1 2.0 7.0 0.1
+        z_m_limit 40 70 1 3.0 5.0 0.1
+        z_m_limit 41 71 1 1.5 3.5 0.1
+        z_m_limit 42 72 1 1.5 4.5 0.1
+        z_m_limit 43 73 1 1.0 4.5 0.1
+        z_m_limit 44 74 1 1.5 4.5 0.1
+        z_m_limit 45 75 1 1.5 5.5 0.1
+	z_m_limit 46 76 1 1.5 5.5 0.1
+        sigposArcsec 1.8
+        forme       -1
+        end
+potentiel 1
+        profil     81
+        x_centre     0.0
+        y_centre     0.0
+        ellipticite     0.15
+        angle_pos     60.0
+        core_radius   10.0
+	cut_radius    500.0
+	v_disp    800.0
+        z_lens     0.54
+        end
+limit 1
+        x_centre 1 -10. 10. 1.0
+        y_centre 1 -15. 0. 1.0
+        ellipticite 1 0.05 0.4 0.01
+        angle_pos   1 40.0 90. 1.0
+	core_radius 1 8.0 25.0 1.
+	cut_radius  1 100.0 1000.0 1.
+	v_disp      1  750. 950. 1.
+        end
+potentiel 2
+        profil     81
+        x_centre     35.0
+        y_centre     -10.0
+        ellipticite     0.15
+        angle_pos     60.0
+        core_radius   5.0
+	cut_radius    500.0
+	v_disp    600.0
+        z_lens     0.54
+        end
+limit 2
+        x_centre 1 20. 30. 1.0
+        y_centre 1 -29. -15. 1.0
+        ellipticite 1 0.3 0.7 0.01
+        angle_pos   1 35.0 70. 1.0
+	core_radius 1 1.0 12.0 1.
+	cut_radius  1 100.0 1000.0 1.
+	v_disp      1  350. 600. 1.
+        end
+potentiel 3
+        profil     81
+        x_centre     65.0
+        y_centre     40.0
+        ellipticite     0.15
+        angle_pos     60.0
+        core_radius   10.0
+	cut_radius    500.0
+	v_disp    700.0
+        z_lens     0.54
+        end
+limit 3
+        x_centre 1 30. 85. 1.0
+        y_centre 1 30. 55. 1.0
+        ellipticite 1 0.3 0.6 0.01
+        angle_pos   1 0.0 180. 1.0
+	core_radius 1 10.0 30.0 1.
+	cut_radius  1 100.0 1000.0 1.
+	v_disp      1  650. 950. 1.
+        end
+potentiel 4
+        profil     81
+        x_centre     130.0
+        y_centre     80.0
+        ellipticite     0.15
+        angle_pos     60.0
+        core_radius   10.0
+	cut_radius    500.0
+	v_disp    1000.0
+        z_lens     0.54
+        end
+limit 4
+        x_centre 1 110. 135. 1.0
+        y_centre 1 60. 80. 1.0
+        ellipticite 1 0.45 0.7 0.01
+        angle_pos   1 0.0 180. 1.0
+	core_radius 1 10.0 30.0 1.
+	cut_radius  1 100.0 1000.0 1.
+	v_disp      1  800. 1000. 1.
+        end
+potentiel 683
+        profil     81
+        x_centre     -19.4
+        y_centre     -21.7
+        ellipticite     0.23
+        angle_pos     -40.0
+        core_radius   1.0
+        cut_radius    150.0
+	v_disp     180.0
+        z_lens     0.15
+        end
+potfile galaxies
+	filein  1  gal2.cat
+	zlens  0.54
+	profil 81
+	corekpc 0.3
+	mag0  20.66
+	sigma  1  150. 350.
+	cutkpc  1 45.  70.
+	slope  0 4.
+	vdslope 0 4.
+	end
+cosmology
+        H0        70.0
+        omega     0.3
+        lambda    0.7
+        end
+champ
+	dmax 400.
+        end
+fini

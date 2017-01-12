@@ -37,6 +37,7 @@
 #define NPOTFILESIZE 2000 //maximum number of potential in potfiles
 #define DMIN	1e-4	// distance minimale de convergence dans le plan image (in arcsec)	
 #define NITMAX 	100
+#define NTYPES 	2
 
 
 // gNFW definitions
@@ -378,6 +379,8 @@ struct runmode_param
 	double 	z_amplif;
 	//Time/Benchmark mode
 	int		time;
+	  //SOA variables
+	 int Nlens[NTYPES];
 };
 
 /** @brief Not used yet

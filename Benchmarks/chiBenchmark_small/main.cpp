@@ -15,7 +15,7 @@
 //
 #include <mm_malloc.h>
 //
-#include "structure.h"
+#include <structure_hpc.h>
 #include "timer.h"
 #include "gradient.hpp"
 #include "chi.hpp"

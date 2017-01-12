@@ -442,7 +442,7 @@ struct point module_potentialDerivatives_totalGradient_81_SOA(const struct point
 typedef struct point (*halo_func_t) (const struct point *pImage, const struct Potential_SOA *lens, int shalos, int nhalos); 
 halo_func_t halo_func[100] = 
 {
-0, 0, 0, 0,  module_potentialDerivatives_totalGradient_5_SOA, 0, 0,  module_potentialDerivatives_totalGradient_8_SOA, 0, 0,
+0, 0, 0, 0, 0, module_potentialDerivatives_totalGradient_5_SOA, 0, 0, module_potentialDerivatives_totalGradient_8_SOA,  0,
 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -479,7 +479,7 @@ struct point module_potentialDerivatives_totalGradient_SOA(const struct point *p
 		int lens_type = lens->type[shalos];
 		int count     = 1;
 		while (lens->type[shalos + count] == lens_type) count++;
-		//std::cout << "type = " << lens_type << " " << count << " " << shalos << std::endl;
+		//std::cerr << "type = " << lens_type << " " << count << " " << shalos << std::endl;
 		//	
 		clumpgrad = (*halo_func[lens_type])(pImage, lens, shalos, count);
 		//
