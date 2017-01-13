@@ -22,6 +22,82 @@
 #include "module_cosmodistances.h"
 #include "module_readParameters.hpp"
 
+//#define __WITH_LENSTOOL 0
+#ifdef __WITH_LENSTOOL
+#warning "linking with libtool..."
+#include <fonction.h>
+#include <constant.h>
+#include <dimension.h>
+#include <structure.h>
+#include <setup.hpp>
+#endif
+
+#ifdef __WITH_LENSTOOL
+struct g_mode   M;
+struct g_pot    P[NPOTFILE];
+struct g_pixel  imFrame, wFrame, ps, PSF;
+struct g_cube   cubeFrame;
+struct g_dyn    Dy;      //   //TV
+
+
+struct g_source S;
+struct g_image  I;
+struct g_grille G;
+struct g_msgrid H;  // multi-scale grid
+struct g_frame  F;
+struct g_large  L;
+struct g_cosmo  C;
+struct g_cline  CL;
+struct g_observ O;
+struct pot      lens[NLMAX];
+struct pot      lmin[NLMAX], lmax[NLMAX], prec[NLMAX];
+struct g_cosmo  clmin, clmax;       /*cosmological limits*/
+struct galaxie  smin[NFMAX], smax[NFMAX];       // limits on source parameters
+struct ipot     ip;
+struct MCarlo   mc;
+struct vfield   vf;
+struct vfield   vfmin,vfmax; // limits on velocity field parameters
+struct cline    cl[NIMAX];
+lensdata *lens_table;
+
+int  block[NLMAX][NPAMAX];      /*switch for the lens optimisation*/
+int  cblock[NPAMAX];                /*switch for the cosmological optimisation*/
+int  sblock[NFMAX][NPAMAX];                /*switch for the source parameters*/
+int  vfblock[NPAMAX];                /*switch for the velocity field parameters*/
+double excu[NLMAX][NPAMAX];
+double excd[NLMAX][NPAMAX];
+/* supplments tableaux de valeurs pour fonctions g pour Einasto
+ *  * Ce sont trois variables globales qu'on pourra utiliser dans toutes les fonctions du projet
+ *  */
+
+#define CMAX 20
+#define LMAX 80
+
+float Tab1[LMAX][CMAX];
+float Tab2[LMAX][CMAX];
+float Tab3[LMAX][CMAX];
+
+
+int      nrline, ntline, flagr, flagt;
+long int  narclet;
+
+struct point    gimage[NGGMAX][NGGMAX], gsource_global[NGGMAX][NGGMAX];
+struct biline   radial[NMAX], tangent[NMAX];
+struct galaxie  arclet[NAMAX], source[NFMAX], image[NFMAX][NIMAX];
+struct galaxie  cimage[NFMAX];
+struct pointgal     gianti[NPMAX][NIMAX];
+
+struct point    SC;
+double elix;
+double alpha_e;
+
+double *v_xx;
+double *v_yy;
+double **map_p;
+double **tmp_p;
+double **map_axx;
+double **map_ayy;
+#endif
 
 int module_readCheckInput_readInput(int argc, char *argv[])
 {
@@ -192,10 +268,28 @@ int main(int argc, char *argv[])
 
 	std::cout << "--------------------------" << std::endl << std::endl;
 
+	double chi2(0);
+	double lh0(0);
+	int error(0);
+
+	// Lenstool Bruteforce
+	//===========================================================================================================
+#ifdef __WITH_LENSTOOL
+
+	grid();
+	setup_lenstool();
+	readConstraints();
+
+	//chi2_img(chi2,lh0 );
+
+	std::cout << "chi Lenstool Benchmark " << std::endl;
+	std::cout << " Chi : " << std::setprecision(15) << chi2 <<  std::endl;
+	o_global_free();
+
+#endif
+
 	// Lenstool-GPU Bruteforce
 	//===========================================================================================================
-	double chi2(0);
-	int error(0);
 
 	double t_1(0),t_2(0),t_3(0);
 #if 1

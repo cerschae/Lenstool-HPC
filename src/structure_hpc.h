@@ -141,6 +141,8 @@ struct ellipse
 	double  theta;	
 };
 
+#endif
+
 /** @brief Storage type for sources, lenses and arclets
  * @param center: position of the center of galaxy
  * @param shape: shape of galaxy
@@ -162,7 +164,7 @@ struct galaxy
 	double  dos;          		
 	double  dr;           		
 };
-#endif
+
 
 /** @brief Contains the information for optimising a parameter in the inverse mode
  * @param block: blockorfree variable (whether a parameter is blocked or free for the mcmc algorithm)

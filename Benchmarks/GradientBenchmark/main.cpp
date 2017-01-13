@@ -15,6 +15,8 @@
 //
 //
 #include <mm_malloc.h>
+
+//#define __WITH_LENSTOOL 1
 //
 #ifdef __WITH_LENSTOOL
 #warning "linking with libtool..."
@@ -22,6 +24,7 @@
 #include<constant.h>
 #include<dimension.h>
 #include<structure.h>
+//#include <liblenstool>
 #endif
 //#include "../../../Projects/lenstool-6.8.1/include/structure.h"
 //#include "structure.h"
