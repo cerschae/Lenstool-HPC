@@ -1,0 +1,930 @@
+#The user defines which mode of lenstool he wants to run here
+runmode										
+	image 0	../ConfigFiles/theoretical_images_time.txt
+	chi2 1
+	end
+image
+	multfile  1  ../ConfigFiles/theoretical_images_time.txt
+	mult_wcs 1
+	sigposArcsec 0.1
+	forme    -1
+	end
+grille
+	nombre      100
+	polaire     0
+	nlentille   90
+	nlens_opt 1
+	end
+champ
+	dmax     50.
+	end
+cosmology												
+	model	  1
+	H0        70.000
+	omegaM    0.300
+	omegaX    0.700
+	omegaK	  0.000
+	wA	  0.000
+	wX        -1.000
+	end
+potentiel 1
+	profil     8									#Profile: 5 SIS, 8 PIEMD
+	x_centre     0.000								#X Position [arcsec]
+	y_centre     0.000								#Y Position [arcsec]
+	ellipticite     0.11					#Ellipticity
+	v_disp     800.									#Dispersion Velocity [km/s]
+	cut_radius	500										#Cut radius (PIEMD distribution)
+	core_radius 	5										#Core radius (PIEMD distribution)
+	z_lens     0.4									#Redshift of lens
+	end
+potentiel 2
+	profil     8									#Profile: 5 SIS, 8 PIEMD
+	x_centre     25.000								#X Position [arcsec]
+	y_centre     20.000								#Y Position [arcsec]
+	ellipticite     0.11							#Ellipticity
+	v_disp     140.									#Dispersion Velocity [km/s]
+	cut_radius	150										#Cut radius (PIEMD distribution)
+	core_radius 	1										#Core radius (PIEMD distribution)
+	z_lens     0.4									#Redshift of lens
+	end
+potentiel 4
+	profil     8									#Profile: 5 SIS, 8 PIEMD
+	x_centre     -16.000								#X Position [arcsec]
+	y_centre     2.000								#Y Position [arcsec]
+	ellipticite     0.11							#Ellipticity
+	v_disp     130.									#Dispersion Velocity [km/s]
+	cut_radius	150										#Cut radius (PIEMD distribution)
+	core_radius 	1										#Core radius (PIEMD distribution)
+	z_lens     0.4									#Redshift of lens
+	end
+potentiel 5
+	profil     8									#Profile: 5 SIS, 8 PIEMD
+	x_centre     -10.000								#X Position [arcsec]
+	y_centre     0.000								#Y Position [arcsec]
+	ellipticite     0.11							#Ellipticity
+	v_disp     110.									#Dispersion Velocity [km/s]
+	cut_radius	150										#Cut radius (PIEMD distribution)
+	core_radius 	1										#Core radius (PIEMD distribution)
+	z_lens     0.4									#Redshift of lens
+	end
+potentiel 6
+	profil     8									#Profile: 5 SIS, 8 PIEMD
+	x_centre     3.000								#X Position [arcsec]
+	y_centre     -10.000								#Y Position [arcsec]
+	ellipticite     0.11							#Ellipticity
+	v_disp     80.									#Dispersion Velocity [km/s]
+	cut_radius	150										#Cut radius (PIEMD distribution)
+	core_radius 	1										#Core radius (PIEMD distribution)
+	z_lens     0.4									#Redshift of lens
+	end
+potentiel 7
+	profil     8									#Profile: 5 SIS, 8 PIEMD
+	x_centre     17.000								#X Position [arcsec]
+	y_centre     -7.000								#Y Position [arcsec]
+	ellipticite     0.11							#Ellipticity
+	v_disp     120.									#Dispersion Velocity [km/s]
+	cut_radius	150										#Cut radius (PIEMD distribution)
+	core_radius 	1										#Core radius (PIEMD distribution)
+	z_lens     0.4									#Redshift of lens
+	end
+potentiel 7
+	profil     8									#Profile: 5 SIS, 8 PIEMD
+	x_centre     17.000								#X Position [arcsec]
+	y_centre     -7.000								#Y Position [arcsec]
+	ellipticite     0.11							#Ellipticity
+	v_disp     1.									#Dispersion Velocity [km/s]
+	rcut	150										#Cut radius (PIEMD distribution)
+	rcore 	1										#Core radius (PIEMD distribution)
+	z_lens     0.4									#Redshift of lens
+	end
+potentiel 7
+	profil     8									#Profile: 5 SIS, 8 PIEMD
+	x_centre     17.000								#X Position [arcsec]
+	y_centre     -7.000								#Y Position [arcsec]
+	ellipticity     0.11							#Ellipticity
+	v_disp     1.									#Dispersion Velocity [km/s]
+	rcut	150										#Cut radius (PIEMD distribution)
+	rcore 	1										#Core radius (PIEMD distribution)
+	z_lens     0.4									#Redshift of lens
+	end
+potentiel 7
+	profil     8									#Profile: 5 SIS, 8 PIEMD
+	x_centre     17.000								#X Position [arcsec]
+	y_centre     -7.000								#Y Position [arcsec]
+	ellipticite     0.11							#Ellipticity
+	v_disp     1.									#Dispersion Velocity [km/s]
+	rcut	150										#Cut radius (PIEMD distribution)
+	rcore 	1										#Core radius (PIEMD distribution)
+	z_lens     0.4									#Redshift of lens
+	end
+potentiel 7
+	profil     8									#Profile: 5 SIS, 8 PIEMD
+	x_centre     17.000								#X Position [arcsec]
+	y_centre     -7.000								#Y Position [arcsec]
+	ellipticity     0.11							#Ellipticity
+	v_disp     1.									#Dispersion Velocity [km/s]
+	rcut	150										#Cut radius (PIEMD distribution)
+	rcore 	1										#Core radius (PIEMD distribution)
+	z_lens     0.4									#Redshift of lens
+	end
+potentiel 7
+	profil     8									#Profile: 5 SIS, 8 PIEMD
+	x_centre     17.000								#X Position [arcsec]
+	y_centre     -7.000								#Y Position [arcsec]
+	ellipticity     0.11							#Ellipticity
+	v_disp     1.									#Dispersion Velocity [km/s]
+	rcut	150										#Cut radius (PIEMD distribution)
+	rcore 	1										#Core radius (PIEMD distribution)
+	z_lens     0.4									#Redshift of lens
+	end
+potentiel 7
+	profil     8									#Profile: 5 SIS, 8 PIEMD
+	x_centre     17.000								#X Position [arcsec]
+	y_centre     -7.000								#Y Position [arcsec]
+	ellipticity     0.11							#Ellipticity
+	v_disp     1.									#Dispersion Velocity [km/s]
+	rcut	150										#Cut radius (PIEMD distribution)
+	rcore 	1										#Core radius (PIEMD distribution)
+	z_lens     0.4									#Redshift of lens
+	end
+potentiel 7
+	profil     8									#Profile: 5 SIS, 8 PIEMD
+	x_centre     17.000								#X Position [arcsec]
+	y_centre     -7.000								#Y Position [arcsec]
+	ellipticity     0.11							#Ellipticity
+	v_disp     1.									#Dispersion Velocity [km/s]
+	rcut	150										#Cut radius (PIEMD distribution)
+	rcore 	1										#Core radius (PIEMD distribution)
+	z_lens     0.4									#Redshift of lens
+	end
+potentiel 7
+	profil     8									#Profile: 5 SIS, 8 PIEMD
+	x_centre     17.000								#X Position [arcsec]
+	y_centre     -7.000								#Y Position [arcsec]
+	ellipticity     0.11							#Ellipticity
+	v_disp     1.									#Dispersion Velocity [km/s]
+	rcut	150										#Cut radius (PIEMD distribution)
+	rcore 	1										#Core radius (PIEMD distribution)
+	z_lens     0.4									#Redshift of lens
+	end
+potentiel 7
+	profil     8									#Profile: 5 SIS, 8 PIEMD
+	x_centre     17.000								#X Position [arcsec]
+	y_centre     -7.000								#Y Position [arcsec]
+	ellipticity     0.11							#Ellipticity
+	v_disp     1.									#Dispersion Velocity [km/s]
+	rcut	150										#Cut radius (PIEMD distribution)
+	rcore 	1										#Core radius (PIEMD distribution)
+	z_lens     0.4									#Redshift of lens
+	end
+potentiel 7
+	profil     8									#Profile: 5 SIS, 8 PIEMD
+	x_centre     17.000								#X Position [arcsec]
+	y_centre     -7.000								#Y Position [arcsec]
+	ellipticity     0.11							#Ellipticity
+	v_disp     1.									#Dispersion Velocity [km/s]
+	rcut	150										#Cut radius (PIEMD distribution)
+	rcore 	1										#Core radius (PIEMD distribution)
+	z_lens     0.4									#Redshift of lens
+	end
+potentiel 7
+	profil     8									#Profile: 5 SIS, 8 PIEMD
+	x_centre     17.000								#X Position [arcsec]
+	y_centre     -7.000								#Y Position [arcsec]
+	ellipticity     0.11							#Ellipticity
+	v_disp     1.									#Dispersion Velocity [km/s]
+	rcut	150										#Cut radius (PIEMD distribution)
+	rcore 	1										#Core radius (PIEMD distribution)
+	z_lens     0.4									#Redshift of lens
+	end
+potentiel 7
+	profil     8									#Profile: 5 SIS, 8 PIEMD
+	x_centre     17.000								#X Position [arcsec]
+	y_centre     -7.000								#Y Position [arcsec]
+	ellipticity     0.11							#Ellipticity
+	v_disp     1.									#Dispersion Velocity [km/s]
+	rcut	150										#Cut radius (PIEMD distribution)
+	rcore 	1										#Core radius (PIEMD distribution)
+	z_lens     0.4									#Redshift of lens
+	end
+potentiel 7
+	profil     8									#Profile: 5 SIS, 8 PIEMD
+	x_centre     17.000								#X Position [arcsec]
+	y_centre     -7.000								#Y Position [arcsec]
+	ellipticity     0.11							#Ellipticity
+	v_disp     1.									#Dispersion Velocity [km/s]
+	rcut	150										#Cut radius (PIEMD distribution)
+	rcore 	1										#Core radius (PIEMD distribution)
+	z_lens     0.4									#Redshift of lens
+	end
+potentiel 7
+	profil     8									#Profile: 5 SIS, 8 PIEMD
+	x_centre     17.000								#X Position [arcsec]
+	y_centre     -7.000								#Y Position [arcsec]
+	ellipticity     0.11							#Ellipticity
+	v_disp     1.									#Dispersion Velocity [km/s]
+	rcut	150										#Cut radius (PIEMD distribution)
+	rcore 	1										#Core radius (PIEMD distribution)
+	z_lens     0.4									#Redshift of lens
+	end
+potentiel 7
+	profil     8									#Profile: 5 SIS, 8 PIEMD
+	x_centre     17.000								#X Position [arcsec]
+	y_centre     -7.000								#Y Position [arcsec]
+	ellipticity     0.11							#Ellipticity
+	v_disp     1.									#Dispersion Velocity [km/s]
+	rcut	150										#Cut radius (PIEMD distribution)
+	rcore 	1										#Core radius (PIEMD distribution)
+	z_lens     0.4									#Redshift of lens
+	end
+potentiel 7
+	profil     8									#Profile: 5 SIS, 8 PIEMD
+	x_centre     17.000								#X Position [arcsec]
+	y_centre     -7.000								#Y Position [arcsec]
+	ellipticity     0.11							#Ellipticity
+	v_disp     1.									#Dispersion Velocity [km/s]
+	rcut	150										#Cut radius (PIEMD distribution)
+	rcore 	1										#Core radius (PIEMD distribution)
+	z_lens     0.4									#Redshift of lens
+	end
+potentiel 7
+	profil     8									#Profile: 5 SIS, 8 PIEMD
+	x_centre     17.000								#X Position [arcsec]
+	y_centre     -7.000								#Y Position [arcsec]
+	ellipticity     0.11							#Ellipticity
+	v_disp     1.									#Dispersion Velocity [km/s]
+	rcut	150										#Cut radius (PIEMD distribution)
+	rcore 	1										#Core radius (PIEMD distribution)
+	z_lens     0.4									#Redshift of lens
+	end
+potentiel 7
+	profil     8									#Profile: 5 SIS, 8 PIEMD
+	x_centre     17.000								#X Position [arcsec]
+	y_centre     -7.000								#Y Position [arcsec]
+	ellipticity     0.11							#Ellipticity
+	v_disp     1.									#Dispersion Velocity [km/s]
+	rcut	150										#Cut radius (PIEMD distribution)
+	rcore 	1										#Core radius (PIEMD distribution)
+	z_lens     0.4									#Redshift of lens
+	end
+potentiel 7
+	profil     8									#Profile: 5 SIS, 8 PIEMD
+	x_centre     17.000								#X Position [arcsec]
+	y_centre     -7.000								#Y Position [arcsec]
+	ellipticity     0.11							#Ellipticity
+	v_disp     1.									#Dispersion Velocity [km/s]
+	rcut	150										#Cut radius (PIEMD distribution)
+	rcore 	1										#Core radius (PIEMD distribution)
+	z_lens     0.4									#Redshift of lens
+	end
+potentiel 7
+	profil     8									#Profile: 5 SIS, 8 PIEMD
+	x_centre     17.000								#X Position [arcsec]
+	y_centre     -7.000								#Y Position [arcsec]
+	ellipticity     0.11							#Ellipticity
+	v_disp     1.									#Dispersion Velocity [km/s]
+	rcut	150										#Cut radius (PIEMD distribution)
+	rcore 	1										#Core radius (PIEMD distribution)
+	z_lens     0.4									#Redshift of lens
+	end
+potentiel 7
+	profil     8									#Profile: 5 SIS, 8 PIEMD
+	x_centre     17.000								#X Position [arcsec]
+	y_centre     -7.000								#Y Position [arcsec]
+	ellipticity     0.11							#Ellipticity
+	v_disp     1.									#Dispersion Velocity [km/s]
+	rcut	150										#Cut radius (PIEMD distribution)
+	rcore 	1										#Core radius (PIEMD distribution)
+	z_lens     0.4									#Redshift of lens
+	end
+potentiel 7
+	profil     8									#Profile: 5 SIS, 8 PIEMD
+	x_centre     17.000								#X Position [arcsec]
+	y_centre     -7.000								#Y Position [arcsec]
+	ellipticity     0.11							#Ellipticity
+	v_disp     1.									#Dispersion Velocity [km/s]
+	rcut	150										#Cut radius (PIEMD distribution)
+	rcore 	1										#Core radius (PIEMD distribution)
+	z_lens     0.4									#Redshift of lens
+	end
+potentiel 7
+	profil     8									#Profile: 5 SIS, 8 PIEMD
+	x_centre     17.000								#X Position [arcsec]
+	y_centre     -7.000								#Y Position [arcsec]
+	ellipticity     0.11							#Ellipticity
+	v_disp     1.									#Dispersion Velocity [km/s]
+	rcut	150										#Cut radius (PIEMD distribution)
+	rcore 	1										#Core radius (PIEMD distribution)
+	z_lens     0.4									#Redshift of lens
+	end
+potentiel 7
+	profil     8									#Profile: 5 SIS, 8 PIEMD
+	x_centre     17.000								#X Position [arcsec]
+	y_centre     -7.000								#Y Position [arcsec]
+	ellipticity     0.11							#Ellipticity
+	v_disp     1.									#Dispersion Velocity [km/s]
+	rcut	150										#Cut radius (PIEMD distribution)
+	rcore 	1										#Core radius (PIEMD distribution)
+	z_lens     0.4									#Redshift of lens
+	end
+potentiel 7
+	profil     8									#Profile: 5 SIS, 8 PIEMD
+	x_centre     17.000								#X Position [arcsec]
+	y_centre     -7.000								#Y Position [arcsec]
+	ellipticity     0.11							#Ellipticity
+	v_disp     1.									#Dispersion Velocity [km/s]
+	rcut	150										#Cut radius (PIEMD distribution)
+	rcore 	1										#Core radius (PIEMD distribution)
+	z_lens     0.4									#Redshift of lens
+	end
+potentiel 7
+	profil     8									#Profile: 5 SIS, 8 PIEMD
+	x_centre     17.000								#X Position [arcsec]
+	y_centre     -7.000								#Y Position [arcsec]
+	ellipticity     0.11							#Ellipticity
+	v_disp     1.									#Dispersion Velocity [km/s]
+	rcut	150										#Cut radius (PIEMD distribution)
+	rcore 	1										#Core radius (PIEMD distribution)
+	z_lens     0.4									#Redshift of lens
+	end
+potentiel 7
+	profil     8									#Profile: 5 SIS, 8 PIEMD
+	x_centre     17.000								#X Position [arcsec]
+	y_centre     -7.000								#Y Position [arcsec]
+	ellipticity     0.11							#Ellipticity
+	v_disp     1.									#Dispersion Velocity [km/s]
+	rcut	150										#Cut radius (PIEMD distribution)
+	rcore 	1										#Core radius (PIEMD distribution)
+	z_lens     0.4									#Redshift of lens
+	end
+potentiel 7
+	profil     8									#Profile: 5 SIS, 8 PIEMD
+	x_centre     17.000								#X Position [arcsec]
+	y_centre     -7.000								#Y Position [arcsec]
+	ellipticity     0.11							#Ellipticity
+	v_disp     1.									#Dispersion Velocity [km/s]
+	rcut	150										#Cut radius (PIEMD distribution)
+	rcore 	1										#Core radius (PIEMD distribution)
+	z_lens     0.4									#Redshift of lens
+	end
+potentiel 7
+	profil     8									#Profile: 5 SIS, 8 PIEMD
+	x_centre     17.000								#X Position [arcsec]
+	y_centre     -7.000								#Y Position [arcsec]
+	ellipticity     0.11							#Ellipticity
+	v_disp     1.									#Dispersion Velocity [km/s]
+	rcut	150										#Cut radius (PIEMD distribution)
+	rcore 	1										#Core radius (PIEMD distribution)
+	z_lens     0.4									#Redshift of lens
+	end
+potentiel 7
+	profil     8									#Profile: 5 SIS, 8 PIEMD
+	x_centre     17.000								#X Position [arcsec]
+	y_centre     -7.000								#Y Position [arcsec]
+	ellipticity     0.11							#Ellipticity
+	v_disp     1.									#Dispersion Velocity [km/s]
+	rcut	150										#Cut radius (PIEMD distribution)
+	rcore 	1										#Core radius (PIEMD distribution)
+	z_lens     0.4									#Redshift of lens
+	end
+potentiel 7
+	profil     8									#Profile: 5 SIS, 8 PIEMD
+	x_centre     17.000								#X Position [arcsec]
+	y_centre     -7.000								#Y Position [arcsec]
+	ellipticity     0.11							#Ellipticity
+	v_disp     1.									#Dispersion Velocity [km/s]
+	rcut	150										#Cut radius (PIEMD distribution)
+	rcore 	1										#Core radius (PIEMD distribution)
+	z_lens     0.4									#Redshift of lens
+	end
+potentiel 7
+	profil     8									#Profile: 5 SIS, 8 PIEMD
+	x_centre     17.000								#X Position [arcsec]
+	y_centre     -7.000								#Y Position [arcsec]
+	ellipticity     0.11							#Ellipticity
+	v_disp     1.									#Dispersion Velocity [km/s]
+	rcut	150										#Cut radius (PIEMD distribution)
+	rcore 	1										#Core radius (PIEMD distribution)
+	z_lens     0.4									#Redshift of lens
+	end
+potentiel 7
+	profil     8									#Profile: 5 SIS, 8 PIEMD
+	x_centre     17.000								#X Position [arcsec]
+	y_centre     -7.000								#Y Position [arcsec]
+	ellipticity     0.11							#Ellipticity
+	v_disp     1.									#Dispersion Velocity [km/s]
+	rcut	150										#Cut radius (PIEMD distribution)
+	rcore 	1										#Core radius (PIEMD distribution)
+	z_lens     0.4									#Redshift of lens
+	end
+potentiel 7
+	profil     8									#Profile: 5 SIS, 8 PIEMD
+	x_centre     17.000								#X Position [arcsec]
+	y_centre     -7.000								#Y Position [arcsec]
+	ellipticity     0.11							#Ellipticity
+	v_disp     1.									#Dispersion Velocity [km/s]
+	rcut	150										#Cut radius (PIEMD distribution)
+	rcore 	1										#Core radius (PIEMD distribution)
+	z_lens     0.4									#Redshift of lens
+	end
+potentiel 7
+	profil     8									#Profile: 5 SIS, 8 PIEMD
+	x_centre     17.000								#X Position [arcsec]
+	y_centre     -7.000								#Y Position [arcsec]
+	ellipticity     0.11							#Ellipticity
+	v_disp     1.									#Dispersion Velocity [km/s]
+	rcut	150										#Cut radius (PIEMD distribution)
+	rcore 	1										#Core radius (PIEMD distribution)
+	z_lens     0.4									#Redshift of lens
+	end
+potentiel 7
+	profil     8									#Profile: 5 SIS, 8 PIEMD
+	x_centre     17.000								#X Position [arcsec]
+	y_centre     -7.000								#Y Position [arcsec]
+	ellipticity     0.11							#Ellipticity
+	v_disp     1.									#Dispersion Velocity [km/s]
+	rcut	150										#Cut radius (PIEMD distribution)
+	rcore 	1										#Core radius (PIEMD distribution)
+	z_lens     0.4									#Redshift of lens
+	end
+potentiel 7
+	profil     8									#Profile: 5 SIS, 8 PIEMD
+	x_centre     17.000								#X Position [arcsec]
+	y_centre     -7.000								#Y Position [arcsec]
+	ellipticity     0.11							#Ellipticity
+	v_disp     1.									#Dispersion Velocity [km/s]
+	rcut	150										#Cut radius (PIEMD distribution)
+	rcore 	1										#Core radius (PIEMD distribution)
+	z_lens     0.4									#Redshift of lens
+	end
+potentiel 7
+	profil     8									#Profile: 5 SIS, 8 PIEMD
+	x_centre     17.000								#X Position [arcsec]
+	y_centre     -7.000								#Y Position [arcsec]
+	ellipticity     0.11							#Ellipticity
+	v_disp     1.									#Dispersion Velocity [km/s]
+	rcut	150										#Cut radius (PIEMD distribution)
+	rcore 	1										#Core radius (PIEMD distribution)
+	z_lens     0.4									#Redshift of lens
+	end
+potentiel 7
+	profil     8									#Profile: 5 SIS, 8 PIEMD
+	x_centre     17.000								#X Position [arcsec]
+	y_centre     -7.000								#Y Position [arcsec]
+	ellipticity     0.11							#Ellipticity
+	v_disp     1.									#Dispersion Velocity [km/s]
+	rcut	150										#Cut radius (PIEMD distribution)
+	rcore 	1										#Core radius (PIEMD distribution)
+	z_lens     0.4									#Redshift of lens
+	end
+potentiel 7
+	profil     8									#Profile: 5 SIS, 8 PIEMD
+	x_centre     17.000								#X Position [arcsec]
+	y_centre     -7.000								#Y Position [arcsec]
+	ellipticity     0.11							#Ellipticity
+	v_disp     1.									#Dispersion Velocity [km/s]
+	rcut	150										#Cut radius (PIEMD distribution)
+	rcore 	1										#Core radius (PIEMD distribution)
+	z_lens     0.4									#Redshift of lens
+	end
+potentiel 7
+	profil     8									#Profile: 5 SIS, 8 PIEMD
+	x_centre     17.000								#X Position [arcsec]
+	y_centre     -7.000								#Y Position [arcsec]
+	ellipticity     0.11							#Ellipticity
+	v_disp     1.									#Dispersion Velocity [km/s]
+	rcut	150										#Cut radius (PIEMD distribution)
+	rcore 	1										#Core radius (PIEMD distribution)
+	z_lens     0.4									#Redshift of lens
+	end
+potentiel 7
+	profil     8									#Profile: 5 SIS, 8 PIEMD
+	x_centre     17.000								#X Position [arcsec]
+	y_centre     -7.000								#Y Position [arcsec]
+	ellipticity     0.11							#Ellipticity
+	v_disp     1.									#Dispersion Velocity [km/s]
+	rcut	150										#Cut radius (PIEMD distribution)
+	rcore 	1										#Core radius (PIEMD distribution)
+	z_lens     0.4									#Redshift of lens
+	end
+potentiel 7
+	profil     8									#Profile: 5 SIS, 8 PIEMD
+	x_centre     17.000								#X Position [arcsec]
+	y_centre     -7.000								#Y Position [arcsec]
+	ellipticity     0.11							#Ellipticity
+	v_disp     1.									#Dispersion Velocity [km/s]
+	rcut	150										#Cut radius (PIEMD distribution)
+	rcore 	1										#Core radius (PIEMD distribution)
+	z_lens     0.4									#Redshift of lens
+	end
+potentiel 7
+	profil     8									#Profile: 5 SIS, 8 PIEMD
+	x_centre     17.000								#X Position [arcsec]
+	y_centre     -7.000								#Y Position [arcsec]
+	ellipticity     0.11							#Ellipticity
+	v_disp     1.									#Dispersion Velocity [km/s]
+	rcut	150										#Cut radius (PIEMD distribution)
+	rcore 	1										#Core radius (PIEMD distribution)
+	z_lens     0.4									#Redshift of lens
+	end
+potentiel 7
+	profil     8									#Profile: 5 SIS, 8 PIEMD
+	x_centre     17.000								#X Position [arcsec]
+	y_centre     -7.000								#Y Position [arcsec]
+	ellipticity     0.11							#Ellipticity
+	v_disp     1.									#Dispersion Velocity [km/s]
+	rcut	150										#Cut radius (PIEMD distribution)
+	rcore 	1										#Core radius (PIEMD distribution)
+	z_lens     0.4									#Redshift of lens
+	end
+potentiel 7
+	profil     8									#Profile: 5 SIS, 8 PIEMD
+	x_centre     17.000								#X Position [arcsec]
+	y_centre     -7.000								#Y Position [arcsec]
+	ellipticity     0.11							#Ellipticity
+	v_disp     1.									#Dispersion Velocity [km/s]
+	rcut	150										#Cut radius (PIEMD distribution)
+	rcore 	1										#Core radius (PIEMD distribution)
+	z_lens     0.4									#Redshift of lens
+	end
+potentiel 7
+	profil     8									#Profile: 5 SIS, 8 PIEMD
+	x_centre     17.000								#X Position [arcsec]
+	y_centre     -7.000								#Y Position [arcsec]
+	ellipticity     0.11							#Ellipticity
+	v_disp     1.									#Dispersion Velocity [km/s]
+	rcut	150										#Cut radius (PIEMD distribution)
+	rcore 	1										#Core radius (PIEMD distribution)
+	z_lens     0.4									#Redshift of lens
+	end
+potentiel 7
+	profil     8									#Profile: 5 SIS, 8 PIEMD
+	x_centre     17.000								#X Position [arcsec]
+	y_centre     -7.000								#Y Position [arcsec]
+	ellipticity     0.11							#Ellipticity
+	v_disp     1.									#Dispersion Velocity [km/s]
+	rcut	150										#Cut radius (PIEMD distribution)
+	rcore 	1										#Core radius (PIEMD distribution)
+	z_lens     0.4									#Redshift of lens
+	end
+potentiel 7
+	profil     8									#Profile: 5 SIS, 8 PIEMD
+	x_centre     17.000								#X Position [arcsec]
+	y_centre     -7.000								#Y Position [arcsec]
+	ellipticity     0.11							#Ellipticity
+	v_disp     1.									#Dispersion Velocity [km/s]
+	rcut	150										#Cut radius (PIEMD distribution)
+	rcore 	1										#Core radius (PIEMD distribution)
+	z_lens     0.4									#Redshift of lens
+	end
+potentiel 7
+	profil     8									#Profile: 5 SIS, 8 PIEMD
+	x_centre     17.000								#X Position [arcsec]
+	y_centre     -7.000								#Y Position [arcsec]
+	ellipticity     0.11							#Ellipticity
+	v_disp     1.									#Dispersion Velocity [km/s]
+	rcut	150										#Cut radius (PIEMD distribution)
+	rcore 	1										#Core radius (PIEMD distribution)
+	z_lens     0.4									#Redshift of lens
+	end
+potentiel 7
+	profil     8									#Profile: 5 SIS, 8 PIEMD
+	x_centre     17.000								#X Position [arcsec]
+	y_centre     -7.000								#Y Position [arcsec]
+	ellipticity     0.11							#Ellipticity
+	v_disp     1.									#Dispersion Velocity [km/s]
+	rcut	150										#Cut radius (PIEMD distribution)
+	rcore 	1										#Core radius (PIEMD distribution)
+	z_lens     0.4									#Redshift of lens
+	end
+potentiel 7
+	profil     8									#Profile: 5 SIS, 8 PIEMD
+	x_centre     17.000								#X Position [arcsec]
+	y_centre     -7.000								#Y Position [arcsec]
+	ellipticity     0.11							#Ellipticity
+	v_disp     1.									#Dispersion Velocity [km/s]
+	rcut	150										#Cut radius (PIEMD distribution)
+	rcore 	1										#Core radius (PIEMD distribution)
+	z_lens     0.4									#Redshift of lens
+	end
+potentiel 7
+	profil     8									#Profile: 5 SIS, 8 PIEMD
+	x_centre     17.000								#X Position [arcsec]
+	y_centre     -7.000								#Y Position [arcsec]
+	ellipticity     0.11							#Ellipticity
+	v_disp     1.									#Dispersion Velocity [km/s]
+	rcut	150										#Cut radius (PIEMD distribution)
+	rcore 	1										#Core radius (PIEMD distribution)
+	z_lens     0.4									#Redshift of lens
+	end
+potentiel 7
+	profil     8									#Profile: 5 SIS, 8 PIEMD
+	x_centre     17.000								#X Position [arcsec]
+	y_centre     -7.000								#Y Position [arcsec]
+	ellipticity     0.11							#Ellipticity
+	v_disp     1.									#Dispersion Velocity [km/s]
+	rcut	150										#Cut radius (PIEMD distribution)
+	rcore 	1										#Core radius (PIEMD distribution)
+	z_lens     0.4									#Redshift of lens
+	end
+potentiel 7
+	profil     8									#Profile: 5 SIS, 8 PIEMD
+	x_centre     17.000								#X Position [arcsec]
+	y_centre     -7.000								#Y Position [arcsec]
+	ellipticity     0.11							#Ellipticity
+	v_disp     1.									#Dispersion Velocity [km/s]
+	rcut	150										#Cut radius (PIEMD distribution)
+	rcore 	1										#Core radius (PIEMD distribution)
+	z_lens     0.4									#Redshift of lens
+	end
+potentiel 7
+	profil     8									#Profile: 5 SIS, 8 PIEMD
+	x_centre     17.000								#X Position [arcsec]
+	y_centre     -7.000								#Y Position [arcsec]
+	ellipticity     0.11							#Ellipticity
+	v_disp     1.									#Dispersion Velocity [km/s]
+	rcut	150										#Cut radius (PIEMD distribution)
+	rcore 	1										#Core radius (PIEMD distribution)
+	z_lens     0.4									#Redshift of lens
+	end
+potentiel 7
+	profil     8									#Profile: 5 SIS, 8 PIEMD
+	x_centre     17.000								#X Position [arcsec]
+	y_centre     -7.000								#Y Position [arcsec]
+	ellipticity     0.11							#Ellipticity
+	v_disp     1.									#Dispersion Velocity [km/s]
+	rcut	150										#Cut radius (PIEMD distribution)
+	rcore 	1										#Core radius (PIEMD distribution)
+	z_lens     0.4									#Redshift of lens
+	end
+potentiel 7
+	profil     8									#Profile: 5 SIS, 8 PIEMD
+	x_centre     17.000								#X Position [arcsec]
+	y_centre     -7.000								#Y Position [arcsec]
+	ellipticity     0.11							#Ellipticity
+	v_disp     1.									#Dispersion Velocity [km/s]
+	rcut	150										#Cut radius (PIEMD distribution)
+	rcore 	1										#Core radius (PIEMD distribution)
+	z_lens     0.4									#Redshift of lens
+	end
+potentiel 7
+	profil     8									#Profile: 5 SIS, 8 PIEMD
+	x_centre     17.000								#X Position [arcsec]
+	y_centre     -7.000								#Y Position [arcsec]
+	ellipticity     0.11							#Ellipticity
+	v_disp     1.									#Dispersion Velocity [km/s]
+	rcut	150										#Cut radius (PIEMD distribution)
+	rcore 	1										#Core radius (PIEMD distribution)
+	z_lens     0.4									#Redshift of lens
+	end
+potentiel 7
+	profil     8									#Profile: 5 SIS, 8 PIEMD
+	x_centre     17.000								#X Position [arcsec]
+	y_centre     -7.000								#Y Position [arcsec]
+	ellipticity     0.11							#Ellipticity
+	v_disp     1.									#Dispersion Velocity [km/s]
+	rcut	150										#Cut radius (PIEMD distribution)
+	rcore 	1										#Core radius (PIEMD distribution)
+	z_lens     0.4									#Redshift of lens
+	end
+potentiel 7
+	profil     8									#Profile: 5 SIS, 8 PIEMD
+	x_centre     17.000								#X Position [arcsec]
+	y_centre     -7.000								#Y Position [arcsec]
+	ellipticity     0.11							#Ellipticity
+	v_disp     1.									#Dispersion Velocity [km/s]
+	rcut	150										#Cut radius (PIEMD distribution)
+	rcore 	1										#Core radius (PIEMD distribution)
+	z_lens     0.4									#Redshift of lens
+	end
+potentiel 7
+	profil     8									#Profile: 5 SIS, 8 PIEMD
+	x_centre     17.000								#X Position [arcsec]
+	y_centre     -7.000								#Y Position [arcsec]
+	ellipticity     0.11							#Ellipticity
+	v_disp     1.									#Dispersion Velocity [km/s]
+	rcut	150										#Cut radius (PIEMD distribution)
+	rcore 	1										#Core radius (PIEMD distribution)
+	z_lens     0.4									#Redshift of lens
+	end
+potentiel 7
+	profil     8									#Profile: 5 SIS, 8 PIEMD
+	x_centre     17.000								#X Position [arcsec]
+	y_centre     -7.000								#Y Position [arcsec]
+	ellipticity     0.11							#Ellipticity
+	v_disp     1.									#Dispersion Velocity [km/s]
+	rcut	150										#Cut radius (PIEMD distribution)
+	rcore 	1										#Core radius (PIEMD distribution)
+	z_lens     0.4									#Redshift of lens
+	end
+potentiel 7
+	profil     8									#Profile: 5 SIS, 8 PIEMD
+	x_centre     17.000								#X Position [arcsec]
+	y_centre     -7.000								#Y Position [arcsec]
+	ellipticity     0.11							#Ellipticity
+	v_disp     1.									#Dispersion Velocity [km/s]
+	rcut	150										#Cut radius (PIEMD distribution)
+	rcore 	1										#Core radius (PIEMD distribution)
+	z_lens     0.4									#Redshift of lens
+	end
+potentiel 7
+	profil     8									#Profile: 5 SIS, 8 PIEMD
+	x_centre     17.000								#X Position [arcsec]
+	y_centre     -7.000								#Y Position [arcsec]
+	ellipticity     0.11							#Ellipticity
+	v_disp     1.									#Dispersion Velocity [km/s]
+	rcut	150										#Cut radius (PIEMD distribution)
+	rcore 	1										#Core radius (PIEMD distribution)
+	z_lens     0.4									#Redshift of lens
+	end
+potentiel 7
+	profil     8									#Profile: 5 SIS, 8 PIEMD
+	x_centre     17.000								#X Position [arcsec]
+	y_centre     -7.000								#Y Position [arcsec]
+	ellipticity     0.11							#Ellipticity
+	v_disp     1.									#Dispersion Velocity [km/s]
+	rcut	150										#Cut radius (PIEMD distribution)
+	rcore 	1										#Core radius (PIEMD distribution)
+	z_lens     0.4									#Redshift of lens
+	end
+potentiel 7
+	profil     8									#Profile: 5 SIS, 8 PIEMD
+	x_centre     17.000								#X Position [arcsec]
+	y_centre     -7.000								#Y Position [arcsec]
+	ellipticity     0.11							#Ellipticity
+	v_disp     1.									#Dispersion Velocity [km/s]
+	rcut	150										#Cut radius (PIEMD distribution)
+	rcore 	1										#Core radius (PIEMD distribution)
+	z_lens     0.4									#Redshift of lens
+	end
+potentiel 7
+	profil     8									#Profile: 5 SIS, 8 PIEMD
+	x_centre     17.000								#X Position [arcsec]
+	y_centre     -7.000								#Y Position [arcsec]
+	ellipticity     0.11							#Ellipticity
+	v_disp     1.									#Dispersion Velocity [km/s]
+	rcut	150										#Cut radius (PIEMD distribution)
+	rcore 	1										#Core radius (PIEMD distribution)
+	z_lens     0.4									#Redshift of lens
+	end
+potentiel 7
+	profil     8									#Profile: 5 SIS, 8 PIEMD
+	x_centre     17.000								#X Position [arcsec]
+	y_centre     -7.000								#Y Position [arcsec]
+	ellipticity     0.11							#Ellipticity
+	v_disp     1.									#Dispersion Velocity [km/s]
+	rcut	150										#Cut radius (PIEMD distribution)
+	rcore 	1										#Core radius (PIEMD distribution)
+	z_lens     0.4									#Redshift of lens
+	end
+potentiel 7
+	profil     8									#Profile: 5 SIS, 8 PIEMD
+	x_centre     17.000								#X Position [arcsec]
+	y_centre     -7.000								#Y Position [arcsec]
+	ellipticity     0.11							#Ellipticity
+	v_disp     1.									#Dispersion Velocity [km/s]
+	rcut	150										#Cut radius (PIEMD distribution)
+	rcore 	1										#Core radius (PIEMD distribution)
+	z_lens     0.4									#Redshift of lens
+	end
+potentiel 7
+	profil     8									#Profile: 5 SIS, 8 PIEMD
+	x_centre     17.000								#X Position [arcsec]
+	y_centre     -7.000								#Y Position [arcsec]
+	ellipticity     0.11							#Ellipticity
+	v_disp     1.									#Dispersion Velocity [km/s]
+	rcut	150										#Cut radius (PIEMD distribution)
+	rcore 	1										#Core radius (PIEMD distribution)
+	z_lens     0.4									#Redshift of lens
+	end
+potentiel 7
+	profil     8									#Profile: 5 SIS, 8 PIEMD
+	x_centre     17.000								#X Position [arcsec]
+	y_centre     -7.000								#Y Position [arcsec]
+	ellipticity     0.11							#Ellipticity
+	v_disp     1.									#Dispersion Velocity [km/s]
+	rcut	150										#Cut radius (PIEMD distribution)
+	rcore 	1										#Core radius (PIEMD distribution)
+	z_lens     0.4									#Redshift of lens
+	end
+potentiel 7
+	profil     8									#Profile: 5 SIS, 8 PIEMD
+	x_centre     17.000								#X Position [arcsec]
+	y_centre     -7.000								#Y Position [arcsec]
+	ellipticity     0.11							#Ellipticity
+	v_disp     1.									#Dispersion Velocity [km/s]
+	rcut	150										#Cut radius (PIEMD distribution)
+	rcore 	1										#Core radius (PIEMD distribution)
+	z_lens     0.4									#Redshift of lens
+	end
+potentiel 7
+	profil     8									#Profile: 5 SIS, 8 PIEMD
+	x_centre     17.000								#X Position [arcsec]
+	y_centre     -7.000								#Y Position [arcsec]
+	ellipticity     0.11							#Ellipticity
+	v_disp     1.									#Dispersion Velocity [km/s]
+	rcut	150										#Cut radius (PIEMD distribution)
+	rcore 	1										#Core radius (PIEMD distribution)
+	z_lens     0.4									#Redshift of lens
+	end
+potentiel 7
+	profil     8									#Profile: 5 SIS, 8 PIEMD
+	x_centre     17.000								#X Position [arcsec]
+	y_centre     -7.000								#Y Position [arcsec]
+	ellipticity     0.11							#Ellipticity
+	v_disp     1.									#Dispersion Velocity [km/s]
+	rcut	150										#Cut radius (PIEMD distribution)
+	rcore 	1										#Core radius (PIEMD distribution)
+	z_lens     0.4									#Redshift of lens
+	end
+potentiel 7
+	profil     8									#Profile: 5 SIS, 8 PIEMD
+	x_centre     17.000								#X Position [arcsec]
+	y_centre     -7.000								#Y Position [arcsec]
+	ellipticity     0.11							#Ellipticity
+	v_disp     1.									#Dispersion Velocity [km/s]
+	rcut	150										#Cut radius (PIEMD distribution)
+	rcore 	1										#Core radius (PIEMD distribution)
+	z_lens     0.4									#Redshift of lens
+	end
+potentiel 7
+	profil     8									#Profile: 5 SIS, 8 PIEMD
+	x_centre     17.000								#X Position [arcsec]
+	y_centre     -7.000								#Y Position [arcsec]
+	ellipticity     0.11							#Ellipticity
+	v_disp     1.									#Dispersion Velocity [km/s]
+	rcut	150										#Cut radius (PIEMD distribution)
+	rcore 	1										#Core radius (PIEMD distribution)
+	z_lens     0.4									#Redshift of lens
+	end
+potentiel 7
+	profil     8									#Profile: 5 SIS, 8 PIEMD
+	x_centre     17.000								#X Position [arcsec]
+	y_centre     -7.000								#Y Position [arcsec]
+	ellipticity     0.11							#Ellipticity
+	v_disp     1.									#Dispersion Velocity [km/s]
+	rcut	150										#Cut radius (PIEMD distribution)
+	rcore 	1										#Core radius (PIEMD distribution)
+	z_lens     0.4									#Redshift of lens
+	end
+potentiel 7
+	profil     8									#Profile: 5 SIS, 8 PIEMD
+	x_centre     17.000								#X Position [arcsec]
+	y_centre     -7.000								#Y Position [arcsec]
+	ellipticity     0.11							#Ellipticity
+	v_disp     1.									#Dispersion Velocity [km/s]
+	rcut	150										#Cut radius (PIEMD distribution)
+	rcore 	1										#Core radius (PIEMD distribution)
+	z_lens     0.4									#Redshift of lens
+	end
+potentiel 7
+	profil     8									#Profile: 5 SIS, 8 PIEMD
+	x_centre     17.000								#X Position [arcsec]
+	y_centre     -7.000								#Y Position [arcsec]
+	ellipticity     0.11							#Ellipticity
+	v_disp     1.									#Dispersion Velocity [km/s]
+	rcut	150										#Cut radius (PIEMD distribution)
+	rcore 	1										#Core radius (PIEMD distribution)
+	z_lens     0.4									#Redshift of lens
+	end
+potentiel 7
+	profil     8									#Profile: 5 SIS, 8 PIEMD
+	x_centre     17.000								#X Position [arcsec]
+	y_centre     -7.000								#Y Position [arcsec]
+	ellipticity     0.11							#Ellipticity
+	v_disp     1.									#Dispersion Velocity [km/s]
+	rcut	150										#Cut radius (PIEMD distribution)
+	rcore 	1										#Core radius (PIEMD distribution)
+	z_lens     0.4									#Redshift of lens
+	end
+potentiel 7
+	profil     8									#Profile: 5 SIS, 8 PIEMD
+	x_centre     17.000								#X Position [arcsec]
+	y_centre     -7.000								#Y Position [arcsec]
+	ellipticity     0.11							#Ellipticity
+	v_disp     1.									#Dispersion Velocity [km/s]
+	rcut	150										#Cut radius (PIEMD distribution)
+	rcore 	1										#Core radius (PIEMD distribution)
+	z_lens     0.4									#Redshift of lens
+	end
+potentiel 7
+	profil     8									#Profile: 5 SIS, 8 PIEMD
+	x_centre     17.000								#X Position [arcsec]
+	y_centre     -7.000								#Y Position [arcsec]
+	ellipticity     0.11							#Ellipticity
+	v_disp     1.									#Dispersion Velocity [km/s]
+	rcut	150										#Cut radius (PIEMD distribution)
+	rcore 	1										#Core radius (PIEMD distribution)
+	z_lens     0.4									#Redshift of lens
+	end
+potentiel 7
+	profil     8									#Profile: 5 SIS, 8 PIEMD
+	x_centre     17.000								#X Position [arcsec]
+	y_centre     -7.000								#Y Position [arcsec]
+	ellipticity     0.11							#Ellipticity
+	v_disp     1.									#Dispersion Velocity [km/s]
+	rcut	150										#Cut radius (PIEMD distribution)
+	rcore 	1										#Core radius (PIEMD distribution)
+	z_lens     0.4									#Redshift of lens
+	end
+fini
