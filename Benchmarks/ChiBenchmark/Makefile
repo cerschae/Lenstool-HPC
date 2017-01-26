@@ -21,6 +21,7 @@ program_INCLUDE_DIRS += /users/fgilles/Projects/Libs/cfitsio/include
 program_INCLUDE_DIRS += /users/fgilles/bin/iaca-lin32/include
 program_INCLUDE_DIRS += /users/fgilles/GPU-Projects/lenstool-master/src
 program_INCLUDE_DIRS += /home/epfl/cerschae/lenstool-hpc/src 
+program_INCLUDE_DIRS += /usr/include
 program_INCLUDE_DIRS += /home/epfl/cerschae/LENSTOOL/lenstool-6.8.1/include 
 program_INCLUDE_DIRS += /home/epfl/cerschae/LENSTOOL/lenstool-6.8.1/liblt 
 program_INCLUDE_DIRS += /home/epfl/cerschae/LENSTOOL/lenstool-6.8.1/src 
@@ -33,16 +34,18 @@ program_INCLUDE_LIBS += /users/fgilles/GPU-Projects/lenstool-master/src
 program_INCLUDE_LIBS += /home/epfl/cerschae/lenstool-hpc/src 
 program_INCLUDE_LIBS += /home/epfl/cerschae/LENSTOOL/lenstool-6.8.1/include 
 program_INCLUDE_LIBS += /home/epfl/cerschae/LENSTOOL/lenstool-6.8.1/src 
+program_INCLUDE_LIBS += /home/epfl/cerschae/LENSTOOL/lenstool-6.8.1/liblt 
 #
 # Compiler flags
 CPPFLAGS += $(foreach includedir,$(program_INCLUDE_DIRS),-I$(includedir))
-CPPFLAGS += $(foreach includelib,$(program_INCLUDE_LIBS),-L$(includelib) -lcfitsio)
+CPPFLAGS += $(foreach includelib,$(program_INCLUDE_LIBS),-L$(includelib))
 CPPFLAGS += -D__WITH_LENSTOOL
+CPPFLAGS += -qopenmp -xHost -g -O3 -std=c++0x -Wall -pedantic
 #CPPFLAGS += -qopenmp -march=core-avx2 -g -O3 -std=c++0x -Wall -pedantic
 #CPPFLAGS += -llenstoolhpc -qopenmp -xHost -g -O3 -std=c++0x -Wall -pedantic
 #CPPFLAGS += -llenstoolhpc -qopenmp -axMIC-AVX512,CORE-AVX2 -g -O3 -std=c++0x -Wall -pedantic
 #CPPFLAGS += -qopt-prefetch-distance=64,8 -qopt-streaming-cache-evict=0 -llenstoolhpc -qopenmp -xMIC-AVX512 -g -O3 -std=c++0x -Wall -pedantic
-CPPFLAGS += -llenstoolhpc -qopenmp -xHost -g -O3 -std=c++0x -Wall -pedantic
+LDFLAGS := -llenstoolhpc -lcfitsio -llenstool -llt -lgsl -lgslcblas -lm -lwcs
 
 
 OBJECTS = $(program_CXX_OBJS) $(program_C_OBJS)
@@ -55,7 +58,7 @@ debug: CXXFLAGS = -g -O0 -std=c++0x -Wall -pedantic -DDEBUG $(EXTRA_FLAGS)
 debug: $(PROGRAM_NAME)
 
 $(PROGRAM_NAME): $(OBJECTS) 
-	$(CXX) $(CPPFLAGS) -o $@ $(program_CXX_OBJS) $(program_C_OBJS) $(CUO_O_OBJECTS)
+	$(CXX) $(CPPFLAGS) -o $@ $(program_CXX_OBJS) $(program_C_OBJS) $(CUO_O_OBJECTS) $(LDFLAGS)
 
 clean:
 	@- $(RM) $(PROGRAM_NAME) $(OBJECTS) *~ *.o *.optrpt chi

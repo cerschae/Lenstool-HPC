@@ -21,6 +21,7 @@
 #include "chi.hpp"
 #include "module_cosmodistances.h"
 #include "module_readParameters.hpp"
+#include<omp.h>
 
 //#define __WITH_LENSTOOL 0
 #ifdef __WITH_LENSTOOL
@@ -268,22 +269,33 @@ int main(int argc, char *argv[])
 
 	std::cout << "--------------------------" << std::endl << std::endl;
 
+	double t_1(0),t_2(0),t_3(0),t_4(0);
 	double chi2(0);
-	double lh0(0);
+	double lhood0(0);
 	int error(0);
 
 	// Lenstool Bruteforce
 	//===========================================================================================================
 #ifdef __WITH_LENSTOOL
 
-	grid();
 	setup_lenstool();
-	readConstraints();
 
-	//chi2_img(chi2,lh0 );
+	if ( M.ichi2 != 0 )
+	{
+		int error;
+		//NPRINTF(stdout, "INFO: compute chires.dat\n");
+		readConstraints();
+		o_chires("chires.dat");
+		t_4 = -myseconds();
+		error = o_chi_lhood0(&chi2, &lhood0, NULL);
+		t_4 += myseconds();
+		printf("INFO: chi2 %lf  Lhood %lf\n", chi2, -0.5 * ( chi2 + lhood0 )  );
+		o_global_free();
+	}
 
 	std::cout << "chi Lenstool Benchmark " << std::endl;
 	std::cout << " Chi : " << std::setprecision(15) << chi2 <<  std::endl;
+	std::cout << " Time  " << std::setprecision(15) << t_4 << std::endl;
 	o_global_free();
 
 #endif
@@ -291,7 +303,7 @@ int main(int argc, char *argv[])
 	// Lenstool-GPU Bruteforce
 	//===========================================================================================================
 
-	double t_1(0),t_2(0),t_3(0);
+
 #if 1
 	t_1 = -myseconds();
 	chi_bruteforce_SOA_CPU_grid_srcplane(&chi2,&error,&runmode,lenses_SOA,&frame,nImagesSet,images);
@@ -308,6 +320,16 @@ int main(int argc, char *argv[])
 	t_2 = -myseconds();
 	chi_bruteforce_SOA_CPU_grid_gradient(&chi2,&error,&runmode,lenses_SOA,&frame,nImagesSet,images);
 	t_2 += myseconds();
+
+	std::cout << " chi_bruteforce_SOA_CPU_grid_gradient Brute Force Benchmark " << std::endl;
+	std::cout << " Chi : " << std::setprecision(15) << chi2 <<  std::endl;
+	std::cout << " Time  " << std::setprecision(15) << t_2 << std::endl;
+#endif
+
+#if 0
+	t_3 = -myseconds();
+	chi_bruteforce_SOA_GPU_grid_gradient(&chi2,&error,&runmode,lenses_SOA,&frame,nImagesSet,images);
+	t_3 += myseconds();
 
 	std::cout << " chi_bruteforce_SOA_CPU_grid_gradient Brute Force Benchmark " << std::endl;
 	std::cout << " Chi : " << std::setprecision(15) << chi2 <<  std::endl;

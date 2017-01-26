@@ -6,12 +6,14 @@
 #include <gradient_avx.hpp>
 #include <grid_srcplane_conversion.hpp>
 #include <grid_gradient_CPU.hpp>
+#include "grid_gradient_GPU.cuh"
 //#ifdef __AVX512F__
 #include "gradient_avx512f.hpp"
 //#endif
 
 void chi_bruteforce_SOA_CPU_grid_srcplane(double *chi, int *error, runmode_param *runmode, const struct Potential_SOA *lens, const struct grid_param *frame, const int *nimages_strongLensing, galaxy *images);
 void chi_bruteforce_SOA_CPU_grid_gradient(double *chi, int *error, runmode_param *runmode, const struct Potential_SOA *lens, const struct grid_param *frame, const int *nimages_strongLensing, galaxy *images);
+void chi_bruteforce_SOA_GPU_grid_gradient(double *chi, int *error, runmode_param *runmode, const struct Potential_SOA *lens, const struct grid_param *frame, const int *nimages_strongLensing, galaxy *images);
 
 void chi_transformImageToSourcePlane(const runmode_param *runmode, const struct point *image_point, double dlsds, const struct Potential *lens, struct point *source_point);
 void chi_transformImageToSourcePlane_SOA(const int *Nlens, const struct point *image_point, double dlsds, const struct Potential_SOA *lens, struct point *source_point);
