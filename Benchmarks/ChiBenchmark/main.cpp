@@ -326,15 +326,6 @@ int main(int argc, char *argv[])
 	std::cout << " Time  " << std::setprecision(15) << t_2 << std::endl;
 #endif
 
-#if 0
-	t_3 = -myseconds();
-	chi_bruteforce_SOA_GPU_grid_gradient(&chi2,&error,&runmode,lenses_SOA,&frame,nImagesSet,images);
-	t_3 += myseconds();
-
-	std::cout << " chi_bruteforce_SOA_CPU_grid_gradient Brute Force Benchmark " << std::endl;
-	std::cout << " Chi : " << std::setprecision(15) << chi2 <<  std::endl;
-	std::cout << " Time  " << std::setprecision(15) << t_2 << std::endl;
-#endif
 
 
 }

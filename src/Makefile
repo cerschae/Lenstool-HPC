@@ -16,12 +16,12 @@ program_CU_SRCS := $(wildcard *.cu)
 #program_CU_HEADERS += $(wildcard ../../*.cuh) #Find .cuh files from additional directories
 program_CU_OBJS := ${program_CU_SRCS:.cu=.cuo}
 #
-program_INCLUDE_DIRS := . /usr/local/cuda/include/ #C++ Include directories
+program_INCLUDE_DIRS := . /usr/local/cuda-7.5/include/ #C++ Include directories
 program_INCLUDE_DIRS += /users/fgilles/Projects/Libs/cfitsio/include
 program_INCLUDE_DIRS += /users/fgilles/bin/iaca-lin32/include
 program_INCLUDE_DIRS += /users/fgilles/Projects/lenstool-6.8.1/include
 program_INCLUDE_DIRS += /users/fgilles/Projects/Libs/gsl-2.2/include
-program_CU_INCLUDE_DIRS := /home/users/amclaugh/CUB/cub-1.3.2/ #CUDA Include directories
+#program_CU_INCLUDE_DIRS := /home/users/amclaugh/CUB/cub-1.3.2/ #CUDA Include directories
 #
 program_INCLUDE_LIBS := /usr/lib64/ #Include libraries
 program_INCLUDE_LIBS += /users/fgilles/Projects/Libs/cfitsio/lib #Include libraries
@@ -30,17 +30,17 @@ program_INCLUDE_LIBS += /home/epfl/cerschae/LENSTOOL/lenstool-6.8.1/src
 #
 # Compiler flags
 CPPFLAGS += $(foreach includedir,$(program_INCLUDE_DIRS),-I$(includedir))
-CPPFLAGS += $(foreach includelib,$(program_INCLUDE_LIBS),-L$(includelib) -lcfitsio)
+CPPFLAGS += $(foreach includelib,$(program_INCLUDE_LIBS),-L$(includelib) )
 #CXXFLAGS += -march=core-avx2 -g -O3 -std=c++0x -Wall -pedantic 
-CPPFLAGS += -fPIC -ftz -qopenmp -xHost -fma -pedantic
+CPPFLAGS += -fPIC -ftz -qopenmp -xHost -fma -pedantic -lcfitsio
 #CPPFLAGS += -qopt-prefetch-distance=64,8 -qopt-streaming-cache-evict=0 -fPIC -qopenmp -xMIC-AVX512 -fma -g -O3 -std=c++0x -Wall -pedantic
 #CPPFLAGS += -qopt-report=5 -S
 CXXFLAGS += -g -O3 -std=c++0x -Wall 
 #
 #GEN_SM35 := -gencode=arch=compute_35,code=\"sm_35,compute_35\" #Target CC 3.5, for example
-#NVFLAGS := -O3 -g -G -rdc=true #rdc=true needed for separable compilation
-#NVFLAGS += $(GEN_SM35)
-#NVFLAGS += $(foreach includedir,$(program_CU_INCLUDE_DIRS),-I$(includedir))
+
+NVFLAGS := $(foreach includedir,$(program_INCLUDE_DIRS),-I$(includedir))
+NVFLAGS += -dc -g -O3 -G -rdc=true -Xcompiler "-fpic" #rdc=true needed for separable compilation
 #
 CUO_O_OBJECTS := ${program_CU_OBJS:.cuo=.cuo.o}
 #
@@ -51,13 +51,13 @@ OBJECTS = $(program_CU_OBJS) $(program_CXX_OBJS) $(program_C_OBJS)
 all: $(PROGRAM_NAME) 
 #
 debug: CXXFLAGS = -g -O0 -fPIC -std=c++0x -Wall -pedantic -DDEBUG $(EXTRA_FLAGS)
-debug: NVFLAGS = -O0 $(GEN_SM35) -g -G 
+debug: NVFLAGS = -O0 $(GEN_SM35) -g -G  -Xcompiler $(CPPFLAGS)
 debug: NVFLAGS += $(foreach includedir,$(program_CU_INCLUDE_DIRS),-I$(includedir))
 debug: $(PROGRAM_NAME)
 
 # Rule for compilation of CUDA source (C++ source can be handled automatically)
 %.cuo: %.cu %.cuh
-	nvcc $(NVFLAGS) $(CPPFLAGS) -o $@ -dc $<
+	nvcc $(NVFLAGS)  -o $@ -dc $<
 
 %.cpp: %.cpp %.h
 	$(CXX) $(CXXFLAGS) $(CPPFLAGS) -o $@ $< 
@@ -73,23 +73,23 @@ debug: $(PROGRAM_NAME)
 # The solution below solves these issues by silently converting the non .o suffix needed by make to the .o suffix 
 # required by nvcc, calling nvcc, and then converting back to the non .o suffix for future, dependency-based 
 # compilation.
-$(PROGRAM_NAME): $(OBJECTS) 
-	$(CXX) $(CPPFLAGS) -shared -o $@ $(program_CXX_OBJS) $(program_C_OBJS) $(CUO_O_OBJECTS) -llenstool 
-
-
-
-
-
 #$(PROGRAM_NAME): $(OBJECTS) 
-#	@ for cu_obj in $(program_CU_OBJS); \
-#	do				\
-#		mv $$cu_obj $$cu_obj.o; \
-#	done				#append a .o suffix for nvcc
-#	nvcc $(NVFLAGS) $(CPPFLAGS) -o $@ $(program_CXX_OBJS) $(program_C_OBJS) $(CUO_O_OBJECTS)
-#	@ for cu_obj in $(CUO_O_OBJECTS); 	\
-#	do					\
-#		mv $$cu_obj $${cu_obj%.*};	\
-#	done				#remove the .o for make
+#	$(CXX) $(CPPFLAGS) -shared -o $@ $(program_CXX_OBJS) $(program_C_OBJS) $(CUO_O_OBJECTS) -llenstool 
+
+
+
+
+
+$(PROGRAM_NAME): $(OBJECTS) 
+	@ for cu_obj in $(program_CU_OBJS); \
+	do				\
+		mv $$cu_obj $$cu_obj.o; \
+	done				#append a .o suffix for nvcc
+	$(CXX) $(CPPFLAGS) -shared -o  $@ $(program_CXX_OBJS) $(program_C_OBJS) $(CUO_O_OBJECTS)
+	@ for cu_obj in $(CUO_O_OBJECTS); 	\
+	do					\
+		mv $$cu_obj $${cu_obj%.*};	\
+	done				#remove the .o for make
 
 clean:
 	@- $(RM) $(PROGRAM_NAME) $(OBJECTS) *~ *.o *.optrpt *.so
