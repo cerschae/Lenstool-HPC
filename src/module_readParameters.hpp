@@ -37,8 +37,9 @@ void module_readParameters_CriticCaustic(std::string infile, cline_param *cline)
 void module_readParameters_arclets(std::string arclets_filename, point arclets_position[], ellipse arclets_shape[], double arclets_redshift[]);
 void module_readParameters_limit(std::string infile, struct potentialoptimization host_potentialoptimization[], int nhalos );
 void module_readParameters_Potential(std::string infile, Potential lens[], int nhalos);
-void module_readParameters_PotentialSOA(std::string infile, Potential *lens, Potential_SOA *lens_SOA, int Nset[]);
-void module_readParameters_PotentialSOA_nonsorted(std::string infile, Potential *lens, Potential_SOA *lens_SOA, int nhalos);
+void module_readParameters_PotentialSOA_2(std::string infile, Potential *lens, Potential_SOA *lens_SOA, int Nset[]);
+void module_readParameters_PotentialSOA(std::string infile, Potential *lens, Potential_SOA *lens_SOA, int nhalos);
+//void module_readParameters_PotentialSOA_nonsorted(std::string infile, Potential *lens, Potential_SOA *lens_SOA, int nhalos);
 void module_readParameters_calculatePotentialparameter(Potential *ilens);
 void module_readParameters_SingleLensingSourcesNumberSets(std::string infile, int &nsetofimages_cleanlens );
 void module_readParameters_SingleLensingSources(std::string infile, point sources[], ellipse sources_shape[], double redshift[], int nimages_cleanlens[], int nsetofimages_cleanlens );

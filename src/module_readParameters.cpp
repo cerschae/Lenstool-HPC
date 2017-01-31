@@ -1368,7 +1368,8 @@ IN.close();
 *
 */
 
-void module_readParameters_PotentialSOA(std::string infile, Potential *lens, Potential_SOA *lens_SOA, int Nset[]){
+
+void module_readParameters_PotentialSOA_2(std::string infile, Potential *lens, Potential_SOA *lens_SOA, int Nset[]){
 
 	double DTR=acos(-1.)/180.;	/* 1 deg in rad  = pi/180 */
 	std::string first, second, third, line1, line2;
@@ -1436,6 +1437,66 @@ void module_readParameters_PotentialSOA(std::string infile, Potential *lens, Pot
 
 }
 
+
+
+void module_readParameters_PotentialSOA(std::string infile, Potential *lens, Potential_SOA *lens_SOA, int nhalos){
+
+	lens_SOA->type = 	new int[nhalos];
+	lens_SOA->position_x  = 	new double[nhalos];
+	lens_SOA->position_y = 		new double[nhalos];
+	lens_SOA->b0 = 	new double[nhalos];
+	lens_SOA->ellipticity_angle = new double[nhalos];
+	lens_SOA->ellipticity = new double[nhalos];
+	lens_SOA->ellipticity_potential = new double[nhalos];
+	lens_SOA->rcore = 	new double[nhalos];
+	lens_SOA->rcut = 	new double[nhalos];
+	lens_SOA->z = 		new double[nhalos];
+
+	int N_type[100];
+	int Indice_type[100];
+	int ind;
+
+	for(int i=0;i < 100; ++i){
+			N_type[i] = 0;
+			Indice_type[i] = 0;
+	}
+
+	for (int i = 0; i < nhalos; ++i){
+		N_type[lens[i].type] += 1;
+	}
+	for(int i=1;i < 100; ++i){
+		Indice_type[i] = N_type[i]+Indice_type[i-1];
+		//printf("%d %d \n ",N_type[i], Indice_type[i]);
+	}
+
+
+	for (int i = 0; i < nhalos; ++i){
+
+		if(Indice_type[lens[i].type-1] <nhalos){
+
+			ind = Indice_type[lens[i].type-1];
+			//printf ("%d ", ind);
+			lens_SOA->type[ind]  = 		lens[i].type;
+			lens_SOA->position_x[ind]  = 		lens[i].position.x;
+			//std::cerr << lens_SOA[1].position_x[*i_point] << " " << lens[i].position.x  << std::endl;
+			lens_SOA->position_y[ind] = 		lens[i].position.y;
+			lens_SOA->b0[ind] = 		lens[i].b0;
+			lens_SOA->ellipticity_angle[ind] = lens[i].ellipticity_angle;
+			lens_SOA->ellipticity[ind] = lens[i].ellipticity;
+			lens_SOA->ellipticity_potential[ind] = lens[i].ellipticity_potential;
+			lens_SOA->rcore[ind] = 	lens[i].rcore;
+			lens_SOA->rcut[ind] = 	lens[i].rcut;
+			lens_SOA->z[ind] = 		lens[i].z;
+
+			Indice_type[lens[i].type-1] += 1;
+		}
+	}
+
+
+
+}
+
+#if 0
 void module_readParameters_PotentialSOA_nonsorted(std::string infile, Potential *lens, Potential_SOA *lens_SOA, int nhalos){
 
 	double DTR=acos(-1.)/180.;	/* 1 deg in rad  = pi/180 */
@@ -1474,7 +1535,7 @@ void module_readParameters_PotentialSOA_nonsorted(std::string infile, Potential 
 
 
 }
-
+#endif
 
 /** @brief This module function calculates profile depended information like the impactparameter b0 and the potential ellipticity epot
  * 

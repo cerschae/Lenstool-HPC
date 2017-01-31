@@ -18,7 +18,7 @@
 #include <structure_hpc.h>
 #include "timer.h"
 #include "gradient.hpp"
-#include "chi.hpp"
+#include "chi_CPU.hpp"
 #include "module_cosmodistances.h"
 #include "module_readParameters.hpp"
 #include<omp.h>
@@ -184,8 +184,8 @@ int main(int argc, char *argv[])
 	struct galaxy images[runmode.nimagestot];
 	struct galaxy sources[runmode.nsets];
 	struct Potential lenses[runmode.nhalos+runmode.npotfile-1];
-	struct Potential_SOA lenses_SOA[NTYPES];
-	struct Potential_SOA lenses_SOA_nonsorted;
+	struct Potential_SOA lenses_SOA_table[NTYPES];
+	struct Potential_SOA lenses_SOA;
 	struct cline_param cline;
 	struct potfile_param potfile;
 	struct Potential potfilepotentials[runmode.npotfile];
@@ -199,10 +199,11 @@ int main(int argc, char *argv[])
 
 	module_readParameters_Potential(inputFile, lenses, runmode.nhalos);
 	//Converts to SOA
-	module_readParameters_PotentialSOA(inputFile, lenses, lenses_SOA, runmode.Nlens);
-	module_readParameters_PotentialSOA_nonsorted(inputFile, lenses, &lenses_SOA_nonsorted, runmode.nhalos);
+	//module_readParameters_PotentialSOA(inputFile, lenses, lenses_SOA, runmode.Nlens);
+	module_readParameters_PotentialSOA(inputFile, lenses, &lenses_SOA, runmode.nhalos);
+	//module_readParameters_PotentialSOA_nonsorted(inputFile, lenses, &lenses_SOA_nonsorted, runmode.nhalos);
 	module_readParameters_debug_potential(runmode.debug, lenses, runmode.nhalos);
-	std::cerr << lenses_SOA[1].b0[0] << " " << lenses[0].b0  << std::endl;
+	//std::cerr << lenses_SOA[1].b0[0] << " " << lenses[0].b0  << std::endl;
 	// This module function reads in the potfiles parameters
 	// Input: input file
 	// Output: Potentials from potfiles and its parameters
@@ -306,31 +307,9 @@ int main(int argc, char *argv[])
 	//===========================================================================================================
 
 
-#if 0
-	t_1 = -myseconds();
-	chi_bruteforce_SOA_CPU_grid_srcplane(&chi2,&error,&runmode,lenses_SOA,&frame,nImagesSet,images);
-	t_1 += myseconds();
-	std::cout << "chi_bruteforce_SOA_CPU_grid_srcplane Benchmark " << std::endl;
-	std::cout << " Chi : " << std::setprecision(15) << chi2 <<  std::endl;
-	std::cout << " Time  " << std::setprecision(15) << t_1 << std::endl;
-
-	chi2 = 0;
-	error = 0;
-#endif
-
-#if 0
-	t_2 = -myseconds();
-	chi_bruteforce_SOA_CPU_grid_gradient(&chi2,&error,&runmode,lenses_SOA,&frame,nImagesSet,images);
-	t_2 += myseconds();
-
-	std::cout << " chi_bruteforce_SOA_CPU_grid_gradient Brute Force Benchmark " << std::endl;
-	std::cout << " Chi : " << std::setprecision(15) << chi2 <<  std::endl;
-	std::cout << " Time  " << std::setprecision(15) << t_2 << std::endl;
-#endif
-
 #if 1
 	t_2 = -myseconds();
-	chi_bruteforce_SOA_CPU_grid_gradient_unsorted(&chi2,&error,&runmode,&lenses_SOA_nonsorted,&frame,nImagesSet,images);
+	chi_bruteforce_SOA_CPU_grid_gradient(&chi2,&error,&runmode,&lenses_SOA,&frame,nImagesSet,images);
 	t_2 += myseconds();
 
 	std::cout << " chi_bruteforce_SOA_CPU_grid_gradient_unsorted Brute Force Benchmark " << std::endl;
