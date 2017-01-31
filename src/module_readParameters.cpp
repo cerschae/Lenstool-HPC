@@ -1436,6 +1436,46 @@ void module_readParameters_PotentialSOA(std::string infile, Potential *lens, Pot
 
 }
 
+void module_readParameters_PotentialSOA_nonsorted(std::string infile, Potential *lens, Potential_SOA *lens_SOA, int nhalos){
+
+	double DTR=acos(-1.)/180.;	/* 1 deg in rad  = pi/180 */
+	std::string first, second, third, line1, line2;
+
+	int iterator[NTYPES];
+
+	Potential_SOA  *ilenses;
+
+	ilenses = lens_SOA;
+	ilenses->type = 	new int[nhalos];
+	ilenses->position_x  = 	new double[nhalos];
+	ilenses->position_y = 		new double[nhalos];
+	ilenses->b0 = 	new double[nhalos];
+	ilenses->ellipticity_angle = new double[nhalos];
+	ilenses->ellipticity = new double[nhalos];
+	ilenses->ellipticity_potential = new double[nhalos];
+	ilenses->rcore = 	new double[nhalos];
+	ilenses->rcut = 	new double[nhalos];
+	ilenses->z = 		new double[nhalos];
+
+	for (int i = 0; i <nhalos; ++i){
+
+		ilenses->type[i]  = 		lens[i].type;
+		ilenses->position_x[i]  = 		lens[i].position.x;
+		ilenses->position_y[i] = 		lens[i].position.y;
+		ilenses->b0[i] = 		lens[i].b0;
+		ilenses->ellipticity_angle[i] = lens[i].ellipticity_angle;
+		ilenses->ellipticity[i] = lens[i].ellipticity;
+		ilenses->ellipticity_potential[i] = lens[i].ellipticity_potential;
+		ilenses->rcore[i] = 	lens[i].rcore;
+		ilenses->rcut[i] = 	lens[i].rcut;
+		ilenses->z[i] = 		lens[i].z;
+
+	}
+
+
+}
+
+
 /** @brief This module function calculates profile depended information like the impactparameter b0 and the potential ellipticity epot
  * 
  * @param lens: mass distribution for which to calculate parameters

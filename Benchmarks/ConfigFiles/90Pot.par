@@ -1,7 +1,7 @@
 #The user defines which mode of lenstool he wants to run here
 runmode
 	source 0 sources.cat										
-	image 1	../ConfigFiles/theoretical_images_time.txt
+	image 1	../ConfigFiles/219Img.txt
 	#inverse 0
 	grid 1 22 1.5  									
 	poten 1 1000 1.5 

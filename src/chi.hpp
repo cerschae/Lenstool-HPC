@@ -12,9 +12,11 @@
 
 void chi_bruteforce_SOA_CPU_grid_srcplane(double *chi, int *error, runmode_param *runmode, const struct Potential_SOA *lens, const struct grid_param *frame, const int *nimages_strongLensing, galaxy *images);
 void chi_bruteforce_SOA_CPU_grid_gradient(double *chi, int *error, runmode_param *runmode, const struct Potential_SOA *lens, const struct grid_param *frame, const int *nimages_strongLensing, galaxy *images);
+void chi_bruteforce_SOA_CPU_grid_gradient_unsorted(double *chi, int *error, runmode_param *runmode, const struct Potential_SOA *lens, const struct grid_param *frame, const int *nimages_strongLensing, galaxy *images);
 
 void chi_transformImageToSourcePlane(const runmode_param *runmode, const struct point *image_point, double dlsds, const struct Potential *lens, struct point *source_point);
 void chi_transformImageToSourcePlane_SOA(const int *Nlens, const struct point *image_point, double dlsds, const struct Potential_SOA *lens, struct point *source_point);
+void chi_transformImageToSourcePlane_SOA_unsorted(const int Nlens, const struct point *image_point, double dlsds, const struct Potential_SOA *lens, struct point *source_point);
 void chi_transformImageToSourcePlane_SOA_AVX(const int *Nlens, const struct point *image_point, double dlsds, const struct Potential_SOA *lens, struct point *source_point);
 void chi_transformImageToSourcePlane_SOA_Packed(const int *Nlens, const struct point *image_point, double dlsds, struct point *source_point, double *grad_x, double * grad_y, int grad_id);
 
