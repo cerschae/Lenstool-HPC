@@ -1,7 +1,12 @@
 #include <fstream>
 #include "grid_gradient_GPU.cuh"
 
-
+void calculate_cossin_values(double *theta_cos, double *theta_sin, double *angles, int nhalos ){
+	for(int i = 0 ; i < nhalos; i++){
+		theta_cos[i]=cos(angles[i]);
+		theta_sin[i]=sin(angles[i]);
+	}
+}
 
 void gradient_grid_GPU_sorted(double *grid_grad_x, double *grid_grad_y, const struct grid_param *frame, const struct Potential_SOA *lens, int nhalos ,int nbgridcells){
 
@@ -26,7 +31,7 @@ void gradient_grid_GPU_sorted(double *grid_grad_x, double *grid_grad_y, const st
   grid_param *frame_gpu;
   Potential_SOA *lens_gpu,*lens_kernel ;
   int *type_gpu;
-  double *lens_x_gpu, *lens_y_gpu, *b0_gpu, *angle_gpu, *epot_gpu, *rcore_gpu, *rcut_gpu;
+  double *lens_x_gpu, *lens_y_gpu, *b0_gpu, *angle_gpu, *epot_gpu, *rcore_gpu, *rcut_gpu, *anglecos_gpu, *anglesin_gpu;
   double *grid_grad_x_gpu, *grid_grad_y_gpu ;
 
   lens_gpu = (Potential_SOA *) malloc(sizeof(Potential_SOA));
@@ -42,6 +47,8 @@ void gradient_grid_GPU_sorted(double *grid_grad_x, double *grid_grad_y, const st
   cudasafe(cudaMalloc( (void**)&(epot_gpu), nhalos*sizeof(double)),"Gradientgpu.cu : Alloc epot_gpu: " );
   cudasafe(cudaMalloc( (void**)&(rcore_gpu), nhalos*sizeof(double)),"Gradientgpu.cu : Alloc rcore_gpu: " );
   cudasafe(cudaMalloc( (void**)&(rcut_gpu), nhalos*sizeof(double)),"Gradientgpu.cu : Alloc rcut_gpu: " );
+  cudasafe(cudaMalloc( (void**)&(anglecos_gpu), nhalos*sizeof(double)),"Gradientgpu.cu : Alloc anglecos_gpu: " );
+  cudasafe(cudaMalloc( (void**)&(anglesin_gpu), nhalos*sizeof(double)),"Gradientgpu.cu : Alloc anglesin_gpu: " );
   cudasafe(cudaMalloc( (void**)&(frame_gpu), sizeof(grid_param)),"Gradientgpu.cu : Alloc frame_gpu: " );
   cudasafe(cudaMalloc( (void**)&(grid_grad_x_gpu), (nbgridcells) * (nbgridcells) *sizeof(double)),"Gradientgpu.cu : Alloc source_x_gpu: " );
   cudasafe(cudaMalloc( (void**)&(grid_grad_y_gpu), (nbgridcells) * (nbgridcells) *sizeof(double)),"Gradientgpu.cu : Alloc source_y_gpu: " );
@@ -55,6 +62,8 @@ void gradient_grid_GPU_sorted(double *grid_grad_x, double *grid_grad_y, const st
   cudasafe(cudaMemcpy(epot_gpu, lens->ellipticity_potential, nhalos*sizeof(double),cudaMemcpyHostToDevice ),"Gradientgpu.cu : Copy epot_gpu: " );
   cudasafe(cudaMemcpy(rcore_gpu, lens->rcore, nhalos*sizeof(double),cudaMemcpyHostToDevice ),"Gradientgpu.cu : Copy rcore_gpu: " );
   cudasafe(cudaMemcpy(rcut_gpu, lens->rcut, nhalos*sizeof(double), cudaMemcpyHostToDevice),"Gradientgpu.cu : Copy rcut_gpu: " );
+  cudasafe(cudaMemcpy(anglecos_gpu, lens->anglecos, nhalos*sizeof(double),cudaMemcpyHostToDevice ),"Gradientgpu.cu : Copy anglecos: " );
+  cudasafe(cudaMemcpy(anglesin_gpu, lens->anglesin, nhalos*sizeof(double), cudaMemcpyHostToDevice),"Gradientgpu.cu : Copy anglesin: " );
   cudasafe(cudaMemcpy(frame_gpu, frame, sizeof(grid_param), cudaMemcpyHostToDevice),"Gradientgpu.cu : Copy fame_gpu: " );
 
 
@@ -70,6 +79,8 @@ void gradient_grid_GPU_sorted(double *grid_grad_x, double *grid_grad_y, const st
   lens_gpu->ellipticity_potential = epot_gpu;
   lens_gpu->rcore = rcore_gpu;
   lens_gpu->rcut = rcut_gpu;
+  lens_gpu->anglecos = anglecos_gpu;
+  lens_gpu->anglesin = anglesin_gpu;
 
   cudaMemcpy(lens_kernel, lens_gpu, sizeof(Potential_SOA), cudaMemcpyHostToDevice);
 
@@ -96,6 +107,8 @@ void gradient_grid_GPU_sorted(double *grid_grad_x, double *grid_grad_y, const st
   cudaFree(epot_gpu);
   cudaFree(rcore_gpu);
   cudaFree(rcut_gpu);
+  cudaFree(anglecos_gpu);
+  cudaFree(anglesin_gpu);
   cudaFree(grid_grad_x_gpu);
   cudaFree(grid_grad_y_gpu);
 

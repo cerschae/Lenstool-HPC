@@ -74,8 +74,10 @@ __device__ struct point module_potentialDerivatives_totalGradient_8_SOA_GPU(cons
     true_coord.x = pImage->x - lens->position_x[i];
     true_coord.y = pImage->y - lens->position_y[i];
     double cosi,sinu;
-    cosi = cos(lens->ellipticity_angle[i]);
-    sinu = sin(lens->ellipticity_angle[i]);
+    //cosi = cos(lens->ellipticity_angle[i]);
+    //sinu = sin(lens->ellipticity_angle[i]);
+    cosi = lens->anglecos[i];
+    sinu = lens->anglesin[i];
     //positionning at the potential center
     // Change the origin of the coordinate system to the center of the clump
     //true_coord_rot = rotateCoordinateSystem_GPU(true_coord, lens->ellipticity_angle[i]);
@@ -126,6 +128,7 @@ __device__ struct point module_potentialDerivatives_totalGradient_8_SOA_GPU(cons
     // rotation
     clumpgrad.x = zis.re;
     clumpgrad.y = zis.im;
+    //clumpgrad = rotateCoordinateSystem_GPU(true_coord, -lens->ellipticity_angle[i]);
     clumpgrad = rotateCoordinateSystem_GPU_2(clumpgrad, cosi,-sinu);
     //
     clumpgrad.x = lens->b0[i]*clumpgrad.x;

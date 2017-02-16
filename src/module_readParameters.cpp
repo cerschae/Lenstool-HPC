@@ -1348,7 +1348,7 @@ std::ifstream IN(infile.c_str(), std::ios::in);
 }  // closes while loop
 
 if(i==0){
-	printf("Parameter “potential” not found in the file %s",infile.c_str());
+	printf("Parameter potential not found in the file %s",infile.c_str());
 	exit(-1);
 	}
 if(i>1){
@@ -1451,6 +1451,8 @@ void module_readParameters_PotentialSOA(std::string infile, Potential *lens, Pot
 	lens_SOA->rcore = 	new double[nhalos];
 	lens_SOA->rcut = 	new double[nhalos];
 	lens_SOA->z = 		new double[nhalos];
+	lens_SOA->anglecos = 	new double[nhalos];
+	lens_SOA->anglesin = 		new double[nhalos];
 
 	int N_type[100];
 	int Indice_type[100];
@@ -1487,6 +1489,8 @@ void module_readParameters_PotentialSOA(std::string infile, Potential *lens, Pot
 			lens_SOA->rcore[ind] = 	lens[i].rcore;
 			lens_SOA->rcut[ind] = 	lens[i].rcut;
 			lens_SOA->z[ind] = 		lens[i].z;
+			lens_SOA->anglecos[ind] = 	cos(lens[i].ellipticity_angle);
+			lens_SOA->anglesin[ind] = 	sin(lens[i].ellipticity_angle);
 
 			Indice_type[lens[i].type-1] += 1;
 		}

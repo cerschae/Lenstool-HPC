@@ -267,6 +267,8 @@ struct Potential_SOA
 	double* mag; //magnitude
 	double* lum; //luminosity
 	double* theta; //theta
+	double* anglecos; //theta precomputation of cosinus and sinus values
+	double* anglesin; //theta
 	double* sigma; // sigma
 };
 
