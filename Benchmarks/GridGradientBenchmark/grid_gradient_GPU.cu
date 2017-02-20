@@ -122,155 +122,7 @@ void gradient_grid_GPU_sorted(double *grid_grad_x, double *grid_grad_y, const st
 
 }
 
-
-void gradient_grid_pinned(double *grid_grad_x, double *grid_grad_y, const struct grid_param *frame, const struct Potential_SOA *lens, int *Nlens,int nbgridcells){
-
-
-  int nBlocks_gpu = 0;
-  // Define the number of threads per block the GPU will use
-  cudaDeviceProp properties_gpu;
-
-  cudaGetDeviceProperties(&properties_gpu, 0); // Get properties of 0th GPU in use
-
-  if (properties_gpu.maxThreadsDim[0]<threadsPerBlock)
-    {
-    fprintf(stderr, "ERROR: The GPU has to support at least %u threads per block.\n", threadsPerBlock);
-    exit(-1);
-    }
-  else
-    {
-    nBlocks_gpu = properties_gpu.maxGridSize[0] / threadsPerBlock;  // Get the maximum number of blocks with the chosen number of threads
-                    // per Block that the GPU supports
-    }
-
-  grid_param *frame_gpu;
-  double *lens_x_gpu, *lens_y_gpu, *b0_gpu, *angle_gpu, *epot_gpu, *rcore_gpu, *rcut_gpu;
-  double *grid_grad_x_gpu, *grid_grad_y_gpu ;
-
-  //SIS//
-
-  // Allocate variables on the GPU
-  cudasafe(cudaMalloc( (void**)&(lens_x_gpu), Nlens[0]*sizeof(double)),"Gradientgpu.cu : Alloc x_gpu: " );
-  cudasafe(cudaMalloc( (void**)&(lens_y_gpu), Nlens[0]*sizeof(double)),"Gradientgpu.cu : Alloc y_gpu: " );
-  cudasafe(cudaMalloc( (void**)&(b0_gpu), Nlens[0]*sizeof(double)),"Gradientgpu.cu : Alloc b0_gpu: " );
-  cudasafe(cudaMalloc( (void**)&(angle_gpu), Nlens[0]*sizeof(double)),"Gradientgpu.cu : Alloc angle_gpu: " );
-  cudasafe(cudaMalloc( (void**)&(epot_gpu), Nlens[0]*sizeof(double)),"Gradientgpu.cu : Alloc epot_gpu: " );
-  cudasafe(cudaMalloc( (void**)&(rcore_gpu), Nlens[0]*sizeof(double)),"Gradientgpu.cu : Alloc rcore_gpu: " );
-  cudasafe(cudaMalloc( (void**)&(rcut_gpu), Nlens[0]*sizeof(double)),"Gradientgpu.cu : Alloc rcut_gpu: " );
-  cudasafe(cudaMalloc( (void**)&(frame_gpu), sizeof(grid_param)),"Gradientgpu.cu : Alloc frame_gpu: " );
-  cudasafe(cudaMalloc( (void**)&(grid_grad_x_gpu), (nbgridcells) * (nbgridcells) *sizeof(double)),"Gradientgpu.cu : Alloc source_x_gpu: " );
-  cudasafe(cudaMalloc( (void**)&(grid_grad_y_gpu), (nbgridcells) * (nbgridcells) *sizeof(double)),"Gradientgpu.cu : Alloc source_y_gpu: " );
-
-  // Copy values to the GPU
-  cudasafe(cudaMemcpy(lens_x_gpu,lens[0].position_x , Nlens[0]*sizeof(double),cudaMemcpyHostToDevice ),"Gradientgpu.cu : Copy x_gpu: " );
-  cudasafe(cudaMemcpy(lens_y_gpu,lens[0].position_y , Nlens[0]*sizeof(double), cudaMemcpyHostToDevice),"Gradientgpu.cu : Copy y_gpu: " );
-  cudasafe(cudaMemcpy(b0_gpu,lens[0].b0 , Nlens[0]*sizeof(double), cudaMemcpyHostToDevice),"Gradientgpu.cu : Copy b0_gpu: " );
-  cudasafe(cudaMemcpy(angle_gpu,lens[0].ellipticity_angle , Nlens[0]*sizeof(double), cudaMemcpyHostToDevice),"Gradientgpu.cu : Copy angle_gpu: " );
-  cudasafe(cudaMemcpy(epot_gpu, lens[0].ellipticity_potential, Nlens[0]*sizeof(double),cudaMemcpyHostToDevice ),"Gradientgpu.cu : Copy epot_gpu: " );
-  cudasafe(cudaMemcpy(rcore_gpu, lens[0].rcore, Nlens[0]*sizeof(double),cudaMemcpyHostToDevice ),"Gradientgpu.cu : Copy rcore_gpu: " );
-  cudasafe(cudaMemcpy(rcut_gpu, lens[0].rcut, Nlens[0]*sizeof(double), cudaMemcpyHostToDevice),"Gradientgpu.cu : Copy rcut_gpu: " );
-  cudasafe(cudaMemcpy(frame_gpu, frame, sizeof(grid_param), cudaMemcpyHostToDevice),"Gradientgpu.cu : Copy fame_gpu: " );
-
-  //printf( "%d %d",nBlocks_gpu,(nbgridcells) * (nbgridcells)/threadsPerBlock );
-
-  if (int((nbgridcells) * (nbgridcells)/threadsPerBlock) == 0){
-    gradient_grid_sis_GPU<<<1,threadsPerBlock>>>(grid_grad_x_gpu, grid_grad_y_gpu,frame_gpu,Nlens[0], nbgridcells, lens_x_gpu, lens_y_gpu, b0_gpu, angle_gpu, epot_gpu, rcore_gpu, rcut_gpu);
-  }
-  else{
-  gradient_grid_sis_GPU<<<(nbgridcells) * (nbgridcells)/threadsPerBlock,threadsPerBlock>>>(grid_grad_x_gpu, grid_grad_y_gpu,frame_gpu,Nlens[0], nbgridcells, lens_x_gpu, lens_y_gpu, b0_gpu, angle_gpu, epot_gpu, rcore_gpu, rcut_gpu);
-  }
-  cudasafe(cudaMemcpy( grid_grad_x, grid_grad_x_gpu, (nbgridcells) * (nbgridcells) *sizeof(double),cudaMemcpyDeviceToHost ),"Gradientgpu.cu : Copy source_x_gpu: " );
-  cudasafe(cudaMemcpy( grid_grad_y, grid_grad_y_gpu, (nbgridcells) * (nbgridcells) *sizeof(double), cudaMemcpyDeviceToHost),"Gradientgpu.cu : Copy source_y_gpu: " );
-  //printf ("%f %f \n", grid_grad_x[0],grid_grad_y[0]);
-
-    // Free GPU memory
-  cudaFree(lens_x_gpu);
-  cudaFree(lens_y_gpu);
-  cudaFree(b0_gpu);
-  cudaFree(angle_gpu);
-  cudaFree(epot_gpu);
-  cudaFree(rcore_gpu);
-  cudaFree(rcut_gpu);
-  cudaFree(grid_grad_x_gpu);
-  cudaFree(grid_grad_y_gpu);
-
-
-  //PIEMD8//
-
-  // Allocate variables on the GPU
-  cudasafe(cudaMalloc( (void**)&(lens_x_gpu), Nlens[1]*sizeof(double)),"Gradientgpu.cu : Alloc x_gpu: " );
-  cudasafe(cudaMalloc( (void**)&(lens_y_gpu), Nlens[1]*sizeof(double)),"Gradientgpu.cu : Alloc y_gpu: " );
-  cudasafe(cudaMalloc( (void**)&(b0_gpu), Nlens[1]*sizeof(double)),"Gradientgpu.cu : Alloc b0_gpu: " );
-  cudasafe(cudaMalloc( (void**)&(angle_gpu), Nlens[1]*sizeof(double)),"Gradientgpu.cu : Alloc angle_gpu: " );
-  cudasafe(cudaMalloc( (void**)&(epot_gpu), Nlens[1]*sizeof(double)),"Gradientgpu.cu : Alloc epot_gpu: " );
-  cudasafe(cudaMalloc( (void**)&(rcore_gpu), Nlens[1]*sizeof(double)),"Gradientgpu.cu : Alloc rcore_gpu: " );
-  cudasafe(cudaMalloc( (void**)&(rcut_gpu), Nlens[1]*sizeof(double)),"Gradientgpu.cu : Alloc rcut_gpu: " );
-  cudasafe(cudaMalloc( (void**)&(frame_gpu), sizeof(grid_param)),"Gradientgpu.cu : Alloc frame_gpu: " );
-  cudasafe(cudaMalloc( (void**)&(grid_grad_x_gpu), (nbgridcells) * (nbgridcells) *sizeof(double)),"Gradientgpu.cu : Alloc source_x_gpu: " );
-  cudasafe(cudaMalloc( (void**)&(grid_grad_y_gpu), (nbgridcells) * (nbgridcells) *sizeof(double)),"Gradientgpu.cu : Alloc source_y_gpu: " );
-
-  // Copy values to the GPU
-  cudasafe(cudaMemcpy(lens_x_gpu,lens[1].position_x , Nlens[1]*sizeof(double),cudaMemcpyHostToDevice ),"Gradientgpu.cu : Copy x_gpu: " );
-  cudasafe(cudaMemcpy(lens_y_gpu,lens[1].position_y , Nlens[1]*sizeof(double), cudaMemcpyHostToDevice),"Gradientgpu.cu : Copy y_gpu: " );
-  cudasafe(cudaMemcpy(b0_gpu,lens[1].b0 , Nlens[1]*sizeof(double), cudaMemcpyHostToDevice),"Gradientgpu.cu : Copy b0_gpu: " );
-  cudasafe(cudaMemcpy(angle_gpu,lens[1].ellipticity_angle , Nlens[1]*sizeof(double), cudaMemcpyHostToDevice),"Gradientgpu.cu : Copy angle_gpu: " );
-  cudasafe(cudaMemcpy(epot_gpu, lens[1].ellipticity_potential, Nlens[1]*sizeof(double),cudaMemcpyHostToDevice ),"Gradientgpu.cu : Copy epot_gpu: " );
-  cudasafe(cudaMemcpy(rcore_gpu, lens[1].rcore, Nlens[1]*sizeof(double),cudaMemcpyHostToDevice ),"Gradientgpu.cu : Copy rcore_gpu: " );
-  cudasafe(cudaMemcpy(rcut_gpu, lens[1].rcut, Nlens[1]*sizeof(double), cudaMemcpyHostToDevice),"Gradientgpu.cu : Copy rcut_gpu: " );
-  cudasafe(cudaMemcpy(frame_gpu, frame, sizeof(grid_param), cudaMemcpyHostToDevice),"Gradientgpu.cu : Copy fame_gpu: " );
-
-  //printf( "%d %d",nBlocks_gpu,(nbgridcells) * (nbgridcells)/threadsPerBlock );
-
-  if (int((nbgridcells) * (nbgridcells)/threadsPerBlock) == 0){
-    gradient_grid_piemd_GPU<<<1,threadsPerBlock>>>(grid_grad_x_gpu, grid_grad_y_gpu,frame_gpu,Nlens[1], nbgridcells, lens_x_gpu, lens_y_gpu, b0_gpu, angle_gpu, epot_gpu, rcore_gpu, rcut_gpu);
-  }
-  else{
-  gradient_grid_piemd_GPU<<<(nbgridcells) * (nbgridcells)/threadsPerBlock,threadsPerBlock>>>(grid_grad_x_gpu, grid_grad_y_gpu,frame_gpu,Nlens[1], nbgridcells, lens_x_gpu, lens_y_gpu, b0_gpu, angle_gpu, epot_gpu, rcore_gpu, rcut_gpu);
-  }
-  cudasafe(cudaMemcpy( grid_grad_x, grid_grad_x_gpu, (nbgridcells) * (nbgridcells) *sizeof(double),cudaMemcpyDeviceToHost ),"Gradientgpu.cu : Copy source_x_gpu: " );
-  cudasafe(cudaMemcpy( grid_grad_y, grid_grad_y_gpu, (nbgridcells) * (nbgridcells) *sizeof(double), cudaMemcpyDeviceToHost),"Gradientgpu.cu : Copy source_y_gpu: " );
-  //printf ("%f %f \n", grid_grad_x[0],grid_grad_y[0]);
-
-    // Free GPU memory
-  cudaFree(lens_x_gpu);
-  cudaFree(lens_y_gpu);
-  cudaFree(b0_gpu);
-  cudaFree(angle_gpu);
-  cudaFree(epot_gpu);
-  cudaFree(rcore_gpu);
-  cudaFree(rcut_gpu);
-  cudaFree(grid_grad_x_gpu);
-  cudaFree(grid_grad_y_gpu);
-
-  for (int i = 0; i < nbgridcells; i++){
-    for(int j = 0; j < nbgridcells; j++){
-      printf(" %f",grid_grad_x[i*nbgridcells + j]);
-    }
-    printf("\n");
-  }
-/*
-  int nDevices;
-
-    cudaGetDeviceCount(&nDevices);
-    for (int i = 0; i < nDevices; i++) {
-      cudaDeviceProp prop;
-      cudaGetDeviceProperties(&prop, i);
-      printf("Device Number: %d\n", i);
-      printf("  Device name: %s\n", prop.name);
-      printf("  Memory Clock Rate (KHz): %d\n",
-             prop.memoryClockRate);
-      printf("  Memory Bus Width (bits): %d\n",
-             prop.memoryBusWidth);
-      printf("  Peak Memory Bandwidth (GB/s): %f\n\n",
-             2.0*prop.memoryClockRate*(prop.memoryBusWidth/8)/1.0e6);
-    }
-
-*/
-
-
-}
-
-void gradient_grid_pinned_multiple(double *grid_grad_x, double *grid_grad_y, const struct grid_param *frame, const struct Potential_SOA *lens, int *Nlens,int nbgridcells){
+void gradient_grid_GPU_multiple(double *grid_grad_x, double *grid_grad_y, const struct grid_param *frame, const struct Potential_SOA *lens, int *Nlens,int nbgridcells){
   //get number of GPU devices
   int nDevices;
   cudaGetDeviceCount(&nDevices);
@@ -400,6 +252,118 @@ void gradient_grid_pinned_multiple(double *grid_grad_x, double *grid_grad_y, con
 
 }
 
+#if 1
+void gradient_grid_GPU_sub(double *grid_grad_x, double *grid_grad_y, const struct grid_param *frame, const struct Potential_SOA *lens, int nhalos, int nbgridcells, int indexactual, int Ncells ){
+
+
+	// GPU Property query
+	int nBlocks_gpu = 0;
+	cudaDeviceProp properties_gpu;
+	cudaGetDeviceProperties(&properties_gpu, 0); // Get properties of 0th GPU in use
+	if (properties_gpu.maxThreadsDim[0]<threadsPerBlock)
+	{
+	fprintf(stderr, "ERROR: The GPU has to support at least %u threads per block.\n", threadsPerBlock);
+	exit(-1);
+	}
+	else
+	{
+	nBlocks_gpu = properties_gpu.maxGridSize[0] / threadsPerBlock;  // Get the maximum number of blocks with the chosen number of threads
+					// per Block that the GPU supports
+	}
+
+	//Number of subdivision and Dimension variables for subdivision
+	//int nSubd = 2;
+
+	//cudaStream_t stream[nDevices];
+
+	//Kernel Variables
+	grid_param *frame_gpu;
+	Potential_SOA *lens_gpu,*lens_kernel ;
+	int *type_gpu;
+	double *lens_x_gpu, *lens_y_gpu, *b0_gpu, *angle_gpu, *epot_gpu, *rcore_gpu, *rcut_gpu, *anglecos_gpu, *anglesin_gpu;
+	double *grid_grad_x_gpu, *grid_grad_y_gpu ;
+
+
+	lens_gpu = (Potential_SOA *) malloc(sizeof(Potential_SOA));
+	lens_gpu->type = (int *) malloc(sizeof(int));
+
+	// Allocate variables on the GPU
+	cudasafe(cudaMalloc( (void**)&(lens_kernel), sizeof(Potential_SOA)),"Gradientgpu.cu : Alloc Potential_SOA: " );
+	cudasafe(cudaMalloc( (void**)&(type_gpu), nhalos*sizeof(int)),"Gradientgpu.cu : Alloc type_gpu: " );
+	cudasafe(cudaMalloc( (void**)&(lens_x_gpu), nhalos*sizeof(double)),"Gradientgpu.cu : Alloc x_gpu: " );
+	cudasafe(cudaMalloc( (void**)&(lens_y_gpu), nhalos*sizeof(double)),"Gradientgpu.cu : Alloc y_gpu: " );
+	cudasafe(cudaMalloc( (void**)&(b0_gpu), nhalos*sizeof(double)),"Gradientgpu.cu : Alloc b0_gpu: " );
+	cudasafe(cudaMalloc( (void**)&(angle_gpu), nhalos*sizeof(double)),"Gradientgpu.cu : Alloc angle_gpu: " );
+	cudasafe(cudaMalloc( (void**)&(epot_gpu), nhalos*sizeof(double)),"Gradientgpu.cu : Alloc epot_gpu: " );
+	cudasafe(cudaMalloc( (void**)&(rcore_gpu), nhalos*sizeof(double)),"Gradientgpu.cu : Alloc rcore_gpu: " );
+	cudasafe(cudaMalloc( (void**)&(rcut_gpu), nhalos*sizeof(double)),"Gradientgpu.cu : Alloc rcut_gpu: " );
+	cudasafe(cudaMalloc( (void**)&(anglecos_gpu), nhalos*sizeof(double)),"Gradientgpu.cu : Alloc anglecos_gpu: " );
+	cudasafe(cudaMalloc( (void**)&(anglesin_gpu), nhalos*sizeof(double)),"Gradientgpu.cu : Alloc anglesin_gpu: " );
+	cudasafe(cudaMalloc( (void**)&(frame_gpu), sizeof(grid_param)),"Gradientgpu.cu : Alloc frame_gpu: " );
+	cudasafe(cudaMalloc( (void**)&(grid_grad_x_gpu), Ncells *sizeof(double)),"Gradientgpu.cu : Alloc source_x_gpu: " );
+	cudasafe(cudaMalloc( (void**)&(grid_grad_y_gpu), Ncells *sizeof(double)),"Gradientgpu.cu : Alloc source_y_gpu: " );
+
+
+	// Copy values to the GPU
+	cudasafe(cudaMemcpyAsync(type_gpu,lens->type , nhalos*sizeof(int),cudaMemcpyHostToDevice ),"Gradientgpu.cu : Copy type_gpu: " );
+	cudasafe(cudaMemcpyAsync(lens_x_gpu,lens->position_x , nhalos*sizeof(double),cudaMemcpyHostToDevice ),"Gradientgpu.cu : Copy x_gpu: " );
+	cudasafe(cudaMemcpyAsync(lens_y_gpu,lens->position_y , nhalos*sizeof(double), cudaMemcpyHostToDevice),"Gradientgpu.cu : Copy y_gpu: " );
+	cudasafe(cudaMemcpyAsync(b0_gpu,lens->b0 , nhalos*sizeof(double), cudaMemcpyHostToDevice),"Gradientgpu.cu : Copy b0_gpu: " );
+	cudasafe(cudaMemcpyAsync(angle_gpu,lens->ellipticity_angle , nhalos*sizeof(double), cudaMemcpyHostToDevice),"Gradientgpu.cu : Copy angle_gpu: " );
+	cudasafe(cudaMemcpyAsync(epot_gpu, lens->ellipticity_potential, nhalos*sizeof(double),cudaMemcpyHostToDevice ),"Gradientgpu.cu : Copy epot_gpu: " );
+	cudasafe(cudaMemcpyAsync(rcore_gpu, lens->rcore, nhalos*sizeof(double),cudaMemcpyHostToDevice ),"Gradientgpu.cu : Copy rcore_gpu: " );
+	cudasafe(cudaMemcpyAsync(rcut_gpu, lens->rcut, nhalos*sizeof(double), cudaMemcpyHostToDevice),"Gradientgpu.cu : Copy rcut_gpu: " );
+	cudasafe(cudaMemcpyAsync(anglecos_gpu, lens->anglecos, nhalos*sizeof(double),cudaMemcpyHostToDevice ),"Gradientgpu.cu : Copy anglecos: " );
+	cudasafe(cudaMemcpyAsync(anglesin_gpu, lens->anglesin, nhalos*sizeof(double), cudaMemcpyHostToDevice),"Gradientgpu.cu : Copy anglesin: " );
+	cudasafe(cudaMemcpyAsync(frame_gpu, frame, sizeof(grid_param), cudaMemcpyHostToDevice),"Gradientgpu.cu : Copy fame_gpu: " );
+
+
+	lens_gpu->type = type_gpu;
+	lens_gpu->position_x = lens_x_gpu;
+	lens_gpu->position_y = lens_y_gpu;
+	lens_gpu->b0 = b0_gpu;
+	lens_gpu->ellipticity_angle = angle_gpu;
+	lens_gpu->ellipticity_potential = epot_gpu;
+	lens_gpu->rcore = rcore_gpu;
+	lens_gpu->rcut = rcut_gpu;
+	lens_gpu->anglecos = anglecos_gpu;
+	lens_gpu->anglesin = anglesin_gpu;
+
+	cudaMemcpy(lens_kernel, lens_gpu, sizeof(Potential_SOA), cudaMemcpyHostToDevice);
+
+
+	if (int((Ncells) * (Ncells)/threadsPerBlock) == 0){
+	gradient_grid_kernel_multiple<<<1,threadsPerBlock>>>(grid_grad_x_gpu, grid_grad_y_gpu,frame_gpu,nhalos, nbgridcells, lens_kernel, indexactual, Ncells);
+	}
+	else{
+	gradient_grid_kernel_multiple<<<(Ncells) * (Ncells)/threadsPerBlock,threadsPerBlock>>>(grid_grad_x_gpu, grid_grad_y_gpu,frame_gpu,nhalos, nbgridcells, lens_kernel, indexactual, Ncells);
+	}
+	cudasafe(cudaMemcpy( grid_grad_x + indexactual, grid_grad_x_gpu, Ncells *sizeof(double),cudaMemcpyDeviceToHost ),"Gradientgpu.cu : Copy source_x_gpu: " );
+	cudasafe(cudaMemcpy( grid_grad_y + indexactual, grid_grad_y_gpu, Ncells *sizeof(double),cudaMemcpyDeviceToHost ),"Gradientgpu.cu : Copy source_y_gpu: " );
+
+
+	//printf("%f %f \n",grid_grad_x[0],grid_grad_y[0]);
+
+	// Free GPU memory
+	cudaFree(lens_gpu);
+	cudaFree(type_gpu);
+	cudaFree(lens_x_gpu);
+	cudaFree(lens_y_gpu);
+	cudaFree(b0_gpu);
+	cudaFree(angle_gpu);
+	cudaFree(epot_gpu);
+	cudaFree(rcore_gpu);
+	cudaFree(rcut_gpu);
+	cudaFree(anglecos_gpu);
+	cudaFree(anglesin_gpu);
+	cudaFree(grid_grad_x_gpu);
+	cudaFree(grid_grad_y_gpu);
+
+
+}
+
+#endif
+
 __global__ void gradient_grid_kernel(double *grid_grad_x, double *grid_grad_y, const struct grid_param *frame, int Nlens,int nbgridcells, const struct Potential_SOA *lens) {
 
   //*grad_x = *grad_y = 0.;
@@ -433,6 +397,43 @@ __global__ void gradient_grid_kernel(double *grid_grad_x, double *grid_grad_y, c
     index = bid * threadsPerBlock + tid;
   }
 
+
+}
+
+__global__ void gradient_grid_kernel_multiple(double *grid_grad_x, double *grid_grad_y, const struct grid_param *frame, int Nlens, int nbgridcells, const struct Potential_SOA *lens, int indexactual, int ncells) {
+
+  //*grad_x = *grad_y = 0.;
+
+  int bid=blockIdx.x; // index of the block (and of the set of images)
+  int tid=threadIdx.x; // index of the thread within the block
+
+  double dx,dy;        //pixelsize
+  int grid_dim, index;
+  struct point image_point, Grad;
+  dx = (frame->xmax - frame->xmin)/(nbgridcells-1);
+  dy = (frame->ymax - frame->ymin)/(nbgridcells-1);
+  grid_dim = (nbgridcells);
+
+  index = bid * threadsPerBlock + tid ;
+  int major_index = indexactual + index ;
+
+  while(index < ncells){
+
+    grid_grad_x[index] = 0.;
+    grid_grad_y[index] = 0.;
+
+    image_point.x = frame->xmin + (major_index/grid_dim)*dx;
+    image_point.y = frame->ymin + (major_index % grid_dim)*dy;
+
+    Grad = module_potentialDerivatives_totalGradient_SOA_GPU(&image_point, lens, Nlens);
+
+    grid_grad_x[index] = Grad.x;
+    grid_grad_y[index] = Grad.y;
+
+    bid += gridDim.x;
+    index = bid * threadsPerBlock + tid;
+    major_index = indexactual + index ;
+  }
 
 }
 
