@@ -242,7 +242,7 @@ grid_gradient_y = (double *)malloc((int) (runmode.nbgridcells) * (runmode.nbgrid
 int grid_dim = runmode.nbgridcells;
 
 
-#if 1
+#if 0
 t_1 = -myseconds();
 //Packaging the image to sourceplane conversion
 gradient_grid_CPU(grid_gradient_x,grid_gradient_y,&frame,&lenses_SOA,runmode.nhalos,grid_dim);
@@ -291,7 +291,7 @@ std::cout << " Gradient  " << std::setprecision(5) << grid_gradient_x[runmode.nb
 std::cout << " Time  " << std::setprecision(15) << t_3 << std::endl;
 #endif
 
-#if 0
+#if 1
 t_4 = -myseconds();
 gradient_grid_GPU_sub(grid_gradient_x,grid_gradient_y,&frame,&lenses_SOA,runmode.nhalos,grid_dim,0,grid_dim*grid_dim);
 t_4 += myseconds();
