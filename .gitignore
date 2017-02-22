@@ -6,6 +6,7 @@
 *.o
 *.cuo
 *.optrpt
+*.nvvp
 GradienBenchmark
 .nfs*
 *.DIST
