@@ -225,14 +225,14 @@ test_resultN_N = module_potentialDerivatives_totalGradient_SOA(&test_pointN_N, &
 
 std::cout << " Initial Test " << std::endl;
 std::cout << " Test 1: " << std::endl;
-std::cout << " Point 1 : " << std::setprecision(5) << test_point1_1.x << " "<< test_point1_1.y <<  std::endl;
-std::cout << " Gradient  " << std::setprecision(5) << test_result1_1.x << " "<< test_result1_1.y <<  std::endl;
+std::cout << " Point 1 : " << std::setprecision(15) << test_point1_1.x << " "<< test_point1_1.y <<  std::endl;
+std::cout << " Gradient  " << std::setprecision(15) << test_result1_1.x << " "<< test_result1_1.y <<  std::endl;
 std::cout << " Test 2: " << std::endl;
-std::cout << " Point 2 : " << std::setprecision(5) << test_point2_2.x << " "<< test_point2_2.y <<  std::endl;
-std::cout << " Gradient  " << std::setprecision(5) << test_result2_2.x << " "<< test_result2_2.y <<  std::endl;
+std::cout << " Point 2 : " << std::setprecision(15) << test_point2_2.x << " "<< test_point2_2.y <<  std::endl;
+std::cout << " Gradient  " << std::setprecision(15) << test_result2_2.x << " "<< test_result2_2.y <<  std::endl;
 std::cout << " Test 3: " << std::endl;
-std::cout << " Point 3 : " << std::setprecision(5) << test_pointN_N.x << " "<< test_pointN_N.y <<  std::endl;
-std::cout << " Gradient  " << std::setprecision(5) << test_resultN_N.x << " "<< test_resultN_N.y <<  std::endl;
+std::cout << " Point 3 : " << std::setprecision(15) << test_pointN_N.x << " "<< test_pointN_N.y <<  std::endl;
+std::cout << " Gradient  " << std::setprecision(15) << test_resultN_N.x << " "<< test_resultN_N.y <<  std::endl;
 
 
 double *grid_gradient_x, *grid_gradient_y;
@@ -260,16 +260,16 @@ std::cout << " Time  " << std::setprecision(15) << t_1 << std::endl;
 
 #if 1
 t_2 = -myseconds();
-gradient_grid_GPU_sorted(grid_gradient_x,grid_gradient_y,&frame,&lenses_SOA,runmode.nhalos,grid_dim);
+gradient_grid_GPU_sorted(grid_gradient_x,grid_gradient_y, &frame, &lenses_SOA, runmode.nhalos, grid_dim);
 t_2 += myseconds();
 
 std::cout << " gradient_grid_GPU_sorted Brute Force Benchmark " << std::endl;
 std::cout << " Test 1: " << std::endl;
-std::cout << " Point 1 : " << std::setprecision(5) << test_point1_1.x << " "<< test_point1_1.y <<  std::endl;
-std::cout << " Gradient  " << std::setprecision(5) << grid_gradient_x[0] << " "<< grid_gradient_y[0] <<  std::endl;
+std::cout << " Point 1 : " << std::setprecision(15) << test_point1_1.x << " "<< test_point1_1.y <<  std::endl;
+std::cout << " Gradient  " << std::setprecision(15) << grid_gradient_x[0] << " "<< grid_gradient_y[0] <<  std::endl;
 std::cout << " Test 2: " << std::endl;
-std::cout << " Point 2 : " << std::setprecision(5) << test_point2_2.x << " "<< test_point2_2.y <<  std::endl;
-std::cout << " Gradient  " << std::setprecision(5) << grid_gradient_x[runmode.nbgridcells+1] << " "<< grid_gradient_y[runmode.nbgridcells+1] <<  std::endl;
+std::cout << " Point 2 : " << std::setprecision(15) << test_point2_2.x << " "<< test_point2_2.y <<  std::endl;
+std::cout << " Gradient  " << std::setprecision(15) << grid_gradient_x[runmode.nbgridcells+1] << " "<< grid_gradient_y[runmode.nbgridcells+1] <<  std::endl;
 std::cout << " Time  " << std::setprecision(15) << t_2 << std::endl;
 #endif
 

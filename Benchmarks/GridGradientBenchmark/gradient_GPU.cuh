@@ -16,5 +16,10 @@ __device__ struct point module_potentialDerivatives_totalGradient_SOA_GPU(const 
 
 __device__ inline struct point rotateCoordinateSystem_GPU(struct point P, double theta);
 __device__ inline struct point rotateCoordinateSystem_GPU_2(struct point P, double cosi, double sinu);
+//
+//__device__
+//inline struct point module_potentialDerivatives_totalGradient_5_SOA_GPU(const struct point *pImage, const struct Potential_SOA *lens, int shalos, int nhalos)
+
+
 
 #endif /* GRADIENT_GPU_CUH_ */
