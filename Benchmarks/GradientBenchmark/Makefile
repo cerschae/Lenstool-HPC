@@ -17,32 +17,24 @@ program_CU_SRCS := $(wildcard *.cu)
 program_CU_OBJS := ${program_CU_SRCS:.cu=.cuo}
 #
 program_INCLUDE_DIRS := . /usr/local/cuda/include/ #C++ Include directories
-program_INCLUDE_DIRS += /users/fgilles/Projects/Libs/cfitsio/include
-program_INCLUDE_DIRS += /users/fgilles/bin/iaca-lin32/include
-program_INCLUDE_DIRS += /users/fgilles/Projects/lenstool-6.8.1/include
-program_INCLUDE_DIRS += /users/fgilles/Projects/Libs/gsl-2.2/include
-program_INCLUDE_DIRS += /users/fgilles/GPU-Projects/lenstool-master/src
-program_INCLUDE_DIRS += /users/fgilles/Projects/Libs/gsl-2.2/include/ 
-program_INCLUDE_DIRS += /home/epfl/cerschae/lenstool-hpc/src 
-program_INCLUDE_DIRS += /home/epfl/cerschae/LENSTOOL/lenstool-6.8.1/include 
+program_INCLUDE_DIRS += $(CFITSIO_ROOT)/include
+#program_INCLUDE_DIRS += /users/fgilles/bin/iaca-lin32/include
+program_INCLUDE_DIRS += $(LENSTOOL_ROOT)/include
+program_INCLUDE_DIRS += $(GSL_ROOT)/gsl-2.2/include
+program_INCLUDE_DIRS += $(LENSTOOLHPC_ROOT)/src
 # 
 program_CU_INCLUDE_DIRS := /home/users/amclaugh/CUB/cub-1.3.2/ #CUDA Include directories
 #
-program_INCLUDE_LIBS := . #Include libraries
-program_INCLUDE_LIBS += /users/fgilles/Projects/Libs/cfitsio/lib #Include libraries
-program_INCLUDE_LIBS += /users/fgilles/Projects/lenstool-6.8.1/src
-program_INCLUDE_LIBS += /users/fgilles/Projects/lenstool-6.8.1/liblt 
-program_INCLUDE_LIBS += /users/fgilles/GPU-Projects/lenstool-master/src
-program_INCLUDE_LIBS += /users/fgilles/Projects/Libs/gsl-2.2/lib 
-program_INCLUDE_LIBS += /users/fgilles/Projects/Libs/cfitsio/lib 
-program_INCLUDE_LIBS += /users/fgilles/Projects/Libs/wcstools-3.9.4/libwcs/ 
-program_INCLUDE_LIBS += /home/epfl/cerschae/lenstool-hpc/src 
-program_INCLUDE_LIBS += /home/epfl/cerschae/LENSTOOL/lenstool-6.8.1/src 
-#program_INCLUDE_LIBS += /home/epfl/cerschae/LENSTOOL/lenstool-6.8.1/src
-#program_INCLUDE_LIBS += /home/epfl/cerschae/LENSTOOL/lenstool-6.8.1/include 
-program_INCLUDE_LIBS += /home/epfl/cerschae/LENSTOOL/lenstool-6.8.1/liblt 
+program_INCLUDE_LIBS := ./ #Include libraries
+program_INCLUDE_LIBS += $(CFITSIO_ROOT)/lib #Include libraries
+program_INCLUDE_LIBS += $(LENSTOOL_ROOT)/src
+program_INCLUDE_LIBS += $(LENSTOOL_ROOT)/liblt 
+program_INCLUDE_LIBS += $(LENSTOOLHPC_ROOT)/src
+program_INCLUDE_LIBS += $(GSL_ROOT)/lib 
+program_INCLUDE_LIBS += $(WCSTOOL_ROOT) 
 #
 # Compiler flags
+# 
 CPPFLAGS += $(foreach includedir,$(program_INCLUDE_DIRS),-I$(includedir))
 CPPFLAGS += $(foreach includelib,$(program_INCLUDE_LIBS),-L$(includelib))
 #CPPFLAGS += -qopt-prefetch-distance=64,8 -qopt-streaming-cache-evict=0 -qopenmp -xMIC-AVX512 -pedantic -llenstoolhpc
