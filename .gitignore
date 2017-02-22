@@ -4,6 +4,7 @@
 .cproject
 .settings
 *.o
+*.cuo
 *.optrpt
 GradienBenchmark
 .nfs*
