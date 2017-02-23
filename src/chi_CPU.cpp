@@ -131,13 +131,14 @@ void chi_bruteforce_SOA_CPU_grid_gradient(double *chi, int *error, runmode_param
             skip_image = 0;
             // Sometimes due to the numerical errors at the centerpoint, for SIE potentials an additional image will appear at the center of the Potential.
             // This is due to the fact that it is not possible to simulate an infinity value at the center correctly, Check that sis correspond to Nlens[0]
+            /*
             for (int iterator=0; iterator < runmode->Nlens[0]; ++iterator){
               //printf("lens[i].type %d %f %f %f \n",lens[i].type, fabs(im_position.x - lens[i].position.x) ,  fabs(im_position.y - lens[i].position.y), dx/2.);
               if ( fabs(im_position.x - lens[0].position_x[iterator]) <= dx/2. and fabs(im_position.y  - lens[0].position_y[iterator]) <= dx/2.){
                 skip_image = 1;
                 printf("WARNING: You are using SIE potentials. An image to close to one of the potential centers has been classified as numerical error and removed \n");
               }
-            }
+            }*/
             if(skip_image==0){
                   //checking whether a closest image has already been found
               //printf("imagenumber %d im_index %d , im_position.x %f , im_position.y %f \n", image_id, im_index  , im_position.x  , im_position.y);

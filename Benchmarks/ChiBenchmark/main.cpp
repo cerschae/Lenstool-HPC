@@ -20,10 +20,11 @@
 #include "gradient.hpp"
 
 #include "chi_CPU.hpp"
-#include "chi_GPU.hpp"
+#include "chi_GPU.cuh"
 
 #include "module_cosmodistances.h"
 #include "module_readParameters.hpp"
+#include <cuda_runtime.h>
 #include<omp.h>
 
 //#define __WITH_LENSTOOL 0
@@ -282,7 +283,8 @@ int main(int argc, char *argv[])
 
 	// Lenstool Bruteforce
 	//===========================================================================================================
-#ifdef __WITH_LENSTOOL
+//#ifdef __WITH_LENSTOOL
+#ifdef 0
 
 	setup_lenstool();
 
@@ -310,7 +312,7 @@ int main(int argc, char *argv[])
 	//===========================================================================================================
 
 
-#if 1
+#if 0
 	t_2 = -myseconds();
 	chi_bruteforce_SOA_CPU_grid_gradient(&chi2,&error,&runmode,&lenses_SOA,&frame,nImagesSet,images);
 	t_2 += myseconds();
@@ -320,6 +322,24 @@ int main(int argc, char *argv[])
 	std::cout << " Time  " << std::setprecision(15) << t_2 << std::endl;
 #endif
 
+#if 1
+	t_3 = -myseconds();
+	chi_bruteforce_SOA_GPU_grid_gradient(&chi2,&error,&runmode,&lenses_SOA,&frame,nImagesSet,images);
+	t_3 += myseconds();
 
+	std::cout << " chi_bruteforce_SOA_CPU_grid_gradient_unsorted Brute Force Benchmark " << std::endl;
+	std::cout << " Chi : " << std::setprecision(15) << chi2 <<  std::endl;
+	std::cout << " Time  " << std::setprecision(15) << t_3 << std::endl;
+#endif
+
+#if 1
+	t_3 = -myseconds();
+	chi_bruteforce_GPU_CPU(&chi2,&error,&runmode,&lenses_SOA,&frame,nImagesSet,images);
+	t_3 += myseconds();
+
+	std::cout << " chi_bruteforce_SOA_CPU_grid_gradient_unsorted Brute Force Benchmark " << std::endl;
+	std::cout << " Chi : " << std::setprecision(15) << chi2 <<  std::endl;
+	std::cout << " Time  " << std::setprecision(15) << t_3 << std::endl;
+#endif
 
 }

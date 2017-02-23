@@ -23,7 +23,7 @@
 // Include
 //===========================================================================================================
 #include <strings.h>
-//#include <structure_hpc.h>
+#include <iostream>
 #include <cuda_runtime.h>
 
 void cudasafe( cudaError_t error, std::string message);
