@@ -15,8 +15,9 @@ program_CU_SRCS := $(wildcard *.cu)
 #program_CU_HEADERS += $(wildcard ../../*.cuh) #Find .cuh files from additional directories
 program_CU_OBJS := ${program_CU_SRCS:.cu=.cuo}
 #
-program_INCLUDE_DIRS := . /usr/local/cuda/include/ #C++ Include directories
-program_INCLUDE_DIRS += /usr/include/cfitsio/ 
+program_INCLUDE_DIRS := .  #C++ Include directories
+program_INCLUDE_DIRS += /usr/include/cfitsio/
+program_INCLUDE_DIRS += /usr/local/cuda-7.5/include/
 program_INCLUDE_DIRS += /users/fgilles/Projects/Libs/cfitsio/include
 program_INCLUDE_DIRS += /users/fgilles/bin/iaca-lin32/include
 program_INCLUDE_DIRS += /users/fgilles/GPU-Projects/lenstool-master/src
@@ -47,22 +48,37 @@ CPPFLAGS += -qopenmp -xHost -g -O3 -std=c++0x -Wall -pedantic
 #CPPFLAGS += -qopt-prefetch-distance=64,8 -qopt-streaming-cache-evict=0 -llenstoolhpc -qopenmp -xMIC-AVX512 -g -O3 -std=c++0x -Wall -pedantic
 LDFLAGS := -llenstoolhpc -lcfitsio -llenstool -llt -lgsl -lgslcblas -lm -lwcs
 
+NVFLAGS := -O3 -g -G -arch=sm_20 -rdc=true -Xcompiler -fopenmp -D__WITH_LENSTOOL #rdc=true needed for separable compilation
+NVFLAGS += $(foreach includedir,$(program_INCLUDE_DIRS),-I$(includedir))
+NVFLAGS += $(foreach includelib,$(program_INCLUDE_LIBS),-L$(includelib))
 
-OBJECTS = $(program_CXX_OBJS) $(program_C_OBJS)
+CUO_O_OBJECTS := ${program_CU_OBJS:.cuo=.cuo.o}
+
+
+OBJECTS = $(program_CXX_OBJS) $(program_C_OBJS) $(program_CU_OBJS)
 
 .PHONY: all clean distclean
-#
+
 all: $(PROGRAM_NAME) 
 #
 debug: CXXFLAGS = -g -O0 -std=c++0x -Wall -pedantic -DDEBUG $(EXTRA_FLAGS)
 debug: $(PROGRAM_NAME)
 
+%.cuo: %.cu %.cuh
+	nvcc $(NVFLAGS) -o $@ -dc $<
+
 $(PROGRAM_NAME): $(OBJECTS) 
-	$(CXX) $(CPPFLAGS) -o $@ $(program_CXX_OBJS) $(program_C_OBJS) $(CUO_O_OBJECTS) $(LDFLAGS)
+	@ for cu_obj in $(program_CU_OBJS); \
+	do        \
+		mv $$cu_obj $$cu_obj.o; \
+	done #append a .o suffix for nvcc
+	nvcc $(NVFLAGS) -o $@ $(program_CXX_OBJS) $(program_C_OBJS) $(CUO_O_OBJECTS) $(LDFLAGS)
+	@ for cu_obj in $(CUO_O_OBJECTS);  \
+	do        \
+		mv $$cu_obj $${cu_obj%.*} ;  \
+	done #remove the .o for make
 
 clean:
-	@- $(RM) $(PROGRAM_NAME) $(OBJECTS) *~ *.o *.optrpt chi
+	@- $(RM) $(PROGRAM_NAME) $(OBJECTS) *~ *.o *.optrpt
 
 distclean: clean
-
-
