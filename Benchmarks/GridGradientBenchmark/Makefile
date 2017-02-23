@@ -18,24 +18,38 @@ program_CU_OBJS := ${program_CU_SRCS:.cu=.cuo}
 program_INCLUDE_DIRS := .  #C++ Include directories
 program_INCLUDE_DIRS += /usr/include/cfitsio/
 program_INCLUDE_DIRS += /usr/local/cuda-7.5/include/
-program_INCLUDE_DIRS += /users/fgilles/Projects/Libs/cfitsio/include
-program_INCLUDE_DIRS += /users/fgilles/bin/iaca-lin32/include
-program_INCLUDE_DIRS += /users/fgilles/GPU-Projects/lenstool-master/src
+#program_INCLUDE_DIRS += /users/fgilles/Projects/Libs/cfitsio/include
+#program_INCLUDE_DIRS += /users/fgilles/bin/iaca-lin32/include
+#program_INCLUDE_DIRS += /users/fgilles/GPU-Projects/lenstool-master/src
 program_INCLUDE_DIRS += /home/epfl/cerschae/lenstool-hpc/src 
 program_INCLUDE_DIRS += /usr/include
 program_INCLUDE_DIRS += /home/epfl/cerschae/LENSTOOL/lenstool-6.8.1/include 
 program_INCLUDE_DIRS += /home/epfl/cerschae/LENSTOOL/lenstool-6.8.1/liblt 
 program_INCLUDE_DIRS += /home/epfl/cerschae/LENSTOOL/lenstool-6.8.1/src 
+program_INCLUDE_DIRS += /users/cerschae/lenstool-hpc/src 
+program_INCLUDE_DIRS += /users/cerschae/Libs/lenstool-6.8.1/include 
+program_INCLUDE_DIRS += /users/cerschae/Libs/lenstool-6.8.1/liblt 
+program_INCLUDE_DIRS += /users/cerschae/Libs/lenstool-6.8.1/src 
+program_INCLUDE_DIRS += /users/cerschae/Libs/cfitsio/include
+program_INCLUDE_DIRS += /users/cerschae/Libs/gsl-2.3/include
 
 #program_CU_INCLUDE_DIRS := /home/users/amclaugh/CUB/cub-1.3.2/ #CUDA Include directories
 #
 program_INCLUDE_LIBS := /usr/lib64/ #Include libraries
-program_INCLUDE_LIBS += /users/fgilles/Projects/Libs/cfitsio/lib #Include libraries
-program_INCLUDE_LIBS += /users/fgilles/GPU-Projects/lenstool-master/src
+#program_INCLUDE_LIBS += /users/fgilles/Projects/Libs/cfitsio/lib #Include libraries
+#program_INCLUDE_LIBS += /users/fgilles/GPU-Projects/lenstool-master/src
 program_INCLUDE_LIBS += /home/epfl/cerschae/lenstool-hpc/src 
 program_INCLUDE_LIBS += /home/epfl/cerschae/LENSTOOL/lenstool-6.8.1/include 
 program_INCLUDE_LIBS += /home/epfl/cerschae/LENSTOOL/lenstool-6.8.1/src 
 program_INCLUDE_LIBS += /home/epfl/cerschae/LENSTOOL/lenstool-6.8.1/liblt 
+program_INCLUDE_LIBS += /users/cerschae/lenstool-hpc/src 
+program_INCLUDE_LIBS += /users/cerschae/Libs/lenstool-6.8.1/include 
+program_INCLUDE_LIBS += /users/cerschae/Libs/lenstool-6.8.1/liblt 
+program_INCLUDE_LIBS += /users/cerschae/Libs/lenstool-6.8.1/src 
+program_INCLUDE_LIBS += /users/cerschae/Libs/cfitsio/lib
+program_INCLUDE_LIBS += /users/cerschae/Libs/gsl-2.3/lib
+program_INCLUDE_LIBS += /users/cerschae/Libs/wcstools-3.9.4/libwcs
+program_INCLUDE_LIBS += /cm/shared/apps/intel-2017/lib/intel64/
 #
 # Compiler flags
 CPPFLAGS += $(foreach includedir,$(program_INCLUDE_DIRS),-I$(includedir))
@@ -48,7 +62,7 @@ CPPFLAGS += -qopenmp -xHost -g -O3 -std=c++0x -Wall -pedantic
 #CPPFLAGS += -qopt-prefetch-distance=64,8 -qopt-streaming-cache-evict=0 -llenstoolhpc -qopenmp -xMIC-AVX512 -g -O3 -std=c++0x -Wall -pedantic
 LDFLAGS := -llenstoolhpc -lcfitsio -llenstool -llt -lgsl -lgslcblas -lm -lwcs
 
-NVFLAGS := -O3 -g -G -arch=sm_20 -rdc=true -Xcompiler -fopenmp -D__WITH_LENSTOOL #rdc=true needed for separable compilation
+NVFLAGS := -O3 -g -G -rdc=true -Xcompiler -fopenmp -D__WITH_LENSTOOL #rdc=true needed for separable compilation
 NVFLAGS += $(foreach includedir,$(program_INCLUDE_DIRS),-I$(includedir))
 NVFLAGS += $(foreach includelib,$(program_INCLUDE_LIBS),-L$(includelib))
 

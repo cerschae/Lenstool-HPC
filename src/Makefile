@@ -21,11 +21,16 @@ program_INCLUDE_DIRS += /users/fgilles/Projects/Libs/cfitsio/include
 program_INCLUDE_DIRS += /users/fgilles/bin/iaca-lin32/include
 program_INCLUDE_DIRS += /users/fgilles/Projects/lenstool-6.8.1/include
 program_INCLUDE_DIRS += /users/fgilles/Projects/Libs/gsl-2.2/include
+program_INCLUDE_DIRS += /users/cerschae/Libs/cfitsio/include
+program_INCLUDE_DIRS += /users/cerschae/lenstool-6.8.1/include
+program_INCLUDE_DIRS += /users/cerschae/Libs/gsl-2.3/include
 #program_CU_INCLUDE_DIRS := /home/users/amclaugh/CUB/cub-1.3.2/ #CUDA Include directories
 #
 program_INCLUDE_LIBS := /usr/lib64/ #Include libraries
 program_INCLUDE_LIBS += /users/fgilles/Projects/Libs/cfitsio/lib #Include libraries
 program_INCLUDE_LIBS += /users/fgilles/Projects/lenstool-6.8.1/src 
+program_INCLUDE_LIBS += /users/cerschae/Libs/cfitsio/lib #Include libraries
+program_INCLUDE_LIBS += /users/cerschae/lenstool-6.8.1/src 
 program_INCLUDE_LIBS += /home/epfl/cerschae/LENSTOOL/lenstool-6.8.1/src 
 #
 # Compiler flags

@@ -23,7 +23,7 @@
 #include "module_cosmodistances.h"
 #include "module_readParameters.hpp"
 #include "grid_gradient_GPU.cuh"
-#include<omp.h>
+//#include<omp.h>
 
 int module_readCheckInput_readInput(int argc, char *argv[])
 {
