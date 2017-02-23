@@ -17,21 +17,17 @@ program_CU_SRCS := $(wildcard *.cu)
 program_CU_OBJS := ${program_CU_SRCS:.cu=.cuo}
 #
 program_INCLUDE_DIRS := . /usr/local/cuda-7.5/include/ #C++ Include directories
-program_INCLUDE_DIRS += /users/fgilles/Projects/Libs/cfitsio/include
-program_INCLUDE_DIRS += /users/fgilles/bin/iaca-lin32/include
-program_INCLUDE_DIRS += /users/fgilles/Projects/lenstool-6.8.1/include
-program_INCLUDE_DIRS += /users/fgilles/Projects/Libs/gsl-2.2/include
-program_INCLUDE_DIRS += /users/cerschae/Libs/cfitsio/include
-program_INCLUDE_DIRS += /users/cerschae/lenstool-6.8.1/include
-program_INCLUDE_DIRS += /users/cerschae/Libs/gsl-2.3/include
+program_INCLUDE_DIRS += $(CFITSIO_ROOT)/include
+program_INCLUDE_DIRS += $(LENSTOOL_ROOT)/include
+program_INCLUDE_DIRS += $(GSL_ROOT)
+#program_INCLUDE_DIRS += /users/fgilles/bin/iaca-lin32/include
 #program_CU_INCLUDE_DIRS := /home/users/amclaugh/CUB/cub-1.3.2/ #CUDA Include directories
 #
 program_INCLUDE_LIBS := /usr/lib64/ #Include libraries
-program_INCLUDE_LIBS += /users/fgilles/Projects/Libs/cfitsio/lib #Include libraries
-program_INCLUDE_LIBS += /users/fgilles/Projects/lenstool-6.8.1/src 
-program_INCLUDE_LIBS += /users/cerschae/Libs/cfitsio/lib #Include libraries
-program_INCLUDE_LIBS += /users/cerschae/lenstool-6.8.1/src 
-program_INCLUDE_LIBS += /home/epfl/cerschae/LENSTOOL/lenstool-6.8.1/src 
+program_INCLUDE_LIBS += $(CFITSIO_ROOT)/lib #Include libraries
+program_INCLUDE_LIBS += $(GSL_ROOT)/lib #Include libraries
+program_INCLUDE_LIBS += $(LENSTOOL_ROOT)/src 
+#program_INCLUDE_LIBS += /home/epfl/cerschae/LENSTOOL/lenstool-6.8.1/src 
 #
 # Compiler flags
 CPPFLAGS += $(foreach includedir,$(program_INCLUDE_DIRS),-I$(includedir))
@@ -41,6 +37,7 @@ CPPFLAGS += -fPIC -ftz -qopenmp -xHost -fma -pedantic -lcfitsio
 #CPPFLAGS += -qopt-prefetch-distance=64,8 -qopt-streaming-cache-evict=0 -fPIC -qopenmp -xMIC-AVX512 -fma -g -O3 -std=c++0x -Wall -pedantic
 #CPPFLAGS += -qopt-report=5 -S
 CXXFLAGS += -g -O3 -std=c++0x -Wall 
+LDFLAGS := -lcfitsio -llenstool
 #
 #GEN_SM35 := -gencode=arch=compute_35,code=\"sm_35,compute_35\" #Target CC 3.5, for example
 
@@ -79,7 +76,7 @@ debug: $(PROGRAM_NAME)
 # required by nvcc, calling nvcc, and then converting back to the non .o suffix for future, dependency-based 
 # compilation.
 #$(PROGRAM_NAME): $(OBJECTS) 
-#	$(CXX) $(CPPFLAGS) -shared -o $@ $(program_CXX_OBJS) $(program_C_OBJS) $(CUO_O_OBJECTS) -llenstool 
+#  $(CXX) $(CPPFLAGS) -shared -o $@ $(program_CXX_OBJS) $(program_C_OBJS) $(CUO_O_OBJECTS) -llenstool 
 
 
 
@@ -87,17 +84,16 @@ debug: $(PROGRAM_NAME)
 
 $(PROGRAM_NAME): $(OBJECTS) 
 	@ for cu_obj in $(program_CU_OBJS); \
-	do				\
+	do        \
 		mv $$cu_obj $$cu_obj.o; \
-	done				#append a .o suffix for nvcc
-	$(CXX) $(CPPFLAGS) -shared -o  $@ $(program_CXX_OBJS) $(program_C_OBJS) $(CUO_O_OBJECTS)
-	@ for cu_obj in $(CUO_O_OBJECTS); 	\
-	do					\
-		mv $$cu_obj $${cu_obj%.*};	\
-	done				#remove the .o for make
+	done        #append a .o suffix for nvcc
+	$(CXX) $(CPPFLAGS) -shared -o  $@ $(program_CXX_OBJS) $(program_C_OBJS) $(CUO_O_OBJECTS) $(LDFLAGS)
+	@ for cu_obj in $(CUO_O_OBJECTS);   \
+	do          \
+		mv $$cu_obj $${cu_obj%.*};  \
+	done        #remove the .o for make
 
 clean:
 	@- $(RM) $(PROGRAM_NAME) $(OBJECTS) *~ *.o *.optrpt *.so
 
 distclean: clean
-
