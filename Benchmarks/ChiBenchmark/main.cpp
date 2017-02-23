@@ -18,7 +18,10 @@
 #include <structure_hpc.h>
 #include "timer.h"
 #include "gradient.hpp"
+
 #include "chi_CPU.hpp"
+#include "chi_GPU.hpp"
+
 #include "module_cosmodistances.h"
 #include "module_readParameters.hpp"
 #include<omp.h>

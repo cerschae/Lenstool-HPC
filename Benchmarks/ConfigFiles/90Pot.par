@@ -8,7 +8,7 @@ runmode
 	mass 1 1000 0.4 1.5
 	dpl 1 1000 1.5
 	amplif 1 1000 1.5
-	nbgridcells 5000
+	nbgridcells 2000
 	Debug   										# true activates debug mode
 	end
 frame  
