@@ -245,14 +245,17 @@ struct point module_potentialDerivatives_totalGradient_8_SOA(const struct point 
 		//
 		//result.x = result.y = 0.;
 		//
+		//@@printf("image_x = %f image_y = %f\n",  pImage->x, pImage->y);	
 		true_coord.x = pImage->x - lens->position_x[i];
 		true_coord.y = pImage->y - lens->position_y[i];
+		//printf("x = %f y = %f\n",  true_coord.x, true_coord.y);	
 		/*positionning at the potential center*/
 		// Change the origin of the coordinate system to the center of the clump
 		true_coord_rot = rotateCoordinateSystem(true_coord, lens->ellipticity_angle[i]);
 		//
 		double x   = true_coord_rot.x;
 		double y   = true_coord_rot.y;
+		//@@printf("x = %f y = %f\n",  x, y);	
 		double eps = lens->ellipticity_potential[i];
 		double rc  = lens->rcore[i];
 		//
@@ -271,6 +274,7 @@ struct point module_potentialDerivatives_totalGradient_8_SOA(const struct point 
 		//	
 		zci.re  = 0;
 		zci.im  = -0.5*(1. - eps*eps)/sqe;
+		//@@printf("zci = %f %f\n", zci.re, zci.im);	
 		//
 		znum.re = cx1*x;
 		znum.im = 2.*sqe*sqrt(rc*rc + rem2) - y/cx1;
@@ -278,15 +282,20 @@ struct point module_potentialDerivatives_totalGradient_8_SOA(const struct point 
 		zden.re = x;
 		zden.im = 2.*rc*sqe - y;
 		norm    = (zden.re*zden.re + zden.im*zden.im);     // zis = znum/zden
+		//@@printf("norm = %f\n", norm);
 		//
 		zis.re  = (znum.re*zden.re + znum.im*zden.im)/norm;
 		zis.im  = (znum.im*zden.re - znum.re*zden.im)/norm;
+		//@@printf("zis = %f %f\n", zis.re, zis.im);	
 		norm    = zis.re;
 		zis.re  = log(sqrt(norm*norm + zis.im*zis.im));  // ln(zis) = ln(|zis|)+i.Arg(zis)
 		zis.im  = atan2(zis.im, norm);
+		//@@printf("zis = %f %f\n", zis.re, zis.im);	
 		//  norm = zis.re;
 		zres.re = zci.re*zis.re - zci.im*zis.im;   // Re( zci*ln(zis) )
 		zres.im = zci.im*zis.re + zis.im*zci.re;   // Im( zci*ln(zis) )
+		//
+		//@@printf("zres: %f %f\n", zres.re, zres.im); 
 		//
 		zis.re  = zres.re;
 		zis.im  = zres.im;
@@ -309,6 +318,8 @@ struct point module_potentialDerivatives_totalGradient_8_SOA(const struct point 
 			// add the gradients
 		grad.x += clumpgrad.x;
 		grad.y += clumpgrad.y;
+		//@@printf("grad: %f %f\n", grad.x, grad.y); 
+		//@@std::cout << "grad.x = " << grad.x << " grad.y = " << grad.y << std::endl;
 		//}
 	}
 	//IACA_END;
