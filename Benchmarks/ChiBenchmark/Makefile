@@ -15,27 +15,27 @@ program_CU_SRCS := $(wildcard *.cu)
 #program_CU_HEADERS += $(wildcard ../../*.cuh) #Find .cuh files from additional directories
 program_CU_OBJS := ${program_CU_SRCS:.cu=.cuo}
 #
-program_INCLUDE_DIRS := .  #C++ Include directories
-program_INCLUDE_DIRS += /usr/include/cfitsio/
-program_INCLUDE_DIRS += /usr/local/cuda-7.5/include/
-program_INCLUDE_DIRS += /users/fgilles/Projects/Libs/cfitsio/include
-program_INCLUDE_DIRS += /users/fgilles/bin/iaca-lin32/include
-program_INCLUDE_DIRS += /users/fgilles/GPU-Projects/lenstool-master/src
-program_INCLUDE_DIRS += /home/epfl/cerschae/lenstool-hpc/src 
-program_INCLUDE_DIRS += /usr/include
-program_INCLUDE_DIRS += /home/epfl/cerschae/LENSTOOL/lenstool-6.8.1/include 
-program_INCLUDE_DIRS += /home/epfl/cerschae/LENSTOOL/lenstool-6.8.1/liblt 
-program_INCLUDE_DIRS += /home/epfl/cerschae/LENSTOOL/lenstool-6.8.1/src 
+program_INCLUDE_DIRS := . /usr/local/cuda/include/ #C++ Include directories
+program_INCLUDE_DIRS += $(CFITSIO_ROOT)/include
+#program_INCLUDE_DIRS += /users/fgilles/bin/iaca-lin32/include
+program_INCLUDE_DIRS += $(LENSTOOL_ROOT)/include
+program_INCLUDE_DIRS += $(LENSTOOL_ROOT)/src
+program_INCLUDE_DIRS += $(LENSTOOL_ROOT)/liblit
 
+program_INCLUDE_DIRS += $(GSL_ROOT)
+program_INCLUDE_DIRS += $(LENSTOOLHPC_ROOT)/src
+#
 #program_CU_INCLUDE_DIRS := /home/users/amclaugh/CUB/cub-1.3.2/ #CUDA Include directories
 #
-program_INCLUDE_LIBS := /usr/lib64/ #Include libraries
-program_INCLUDE_LIBS += /users/fgilles/Projects/Libs/cfitsio/lib #Include libraries
-program_INCLUDE_LIBS += /users/fgilles/GPU-Projects/lenstool-master/src
-program_INCLUDE_LIBS += /home/epfl/cerschae/lenstool-hpc/src 
-program_INCLUDE_LIBS += /home/epfl/cerschae/LENSTOOL/lenstool-6.8.1/include 
-program_INCLUDE_LIBS += /home/epfl/cerschae/LENSTOOL/lenstool-6.8.1/src 
-program_INCLUDE_LIBS += /home/epfl/cerschae/LENSTOOL/lenstool-6.8.1/liblt 
+#program_INCLUDE_LIBS := ./ #Include libraries
+program_INCLUDE_LIBS += $(CFITSIO_ROOT)/lib #Include libraries
+program_INCLUDE_LIBS += $(LENSTOOL_ROOT)/src
+program_INCLUDE_LIBS += $(LENSTOOL_ROOT)/liblt
+program_INCLUDE_LIBS += $(LENSTOOL_ROOT)/include
+program_INCLUDE_LIBS += $(LENSTOOLHPC_ROOT)/src/
+program_INCLUDE_LIBS += $(GSL_ROOT)/lib
+program_INCLUDE_LIBS += $(WCSTOOL_ROOT)
+#
 #
 # Compiler flags
 CPPFLAGS += $(foreach includedir,$(program_INCLUDE_DIRS),-I$(includedir))
@@ -48,9 +48,10 @@ CPPFLAGS += -qopenmp -xHost -g -O3 -std=c++0x -Wall -pedantic
 #CPPFLAGS += -qopt-prefetch-distance=64,8 -qopt-streaming-cache-evict=0 -llenstoolhpc -qopenmp -xMIC-AVX512 -g -O3 -std=c++0x -Wall -pedantic
 LDFLAGS := -llenstoolhpc -lcfitsio -llenstool -llt -lgsl -lgslcblas -lm -lwcs
 
-NVFLAGS := -O3 -g -G -arch=sm_20 -rdc=true -Xcompiler -fopenmp -D__WITH_LENSTOOL #rdc=true needed for separable compilation
+NVFLAGS := -O3 -g -G -arch=sm_35 -rdc=true -ccbin icpc -Xcompiler -qopenmp #rdc=true needed for separable compilation
+NVFLAGS += -D__WITH_LENSTOOL 
 NVFLAGS += $(foreach includedir,$(program_INCLUDE_DIRS),-I$(includedir))
-NVFLAGS += $(foreach includelib,$(program_INCLUDE_LIBS),-L$(includelib))
+NVFLAGS += $(foreach includelib,$(program_INCLUDE_LIBS),-L$(includelib)) 
 
 CUO_O_OBJECTS := ${program_CU_OBJS:.cuo=.cuo.o}
 
@@ -63,9 +64,9 @@ all: $(PROGRAM_NAME)
 #
 debug: CXXFLAGS = -g -O0 -std=c++0x -Wall -pedantic -DDEBUG $(EXTRA_FLAGS)
 debug: $(PROGRAM_NAME)
-
 %.cuo: %.cu %.cuh
 	nvcc $(NVFLAGS) -o $@ -dc $<
+#nvcc $(NVFLAGS)  -Xptxas -v,-abi=no -ptx -src-in-ptx -dc $<
 
 $(PROGRAM_NAME): $(OBJECTS) 
 	@ for cu_obj in $(program_CU_OBJS); \

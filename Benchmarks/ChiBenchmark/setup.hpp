@@ -7,17 +7,18 @@
 #include <structure_hpc.h>
 #include <string.h>
 #include<omp.h>
+#include <fonction.h>
 
-#ifdef __WITH_LENSTOOL
+#ifdef 0
 #warning "linking with libtool..."
 #include <fonction.h>
 #include <constant.h>
 #include <dimension.h>
 #include <structure.h>
 #include <setup.hpp>
-#endif
+
 
 void setup_lenstool();
-
+#endif
 
 #endif /* SETUP_HPP_ */
