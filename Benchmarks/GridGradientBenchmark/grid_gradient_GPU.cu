@@ -1,11 +1,25 @@
 #include <fstream>
 #include "grid_gradient_GPU.cuh"
 
-#define BLOCK_SIZE 16
+#define BLOCK_SIZE_X 16
+#define BLOCK_SIZE_Y 8
+//#define ROT
+
+#define _SHARED_MEM
+
+#ifdef _SHARED_MEM
+#define SHARED __shared__
+#warning "shared memory"
+#else
+#define SHARED 
+#endif
 
 #define Nx 1
 #define Ny 0
 
+extern "C" {
+double myseconds();
+}
 void
 module_potentialDerivatives_totalGradient_SOA_CPU_GPU(double *grid_grad_x, double *grid_grad_y, const struct grid_param *frame, const struct Potential_SOA *lens_cpu, const struct Potential_SOA *lens_gpu, int nbgridcells, int nhalos);
 
@@ -354,6 +368,7 @@ void gradient_grid_GPU_sub(double *grid_grad_x, double *grid_grad_y, const struc
 	//
 	cudaMemcpy(lens_kernel, lens_gpu, sizeof(Potential_SOA), cudaMemcpyHostToDevice);
 	//
+	double time = -myseconds();
 	module_potentialDerivatives_totalGradient_SOA_CPU_GPU(grid_grad_x_gpu, grid_grad_y_gpu, frame_gpu, lens, lens_kernel, nbgridcells, nhalos);
 	//
 	if (int((nbgridcells) * (nbgridcells)/threadsPerBlock) == 0)
@@ -507,26 +522,9 @@ module_potentialDerivatives_totalGradient_8_SOA_GPU_cur(double *grid_grad_x, dou
                 double dx = (frame->xmax - frame->xmin)/(nbgridcells-1);
                 double dy = (frame->ymax - frame->ymin)/(nbgridcells-1);
                 //
-#if 0
-                /*__shared__*/ double img_pt[2];
-                if ((row == 0) && (col == 0))
-                {
-                        img_pt[0] = frame->xmin + col*dx;
-                        img_pt[1] = frame->ymin + row*dy;
-                }
-                __syncthreads();
-#else
-                  //int index = jj*nbgridcells + ii;
-                  //grid_grad_x[index] = 0.;
-                  //grid_grad_y[index] = 0.;
-
-                  //image_point.x = frame->xmin + ii*dx;
-                  //image_point.y = frame->ymin + jj*dy;
                 image_point.x = frame->xmin + col*dx;
                 image_point.y = frame->ymin + row*dy;
-#endif
-                //
-                //
+		//
                 for(int i = shalos; i < shalos + nhalos; i++)
                 {
                         struct point true_coord, true_coord_rot; //, result;
@@ -604,323 +602,267 @@ module_potentialDerivatives_totalGradient_8_SOA_GPU_cur(double *grid_grad_x, dou
         }
 }
 
-
-
 __global__
-void 
-module_potentialDerivatives_totalGradient_8_SOA_GPU_SM(double *grid_grad_x, double *grid_grad_y, const struct Potential_SOA *lens, const struct grid_param *frame, int nbgridcells, int shalos, int nhalos)
+void
+module_potentialDerivatives_totalGradient_8_SOA_GPU_SM2(double *grid_grad_x, double *grid_grad_y, const struct Potential_SOA *lens, const struct grid_param *frame, int nbgridcells, int shalos, int nhalos)
 {
+	//
         //asm volatile("# module_potentialDerivatives_totalGradient_SOA begins");
         // 6 DP loads, i.e. 48 Bytes: position_x, position_y, ellipticity_angle, ellipticity_potential, rcore, b0
         //
-        struct point grad, grad2, grad3, grad4;
-        struct point image_point, image_point2, image_point3, image_point4;
+        double grad_x, grad_y;
+	double clumpgrad_x, clumpgrad_y;
+	double image_point_x, image_point_y;
 	//
-        grad.x = 0;
-        grad.y = 0;
-	//
-        grad2.x = 0;
-        grad2.y = 0;
-	//
-	grad3.x = 0;
-        grad3.y = 0;
+	SHARED double cosi	[200];
+	SHARED double sinu	[200];
+	SHARED double rc	[200];
+	SHARED double b0	[200];
+	SHARED double epsi	[200];
+	SHARED double position_x[200];
+	SHARED double position_y[200];
+	SHARED double rsqe	[200];
+	SHARED double sonepeps	[200];
+	SHARED double sonemeps	[200];
         //
-        grad4.x = 0;
-        grad4.y = 0;	
+        grad_x = 0;
+        grad_y = 0;
+        //
+        int col = blockIdx.x*blockDim.x + threadIdx.x;
+        int row = blockIdx.y*blockDim.y + threadIdx.y;
+	int ithread  = threadIdx.y*blockDim.x + threadIdx.x;
 	//
-	int row = blockIdx.y * blockDim.y + threadIdx.y;
-        int col = blockIdx.x * blockDim.x + threadIdx.x;
-	//if((row == 0) && (col == 0)) printf("nhalos = %d\n", nhalos);
+	int index = row*nbgridcells + col;
 	//
+	//grid_grad_x[index] = 0.;
+	//grid_grad_y[index] = 0.;
+	//
+	double dx = (frame->xmax - frame->xmin)/(nbgridcells-1);
+	double dy = (frame->ymax - frame->ymin)/(nbgridcells-1);
+	//
+	image_point_x = frame->xmin + col*dx;
+	image_point_y = frame->ymin + row*dy;
+	//
+	int i = ithread;
+	if (i < nhalos)
+	{
+		cosi[i]       = __ldg(&lens->anglecos		  [shalos + i]);
+		sinu[i]       = __ldg(&lens->anglesin		  [shalos + i]);
+		position_x[i] = __ldg(&lens->position_x		  [shalos + i]);
+		position_y[i] = __ldg(&lens->position_y		  [shalos + i]);
+		rc[i]         = __ldg(&lens->rcore		  [shalos + i]);
+		b0[i]         = __ldg(&lens->b0		          [shalos + i]);
+		epsi[i]       = __ldg(&lens->ellipticity_potential[shalos + i]);
+		sonemeps[i]   = 1 - epsi[i];
+		sonepeps[i]   = 1 + epsi[i];
+		rsqe[i]	      = sqrt(epsi[i]);
+	}
+	__syncthreads();
 	//
 	if ((row < nbgridcells) && (col < nbgridcells))
 	{
-		//
-		//
-		//grid_grad_x[index] = 0.;
-		//grid_grad_y[index] = 0.;
-		//
-		double dx = (frame->xmax - frame->xmin)/(nbgridcells-1);
-		double dy = (frame->ymax - frame->ymin)/(nbgridcells-1);
-		int index  = col*nbgridcells + row;
-		int index2 = (col + BLOCK_SIZE/4)*nbgridcells + row;
-		int index3 = (col + BLOCK_SIZE/2)*nbgridcells + row;
-		int index4 = (col + 2*BLOCK_SIZE/3)*nbgridcells + row;
-		//
-#if 0
-		/*__shared__*/ double img_pt[2];
-		if ((row == 0) && (col == 0))
+		for(int i = 0; i < nhalos; i++)
 		{
-			img_pt[0] = frame->xmin + col*dx;
-			img_pt[1] = frame->ymin + row*dy;
-		}
-		__syncthreads();
-#else
-		image_point.x = frame->xmin + col*dx;
-		image_point.y = frame->ymin + row*dy;	
-		//
-		image_point2.x = frame->xmin + (col + BLOCK_SIZE/2)*dx;
-		image_point2.y = frame->ymin + row*dy;	
-		//
-		image_point3.x = frame->xmin + (col + BLOCK_SIZE/2)*dx;
-		image_point3.y = frame->ymin + row*dy;	
-		//
-		image_point4.x = frame->xmin + (col + BLOCK_SIZE/2)*dx;
-		image_point4.y = frame->ymin + row*dy;	
-#endif
-		//
-		for(int i = shalos; i < shalos + nhalos; i++)
-		{
-			struct point true_coord; //, result;
-			//double       R, angular_deviation;
+			//
+			double true_coord_x = image_point_x - position_x[i];
+			double true_coord_y = image_point_y - position_y[i];
+			//
+			double x = true_coord_x*cosi[i] + true_coord_y*sinu[i];
+			double y = true_coord_y*cosi[i] - true_coord_x*sinu[i];
+			//
+			double eps     = epsi[i]; 
+			//double onemeps = 1 - eps; 
+			//double onepeps = 1 + eps; 
+			//
+			//double eps     = epsi[i]; 
+			double onemeps = sonemeps[i]; 
+			double onepeps = sonepeps[i];
+			//
+			//double sqe  = sqrt(eps);
+			double sqe  = rsqe[i];
+			double rem2 = x*x/(onepeps*onepeps) + y*y/(onemeps*onemeps);
+			//
 			complex      zis;
-			complex zci;
-			complex znum, zden, zres;
+			//
+			double znum_re, znum_im;
+			double zres_re, zres_im;
 			double norm;
+			double zden_re, zden_im;
+			double  zis_re,  zis_im;
 			//
-#if 1
-			/*__shared__*/ double true_coord_x;
-			/*__shared__*/ double true_coord_y;
+			double zci_im  = -0.5*(1. - eps*eps)/sqe;
 			//
-			/*__shared__*/ double cosi;
-			/*__shared__*/ double sinu;
+			double cx1  = onemeps/onepeps; 
 			//
-			/*__shared__*/ double eps;
-			/*__shared__*/ double b0;
-			/*__shared__*/ double rc;
-#else
-
-			__shared__ double true_coord_x;
-			__shared__ double true_coord_y;
+			znum_re = cx1*x;
+			znum_im = 2.*sqe*sqrt(rc[i]*rc[i] + rem2) - y/cx1;
 			//
-			__shared__ double cosi;
-			__shared__ double sinu;
+			zden_re = x;
+			zden_im = 2.*rc[i]*sqe - y;
 			//
-			__shared__ double eps;
-			__shared__ double b0;
-			__shared__ double rc;
+			norm    = (x*x + zden_im*zden_im);     // zis = znum/zden
+			zis.re  = (znum_re*x + znum_im*zden_im)/norm;
+			zis.im  = (znum_im*x - znum_re*zden_im)/norm;
 			//
-			if (threadIdx.x == 0)
-#endif
-			{
-				//printf("Idx.y = %d\n", threadIdx.y);
-				true_coord_x =  __ldg(&lens->position_x[i]);
-				true_coord_y =  __ldg(&lens->position_y[i]);
-				cosi	     =  __ldg(&lens->anglecos[i]);	
-				sinu 	     =  __ldg(&lens->anglesin[i]);  
-				eps          =  __ldg(&lens->ellipticity_potential[i]);
-				rc	     =  __ldg(&lens->rcore[i]); 
-				b0	     =  __ldg(&lens->b0[i]);
-			}
-			//__syncthreads();	
-			//if ((threadIdx.x == 0) && ((blockIdx.y == 1) || (blockIdx.y == 1)))
-		//		printf("%d %d %d eps = %f\n", threadIdx.x, threadIdx.y, index, rc);
+			norm    = zis.re;
 			//
-			//result.x = result.y = 0.;
+			zis.re  = log(sqrt(norm*norm + zis.im*zis.im));  // ln(zis) = ln(|zis|)+i.Arg(zis)
+			zis.im  = atan2(zis.im, norm);
 			//
-			//true_coord_x = image_point.x - __ldg(&lens->position_x[i]);
-			//true_coord_y = image_point.y - __ldg(&lens->position_y[i]);
-			{
-				true_coord_x = image_point.x - true_coord_x; 
-				true_coord_y = image_point.y - true_coord_y; 
-				//
-				// positionning at the potential center
-				// Change the origin of the coordinate system to the center of the clump
-				//
-				double x = true_coord_x*cosi + true_coord_y*sinu;
-				double y = true_coord_y*cosi - true_coord_x*sinu;
-				//
-				//double eps = __ldg(&lens->ellipticity_potential[i]);
-				//
-				double sqe  = sqrt(eps);
-				//
-				double rem2 = x*x/((1. + eps)*(1. + eps)) + y*y/((1. - eps)*(1. - eps));
-				//
-				//
-				zci.im  = -0.5*(1. - eps*eps)/sqe;
-				//
-				//double rc  = __ldg(&lens->rcore[i]);
-				double cx1  = (1. - eps)/(1. + eps);
-				znum.re = cx1*x;
-				znum.im = 2.*sqe*sqrt(rc*rc + rem2) - y/cx1;
-				//
-				zden.re = x;
-				zden.im = 2.*rc*sqe - y;
-				norm    = (zden.re*zden.re + zden.im*zden.im);     // zis = znum/zden
-				//
-				zis.re  = (znum.re*zden.re + znum.im*zden.im)/norm;
-				zis.im  = (znum.im*zden.re - znum.re*zden.im)/norm;
-				//
-				norm    = zis.re;
-				//
-				zis.re  = log(sqrt(norm*norm + zis.im*zis.im));  // ln(zis) = ln(|zis|)+i.Arg(zis)
-				zis.im  = atan2(zis.im, norm);
-				//
-				zres.re = zci.im*zis.im;   // Re( zci*ln(zis) )
-				zres.im = zci.im*zis.re;   // Im( zci*ln(zis) )
-				//
-				//double b0  = __ldg(&lens->b0[i]);
-				grad.x += b0*(zres.re*cosi - zres.im*sinu);
-				grad.y += b0*(zres.im*cosi + zres.re*sinu);
-			}
-			/*
-			{
-				true_coord_x = image_point2.x - true_coord_x;
-				true_coord_y = image_point2.y - true_coord_y;
-				//
-				// positionning at the potential center
-				// Change the origin of the coordinate system to the center of the clump
-				//
-				double x = true_coord_x*cosi + true_coord_y*sinu;
-				double y = true_coord_y*cosi - true_coord_x*sinu;
-				//
-				//double eps = __ldg(&lens->ellipticity_potential[i]);
-				//
-				double sqe  = sqrt(eps);
-				//
-				double rem2 = x*x/((1. + eps)*(1. + eps)) + y*y/((1. - eps)*(1. - eps));
-				//
-				//
-				zci.im  = -0.5*(1. - eps*eps)/sqe;
-				//
-				//double rc  = __ldg(&lens->rcore[i]);
-				double cx1  = (1. - eps)/(1. + eps);
-				znum.re = cx1*x;
-				znum.im = 2.*sqe*sqrt(rc*rc + rem2) - y/cx1;
-				//
-				zden.re = x;
-				zden.im = 2.*rc*sqe - y;
-				norm    = (zden.re*zden.re + zden.im*zden.im);     // zis = znum/zden
-				//
-				zis.re  = (znum.re*zden.re + znum.im*zden.im)/norm;
-				zis.im  = (znum.im*zden.re - znum.re*zden.im)/norm;
-				//
-				norm    = zis.re;
-				//
-				zis.re  = log(sqrt(norm*norm + zis.im*zis.im));  // ln(zis) = ln(|zis|)+i.Arg(zis)
-				zis.im  = atan2(zis.im, norm);
-				//
-				zres.re = zci.im*zis.im;   // Re( zci*ln(zis) )
-				zres.im = zci.im*zis.re;   // Im( zci*ln(zis) )
-				//
-				//double b0  = __ldg(&lens->b0[i]);
-				grad2.x += b0*(zres.re*cosi - zres.im*sinu);
-				grad2.y += b0*(zres.im*cosi + zres.re*sinu);
-			}
-			*/
-			/*
-			{
-                                true_coord_x = image_point3.x - true_coord_x;
-                                true_coord_y = image_point3.y - true_coord_y;
-                                //
-                                // positionning at the potential center
-                                // Change the origin of the coordinate system to the center of the clump
-                                //
-                                double x = true_coord_x*cosi + true_coord_y*sinu;
-                                double y = true_coord_y*cosi - true_coord_x*sinu;
-                                //
-                                //double eps = __ldg(&lens->ellipticity_potential[i]);
-                                //
-                                double sqe  = sqrt(eps);
-                                //
-                                double rem2 = x*x/((1. + eps)*(1. + eps)) + y*y/((1. - eps)*(1. - eps));
-                                //
-                                //
-                                zci.im  = -0.5*(1. - eps*eps)/sqe;
-                                //
-                                //double rc  = __ldg(&lens->rcore[i]);
-                                double cx1  = (1. - eps)/(1. + eps);
-                                znum.re = cx1*x;
-                                znum.im = 2.*sqe*sqrt(rc*rc + rem2) - y/cx1;
-                                //
-                                zden.re = x;
-                                zden.im = 2.*rc*sqe - y;
-                                norm    = (zden.re*zden.re + zden.im*zden.im);     // zis = znum/zden
-                                //
-                                zis.re  = (znum.re*zden.re + znum.im*zden.im)/norm;
-                                zis.im  = (znum.im*zden.re - znum.re*zden.im)/norm;
-                                //
-                                norm    = zis.re;
-                                //
-                                zis.re  = log(sqrt(norm*norm + zis.im*zis.im));  // ln(zis) = ln(|zis|)+i.Arg(zis)
-                                zis.im  = atan2(zis.im, norm);
-                                //
-                                zres.re = zci.im*zis.im;   // Re( zci*ln(zis) )
-                                zres.im = zci.im*zis.re;   // Im( zci*ln(zis) )
-                                //
-                                //double b0  = __ldg(&lens->b0[i]);
-                                grad3.x += b0*(zres.re*cosi - zres.im*sinu);
-                                grad3.y += b0*(zres.im*cosi + zres.re*sinu);
-                        }
-                        //
-                        {
-                                true_coord_x = image_point4.x - true_coord_x;
-                                true_coord_y = image_point4.y - true_coord_y;
-                                //
-                                // positionning at the potential center
-                                // Change the origin of the coordinate system to the center of the clump
-                                //
-                                double x = true_coord_x*cosi + true_coord_y*sinu;
-                                double y = true_coord_y*cosi - true_coord_x*sinu;
-                                //
-                                //double eps = __ldg(&lens->ellipticity_potential[i]);
-                                //
-                                double sqe  = sqrt(eps);
-                                //
-                                double rem2 = x*x/((1. + eps)*(1. + eps)) + y*y/((1. - eps)*(1. - eps));
-                                //
-                                //
-                                zci.im  = -0.5*(1. - eps*eps)/sqe;
-                                //
-                                //double rc  = __ldg(&lens->rcore[i]);
-                                double cx1  = (1. - eps)/(1. + eps);
-                                znum.re = cx1*x;
-                                znum.im = 2.*sqe*sqrt(rc*rc + rem2) - y/cx1;
-                                //
-                                zden.re = x;
-                                zden.im = 2.*rc*sqe - y;
-                                norm    = (zden.re*zden.re + zden.im*zden.im);     // zis = znum/zden
-                                //
-                                zis.re  = (znum.re*zden.re + znum.im*zden.im)/norm;
-                                zis.im  = (znum.im*zden.re - znum.re*zden.im)/norm;
-                                //
-                                norm    = zis.re;
-                                //
-                                zis.re  = log(sqrt(norm*norm + zis.im*zis.im));  // ln(zis) = ln(|zis|)+i.Arg(zis)
-                                zis.im  = atan2(zis.im, norm);
-                                //
-                                zres.re = zci.im*zis.im;   // Re( zci*ln(zis) )
-                                zres.im = zci.im*zis.re;   // Im( zci*ln(zis) )
-                                //
-                                //double b0  = __ldg(&lens->b0[i]);
-                                grad4.x += b0*(zres.re*cosi - zres.im*sinu);
-                                grad4.y += b0*(zres.im*cosi + zres.re*sinu);
-                        }
-			*/
-
-
+			zres_re = - zci_im*zis.im;   // Re( zci*ln(zis) )
+			zres_im =   zci_im*zis.re;   // Im( zci*ln(zis) )
+			//
+			grad_x += b0[i]*(zres_re*cosi[i] - zres_im*sinu[i]);
+			grad_y += b0[i]*(zres_im*cosi[i] + zres_re*sinu[i]);
 		}
-		//IACA_END;
 		//
-		grid_grad_x[index] = grad.x;
-		grid_grad_y[index] = grad.y;
-		//
-		//grid_grad_x[index2] = grad2.x;
-		//grid_grad_y[index2] = grad2.y;
-		/*
-                grid_grad_x[index3] = grad3.x;
-                grid_grad_y[index3] = grad3.y;
-                //
-                grid_grad_x[index4] = grad4.x;
-                grid_grad_y[index4] = grad4.y;
-		*/
+		grid_grad_x[index] = grad_x;
+		grid_grad_y[index] = grad_y;
+		//__syncthreads();
 	}
 }
-
+//
+//
+//
+__global__
+void
+module_potentialDerivatives_totalGradient_8_SOA_GPU_SM3(double *grid_grad_x, double *grid_grad_y, const struct Potential_SOA
+ *lens, const struct grid_param *frame, int nbgridcells, int shalos, int nhalos)
+{
+        //
+        //asm volatile("# module_potentialDerivatives_totalGradient_SOA begins");
+        // 6 DP loads, i.e. 48 Bytes: position_x, position_y, ellipticity_angle, ellipticity_potential, rcore, b0
+        //
+        double grad_x, grad_y;
+        double clumpgrad_x, clumpgrad_y;
+        double image_point_x, image_point_y;
+        //
+        SHARED double cosi      [200];
+        SHARED double sinu      [200];
+        SHARED double rc        [200];
+        SHARED double b0        [200];
+        SHARED double epsi      [200];
+        SHARED double position_x[200];
+        SHARED double position_y[200];
+        SHARED double rsqe      [200];
+        //SHARED double sonepeps  [200];
+        //SHARED double sonemeps  [200];
+        //
+        grad_x         = 0;
+        grad_y 	       = 0;
+        //
+        int row        = blockIdx.x*blockDim.x + threadIdx.x;
+        int grid_size  = nbgridcells/blockDim.y; 
+        int col        =( blockIdx.y*blockDim.y + threadIdx.y)*grid_size;
+	//if (threadIdx.x == 0) printf("%d %d %d: row = %d, col = %d, grid_size = %d\n", blockIdx.y, gridDim.y, threadIdx.y, row, col, grid_size);
+        //
+        //
+        //grid_grad_x[index] = 0.;
+        //grid_grad_y[index] = 0.;
+        //
+        double dx = (frame->xmax - frame->xmin)/(nbgridcells-1);
+        double dy = (frame->ymax - frame->ymin)/(nbgridcells-1);
+	//if (threadIdx.x == 0) printf("dx = %f, dy = %f\n", dx, dy);
+        //
+        image_point_x = frame->xmin + col*dx;
+        image_point_y = frame->ymin + row*dy;
+        //
+        int i = row;
+	if (threadIdx.x == 0)
+	for (int i = 0; i < nhalos; i += 1)	
+        {
+                cosi[i]       = __ldg(&lens->anglecos             [shalos + i]);
+                sinu[i]       = __ldg(&lens->anglesin             [shalos + i]);
+                position_x[i] = __ldg(&lens->position_x           [shalos + i]);
+                position_y[i] = __ldg(&lens->position_y           [shalos + i]);
+                rc[i]         = __ldg(&lens->rcore                [shalos + i]);
+                b0[i]         = __ldg(&lens->b0                   [shalos + i]);
+                epsi[i]       = __ldg(&lens->ellipticity_potential[shalos + i]);
+                rsqe[i]       = sqrt(epsi[i]);
+        }
+	//if (threadIdx.x == 0) printf("%d %d\n", blockDim.y, gridDim.y);
+        __syncthreads();
+        //
+	if ((row < nbgridcells) && (col < nbgridcells))
+	{
+		//
+		for(int icol = 0; icol < grid_size; ++icol)
+		{
+			int index = row*nbgridcells + col + icol;
+			grad_x = grad_y = 0.;
+			//
+			for(int i = 0; i < nhalos; i++)
+			{
+				//
+				double true_coord_x = image_point_x + icol*dx - position_x[i];
+				double true_coord_y = image_point_y           - position_y[i];
+				//if ((row == 1) && (col == 0)) printf("%d %d: %f %f\n", row, col, true_coord_x, true_coord_y);
+				//
+				double x = true_coord_x*cosi[i] + true_coord_y*sinu[i];
+				double y = true_coord_y*cosi[i] - true_coord_x*sinu[i];
+				//
+				double eps     = epsi[i];
+				double onemeps = 1 - eps;
+				double onepeps = 1 + eps;
+				//if ((row == 1) && (col == 0)) printf("i = %d, eps = %f\n", i, eps);
+				//
+				//double eps     = epsi[i];
+				//double onemeps = sonemeps[i];
+				//double onepeps = sonepeps[i];
+				//
+				//double sqe  = sqrt(eps);
+				double sqe  = rsqe[i];
+				double rem2 = x*x/(onepeps*onepeps) + y*y/(onemeps*onemeps);
+				//
+				complex      zis;
+				//
+				double znum_re, znum_im;
+				double zres_re, zres_im;
+				double norm;
+				double zden_re, zden_im;
+				double  zis_re,  zis_im;
+				//
+				double zci_im  = -0.5*(1. - eps*eps)/sqe;
+				//
+				double cx1  = onemeps/onepeps;
+				//
+				znum_re = cx1*x;
+				znum_im = 2.*sqe*sqrt(rc[i]*rc[i] + rem2) - y/cx1;
+				//
+				zden_re = x;
+				zden_im = 2.*rc[i]*sqe - y;
+				//
+				norm    = (x*x + zden_im*zden_im);     // zis = znum/zden
+				zis.re  = (znum_re*x + znum_im*zden_im)/norm;
+				zis.im  = (znum_im*x - znum_re*zden_im)/norm;
+				//
+				norm    = zis.re;
+				//
+				zis.re  = log(sqrt(norm*norm + zis.im*zis.im));  // ln(zis) = ln(|zis|)+i.Arg(zis)
+				zis.im  = atan2(zis.im, norm);
+				//
+				zres_re = - zci_im*zis.im;   // Re( zci*ln(zis) )
+				zres_im =   zci_im*zis.re;   // Im( zci*ln(zis) )
+				//
+				grad_x += b0[i]*(zres_re*cosi[i] - zres_im*sinu[i]);
+				grad_y += b0[i]*(zres_im*cosi[i] + zres_re*sinu[i]);
+			}
+			//
+			grid_grad_x[index] += grad_x; 
+			grid_grad_y[index] += grad_y; 
+		}
+		//
+		//grid_grad_x[index] = grad_x;
+		//grid_grad_y[index] = grad_y;
+		//__syncthreads();
+	}
+}
+//
+//
+//
 __global__
 	void
-module_potentialDerivatives_totalGradient_8_SOA_GPU_v2(double *grid_grad_x, double *grid_grad_y, const struct Potential_SOA *lens, const struct grid_param *frame,
-		int nbgridcells, int i, int nhalos)
+module_potentialDerivatives_totalGradient_8_SOA_GPU_v2(double *grid_grad_x, double *grid_grad_y, const struct Potential_SOA *lens, const struct grid_param *frame, int nbgridcells, int i, int nhalos)
 {
 	//asm volatile("# module_potentialDerivatives_totalGradient_SOA begins");
 	// 6 DP loads, i.e. 48 Bytes: position_x, position_y, ellipticity_angle, ellipticity_potential, rcore, b0
@@ -944,7 +886,7 @@ module_potentialDerivatives_totalGradient_8_SOA_GPU_v2(double *grid_grad_x, doub
 		double dy = (frame->ymax - frame->ymin)/(nbgridcells-1);
 		//
 #if 0
-		/*__shared__*/ double img_pt[2];
+		/*SHARED*/ double img_pt[2];
 		if ((row == 0) && (col == 0))
 		{
 			img_pt[0] = frame->xmin + col*dx;
@@ -1005,130 +947,106 @@ module_potentialDerivatives_totalGradient_8_SOA_GPU_v2(double *grid_grad_x, doub
 		zis.re  = (znum.re*zden.re + znum.im*zden.im)/norm;
 		zis.im  = (znum.im*zden.re - znum.re*zden.im)/norm;
 		//
-		//
 		double b0  = __ldg(&lens->b0[i]);
 		grad.x += b0*(zres.re*cosi - zres.im*sinu);
 		grad.y += b0*(zres.im*cosi + zres.re*sinu);
-		//}
-		//IACA_END;
 		//
 		grid_grad_x[index] += grad.x;
 		grid_grad_y[index] += grad.y;
 	}
-}
+	}
 
 
 
 
 
-/*
-   typedef struct point (*halo_func_GPU_t) (const struct point *pImage, const struct Potential_SOA *lens, int shalos, int nhalos);
+	/*
+	   typedef struct point (*halo_func_GPU_t) (const struct point *pImage, const struct Potential_SOA *lens, int shalos, int nhalos);
 
-   __constant__ halo_func_GPU_t halo_func_GPU[100] =
-   {
-   0, 0, 0, 0, 0, module_potentialDerivatives_totalGradient_5_SOA_GPU, 0, 0, module_potentialDerivatives_totalGradient_8_SOA_GPU,  0,
-   0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-   0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-   0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-   0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-   0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-   0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-   0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-   0,  module_potentialDerivatives_totalGradient_81_SOA_GPU, 0, 0, 0, 0, 0, 0, 0, 0,
-   0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-   };
- */
+	   __constant__ halo_func_GPU_t halo_func_GPU[100] =
+	   {
+	   0, 0, 0, 0, 0, module_potentialDerivatives_totalGradient_5_SOA_GPU, 0, 0, module_potentialDerivatives_totalGradient_8_SOA_GPU,  0,
+	   0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+	   0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+	   0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+	   0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+	   0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+	   0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+	   0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+	   0,  module_potentialDerivatives_totalGradient_81_SOA_GPU, 0, 0, 0, 0, 0, 0, 0, 0,
+	   0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	   };
+	 */
 
-	void
+void
 module_potentialDerivatives_totalGradient_SOA_CPU_GPU(double *grid_grad_x, double *grid_grad_y, const struct grid_param *frame, const struct Potential_SOA *lens_cpu, const struct Potential_SOA *lens_gpu, int nbgridcells, int nhalos)
-{
-	struct point grad, clumpgrad;
-	//
-	grad.x = clumpgrad.x = 0.;
-	grad.y = clumpgrad.y = 0.;
-	int shalos = 0;
-	int GRID_SIZE = (nbgridcells + BLOCK_SIZE - 1)/BLOCK_SIZE; // number of blocks
-	//
-	dim3 dimBlock(BLOCK_SIZE, BLOCK_SIZE);
-	dim3 dimGrid(GRID_SIZE, GRID_SIZE);	
-	//
-	int count = nhalos;	
-	cudaMemset(grid_grad_x, 0, nbgridcells*nbgridcells*sizeof(double));
-	cudaMemset(grid_grad_y, 0, nbgridcells*nbgridcells*sizeof(double));
-	module_potentialDerivatives_totalGradient_8_SOA_GPU_cur<<<dimGrid, dimBlock>>> (grid_grad_x, grid_grad_y, lens_gpu, frame, nbgridcells, shalos, count);
-	cudasafe(cudaGetLastError(), "module_potentialDerivative_totalGradient_SOA_CPU_GPU");
-	//cudaDeviceSynchronize();
-	//module_potentialDerivatives_totalGradient_8_SOA_GPU_SM<<<dimGrid, dimBlock>>> (grid_grad_x, grid_grad_y, lens_gpu, frame, nbgridcells, shalos, count);
-	//grid.x += clumpgrad.x;
-	//grad.y += clumpgrad.y;
+		{
+			struct point grad, clumpgrad;
+			//
+			grad.x = clumpgrad.x = 0.;
+			grad.y = clumpgrad.y = 0.;
+			//
+			int shalos = 0;
+			//
+			int GRID_SIZE_X = (nbgridcells + BLOCK_SIZE_X - 1)/BLOCK_SIZE_X; // number of blocks
+			int GRID_SIZE_Y = 1; 
+			//
+			{
+				//dim3 dimBlock(BLOCK_SIZE/1, BLOCK_SIZE);
+				//dim3 dimGrid (GRID_SIZE   , GRID_SIZE );	
+				dim3 dimBlock(BLOCK_SIZE_X, BLOCK_SIZE_Y);
+				dim3 dimGrid (GRID_SIZE_X , GRID_SIZE_Y);	
+				//
+				int count = nhalos;	
+				printf("nhalos = %d\n", nhalos);
+				//
+				cudaMemset(grid_grad_x, 0, nbgridcells*nbgridcells*sizeof(double));
+				cudaMemset(grid_grad_y, 0, nbgridcells*nbgridcells*sizeof(double));
+				//
+				module_potentialDerivatives_totalGradient_8_SOA_GPU_SM3<<<dimGrid, dimBlock>>> (grid_grad_x, grid_grad_y, lens_gpu, frame, nbgridcells, shalos, count);
+			}
+			//
+			/*
+			   {
+			   dim3 dimBlock(BLOCK_SIZE/1, BLOCK_SIZE/2);
+			   dim3 dimGrid(GRID_SIZE, GRID_SIZE);
+			//
+			int count = nhalos;
+			cudaMemset(grid_grad_x, 0, nbgridcells*nbgridcells*sizeof(double));
+			cudaMemset(grid_grad_y, 0, nbgridcells*nbgridcells*sizeof(double));
+			//
+			module_potentialDerivatives_totalGradient_8_SOA_GPU_SM<<<dimGrid, dimBlock>>> (grid_grad_x, grid_grad_y, lens_gpu, frame, nbgridcells, shalos, count);
+			}
+			 */
+			//
+			cudasafe(cudaGetLastError(), "module_potentialDerivative_totalGradient_SOA_CPU_GPU");
+			//
+			//cudaDeviceSynchronize();
+			//module_potentialDerivatives_totalGradient_8_SOA_GPU_SM<<<dimGrid, dimBlock>>> (grid_grad_x, grid_grad_y, lens_gpu, frame, nbgridcells, shalos, count);
+			//grad.x += clumpgrad.x;
+			//grad.y += clumpgrad.y;
 
-	//
-	//	
-	/*
-	   while (shalos < nhalos)
-	   {
+			//
+			//	
+			/*
+			   while (shalos < nhalos)
+			   {
 
-	   int lens_type = lens_cpu->type[shalos];
-	   int count     = 1;
-	   while (lens_cpu->type[shalos + count] == lens_type) count++;
-	//std::cerr << "type = " << lens_type << " " << count << " " << shalos << std::endl;
-	//printf ("%d %d %d \n",lens_type,count,shalos);
-	//
-	clumpgrad = (*halo_func_GPU[lens_type]<<<dimGrid, dimBlock>>> )(lens_gpu, shalos, count);
-	//
-	grad.x += clumpgrad.x;
-	grad.y += clumpgrad.y;
-	shalos += count;
-	}
+			   int lens_type = lens_cpu->type[shalos];
+			   int count     = 1;
+			   while (lens_cpu->type[shalos + count] == lens_type) count++;
+			//std::cerr << "type = " << lens_type << " " << count << " " << shalos << std::endl;
+			//printf ("%d %d %d \n",lens_type,count,shalos);
+			//
+			clumpgrad = (*halo_func_GPU[lens_type]<<<dimGrid, dimBlock>>> )(lens_gpu, shalos, count);
+			//
+			grad.x += clumpgrad.x;
+			grad.y += clumpgrad.y;
+			shalos += count;
+			}
 
-	return(grad);
-	 */
-}
+			return(grad);
+			 */
+		}
 
-
-	void
-module_potentialDerivatives_totalGradient_SOA_CPU_GPU_v2(double *grid_grad_x, double *grid_grad_y, const struct grid_param *frame, const struct Potential_SOA *lens_cpu, const struct Potential_SOA *lens_gpu, int nbgridcells, int nhalos)
-{
-	//struct point grad, clumpgrad;
-	//
-	int shalos = 0;
-	int GRID_SIZE = (nbgridcells + BLOCK_SIZE - 1)/BLOCK_SIZE; // number of blocks
-	//
-	dim3 dimBlock(BLOCK_SIZE, BLOCK_SIZE);
-	dim3 dimGrid(GRID_SIZE, GRID_SIZE);
-	int count = nhalos;
-	//
-	cudaMemset(grid_grad_x, 0, nbgridcells*nbgridcells*sizeof(double));
-	cudaMemset(grid_grad_y, 0, nbgridcells*nbgridcells*sizeof(double));
-	//
-	for (int ii = 0; ii < nhalos; ++ii)
-	{
-		module_potentialDerivatives_totalGradient_8_SOA_GPU_cur<<<dimGrid, dimBlock>>> (grid_grad_x, grid_grad_y, lens_gpu, frame, nbgridcells, ii, 1);
-		//module_potentialDerivatives_totalGradient_8_SOA_GPU_SM<<<dimGrid, dimBlock, 7*sizeof(double)>>> (grid_grad_x, grid_grad_y, lens_gpu, frame, nbgridcells, ii, 1);
-	}
-	//grid.x += clumpgrad.x;
-	//grad.y += clumpgrad.y;
-
-	//
-	//
-	/*
-	   while (shalos < nhalos)
-	   {
-
-	   int lens_type = lens_cpu->type[shalos];
-	   int count     = 1;
-	   while (lens_cpu->type[shalos + count] == lens_type) count++;
-	//std::cerr << "type = " << lens_type << " " << count << " " << shalos << std::endl;
-	//printf ("%d %d %d \n",lens_type,count,shalos);
-	//
-	clumpgrad = (*halo_func_GPU[lens_type]<<<dimGrid, dimBlock>>> )(lens_gpu, shalos, count);
-	//
-	grad.x += clumpgrad.x;
-	grad.y += clumpgrad.y;
-	shalos += count;
-	}
-
-	return(grad);
-	 */
-}
 
