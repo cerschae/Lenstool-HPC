@@ -49,7 +49,6 @@ inline struct point module_potentialDerivatives_totalGradient_5_SOA_GPU(const st
   }
   return grad;
 }
-
 //
 //
 //

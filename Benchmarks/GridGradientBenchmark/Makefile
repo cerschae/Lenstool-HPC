@@ -61,8 +61,8 @@ all: $(PROGRAM_NAME)
 debug: CXXFLAGS = -g -O0 -std=c++0x -Wall -pedantic -DDEBUG $(EXTRA_FLAGS)
 debug: $(PROGRAM_NAME)
 %.cuo: %.cu %.cuh
-	nvcc $(NVFLAGS) --ptxas-options=-v -o $@ -dc $<
-#nvcc $(NVFLAGS)  -Xptxas -v,-abi=no -ptx -src-in-ptx -dc $<
+	nvcc $(NVFLAGS) -Xptxas -dlcm=cg --ptxas-options=-v -o $@ -dc $<
+	#nvcc $(NVFLAGS)  -maxrregcount=100 -Xptxas -dlcm=cg --ptxas-options=-v -o $@ -dc $<
 
 $(PROGRAM_NAME): $(OBJECTS) 
 	@ for cu_obj in $(program_CU_OBJS); \

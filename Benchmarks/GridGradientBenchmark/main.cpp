@@ -243,8 +243,8 @@ int main(int argc, char *argv[])
 	std::cout << " GPU Test... "; 
 	double *grid_gradient_x, *grid_gradient_y;
 
-	grid_gradient_x = (double *)malloc((int) (runmode.nbgridcells) * (runmode.nbgridcells) * sizeof(double));
-	grid_gradient_y = (double *)malloc((int) (runmode.nbgridcells) * (runmode.nbgridcells) * sizeof(double));
+	grid_gradient_x = (double *) malloc((int) (runmode.nbgridcells) * (runmode.nbgridcells) * sizeof(double));
+	grid_gradient_y = (double *) malloc((int) (runmode.nbgridcells) * (runmode.nbgridcells) * sizeof(double));
 
 
 #if 0
@@ -263,13 +263,12 @@ std::cout << " Gradient  " << std::setprecision(5) << grid_gradient_x[runmode.nb
 std::cout << " Time  " << std::setprecision(15) << t_1 << std::endl;
 #endif
 
-#if 1
 	t_2 = -myseconds();
 	gradient_grid_GPU_sorted(grid_gradient_x, grid_gradient_y, &frame, &lenses_SOA, runmode.nhalos, grid_dim);
 	t_2 += myseconds();
 
 	std::cout << " Time  " << std::setprecision(15) << t_2 << std::endl;
-#endif
+#if 1 
 	double norm_x = 0.;
 	double norm_y = 0.;
 
@@ -282,13 +281,14 @@ std::cout << " Time  " << std::setprecision(15) << t_1 << std::endl;
 		double c_y = grid_gradient_y_cpu[ii];
 		//
 		//if (!(ii%grid_dim)) std::cout << std::endl;
-		///std::cout << ii << " " << g_x << " " << c_x << " " << g_y << " " << c_y << std::endl;
+		//		std::cout << ii << " " << g_x << " " << c_x << " " << g_y << " " << c_y << std::endl;
 		//
 		norm_x += (grid_gradient_x[ii] - grid_gradient_x_cpu[ii])*(grid_gradient_x[ii] - grid_gradient_x_cpu[ii]);
 		norm_y += (grid_gradient_y[ii] - grid_gradient_y_cpu[ii])*(grid_gradient_y[ii] - grid_gradient_y_cpu[ii]);
 	}
 
 	std::cout << "  l2 difference norm = " << std::setprecision(15) << norm_x << " " << std::setprecision(15) << norm_y << std::endl;
+#endif
 
 #if 1
 t_3 = -myseconds();
