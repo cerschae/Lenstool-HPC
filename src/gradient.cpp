@@ -290,7 +290,7 @@ struct point module_potentialDerivatives_totalGradient_8_SOA(const struct point 
 		norm    = zis.re;
 		zis.re  = log(sqrt(norm*norm + zis.im*zis.im));  // ln(zis) = ln(|zis|)+i.Arg(zis)
 		zis.im  = atan2(zis.im, norm);
-		//@@printf("zis = %f %f\n", zis.re, zis.im);	
+		//@@printf("y,x = %f %f\n", zis.im, norm);	
 		//  norm = zis.re;
 		zres.re = zci.re*zis.re - zci.im*zis.im;   // Re( zci*ln(zis) )
 		zres.im = zci.im*zis.re + zis.im*zci.re;   // Im( zci*ln(zis) )
