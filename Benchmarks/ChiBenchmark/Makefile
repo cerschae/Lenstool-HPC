@@ -46,7 +46,7 @@ CPPFLAGS += -qopenmp -xHost -g -O3 -std=c++0x -Wall -pedantic
 #CPPFLAGS += -llenstoolhpc -qopenmp -xHost -g -O3 -std=c++0x -Wall -pedantic
 #CPPFLAGS += -llenstoolhpc -qopenmp -axMIC-AVX512,CORE-AVX2 -g -O3 -std=c++0x -Wall -pedantic
 #CPPFLAGS += -qopt-prefetch-distance=64,8 -qopt-streaming-cache-evict=0 -llenstoolhpc -qopenmp -xMIC-AVX512 -g -O3 -std=c++0x -Wall -pedantic
-LDFLAGS := -llenstoolhpc -lcfitsio -llenstool -llt -lgsl -lgslcblas -lm -lwcs
+LDFLAGS := -llenstoolhpc -llenstool -llt -lgsl -lgslcblas -lm -lwcs -lcfitsio
 
 NVFLAGS := -O3 -g -G -arch=sm_35 -rdc=true -ccbin icpc -Xcompiler -qopenmp #rdc=true needed for separable compilation
 NVFLAGS += -D__WITH_LENSTOOL 
