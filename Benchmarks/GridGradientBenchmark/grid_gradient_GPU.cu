@@ -1,8 +1,9 @@
 #include <fstream>
 #include "grid_gradient_GPU.cuh"
 
-#define BLOCK_SIZE_X 16
-#define BLOCK_SIZE_Y 8
+#define BLOCK_SIZE_X 8
+#define BLOCK_SIZE_Y 16
+
 //#define ROT
 
 #define _SHARED_MEM
@@ -756,8 +757,8 @@ module_potentialDerivatives_totalGradient_8_SOA_GPU_SM3(double *grid_grad_x, dou
         grad_x         = 0;
         grad_y 	       = 0;
         //
-        int row        = blockIdx.x*blockDim.x + threadIdx.x;
-        int col        = blockIdx.y*blockDim.y + threadIdx.y;
+        int row        = blockIdx.y*blockDim.y + threadIdx.y;
+        int col        = blockIdx.x*blockDim.x + threadIdx.x;
 	//
 	//int loc_row    = threadIdx.x;
 	//int loc_col    = threadIdx.y*blockDim.x + threadIdx.x;
@@ -779,14 +780,14 @@ module_potentialDerivatives_totalGradient_8_SOA_GPU_SM3(double *grid_grad_x, dou
 	//
 	for (int i = 0; i < (nhalos + numThreads - 1)/numThreads; ++i)
 	{ 
-		int iloc  = threadIdx.x*blockDim.y + threadIdx.y + i*numThreads;
+		int iloc  = threadIdx.y*blockDim.x + threadIdx.x + i*numThreads;
 		if (iloc < nhalos)
 		{
 			cosi[iloc]       = __ldg(&lens->anglecos             [shalos + iloc]);
 			sinu[iloc]       = __ldg(&lens->anglesin             [shalos + iloc]);
 			position_x[iloc] = __ldg(&lens->position_x           [shalos + iloc]);
 			position_y[iloc] = __ldg(&lens->position_y           [shalos + iloc]);
-			rci[iloc]         = __ldg(&lens->rcore                [shalos + iloc]);
+			rci[iloc]        = __ldg(&lens->rcore                [shalos + iloc]);
 			b0[iloc]         = __ldg(&lens->b0                   [shalos + iloc]);
 			epsi[iloc]       = __ldg(&lens->ellipticity_potential[shalos + iloc]);
 			rsqe[iloc]       = sqrt(epsi[iloc]);
@@ -810,30 +811,34 @@ module_potentialDerivatives_totalGradient_8_SOA_GPU_SM3(double *grid_grad_x, dou
 			double cx1 = onemeps/onepeps;
 			//
 			//
-			//double x = true_coord_y*sinu[i];
-			//double y = true_coord_y*cosi[i];
-			double true_coord_y = image_point_y - position_y[i];
-			double true_coord_x = image_point_x - position_x[i] /*+ icol*dx*/;
-			//
-			double zci_im;
-			zci_im  = -0.5*(1. - eps*eps)/sqe;
+			//double zci_im = 1;
+			double zci_im  = -0.5*(1. - eps*eps)/sqe;
 			double inv_onepeps = 1./(onepeps*onepeps);
 			double inv_onemeps = 1./(onemeps*onemeps);
 #endif
 			//
 			{
-				KERNEL_8_reg(0);
 				//KERNEL_8;
+				double grad_x = grad_y = 0.;
+				double true_coord_y = image_point_y - position_y[i];
+				double true_coord_x = image_point_x - position_x[i];
+				KERNEL_8_reg(0);
+				grid_grad_x[iglob +  0] += grad_x;
+				grid_grad_y[iglob +  0] += grad_y;
 			}
-			/*{
-				KERNEL_8_reg(BLOCK_SIZE_X/2);
+			/*
+			{
+				//KERNEL_8;
+				double grad_x = grad_y = 0.;
+				double true_coord_y = image_point_y - position_y[i];
+				double true_coord_x = image_point_x - position_x[i] + BLOCK_SIZE_X/2*dx;
+				KERNEL_8_reg(0);
 				grid_grad_x[iglob + BLOCK_SIZE_X/2] += grad_x;
 				grid_grad_y[iglob + BLOCK_SIZE_X/2] += grad_y;
-			}*/
+			}
+			*/
 		//
 		}
-		grid_grad_x[iglob +  0] = grad_x;
-		grid_grad_y[iglob +  0] = grad_y;
 	}
 }
 //
@@ -842,7 +847,7 @@ module_potentialDerivatives_totalGradient_8_SOA_GPU_SM3(double *grid_grad_x, dou
 __global__
 void
 module_potentialDerivatives_totalGradient_8_SOA_GPU_SM4(double *grid_grad_x, double *grid_grad_y, const struct Potential_SOA
-		*lens, const struct grid_param *frame, int nbgridcells, int shalos, int nhalos/*, double* dtimer*/)
+		lens, const struct grid_param *frame, int nbgridcells, int shalos, int nhalos/*, double* dtimer*/)
 {
 	//
 	//asm volatile("# module_potentialDerivatives_totalGradient_SOA begins");
@@ -1194,8 +1199,8 @@ module_potentialDerivatives_totalGradient_SOA_CPU_GPU(double *grid_grad_x, doubl
 	{
 		//dim3 dimBlock(BLOCK_SIZE_X/1, BLOCK_SIZE_Y);
 		//dim3 dimGrid (GRID_SIZE_X   , GRID_SIZE_Y );	
-		dim3 threads(BLOCK_SIZE_Y, BLOCK_SIZE_X);
-		dim3 grid (GRID_SIZE_Y ,  GRID_SIZE_X);	
+		dim3 threads(BLOCK_SIZE_X, BLOCK_SIZE_Y/1);
+		dim3 grid   (GRID_SIZE_X , GRID_SIZE_Y);	
 		//
 		int count = nhalos;	
 		//printf("nhalos = %d, size of shared memory = %lf\n", nhalos, (double) (8*nhalos + BLOCK_SIZE_X*nbgridcells/BLOCK_SIZE_Y)*sizeof(double));
