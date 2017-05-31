@@ -1,6 +1,6 @@
 #include <iostream>
 #include <string.h>
-#include <cuda_runtime.h>
+//#include <cuda_runtime.h>
 #include <math.h>
 #include <sys/time.h>
 #include <fstream>
@@ -8,6 +8,7 @@
 
 //#include "simd_math.h"
 
+#define __WITH_LENSTOOL
 //#include "structure.h"
 #include "structure_hpc.h"
 //#ifdef __WITH_LENSTOOL
