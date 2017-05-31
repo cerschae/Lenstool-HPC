@@ -27,6 +27,82 @@
 #include "grid_gradient_GPU.cuh"
 //#include<omp.h>
 
+#ifdef __WITH_LENSTOOL
+#include "setup.hpp"
+#warning "linking with libtool..."
+#include<fonction.h>
+#include<constant.h>
+#include<dimension.h>
+#include<structure.h>
+//
+//
+struct g_mode   M;
+struct g_pot    P[NPOTFILE];
+struct g_pixel  imFrame, wFrame, ps, PSF;
+struct g_cube   cubeFrame;
+struct g_dyn    Dy;      //   //TV
+//
+struct g_source S;
+struct g_image  I;
+struct g_grille G;
+struct g_msgrid H;  // multi-scale grid
+struct g_frame  F;
+struct g_large  L;
+struct g_cosmo  C;
+struct g_cline  CL;
+struct g_observ O;
+struct pot      lens[NLMAX];
+struct pot      lmin[NLMAX], lmax[NLMAX], prec[NLMAX];
+struct g_cosmo  clmin, clmax;       /*cosmological limits*/
+struct galaxie  smin[NFMAX], smax[NFMAX];       // limits on source parameters
+struct ipot     ip;
+struct MCarlo   mc;
+struct vfield   vf;
+struct vfield   vfmin,vfmax; // limits on velocity field parameters
+struct cline    cl[NIMAX];
+lensdata *lens_table;
+//
+int  block[NLMAX][NPAMAX];      /*switch for the lens optimisation*/
+int  cblock[NPAMAX];                /*switch for the cosmological optimisation*/
+int  sblock[NFMAX][NPAMAX];                /*switch for the source parameters*/
+int  vfblock[NPAMAX];                /*switch for the velocity field parameters*/
+double excu[NLMAX][NPAMAX];
+double excd[NLMAX][NPAMAX];
+/* supplments tableaux de valeurs pour fonctions g pour Einasto
+ *  * Ce sont trois variables globales qu'on pourra utiliser dans toutes les fonctions du projet
+ *  */
+
+#define CMAX 20
+#define LMAX 80
+
+float Tab1[LMAX][CMAX];
+float Tab2[LMAX][CMAX];
+float Tab3[LMAX][CMAX];
+
+
+int      nrline, ntline, flagr, flagt;
+long int  narclet;
+
+struct point    gimage[NGGMAX][NGGMAX], gsource_global[NGGMAX][NGGMAX];
+struct biline   radial[NMAX], tangent[NMAX];
+struct galaxie  arclet[NAMAX], source[NFMAX], image[NFMAX][NIMAX];
+struct galaxie  cimage[NFMAX];
+struct pointgal     gianti[NPMAX][NIMAX];
+
+struct point    SC;
+double elix;
+double alpha_e;
+
+double *v_xx;
+double *v_yy;
+double **map_p;
+double **tmp_p;
+double **map_axx;
+double **map_ayy;
+#endif
+//
+//
+//
 int module_readCheckInput_readInput(int argc, char *argv[])
 {
 	/// check if there is a correct number of arguments, and store the name of the input file in infile
@@ -78,7 +154,9 @@ int module_readCheckInput_readInput(int argc, char *argv[])
 
 	return 0;
 }
-
+//
+//
+//
 int main(int argc, char *argv[])
 {
 	//
@@ -109,7 +187,7 @@ int main(int argc, char *argv[])
 	struct grid_param frame;
 	struct galaxy images[runmode.nimagestot];
 	struct galaxy sources[runmode.nsets];
-	struct Potential lenses[runmode.nhalos+runmode.npotfile-1];
+	struct Potential lenses[runmode.nhalos + runmode.npotfile-1];
 	struct Potential_SOA lenses_SOA_table[NTYPES];
 	struct Potential_SOA lenses_SOA;
 	struct cline_param cline;
@@ -139,7 +217,7 @@ int main(int argc, char *argv[])
 		module_readParameters_readpotfiles_param(inputFile, &potfile);
 		module_readParameters_debug_potfileparam(runmode.debug, &potfile);
 		module_readParameters_readpotfiles(&runmode,&potfile,lenses);
-		module_readParameters_debug_potential(runmode.debug, lenses, runmode.nhalos+runmode.npotfile);
+		module_readParameters_debug_potential(runmode.debug, lenses, runmode.nhalos + runmode.npotfile);
 
 	}
 	//
@@ -154,59 +232,62 @@ int main(int argc, char *argv[])
 		// This module function reads in the strong lensing images
 		module_readParameters_readImages(&runmode, images, nImagesSet);
 		//runmode.nsets = runmode.nimagestot;
-		for(int i = 0; i < runmode.nimagestot; ++i){
-
+		for(int i = 0; i < runmode.nimagestot; ++i)
+		{
 			images[i].dls = module_cosmodistances_objectObject(lenses[0].z, images[i].redshift, cosmology);
 			images[i].dos = module_cosmodistances_observerObject(images[i].redshift, cosmology);
-			images[i].dr = module_cosmodistances_lensSourceToObserverSource(lenses[0].z, images[i].redshift, cosmology);
-
+			images[i].dr  = module_cosmodistances_lensSourceToObserverSource(lenses[0].z, images[i].redshift, cosmology);
 		}
-		module_readParameters_debug_image(runmode.debug, images, nImagesSet,runmode.nsets);
-
+		module_readParameters_debug_image(runmode.debug, images, nImagesSet, runmode.nsets);
 	}
 	//
 	if (runmode.inverse == 1){
 
 		// This module function reads in the potential optimisation limits
-		module_readParameters_limit(inputFile,host_potentialoptimization,runmode.nhalos);
+		module_readParameters_limit(inputFile, host_potentialoptimization, runmode.nhalos);
 		module_readParameters_debug_limit(runmode.debug, host_potentialoptimization[0]);
 	}
 	//
 	if (runmode.source == 1){
 		//Initialisation to default values.(Setting sources to z = 1.5 default value)
-		for(int i = 0; i < runmode.nsets; ++i){
+		for(int i = 0; i < runmode.nsets; ++i)
+		{
 			sources[i].redshift = 1.5;
 		}
 		// This module function reads in the strong lensing sources
 		module_readParameters_readSources(&runmode, sources);
 		//Calculating cosmoratios
-		for(int i = 0; i < runmode.nsets; ++i){
-
+		for(int i = 0; i < runmode.nsets; ++i)
+		{
 			sources[i].dls = module_cosmodistances_objectObject(lenses[0].z, sources[i].redshift, cosmology);
 			sources[i].dos = module_cosmodistances_observerObject(sources[i].redshift, cosmology);
-			sources[i].dr = module_cosmodistances_lensSourceToObserverSource(lenses[0].z, sources[i].redshift, cosmology);
+			sources[i].dr  = module_cosmodistances_lensSourceToObserverSource(lenses[0].z, sources[i].redshift, cosmology);
 		}
 		module_readParameters_debug_source(runmode.debug, sources, runmode.nsets);
-
 	}
 	//
 	std::cout << "--------------------------" << std::endl << std::endl;
 
 	double t_1,t_2,t_3,t_4;
-
+	//
+	//
+	//
+#ifdef __WITH_LENSTOOL
+	convert_to_LT(&lenses_SOA, runmode.nhalos);	
+#endif
+	//
 	// Lenstool-CPU Grid-Gradient
-	//===========================================================================================================
-
+	//
 	//Setting Test:
 	double dx, dy;
 	int grid_dim = runmode.nbgridcells;
-
+	//
 	dx = (frame.xmax - frame.xmin)/(runmode.nbgridcells-1);
 	dy = (frame.ymax - frame.ymin)/(runmode.nbgridcells-1);
-
-	point test_point1_1,test_point2_2, test_result1_1,test_result2_2,test_pointN_N, test_resultN_N;
+	//
+	point test_point1_1, test_point2_2, test_result1_1, test_result2_2, test_pointN_N, test_resultN_N;
 	double dlsds = images[0].dr;
-
+	//
 	test_point1_1.x = frame.xmin;
 	test_point1_1.y = frame.ymin;
 	test_point2_2.x = frame.xmin + dx;
@@ -231,12 +312,49 @@ int main(int argc, char *argv[])
 	t_1 += myseconds();
 	//
 	std::cout << " Time  " << std::setprecision(15) << t_1 << std::endl;
+	//
+	//
+	//
+#ifdef __WITH_LENSTOOL
+	std::cout << " CPU Test Lenstool...";
+	double t_lt = -myseconds();
+	struct point Grad;
+	double *grid_grad_x, *grid_grad_y;
+	grid_grad_x = (double *) malloc((int) (runmode.nbgridcells) * (runmode.nbgridcells) * sizeof(double));
+        grid_grad_y = (double *) malloc((int) (runmode.nbgridcells) * (runmode.nbgridcells) * sizeof(double));	
+#pragma omp parallel for 
+        for (int jj = 0; jj < runmode.nbgridcells; ++jj)
+                for (int ii = 0; ii < runmode.nbgridcells; ++ii)
+                {
+                        //  (index < grid_dim*grid_dim)
+                        int index = jj*runmode.nbgridcells + ii;
+			for (int lens = 0; lens < runmode.nhalos; ++lens)
+			{
+				//grid_grad_x[index] = 0.;
+				//grid_grad_y[index] = 0.;
+				point image_point;
+				image_point.x = frame.xmin + ii*dx;
+				image_point.y = frame.ymin + jj*dy;
+
+				struct point Grad = e_grad_pot(&image_point, lens);
+				//
+				grid_grad_x[index] = Grad.x;
+				grid_grad_y[index] = Grad.y;
+			}
+                        //
+                }
+	t_lt += myseconds();
+	std::cout << " Time = " <<  std::setprecision(15) << t_lt << std::endl;
+#endif
+	//
+	//
+	//
+	double *grid_gradient_x, *grid_gradient_y;
 
 // #ifdef __USE_GPU
 // GPU test
 
 	std::cout << " GPU Test... "; 
-	double *grid_gradient_x, *grid_gradient_y;
 
 	grid_gradient_x = (double *) malloc((int) (runmode.nbgridcells) * (runmode.nbgridcells) * sizeof(double));
 	grid_gradient_y = (double *) malloc((int) (runmode.nbgridcells) * (runmode.nbgridcells) * sizeof(double));
@@ -268,22 +386,19 @@ std::cout << " Time  " << std::setprecision(15) << t_1 << std::endl;
 #if 1 
 	double norm_x = 0.;
 	double norm_y = 0.;
-
+	//
 	for (int ii = 0; ii < grid_dim*grid_dim; ++ii)
 	{
-		double g_x = grid_gradient_x[ii];
-		double g_y = grid_gradient_y[ii];
+		double g_x = grid_grad_x[ii];
+		double g_y = grid_grad_y[ii];
 		//
 		double c_x = grid_gradient_x_cpu[ii];
 		double c_y = grid_gradient_y_cpu[ii];
 		//
-		//if (!(ii%grid_dim)) std::cout << std::endl;
-		//		std::cout << ii << " " << g_x << " " << c_x << " " << g_y << " " << c_y << std::endl;
-		//
-		norm_x += (grid_gradient_x[ii] - grid_gradient_x_cpu[ii])*(grid_gradient_x[ii] - grid_gradient_x_cpu[ii]);
-		norm_y += (grid_gradient_y[ii] - grid_gradient_y_cpu[ii])*(grid_gradient_y[ii] - grid_gradient_y_cpu[ii]);
+		norm_x += (grid_grad_x[ii] - grid_gradient_x_cpu[ii])*(grid_grad_x[ii] - grid_gradient_x_cpu[ii]);
+		norm_y += (grid_grad_y[ii] - grid_gradient_y_cpu[ii])*(grid_grad_y[ii] - grid_gradient_y_cpu[ii]);
 	}
-
+	//
 	std::cout << "  l2 difference norm = " << std::setprecision(15) << norm_x << " " << std::setprecision(15) << norm_y << std::endl;
 #endif
 
