@@ -1,4 +1,7 @@
-PROGRAM_NAME := ChiBenchmark
+all: ChiBenchmark_CPU ChiBenmark_GPU
+
+
+PROGRAM_NAME := ChiBenchmark_CPU
 #CXX=g++ -lm -ffast-math -ftree-loop-vectorize 
 CXX=icpc
 
@@ -7,24 +10,22 @@ program_CXX_SRCS := $(wildcard *.cpp)
 program_CXX_OBJS := ${program_CXX_SRCS:.cpp=.o}
 
 #program_CXX_SRCS += $(wildcard ../../*.c) #Find C source files from additonal directories
+program_CU_SRCS := $(wildcard *.cpp)
 program_C_OBJS := ${program_C_SRCS:.c=.o}
 #
 program_CU_SRCS := $(wildcard *.cu)
-#program_CU_SRCS += $(wildcard ../../*.cu) #Find CUDA source files from additional directories
-#program_CU_HEADERS := $(wildcard *.cuh) #Optional: Include .cuh files as dependencies
-#program_CU_HEADERS += $(wildcard ../../*.cuh) #Find .cuh files from additional directories
 program_CU_OBJS := ${program_CU_SRCS:.cu=.cuo}
+#
+# include
 #
 program_INCLUDE_DIRS := . /usr/local/cuda/include/ #C++ Include directories
 program_INCLUDE_DIRS += $(CFITSIO_ROOT)/include
-#program_INCLUDE_DIRS += /users/fgilles/bin/iaca-lin32/include
 program_INCLUDE_DIRS += $(LENSTOOL_ROOT)/include
 program_INCLUDE_DIRS += $(GSL_ROOT)
 program_INCLUDE_DIRS += $(LENSTOOLHPC_ROOT)/src
 #
-#program_CU_INCLUDE_DIRS := /home/users/amclaugh/CUB/cub-1.3.2/ #CUDA Include directories
+# libs
 #
-#program_INCLUDE_LIBS := ./ #Include libraries
 program_INCLUDE_LIBS += $(CFITSIO_ROOT)/lib #Include libraries
 program_INCLUDE_LIBS += $(LENSTOOL_ROOT)/src
 program_INCLUDE_LIBS += $(LENSTOOL_ROOT)/liblt
@@ -50,9 +51,10 @@ NVFLAGS += $(foreach includedir,$(program_INCLUDE_DIRS),-I$(includedir))
 NVFLAGS += $(foreach includelib,$(program_INCLUDE_LIBS),-L$(includelib)) 
 
 CUO_O_OBJECTS := ${program_CU_OBJS:.cuo=.cuo.o}
+C_O_OBJECTS := ${program_C_OBJS:.c=.o}
 
-
-OBJECTS = $(program_CXX_OBJS) $(program_C_OBJS) $(program_CU_OBJS)
+GPU_OBJECTS = $(program_CXX_OBJS) $(program_C_OBJS) $(program_CU_OBJS)
+CPU_OBJECTS = $(program_CXX_OBJS) $(program_C_OBJS)
 
 .PHONY: all clean distclean
 
@@ -64,15 +66,28 @@ debug: $(PROGRAM_NAME)
 	nvcc $(NVFLAGS) -Xptxas -dlcm=cg --ptxas-options=-v -o $@ -dc $<
 	#nvcc $(NVFLAGS)  -maxrregcount=100 -Xptxas -dlcm=cg --ptxas-options=-v -o $@ -dc $<
 
-$(PROGRAM_NAME): $(OBJECTS) 
-	@ for cu_obj in $(program_CU_OBJS); \
+
+#$(PROGRAM_NAME_GPU): $(CPU_OBJECTS)
+#	@ for cu_obj in $(program_CU_OBJS); \
+#	do        \
+#		mv $$cu_obj $$cu_obj.o; \
+#	done #append a .o suffix for nvcc
+#	nvcc $(NVFLAGS) -o $@ $(program_CXX_OBJS) $(program_C_OBJS) $(CUO_O_OBJECTS) $(LDFLAGS)
+#	@ for cu_obj in $(CUO_O_OBJECTS);  \
+#	do        \
+#		mv $$cu_obj $${cu_obj%.*} ;  \
+#	done #remove the .o for make
+
+
+$(PROGRAM_NAME): $(CPU_OBJECTS) 
+	@ for c_obj in $(program_C_OBJS); \
 	do        \
-		mv $$cu_obj $$cu_obj.o; \
+		mv $$c_obj $$c_obj.o; \
 	done #append a .o suffix for nvcc
-	nvcc $(NVFLAGS) -o $@ $(program_CXX_OBJS) $(program_C_OBJS) $(CUO_O_OBJECTS) $(LDFLAGS)
-	@ for cu_obj in $(CUO_O_OBJECTS);  \
+	icpc -o $@ $(program_CXX_OBJS) $(program_C_OBJS) $(C_O_OBJECTS) $(LDFLAGS)
+	@ for c_obj in $(C_O_OBJECTS);  \
 	do        \
-		mv $$cu_obj $${cu_obj%.*} ;  \
+		mv $$c_obj $${c_obj%.*} ;  \
 	done #remove the .o for make
 
 clean:
