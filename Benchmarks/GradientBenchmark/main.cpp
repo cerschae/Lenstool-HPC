@@ -8,7 +8,7 @@
 #include <iostream>
 #include <iomanip>
 #include <string.h>
-#include <cuda_runtime.h>
+//#include <cuda_runtime.h>
 #include <math.h>
 #include <sys/time.h>
 #include <fstream>
@@ -16,7 +16,7 @@
 //
 #include <mm_malloc.h>
 
-//#define __WITH_LENSTOOL 1
+#define __WITH_LENSTOOL 1
 //
 #ifdef __WITH_LENSTOOL
 #warning "linking with libtool..."
@@ -35,7 +35,7 @@
 #include "gradient_avx512f.hpp"
 #include "setup.hpp"
 //
-#define NN 1000
+#define NN 10000
 //
 //
 //
@@ -209,10 +209,10 @@ int main()
 	std::cout << " LT  sol   = " << std::setprecision(15) << grad_lt.x << " " << std::setprecision(15) << grad_lt.y << ", time = " << t0 << " s." << std::endl;
 #endif
 	//
-	std::cout << " grad      = " << std::setprecision(15) << grad.x << " " << std::setprecision(15) << grad.y << ", time = " << t1 << " s., speedup = " << t0/t1 << std::endl;
+	std::cout << " grad      = " << std::setprecision(15) << grad.x << " " << std::setprecision(15) << grad.y << ", time = " << t1 << " s., speedup = " << (double) t0/t1 << std::endl;
 	//
-	std::cout << " grad SIMD = " << std::setprecision(15) << grad_soa.x << " " << std::setprecision(15) << grad_soa.y << ", time = " << t3 << " s., speedup = " << t0/t3 << std::endl;
-	std::cout << " grad HC   = " << std::setprecision(15) << grad_soa_avx.x << " " << std::setprecision(15) << grad_soa_avx.y << ", time = " << t2 << " s. speedup = " << t0/t2 << std::endl;
+	std::cout << " grad SIMD = " << std::setprecision(15) << grad_soa.x << " " << std::setprecision(15) << grad_soa.y << ", time = " << t3 << " s., speedup = " << (double) t0/t3 << std::endl;
+	std::cout << " grad HC   = " << std::setprecision(15) << grad_soa_avx.x << " " << std::setprecision(15) << grad_soa_avx.y << ", time = " << t2 << " s. speedup = " << (double) t0/t2 << std::endl;
 	//
 	//
 	//
