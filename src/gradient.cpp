@@ -326,8 +326,90 @@ struct point module_potentialDerivatives_totalGradient_8_SOA(const struct point 
 	//
 	return(grad);
 }
-
-
+//
+//
+//
+struct point module_potentialDerivatives_totalGradient_8_SOA_v2(const struct point *pImage, const struct Potential_SOA *lens, int shalos, int nhalos)
+{
+        asm volatile("# module_potentialDerivatives_totalGradient_8_SOA_v2 begins");
+	//
+        // 6 DP loads, i.e. 48 Bytes: position_x, position_y, ellipticity_angle, ellipticity_potential, rcore, b0
+        //
+        struct point grad, clumpgrad;
+        grad.x = 0;
+        grad.y = 0;
+        //
+        for(int i = shalos; i < shalos + nhalos; i++)
+        {
+                //IACA_START;
+                //
+                struct point true_coord, true_coord_rot; //, result;
+                complex      zis;
+                double b0   = lens->b0[i];
+                //
+                true_coord.x = pImage->x - lens->position_x[i];
+                true_coord.y = pImage->y - lens->position_y[i];
+                //
+                //true_coord_rot = rotateCoordinateSystem(true_coord, lens->ellipticity_angle[i]);
+                //
+                double cose = lens->anglecos[i];
+                double sine = lens->anglesin[i];
+                double x = true_coord.x*cose + true_coord.y*sine;
+                double y = true_coord.y*cose - true_coord.x*sine;
+                //
+                //double x   = true_coord_rot.x;
+                //double y   = true_coord_rot.y;
+                //@@printf("x = %f y = %f\n",  x, y);
+                double eps = lens->ellipticity_potential[i];
+                double rc  = lens->rcore[i];
+                //
+                double sqe  = sqrt(eps);
+                //
+                double cx1  = (1. - eps)/(1. + eps);
+                double cxro = (1. + eps)*(1. + eps);
+                double cyro = (1. - eps)*(1. - eps);
+                //
+                double rem2 = x*x/cxro + y*y/cyro;
+                //
+                complex zci, znum, zden, zres;
+                double norm;
+                //
+                zci.re  = 0;
+                zci.im  = -0.5*(1. - eps*eps)/sqe;
+                //
+                //
+                znum.re = cx1*x;
+                znum.im = 2.*sqe*sqrt(rc*rc + rem2) - y/cx1;
+                //
+                zden.re = x;
+                zden.im = 2.*rc*sqe - y;
+                norm    = (zden.re*zden.re + zden.im*zden.im);     // zis = znum/zden
+                //
+                //
+                zis.re  = (znum.re*zden.re + znum.im*zden.im)/norm;
+                zis.im  = (znum.im*zden.re - znum.re*zden.im)/norm;
+                //
+                norm    = zis.re;
+                zis.re  = log(sqrt(norm*norm + zis.im*zis.im));  // ln(zis) = ln(|zis|)+i.Arg(zis)
+                zis.im  = atan2(zis.im, norm);
+                //  norm = zis.re;
+                zres.re = zci.re*zis.re - zci.im*zis.im;   // Re( zci*ln(zis) )
+                zres.im = zci.im*zis.re + zis.im*zci.re;   // Im( zci*ln(zis) )
+                //
+                zis.re  = zres.re;
+                zis.im  = zres.im;
+                //
+                grad.x += b0*(zres.re*cose - zres.im*sine);
+                grad.y += b0*(zres.im*cose + zres.re*sine);
+                //
+        }
+        //IACA_END;
+        //
+        return(grad);
+}
+//
+//
+//
 struct point module_potentialDerivatives_totalGradient_81_SOA(const struct point *pImage, const struct Potential_SOA *lens, int shalos, int nhalos)
 {
         asm volatile("# module_potentialDerivatives_totalGradient_SOA begins");
@@ -453,7 +535,7 @@ struct point module_potentialDerivatives_totalGradient_81_SOA(const struct point
 typedef struct point (*halo_func_t) (const struct point *pImage, const struct Potential_SOA *lens, int shalos, int nhalos); 
 halo_func_t halo_func[100] = 
 {
-0, 0, 0, 0, 0, module_potentialDerivatives_totalGradient_5_SOA, 0, 0, module_potentialDerivatives_totalGradient_8_SOA,  0,
+0, 0, 0, 0, 0, module_potentialDerivatives_totalGradient_5_SOA, 0, 0, module_potentialDerivatives_totalGradient_8_SOA_v2,  0,
 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
