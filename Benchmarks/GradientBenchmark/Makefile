@@ -20,7 +20,7 @@ program_INCLUDE_DIRS := . /usr/local/cuda/include/ #C++ Include directories
 program_INCLUDE_DIRS += $(CFITSIO_ROOT)/include
 #program_INCLUDE_DIRS += /users/fgilles/bin/iaca-lin32/include
 program_INCLUDE_DIRS += $(LENSTOOL_ROOT)/include
-program_INCLUDE_DIRS += $(GSL_ROOT)/gsl-2.2/include
+program_INCLUDE_DIRS += $(GSL_ROOT)/include
 program_INCLUDE_DIRS += $(LENSTOOLHPC_ROOT)/src
 # 
 program_CU_INCLUDE_DIRS := /home/users/amclaugh/CUB/cub-1.3.2/ #CUDA Include directories
