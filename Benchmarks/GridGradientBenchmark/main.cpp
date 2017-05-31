@@ -14,14 +14,16 @@
 #include <sys/stat.h>
 //
 #include <mm_malloc.h>
+#include <omp.h>
 //
-#include <cuda_runtime.h>
+//#include <cuda_runtime.h>
 #include <structure_hpc.h>
 #include "timer.h"
 #include "gradient.hpp"
 #include "chi_CPU.hpp"
 #include "module_cosmodistances.h"
 #include "module_readParameters.hpp"
+#ifdef __USE_GPU
 #include "grid_gradient_GPU.cuh"
 //#include<omp.h>
 
@@ -79,32 +81,31 @@ int module_readCheckInput_readInput(int argc, char *argv[])
 
 int main(int argc, char *argv[])
 {
-
-
+	//
 	// Setting Up the problem
-	//===========================================================================================================
+	//
 
 	// This module function reads the terminal input when calling LENSTOOL and checks that it is correct
 	// Otherwise it exits LENSTOOL
+	// 
 	module_readCheckInput_readInput(argc, argv);
-
+	//
 	// This module function reads the cosmology parameters from the parameter file
 	// Input: struct cosmologicalparameters cosmology, parameter file
 	// Output: Initialized cosmology struct
 	cosmo_param cosmology;  // Cosmology struct to store the cosmology data from the file
 	std::string inputFile = argv[1];   // Input file
 	module_readParameters_readCosmology(inputFile, cosmology);
-
+	//
 	// This module function reads the runmode paragraph and the number of sources, arclets, etc. in the parameter file.
 	// The runmode_param stores the information of what exactly the user wants to do with lenstool.
 	struct runmode_param runmode;
 	module_readParameters_readRunmode(inputFile, &runmode);
-
 	module_readParameters_debug_cosmology(runmode.debug, cosmology);
 	module_readParameters_debug_runmode(runmode.debug, runmode);
-
-
+	//
 	//=== Declaring variables
+	//
 	struct grid_param frame;
 	struct galaxy images[runmode.nimagestot];
 	struct galaxy sources[runmode.nsets];
@@ -141,19 +142,13 @@ int main(int argc, char *argv[])
 		module_readParameters_debug_potential(runmode.debug, lenses, runmode.nhalos+runmode.npotfile);
 
 	}
-
-
-
+	//
 	// This module function reads in the grid form and its parameters
 	// Input: input file
 	// Output: grid and its parameters
-
-
+	//
 	module_readParameters_Grid(inputFile, &frame);
-
-
-
-
+	//
 	if (runmode.image == 1 or runmode.inverse == 1 or runmode.time > 0){
 
 		// This module function reads in the strong lensing images
@@ -169,15 +164,14 @@ int main(int argc, char *argv[])
 		module_readParameters_debug_image(runmode.debug, images, nImagesSet,runmode.nsets);
 
 	}
-
+	//
 	if (runmode.inverse == 1){
 
 		// This module function reads in the potential optimisation limits
 		module_readParameters_limit(inputFile,host_potentialoptimization,runmode.nhalos);
 		module_readParameters_debug_limit(runmode.debug, host_potentialoptimization[0]);
 	}
-
-
+	//
 	if (runmode.source == 1){
 		//Initialisation to default values.(Setting sources to z = 1.5 default value)
 		for(int i = 0; i < runmode.nsets; ++i){
@@ -195,7 +189,7 @@ int main(int argc, char *argv[])
 		module_readParameters_debug_source(runmode.debug, sources, runmode.nsets);
 
 	}
-
+	//
 	std::cout << "--------------------------" << std::endl << std::endl;
 
 	double t_1,t_2,t_3,t_4;
@@ -238,7 +232,8 @@ int main(int argc, char *argv[])
 	//
 	std::cout << " Time  " << std::setprecision(15) << t_1 << std::endl;
 
-	// GPU test
+// #ifdef __USE_GPU
+// GPU test
 
 	std::cout << " GPU Test... "; 
 	double *grid_gradient_x, *grid_gradient_y;
@@ -268,6 +263,8 @@ std::cout << " Time  " << std::setprecision(15) << t_1 << std::endl;
 	t_2 += myseconds();
 
 	std::cout << " Time  " << std::setprecision(15) << t_2 << std::endl;
+#endif
+
 #if 1 
 	double norm_x = 0.;
 	double norm_y = 0.;
