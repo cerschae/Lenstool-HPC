@@ -30,10 +30,13 @@ convert_to_LT(Potential_SOA* lenses, int nlenses)
                 lens[i].type                  = lenses->type[i];
                 lens[i].emass                 = 0.11;
                 lens[i].epot                  = lenses->ellipticity_potential[i];
-                lens[i].theta                 = lenses->theta[i];
+		//printf("%f %f\n", lenses->ellipticity_potential[i], lenses->ellipticity[i]);
+                //lens[i].epot                  = lenses->ellipticity[i];
+                lens[i].theta                 = lenses->ellipticity_angle[i];
                 lens[i].rcut                  = lenses->rcut[i];
                 lens[i].rc                    = lenses->rcore[i];
                 lens[i].b0                    = lenses->b0[i];
+		lens[i].z		      = lenses->z[i];
                 lens[i].masse                 = 0;			// weight
                 //lens[i].rc  	                 = 0;			// rscale
 //               (&lens)[i].exponent              = 0;
@@ -41,7 +44,6 @@ convert_to_LT(Potential_SOA* lenses, int nlenses)
 //                (&lens)[i].einasto_kappacritic   = 0;
                 lens[i].z                     = 0.4;
         }
-        std::cout << "Setup done..." << std::endl;
 }
 #endif
 

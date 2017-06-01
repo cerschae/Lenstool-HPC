@@ -273,7 +273,9 @@ int main(int argc, char *argv[])
 	//
 	//
 #ifdef __WITH_LENSTOOL
+	printf("Setting up lenstool using %d lenses...", runmode.nhalos); fflush(stdout);
 	convert_to_LT(&lenses_SOA, runmode.nhalos);	
+	printf("ok\n");
 #endif
 	//
 	// Lenstool-CPU Grid-Gradient
@@ -295,14 +297,62 @@ int main(int argc, char *argv[])
 	test_pointN_N.x = frame.xmin + ((runmode.nbgridcells*runmode.nbgridcells-1)/runmode.nbgridcells)*dx;
 	test_pointN_N.y = frame.ymin + ((runmode.nbgridcells*runmode.nbgridcells-1) % runmode.nbgridcells)*dy;
 
+	//
+	//
+	//
+
+#ifdef __WITH_LENSTOOL
+        std::cout << " CPU Test Lenstool    ... ";
+        struct point Grad;
+        double *grid_grad_x, *grid_grad_y;
+        grid_grad_x = (double *) malloc((int) (runmode.nbgridcells) * (runmode.nbgridcells) * sizeof(double));
+        grid_grad_y = (double *) malloc((int) (runmode.nbgridcells) * (runmode.nbgridcells) * sizeof(double));
+        double t_lt = -myseconds();
+#pragma omp parallel for
+//#pragma omp parallel for if (omp_get_num_threads() > 1) schedule(guided, 100)
+        for (int jj = 0; jj < runmode.nbgridcells; ++jj)
+                for (int ii = 0; ii < runmode.nbgridcells; ++ii)
+                {
+                        //  (index < grid_dim*grid_dim)
+
+                        int index = jj*runmode.nbgridcells + ii;
+                        //grid_grad_x[index] = 0.;
+                        //grid_grad_y[index] = 0.;
+
+                        struct point image_point;
+                        image_point.x = frame.xmin + ii*dx;
+                        image_point.y = frame.ymin + jj*dy;
+#if 1
+                        G.nlens = runmode.nhalos;
+                        Grad = e_grad(&image_point);
+                        grid_grad_x[index] = Grad.x;
+                        grid_grad_y[index] = Grad.y;
+
+#else
+                        for (int lens = 0; lens < runmode.nhalos; ++lens)
+                        {
+
+                                struct point Grad = e_grad_pot(&image_point, lens);
+                                //printf("%f %f\n", Grad.x, Grad.y);
+                                //
+                                grid_grad_x[index] += Grad.x;
+                                grid_grad_y[index] += Grad.y;
+                        }
+#endif
+		}
+	t_lt += myseconds();
+	std::cout << " Time = " << t_lt << " s." << std::endl;
+#endif
+
+	//
+
 	double* grid_gradient_x_cpu = (double *) malloc((int) (runmode.nbgridcells) * (runmode.nbgridcells) * sizeof(double));
         double* grid_gradient_y_cpu = (double *) malloc((int) (runmode.nbgridcells) * (runmode.nbgridcells) * sizeof(double));
 
 	memset(grid_gradient_x_cpu, 0, (runmode.nbgridcells) * (runmode.nbgridcells) * sizeof(double));
 	memset(grid_gradient_y_cpu, 0, (runmode.nbgridcells) * (runmode.nbgridcells) * sizeof(double));
 	
-
-	std::cout << " CPU Test... "; 
+	std::cout << " CPU Test lenstool_hpc... "; 
 	//
 	t_1 = -myseconds();
 	//test_result1_1 = module_potentialDerivatives_totalGradient_SOA(&test_point1_1, &lenses_SOA, runmode.nhalos);
@@ -311,41 +361,7 @@ int main(int argc, char *argv[])
 	gradient_grid_CPU(grid_gradient_x_cpu, grid_gradient_y_cpu, &frame, &lenses_SOA, runmode.nhalos, grid_dim);	
 	t_1 += myseconds();
 	//
-	std::cout << " Time  " << std::setprecision(15) << t_1 << std::endl;
-	//
-	//
-	//
-#ifdef __WITH_LENSTOOL
-	std::cout << " CPU Test Lenstool...";
-	double t_lt = -myseconds();
-	struct point Grad;
-	double *grid_grad_x, *grid_grad_y;
-	grid_grad_x = (double *) malloc((int) (runmode.nbgridcells) * (runmode.nbgridcells) * sizeof(double));
-        grid_grad_y = (double *) malloc((int) (runmode.nbgridcells) * (runmode.nbgridcells) * sizeof(double));	
-#pragma omp parallel for 
-        for (int jj = 0; jj < runmode.nbgridcells; ++jj)
-                for (int ii = 0; ii < runmode.nbgridcells; ++ii)
-                {
-                        //  (index < grid_dim*grid_dim)
-                        int index = jj*runmode.nbgridcells + ii;
-			for (int lens = 0; lens < runmode.nhalos; ++lens)
-			{
-				//grid_grad_x[index] = 0.;
-				//grid_grad_y[index] = 0.;
-				point image_point;
-				image_point.x = frame.xmin + ii*dx;
-				image_point.y = frame.ymin + jj*dy;
-
-				struct point Grad = e_grad_pot(&image_point, lens);
-				//
-				grid_grad_x[index] = Grad.x;
-				grid_grad_y[index] = Grad.y;
-			}
-                        //
-                }
-	t_lt += myseconds();
-	std::cout << " Time = " <<  std::setprecision(15) << t_lt << std::endl;
-#endif
+	std::cout << " Time = " << std::setprecision(15) << t_1 << std::endl;
 	//
 	//
 	//
