@@ -34,6 +34,7 @@ CPPFLAGS += $(foreach includedir,$(program_INCLUDE_DIRS),-I$(includedir))
 CPPFLAGS += $(foreach includelib,$(program_INCLUDE_LIBS),-L$(includelib) )
 #CXXFLAGS += -march=core-avx2 -g -O3 -std=c++0x -Wall -pedantic 
 CPPFLAGS += -fPIC -ftz -qopenmp -xHost -fma -pedantic -lcfitsio
+#CPPFLAGS += -no-vec
 #CPPFLAGS += -qopt-prefetch-distance=64,8 -qopt-streaming-cache-evict=0 -fPIC -qopenmp -xMIC-AVX512 -fma -g -O3 -std=c++0x -Wall -pedantic
 #CPPFLAGS += -qopt-report=5 -S
 CXXFLAGS += -g -O3 -std=c++0x -Wall 
