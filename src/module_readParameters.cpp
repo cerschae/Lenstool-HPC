@@ -1478,19 +1478,19 @@ void module_readParameters_PotentialSOA(std::string infile, Potential *lens, Pot
 
 			ind = Indice_type[lens[i].type-1];
 			//printf ("%d ", ind);
-			lens_SOA->type[ind]  = 		lens[i].type;
-			lens_SOA->position_x[ind]  = 		lens[i].position.x;
+			lens_SOA->type[ind] 		     = lens[i].type;
+			lens_SOA->position_x[ind]  	     = lens[i].position.x;
 			//std::cerr << lens_SOA[1].position_x[*i_point] << " " << lens[i].position.x  << std::endl;
-			lens_SOA->position_y[ind] = 		lens[i].position.y;
-			lens_SOA->b0[ind] = 		lens[i].b0;
-			lens_SOA->ellipticity_angle[ind] = lens[i].ellipticity_angle;
-			lens_SOA->ellipticity[ind] = lens[i].ellipticity;
+			lens_SOA->position_y[ind] 	     = lens[i].position.y;
+			lens_SOA->b0[ind] 		     = 		lens[i].b0;
+			lens_SOA->ellipticity_angle[ind]     = lens[i].ellipticity_angle;
+			lens_SOA->ellipticity[ind]           = lens[i].ellipticity;
 			lens_SOA->ellipticity_potential[ind] = lens[i].ellipticity_potential;
-			lens_SOA->rcore[ind] = 	lens[i].rcore;
-			lens_SOA->rcut[ind] = 	lens[i].rcut;
-			lens_SOA->z[ind] = 		lens[i].z;
-			lens_SOA->anglecos[ind] = 	cos(lens[i].ellipticity_angle);
-			lens_SOA->anglesin[ind] = 	sin(lens[i].ellipticity_angle);
+			lens_SOA->rcore[ind] 		     = lens[i].rcore;
+			lens_SOA->rcut[ind] 		     = lens[i].rcut;
+			lens_SOA->z[ind] 		     = lens[i].z;
+			lens_SOA->anglecos[ind] 	     = cos(lens[i].ellipticity_angle);
+			lens_SOA->anglesin[ind] 	     = sin(lens[i].ellipticity_angle);
 
 			Indice_type[lens[i].type-1] += 1;
 		}
