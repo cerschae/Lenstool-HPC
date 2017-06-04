@@ -163,6 +163,8 @@ setup_jauzac_SOA(Potential_SOA *lens_soa, int* nlenses, double* x, double* y, do
                 lens_soa->b0 = (double*) malloc(*nlenses*sizeof(double));
                 lens_soa->vdisp = (double*) malloc(*nlenses*sizeof(double));
                 lens_soa->ellipticity_angle = (double*) malloc(*nlenses*sizeof(double));
+                lens_soa->anglecos = (double*) malloc(*nlenses*sizeof(double));
+                lens_soa->anglesin = (double*) malloc(*nlenses*sizeof(double));
                 lens_soa->ellipticity = (double*) malloc(*nlenses*sizeof(double));
                 lens_soa->ellipticity_potential = (double*) malloc(*nlenses*sizeof(double));
                 lens_soa->rcore = (double*) malloc(*nlenses*sizeof(double));
@@ -189,6 +191,8 @@ setup_jauzac_SOA(Potential_SOA *lens_soa, int* nlenses, double* x, double* y, do
                 lens_soa->ellipticity[i]           = 0.11;
                 lens_soa->ellipticity_potential[i] = epot[i];
                 lens_soa->ellipticity_angle[i]     = theta[i];
+		lens_soa->anglecos[i]		   = cos(theta[i]);
+		lens_soa->anglesin[i]		   = sin(theta[i]);
                 lens_soa->rcut[i]                  = rcut[i];
                 lens_soa->rcore[i]                 = rcore[i];
                 lens_soa->b0[i]                    = b0[i];
