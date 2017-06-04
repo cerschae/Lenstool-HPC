@@ -1454,6 +1454,7 @@ void module_readParameters_PotentialSOA(std::string infile, Potential *lens, Pot
 	lens_SOA->anglecos = 	new double[nhalos];
 	lens_SOA->anglesin = 		new double[nhalos];
 
+	printf("anglecos = %p\n", &lens_SOA->anglecos[0]);
 	int N_type[100];
 	int Indice_type[100];
 	int ind;

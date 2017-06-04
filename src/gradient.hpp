@@ -35,4 +35,20 @@ complex piemd_1derivatives_ci05(double x, double y, double eps, double rc);
 void module_readParameters_calculatePotentialparameter(Potential *lens);
 void module_readParameters_calculatePotentialparameter_SOA(Potential_SOA *lens, int i);
 */
+
+
+#define KERNEL(RCUT, ZRES) \
+znum.re = cx1*x; \
+znum.im = 2.*sqe*sqrt(RCUT*RCUT + rem2) - y/cx1; \
+zden.im = 2.*RCUT*sqe - y; \
+norm    = (x*x + zden.im*zden.im); \
+zis.re  = (znum.re*x + znum.im*zden.im)/norm; \
+zis.im  = (znum.im*x - znum.re*zden.im)/norm; \
+norm    = zis.re; \
+zis.re  = log(sqrt(norm*norm + zis.im*zis.im)); \
+zis.im  = atan2(zis.im, norm); \
+ZRES.re = - zci.im*zis.im; \
+ZRES.im =   zci.im*zis.re; \
+\
+
 #endif

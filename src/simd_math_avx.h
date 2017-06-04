@@ -14,6 +14,11 @@ inline __m256d operator * (__m256d a, __m256d b) {return _mm256_mul_pd(a, b);}
 inline __m256d operator / (__m256d a, __m256d b) {return _mm256_div_pd(a, b);}
 #endif
 
+#define ADD(x,y) _mm256_add_pd(x, y)
+#define SUB(x,y) _mm256_sub_pd(x, y)
+#define MUL(x,y) _mm256_mul_pd(x, y)
+#define SET(x)   _mm256_set1_pd(x)
+
 //#define __INV RCP
 //#define __INV RCP_1NR
 #define __INV  RCP_2NR
