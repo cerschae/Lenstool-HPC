@@ -12,4 +12,6 @@ struct point module_potentialDerivatives_totalGradient_81_SOA_AVX(const struct p
 //
 struct point module_potentialDerivatives_totalGradient_SOA_AVX(const struct point *pImage, const struct Potential_SOA *lens, int nhalos);
 //
+struct point module_potentialDerivatives_totalGradient_SOA_novec(const struct point *pImage, const struct Potential_SOA *lens, int nhalos);
+//
 #endif

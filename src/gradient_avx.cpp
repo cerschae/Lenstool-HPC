@@ -200,16 +200,11 @@ struct point module_potentialDerivatives_totalGradient_8_SOA_AVX_v2(const struct
                 __m256d one_minus_eps     = _mm256_sub_pd(one, eps);
                 __m256d one_plus_eps      = _mm256_add_pd(one, eps);
                 __m256d one_plus_eps_rcp  = __INV(one_plus_eps);
-                // 1 load
+                // 2 load
 		__m256d cose 	= _mm256_loadu_pd(&lens->anglecos[i]);
 		__m256d sine 	= _mm256_loadu_pd(&lens->anglesin[i]);
 		//
 		__m256d x	=  ADD(MUL(true_coord_x, cose), MUL(true_coord_y, sine));
-                __m256d two   = _mm256_set1_pd( 2. );
-                __m256d one   = _mm256_set1_pd( 1. );
-                __m256d zero  = _mm256_set1_pd( 0. );
-                __m256d half  = _mm256_set1_pd( 0.5);
-                __m256d mhalf = _mm256_set1_pd(-0.5);
 		__m256d y	=  SUB(MUL(true_coord_y, cose), MUL(true_coord_x, sine));
                 //
                 __m256d sqe   = __SQRT(eps);
@@ -465,7 +460,7 @@ struct point module_potentialDerivatives_totalGradient_81_SOA_AVX(const struct p
 typedef struct point (*halo_func_avx_t) (const struct point *pImage, const struct Potential_SOA *lens, int shalos, int nhalos);
 halo_func_avx_t halo_func_avx[100] =
 {
-0, 0, 0, 0,  0, 0,  0, 0, module_potentialDerivatives_totalGradient_8_SOA_AVX_v2, 0,
+0, 0, 0, 0,  0, 0,  0, 0, module_potentialDerivatives_totalGradient_8_SOA_AVX, 0,
 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
