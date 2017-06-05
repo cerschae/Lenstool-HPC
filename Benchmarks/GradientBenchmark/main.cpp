@@ -171,12 +171,22 @@ int main()
 	//
 	std::cout << "Benchmark for Gradient Calculation using  " << nlenses_soa << " lenses with type " << lens_soa.type[0] << ", image: " << image_soa.x << " " << image_soa.y << std::endl;
 	// AVX version
-	point grad_soa_avx; // store the result
 	//
-	//gettimeofday(&t1, 0);
+	point grad_soa_novec;
+	double t21 = -myseconds();
+        for (int ii = 0; ii < NN; ++ii)
+        {
+                //grad_soa = module_potentialDerivatives_totalGradient_SOA_AVX512(&image_soa, &lens_soa, nlenses_soa);
+                //grad_soa = module_potentialDerivatives_totalGradient_8_SOA_AVX(&image_soa, &lens_soa, nlenses_soa);
+                //
+                //grad_soa_avx = module_potentialDerivatives_totalGradient_81_SOA_AVX(&image_soa, &lens_soa, 0, nlenses_soa)
+;
+                grad_soa_novec = module_potentialDerivatives_totalGradient_SOA_novec(&image_soa, &lens_soa, nlenses_soa);
+                //grad_soa = module_potentialDerivatives_totalGradient_SOA(&image_soa, &lens_soa, 0, nlenses_soa);
+        }
+        t21 += myseconds();	
 	//
-	//module_potentialDerivatives_totalGradient(&runmodesmall,&image, lens);
-	//__SSC_MARK(0x111);
+	point grad_soa; // store the result
 	t2 = -myseconds();
 	for (int ii = 0; ii < NN; ++ii)
 	{
@@ -184,7 +194,7 @@ int main()
 		//grad_soa = module_potentialDerivatives_totalGradient_8_SOA_AVX(&image_soa, &lens_soa, nlenses_soa);
 		//
 		//grad_soa_avx = module_potentialDerivatives_totalGradient_81_SOA_AVX(&image_soa, &lens_soa, 0, nlenses_soa);
-		grad_soa_avx = module_potentialDerivatives_totalGradient_SOA_AVX(&image_soa, &lens_soa, nlenses_soa);
+		grad_soa = module_potentialDerivatives_totalGradient_SOA(&image_soa, &lens_soa, nlenses_soa);
 		//grad_soa = module_potentialDerivatives_totalGradient_SOA(&image_soa, &lens_soa, 0, nlenses_soa);
 	}	
 	t2 += myseconds();
@@ -192,7 +202,7 @@ int main()
 	//
 	// autovectorized version
 	//
-	point grad_soa;
+	point grad_soa_avx;
 	t3 = -myseconds();
 	for (int ii = 0; ii < NN; ++ii)
 	{
@@ -201,33 +211,23 @@ int main()
 		//                                //grad_soa = module_potentialDerivatives_totalGradient_81_SOA_AVX(&image_soa, &lens_soa, nlenses_soa);
 		//grad_soa = module_potentialDerivatives_totalGradient_81_SOA(&image_soa, &lens_soa, 0, nlenses_soa);
 		//grad_soa = module_potentialDerivatives_totalGradient_8_SOA(&image_soa, &lens_soa, 0, nlenses_soa);
-		grad_soa = module_potentialDerivatives_totalGradient_SOA(&image_soa, &lens_soa, nlenses_soa);
+		grad_soa_avx = module_potentialDerivatives_totalGradient_SOA_AVX(&image_soa, &lens_soa, nlenses_soa);
 	}
 	t3 += myseconds();
 	//
 	std::cout << " ref sol   = " << std::setprecision(15) << sol_grad_x << " " << std::setprecision(15) << sol_grad_y << std::endl;
 	//
 #ifdef __WITH_LENSTOOL
-	std::cout << " LT  sol   = " << std::setprecision(15) << grad_lt.x << " " << std::setprecision(15) << grad_lt.y << ", time = " << t0 << " s." << std::endl;
+	std::cout << " Lenstool sol   = " << std::setprecision(15) << grad_lt.x << " " << std::setprecision(15) << grad_lt.y << ", time = " << t0 << " s." << std::endl;
 #endif
 	//
-	std::cout << " grad      = " << std::setprecision(15) << grad.x << " " << std::setprecision(15) << grad.y << ", time = " << t1 << " s., speedup = " << (double) t0/t1 << std::endl;
+	std::cout << " grad           = " << std::setprecision(15) << grad.x << " " << std::setprecision(15) << grad.y << ", time = " << t1 << " s., speedup = " << (double) t0/t1 << std::endl;
 	//
-	std::cout << " grad SIMD = " << std::setprecision(15) << grad_soa.x << " " << std::setprecision(15) << grad_soa.y << ", time = " << t3 << " s., speedup = " << (double) t0/t3 << std::endl;
+	std::cout << " grad novec     = " << std::setprecision(15) << grad.x << " " << std::setprecision(15) << grad.y << ", time = " << t21 << " s., speedup = " << (double) t0/t21 << std::endl;
 	//
-	std::cout << " grad HC   = " << std::setprecision(15) << grad_soa_avx.x << " " << std::setprecision(15) << grad_soa_avx.y << ", time = " << t2 << " s. speedup = " << (double) t0/t2 << std::endl;
+	std::cout << " grad SIMD      = " << std::setprecision(15) << grad_soa.x << " " << std::setprecision(15) << grad_soa.y << ", time = " << t2 << " s., speedup = " << (double) t0/t2 << std::endl;
 	//
+	std::cout << " grad handcoded = " << std::setprecision(15) << grad_soa_avx.x << " " << std::setprecision(15) << grad_soa_avx.y << ", time = " << t3 << " s. speedup = " << (double) t0/t3 << std::endl;
 	//
-	//
-#if 0
-	std::ofstream myfile;
-	myfile.open ("BenchmarkGrad.txt");
-	myfile << "Benchmark for Gradient Calculation "<< std::endl;
-	myfile << "Sample size " << small << ": " << time1 << std::endl;
-	myfile << "Sample size " << medium << ": " << time2 << std::endl;
-	myfile << "Sample size " << big << ": " << time3 << std::endl;
-	myfile.close();
-#endif
-	//free(lens);
 }
 
