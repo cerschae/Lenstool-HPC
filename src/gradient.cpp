@@ -360,9 +360,6 @@ struct point module_potentialDerivatives_totalGradient_8_SOA_v2(const struct poi
                 double x = true_coord.x*cose + true_coord.y*sine;
                 double y = true_coord.y*cose - true_coord.x*sine;
                 //
-                //double x   = true_coord_rot.x;
-                //double y   = true_coord_rot.y;
-                //@@printf("x = %f y = %f\n",  x, y);
                 double eps = lens->ellipticity_potential[i];
                 double rc  = lens->rcore[i];
                 //
@@ -380,33 +377,71 @@ struct point module_potentialDerivatives_totalGradient_8_SOA_v2(const struct poi
                 zci.re  = 0;
                 zci.im  = -0.5*(1. - eps*eps)/sqe;
                 //
-                //
-#if 1
 		KERNEL(rc, zres)
-#else
-                znum.re = cx1*x;
-                znum.im = 2.*sqe*sqrt(rc*rc + rem2) - y/cx1;
+		//
+                grad.x += b0*(zres.re*cose - zres.im*sine);
+                grad.y += b0*(zres.im*cose + zres.re*sine);
                 //
-                zden.re = x;
-                zden.im = 2.*rc*sqe - y;
-                norm    = (zden.re*zden.re + zden.im*zden.im);     // zis = znum/zden
+        }
+        //IACA_END;
+        //
+        return(grad);
+}
+//
+//
+//
+struct point module_potentialDerivatives_totalGradient_8_SOA_v2_novec(const struct point *pImage, const struct Potential_SOA *lens
+, int shalos, int nhalos)
+{
+        asm volatile("# module_potentialDerivatives_totalGradient_8_SOA_v2 begins");
+        //std::cout << "# module_potentialDerivatives_totalGradient_8_SOA_v2 begins" << std::endl;
+        //
+        // 6 DP loads, i.e. 48 Bytes: position_x, position_y, ellipticity_angle, ellipticity_potential, rcore, b0
+        //
+        struct point grad, clumpgrad;
+        grad.x = 0;
+        grad.y = 0;
+        //printf("%d %d\n", shalos, nhalos);
+        //
+#pragma novector
+        for(int i = shalos; i < shalos + nhalos; i++)
+        {
+                //IACA_START;
                 //
-                zis.re  = (znum.re*zden.re + znum.im*zden.im)/norm;
-                zis.im  = (znum.im*zden.re - znum.re*zden.im)/norm;
+                struct point true_coord, true_coord_rot; //, result;
+                complex      zis;
+                double b0   = lens->b0[i];
                 //
-                norm    = zis.re;
-                zis.re  = log(sqrt(norm*norm + zis.im*zis.im));  // ln(zis) = ln(|zis|)+i.Arg(zis)
-                zis.im  = atan2(zis.im, norm);
-                //  norm = zis.re;
-                zres.re = zci.re*zis.re - zci.im*zis.im;   // Re( zci*ln(zis) )
-                zres.im = zci.im*zis.re + zis.im*zci.re;   // Im( zci*ln(zis) )
+                true_coord.x = pImage->x - lens->position_x[i];
+                true_coord.y = pImage->y - lens->position_y[i];
                 //
-                zis.re  = zres.re;
-                zis.im  = zres.im;
-#endif
+                //true_coord_rot = rotateCoordinateSystem(true_coord, lens->ellipticity_angle[i]);
                 //
-                //grad.x += b0*(zres.re*cose - zres.im*sine);
-                //grad.y += b0*(zres.im*cose + zres.re*sine);
+                double cose = lens->anglecos[i];
+                double sine = lens->anglesin[i];
+                //
+                double x = true_coord.x*cose + true_coord.y*sine;
+                double y = true_coord.y*cose - true_coord.x*sine;
+                //
+                double eps = lens->ellipticity_potential[i];
+                double rc  = lens->rcore[i];
+                //
+                double sqe  = sqrt(eps);
+                //
+                double cx1  = (1. - eps)/(1. + eps);
+                double cxro = (1. + eps)*(1. + eps);
+                double cyro = (1. - eps)*(1. - eps);
+                //
+                double rem2 = x*x/cxro + y*y/cyro;
+                //
+                complex zci, znum, zden, zres;
+                double norm;
+                //
+                zci.re  = 0;
+                zci.im  = -0.5*(1. - eps*eps)/sqe;
+                //
+                KERNEL(rc, zres)
+                //
                 grad.x += b0*(zres.re*cose - zres.im*sine);
                 grad.y += b0*(zres.im*cose + zres.re*sine);
                 //
@@ -466,47 +501,11 @@ struct point module_potentialDerivatives_totalGradient_81_SOA(const struct point
                 zci.im  = -0.5*(1. - eps*eps)/sqe;
 		// step 1
 		{
-#if 1
 			KERNEL(rc, zres_rc)
-#else
-			znum.re = cx1*x;
-			znum.im = 2.*sqe*sqrt(rc*rc + rem2) - y/cx1;
-			//
-			zden.re = x;
-			zden.im = 2.*rc*sqe - y;
-			norm    = (zden.re*zden.re + zden.im*zden.im);     // zis = znum/zden
-			//
-			zis.re  = (znum.re*zden.re + znum.im*zden.im)/norm;
-			zis.im  = (znum.im*zden.re - znum.re*zden.im)/norm;
-			norm    = zis.re;
-			zis.re  = log(sqrt(norm*norm + zis.im*zis.im));  // ln(zis) = ln(|zis|)+i.Arg(zis)
-			zis.im  = atan2(zis.im, norm);
-			//  norm = zis.re;
-			zres_rc.re = zci.re*zis.re - zci.im*zis.im;   // Re( zci*ln(zis) )
-			zres_rc.im = zci.im*zis.re + zis.im*zci.re;   // Im( zci*ln(zis) )
-#endif
 		}
 		// step 2
 		{
-#if 1
 			KERNEL(rcut, zres_rcut)
-#else
-                        znum.re = cx1*x;
-                        znum.im = 2.*sqe*sqrt(rcut*rcut + rem2) - y/cx1;
-                        //
-                        zden.re = x;
-                        zden.im = 2.*rcut*sqe - y;
-                        norm    = (zden.re*zden.re + zden.im*zden.im);     // zis = znum/zden
-                        //
-                        zis.re  = (znum.re*zden.re + znum.im*zden.im)/norm;
-                        zis.im  = (znum.im*zden.re - znum.re*zden.im)/norm;
-                        norm    = zis.re;
-                        zis.re  = log(sqrt(norm*norm + zis.im*zis.im));  // ln(zis) = ln(|zis|)+i.Arg(zis)
-                        zis.im  = atan2(zis.im, norm);
-                        //  
-                        zres_rcut.re = zci.re*zis.re - zci.im*zis.im;   // Re( zci*ln(zis) )
-                        zres_rcut.im = zci.im*zis.re + zis.im*zci.re;   // Im( zci*ln(zis) )
-#endif
                 }
 		zis.re  = t05*(zres_rc.re - zres_rcut.re);
 		zis.im  = t05*(zres_rc.im - zres_rcut.im); 
@@ -549,11 +548,6 @@ struct point module_potentialDerivatives_totalGradient_81_SOA_v2(const struct po
                 true_coord.y = pImage->y - lens->position_y[i];
                 /*positionning at the potential center*/
                 // Change the origin of the coordinate system to the center of the clump
-                //true_coord_rot = rotateCoordinateSystem(true_coord, lens->ellipticity_angle[i]);
-                //
-                //double x    = true_coord_rot.x;
-                //double y    = true_coord_rot.y;
-		//
                 double cose = lens->anglecos[i];
                 double sine = lens->anglesin[i];
                 double x = true_coord.x*cose + true_coord.y*sine;
@@ -578,54 +572,88 @@ struct point module_potentialDerivatives_totalGradient_81_SOA_v2(const struct po
                 //
                 zci.re  = 0;
                 zci.im  = -0.5*(1. - eps*eps)/sqe;
+		//
                 // step 1
                 {
-#if 0
 			KERNEL(rc, zres_rc)
-#else			
-                        znum.re = cx1*x;
-                        znum.im = 2.*sqe*sqrt(rc*rc + rem2) - y/cx1;
-                        //
-                        zden.re = x;
-                        zden.im = 2.*rc*sqe - y;
-                        norm    = (zden.re*zden.re + zden.im*zden.im);     // zis = znum/zden
-                        //
-                        zis.re  = (znum.re*zden.re + znum.im*zden.im)/norm;
-                        zis.im  = (znum.im*zden.re - znum.re*zden.im)/norm;
-                        norm    = zis.re;
-                        zis.re  = log(sqrt(norm*norm + zis.im*zis.im));  // ln(zis) = ln(|zis|)+i.Arg(zis)
-                        zis.im  = atan2(zis.im, norm);
-                        //  norm = zis.re;
-                        zres_rc.re = zci.re*zis.re - zci.im*zis.im;   // Re( zci*ln(zis) )
-                        zres_rc.im = zci.im*zis.re + zis.im*zci.re;   // Im( zci*ln(zis) )
-#endif
                 }
                 // step 2
                 {
-#if 0
 			KERNEL(rcut, zres_rcut)
-#else
-                        znum.re = cx1*x;
-                        znum.im = 2.*sqe*sqrt(rcut*rcut + rem2) - y/cx1;
-                        //
-                        zden.re = x;
-                        zden.im = 2.*rcut*sqe - y;
-                        norm    = (zden.re*zden.re + zden.im*zden.im);     // zis = znum/zden
-                        //
-                        zis.re  = (znum.re*zden.re + znum.im*zden.im)/norm;
-                        zis.im  = (znum.im*zden.re - znum.re*zden.im)/norm;
-                        norm    = zis.re;
-                        zis.re  = log(sqrt(norm*norm + zis.im*zis.im));  // ln(zis) = ln(|zis|)+i.Arg(zis)
-                        zis.im  = atan2(zis.im, norm);
-                        //
-                        zres_rcut.re = zci.re*zis.re - zci.im*zis.im;   // Re( zci*ln(zis) )
-                        zres_rcut.im = zci.im*zis.re + zis.im*zci.re;   // Im( zci*ln(zis) )
-#endif
                 }
                 zis.re  = t05*(zres_rc.re - zres_rcut.re);
                 zis.im  = t05*(zres_rc.im - zres_rcut.im);
                 // rotation
 		grad.x += (zis.re*cose - zis.im*sine);
+                grad.y += (zis.im*cose + zis.re*sine);
+                //
+        }
+        //
+        return(grad);
+}
+//
+//
+//
+struct point module_potentialDerivatives_totalGradient_81_SOA_v2_novec(const struct point *pImage, const struct Potential_SOA *lens, int shalos, int nhalos)
+{
+        asm volatile("# module_potentialDerivatives_totalGradient_81_SOA begins");
+        //std::cout << "# module_potentialDerivatives_totalGradient_81_SOA begins" << std::endl;
+        // 6 DP loads, i.e. 48 Bytes: position_x, position_y, ellipticity_angle, ellipticity_potential, rcore, b0
+        struct point grad, clumpgrad;
+        grad.x = 0;
+        grad.y = 0;
+#pragma novector
+        for(int i = shalos; i < shalos + nhalos; i++)
+        {
+                //IACA_START;
+                //
+                struct point true_coord, true_coord_rot; //, result;
+                //double       R, angular_deviation;
+                complex      zis;
+                //
+                //result.x = result.y = 0.;
+                //
+                true_coord.x = pImage->x - lens->position_x[i];
+                true_coord.y = pImage->y - lens->position_y[i];
+                /*positionning at the potential center*/
+                // Change the origin of the coordinate system to the center of the clump
+                double cose = lens->anglecos[i];
+                double sine = lens->anglesin[i];
+                double x = true_coord.x*cose + true_coord.y*sine;
+                double y = true_coord.y*cose - true_coord.x*sine;
+                //
+                double eps  = lens->ellipticity_potential[i];
+                double rc   = lens->rcore[i];
+                double rcut = lens->rcut[i];
+                double b0   = lens->b0[i];
+                double t05  = b0*rcut/(rcut - rc);
+                //
+                double sqe  = sqrt(eps);
+                //
+                double cx1  = (1. - eps)/(1. + eps);
+                double cxro = (1. + eps)*(1. + eps);
+                double cyro = (1. - eps)*(1. - eps);
+                //
+                double rem2 = x*x/cxro + y*y/cyro;
+                //
+                complex zci, znum, zden, zres_rc, zres_rcut;
+                double norm;
+                //
+                zci.re  = 0;
+                zci.im  = -0.5*(1. - eps*eps)/sqe;
+                //
+                // step 1
+                {
+                        KERNEL(rc, zres_rc)
+                }
+                // step 2
+                {
+                        KERNEL(rcut, zres_rcut)
+                }
+                zis.re  = t05*(zres_rc.re - zres_rcut.re);
+                zis.im  = t05*(zres_rc.im - zres_rcut.im);
+                // rotation
+                grad.x += (zis.re*cose - zis.im*sine);
                 grad.y += (zis.im*cose + zis.re*sine);
                 //
         }
@@ -686,3 +714,61 @@ struct point module_potentialDerivatives_totalGradient_SOA(const struct point *p
 
         return(grad);
 }
+
+
+
+typedef struct point (*halo_func_t_novec) (const struct point *pImage, const struct Potential_SOA *lens, int shalos, int nhalos);
+halo_func_t_novec halo_func_novec[100] =
+{
+0, 0, 0, 0, 0, module_potentialDerivatives_totalGradient_5_SOA, 0, 0, module_potentialDerivatives_totalGradient_8_SOA_v2_novec,  0,
+0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+0,  module_potentialDerivatives_totalGradient_81_SOA_v2_novec, 0, 0, 0, 0, 0, 0, 0, 0,
+0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+};
+//
+//
+//
+struct point module_potentialDerivatives_totalGradient_SOA_novec(const struct point *pImage, const struct Potential_SOA *lens, int
+ nhalos)
+{
+        struct point grad, clumpgrad;
+        //
+        grad.x = clumpgrad.x = 0;
+        grad.y = clumpgrad.y = 0;
+        //
+        int shalos = 0;
+        //
+        //module_potentialDerivatives_totalGradient_81_SOA(pImage, lens, 0, nhalos);
+        //return;
+        /*
+        int* p_type = &(lens->type)[0];
+        int* lens_type = (int*) malloc(nhalos*sizeof(int));
+        memcpy(lens_type, &(lens->type)[0], nhalos*sizeof(int));
+        */
+        //quicksort(lens_type, nhalos);
+        //
+        while (shalos < nhalos)
+        {
+                int lens_type = lens->type[shalos];
+                int count     = 1;
+                while (lens->type[shalos + count] == lens_type) count++;
+                //std::cerr << "type = " << lens_type << " " << count << " " << shalos << std::endl;
+                //
+                clumpgrad = (*halo_func_novec[lens_type])(pImage, lens, shalos, count);
+                //
+                grad.x += clumpgrad.x;
+                grad.y += clumpgrad.y;
+                shalos += count;
+        }
+
+        return(grad);
+}
+
+
+
