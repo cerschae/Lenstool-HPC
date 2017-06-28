@@ -12,6 +12,7 @@
 #include <sys/time.h>
 #include <fstream>
 #include <sys/stat.h>
+#include <unistd.h>
 //
 #include <mm_malloc.h>
 #include <omp.h>
@@ -100,6 +101,10 @@ double **tmp_p;
 double **map_axx;
 double **map_ayy;
 #endif
+
+void
+gradient_grid_GPU_sorted(double *grid_grad_x, double *grid_grad_y, const struct grid_param *frame, const struct Potential_SOA *lens, int Nlens, int nbgridcells);
+
 //
 //
 //
@@ -166,6 +171,10 @@ int main(int argc, char *argv[])
 	// This module function reads the terminal input when calling LENSTOOL and checks that it is correct
 	// Otherwise it exits LENSTOOL
 	// 
+	char cwd[1024];
+	if (getcwd(cwd, sizeof(cwd)) != NULL)
+		fprintf(stdout, "Current working dir: %s\n", cwd);
+	//
 	module_readCheckInput_readInput(argc, argv);
 	//
 	// This module function reads the cosmology parameters from the parameter file
@@ -372,8 +381,19 @@ int main(int argc, char *argv[])
 
 	std::cout << " GPU Test... "; 
 
-	grid_gradient_x = (double *) malloc((int) (runmode.nbgridcells) * (runmode.nbgridcells) * sizeof(double));
-	grid_gradient_y = (double *) malloc((int) (runmode.nbgridcells) * (runmode.nbgridcells) * sizeof(double));
+	double* grid_gradient_x_gpu = (double *) malloc((int) (runmode.nbgridcells) * (runmode.nbgridcells) * sizeof(double));
+        double* grid_gradient_y_gpu = (double *) malloc((int) (runmode.nbgridcells) * (runmode.nbgridcells) * sizeof(double));
+	//
+	memset(grid_gradient_x_gpu, 0, (runmode.nbgridcells) * (runmode.nbgridcells) * sizeof(double));
+	memset(grid_gradient_y_gpu, 0, (runmode.nbgridcells) * (runmode.nbgridcells) * sizeof(double));
+	//
+	grid_gradient_x_gpu = (double *) malloc((int) (runmode.nbgridcells) * (runmode.nbgridcells) * sizeof(double));
+	grid_gradient_y_gpu = (double *) malloc((int) (runmode.nbgridcells) * (runmode.nbgridcells) * sizeof(double));
+
+	//t_2 = -myseconds();
+	//Packaging the image to sourceplane conversion
+	//gradient_grid_CPU(grid_gradient_x,grid_gradient_y, &frame, &lenses_SOA, runmode.nhalos, grid_dim);
+	//t_2 += myseconds();
 
 
 #if 0
@@ -397,25 +417,49 @@ std::cout << " Time  " << std::setprecision(15) << t_1 << std::endl;
 	t_2 += myseconds();
 
 	std::cout << " Time  " << std::setprecision(15) << t_2 << std::endl;
+*/
 #endif
 
-#if 1 
-	double norm_x = 0.;
-	double norm_y = 0.;
-	//
-	for (int ii = 0; ii < grid_dim*grid_dim; ++ii)
+#ifdef __WITH_LENSTOOL 
 	{
-		double g_x = grid_grad_x[ii];
-		double g_y = grid_grad_y[ii];
+		double norm_x = 0.;
+		double norm_y = 0.;
 		//
-		double c_x = grid_gradient_x_cpu[ii];
-		double c_y = grid_gradient_y_cpu[ii];
+		for (int ii = 0; ii < grid_dim*grid_dim; ++ii)
+		{
+			double g_x = grid_grad_x[ii];
+			double g_y = grid_grad_y[ii];
+			//
+			double c_x = grid_gradient_x_cpu[ii];
+			double c_y = grid_gradient_y_cpu[ii];
+			//
+			norm_x += (grid_grad_x[ii] - grid_gradient_x_cpu[ii])*(grid_grad_x[ii] - grid_gradient_x_cpu[ii]);
+			norm_y += (grid_grad_y[ii] - grid_gradient_y_cpu[ii])*(grid_grad_y[ii] - grid_gradient_y_cpu[ii]);
+		}
 		//
-		norm_x += (grid_grad_x[ii] - grid_gradient_x_cpu[ii])*(grid_grad_x[ii] - grid_gradient_x_cpu[ii]);
-		norm_y += (grid_grad_y[ii] - grid_gradient_y_cpu[ii])*(grid_grad_y[ii] - grid_gradient_y_cpu[ii]);
+		std::cout << "  l2 difference norm cpu = " << std::setprecision(15) << norm_x << " " << std::setprecision(15) << norm_y << std::endl;
 	}
 	//
-	std::cout << "  l2 difference norm = " << std::setprecision(15) << norm_x << " " << std::setprecision(15) << norm_y << std::endl;
+#ifdef __USE_GPU
+	{
+		double norm_x = 0.;
+		double norm_y = 0.;
+		//
+		for (int ii = 0; ii < grid_dim*grid_dim; ++ii)
+		{
+			double g_x = grid_grad_x[ii];
+			double g_y = grid_grad_y[ii];
+			//
+			double c_x = grid_gradient_x_gpu[ii];
+			double c_y = grid_gradient_y_gpu[ii];
+			//
+			norm_x += (grid_grad_x[ii] - grid_gradient_x_gpu[ii])*(grid_grad_x[ii] - grid_gradient_x_gpu[ii]);
+			norm_y += (grid_grad_y[ii] - grid_gradient_y_gpu[ii])*(grid_grad_y[ii] - grid_gradient_y_gpu[ii]);
+		}
+		//
+		std::cout << "  l2 difference norm gpu = " << std::setprecision(15) << norm_x << " " << std::setprecision(15) << norm_y << std::endl;
+	}
+#endif
 #endif
 
 #if 1
