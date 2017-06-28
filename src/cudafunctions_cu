@@ -1,0 +1,39 @@
+/**
+* @file   cudafunctions.cpp
+* @Author Christoph Schaefer, EPFL (christophernstrerne.schaefer@epfl.ch)
+* @date   July 2015
+* @version 0,1
+* @brief  Functions for safe calling of cuda function and timing functions
+*
+*/
+
+
+/// Include
+///==========================================================================================================
+#include<stdio.h>
+#include<string>
+#include<strings.h>
+#include<stdlib.h>
+#include<iostream>
+#include<fstream>
+#include<math.h>
+#include<time.h>
+#include"cudafunctions.cuh"
+#include<cuda_runtime.h>
+#include<typeinfo>
+
+
+
+/** @brief Safe Cuda call function. Checks for error, prints and then stops the execution.
+*/
+#define cudasafe CUDA_SAFE_CALL
+
+#define CUDA_SAFE_CALL(call, mess) \                                          
+do {                                \                                  
+    cudaError_t err = call;          \                                 
+    if (cudaSuccess != err) {         \                                
+        fprintf (stderr, "'%s' Cuda error in file '%s' in line %i : %s.", \
+                 __FILE__, __LINE__, mess, cudaGetErrorString(err) );      \ 
+        exit(EXIT_FAILURE);                                          \
+    }                                                                \
+} while (0)
