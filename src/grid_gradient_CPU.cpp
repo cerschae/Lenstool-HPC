@@ -4,7 +4,7 @@
 
 void gradient_grid_CPU(double *grid_grad_x, double *grid_grad_y, const struct grid_param *frame, const struct Potential_SOA *lens, int nhalos, int nbgridcells)
 {
-	gradient_grid_general_CPU(grid_grad_x, grid_grad_y,frame,nhalos,nbgridcells, lens);
+	gradient_grid_general_CPU(grid_grad_x, grid_grad_y,frame, nhalos, nbgridcells, lens);
 }
 
 void gradient_grid_general_CPU_old(double *grid_grad_x, double *grid_grad_y, const struct grid_param *frame, int Nlens,int nbgridcells, const struct Potential_SOA *lens)
@@ -45,7 +45,8 @@ void gradient_grid_general_CPU_old(double *grid_grad_x, double *grid_grad_y, con
 }
 
 
-void gradient_grid_general_CPU(double *grid_grad_x, double *grid_grad_y, const struct grid_param *frame, int Nlens,int nbgridcells, const struct Potential_SOA *lens){
+void gradient_grid_general_CPU(double *grid_grad_x, double *grid_grad_y, const struct grid_param *frame, int Nlens,int nbgridcells, const struct Potential_SOA *lens)
+{
 	int bid=0; // index of the block (and of the set of images)
 	int tid=0; // index of the thread within the block
 
