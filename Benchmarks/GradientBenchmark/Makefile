@@ -41,7 +41,8 @@ CPPFLAGS += $(foreach includelib,$(program_INCLUDE_LIBS),-L$(includelib))
 #CPPFLAGS += -qopt-streaming-stores=always -qopenmp -xMIC-AVX512 -pedantic -llenstoolhpc
 CPPFLAGS += -ftz -qopenmp -xHost -llenstool -fma -pedantic -llenstoolhpc  -llt -lcfitsio -lwcs -lgsl -lgslcblas 
 CPPFLAGS += -g -O3 -std=c++0x -Wall 
-#CPPFLAGS += -D__WITH_LENSTOOL
+CPPFLAGS += -D__WITH_LENSTOOL
+#CPPFLAGS += -D__USE_GPU
 #
 GEN_SM35 := -gencode=arch=compute_35,code=\"sm_35,compute_35\" #Target CC 3.5, for example
 NVFLAGS := -O3 -g -G -rdc=true #rdc=true needed for separable compilation
