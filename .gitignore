@@ -5,8 +5,10 @@
 .settings
 *.o
 *.cuo
+*.so
 *.optrpt
 *.nvvp
 GradienBenchmark
 .nfs*
 *.DIST
+*~
