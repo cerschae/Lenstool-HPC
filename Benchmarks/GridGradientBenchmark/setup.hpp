@@ -4,7 +4,9 @@
 #include <math.h>
 #include <sys/time.h>
 #include <fstream>
+#ifndef __xlC__
 #include <immintrin.h>
+#endif
 
 //#include "simd_math.h"
 

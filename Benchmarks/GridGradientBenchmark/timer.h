@@ -13,10 +13,11 @@ double myseconds()
 }
 }
 
-
+#ifndef __xlC__
 static inline unsigned long long cycles()
 {
 	unsigned long long u;
 	__asm__ volatile ("rdtscp;shlq $32,%%rdx;orq %%rdx,%%rax;movq %%rax,%0":"=q"(u)::"%rax", "%rdx", "rcx");
 	return u;
 }
+#endif

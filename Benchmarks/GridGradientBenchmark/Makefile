@@ -8,7 +8,7 @@ PROGRAM_NAME := ChiBenchmark_CPU
 #all: $(PROGRAM_NAME_GPU) $(PROGRAM_NAME)
 all: $(PROGRAM_NAME) 
 #CXX=g++ -lm -ffast-math -ftree-loop-vectorize 
-CXX=icpc
+CXX=xlc++
 #
 program_CXX_SRCS := $(wildcard *.cpp)
 program_CXX_OBJS := ${program_CXX_SRCS:.cpp=.o}
@@ -30,7 +30,7 @@ program_INCLUDE_DIRS += $(LENSTOOLHPC_ROOT)/src
 # libs
 #
 program_INCLUDE_LIBS += $(CFITSIO_ROOT)/lib #Include libraries
-program_INCLUDE_LIBS += $(LENSTOOL_ROOT)/src
+program_INCLUDE_LIBS += $(LENSTOOL_ROOT)/src/
 program_INCLUDE_LIBS += $(LENSTOOL_ROOT)/liblt
 program_INCLUDE_LIBS += $(LENSTOOLHPC_ROOT)/src/
 program_INCLUDE_LIBS += $(GSL_ROOT)/lib
@@ -41,10 +41,9 @@ program_INCLUDE_LIBS += $(WCSTOOL_ROOT)
 CPPFLAGS += $(foreach includedir,$(program_INCLUDE_DIRS),-I$(includedir))
 CPPFLAGS += $(foreach includelib,$(program_INCLUDE_LIBS),-L$(includelib))
 CPPFLAGS += -D__WITH_LENSTOOL 
-CPPFLAGS += -D__USE_GPU
-CPPFLAGS += -qopenmp -xHost -g -O3 -std=c++0x -Wall -pedantic
-CPPFLAGS += -fma -qopenmp -ftz
-CPPFLAGS += -xHost -pedantic  
+#CPPFLAGS += -D__USE_GPU
+CPPFLAGS += -qsmp -g -O3 -Wall -pedantic
+CPPFLAGS += -pedantic  
 CPPFLAGS += -fPIC
 #CPPFLAGS += -no-vec
 #CPPFLAGS += -qopenmp -march=core-avx2 -g -O3 -std=c++0x -Wall -pedantic
@@ -72,7 +71,7 @@ CPU_OBJECTS = $(program_CXX_OBJS) $(program_C_OBJS)
 	$(CXX) $(CXXFLAGS) -o $@ $< $(CPPFLAGS)
 #
 $(PROGRAM_NAME): $(CPU_OBJECTS) 
-	icpc -o $@ $^ $(LDFLAGS) 
+	xlc++ -o $@ $^ $(LDFLAGS) 
 
 clean:
 	@- $(RM) $(PROGRAM_NAME) $(OBJECTS) *~ *.o *.optrpt
