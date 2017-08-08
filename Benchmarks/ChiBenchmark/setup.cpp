@@ -42,7 +42,7 @@ void setup_lenstool(){
 	extern struct galaxie   image[NFMAX][NIMAX];
 	extern struct g_cosmo  C;
 	extern struct pot      lens[NLMAX];
-	int noedit, init;
+	int noedit = 1, init;
 	//double  chi2, lhood0;
 	//char    infile[80];
 	long int ni, ncistart;
@@ -54,7 +54,7 @@ void setup_lenstool(){
 	#endif
 
 	/************** Read the .par file and initialise potentials ***********/
-	init = init_grille(infile, 0);
+	init = init_grille(infile, noedit);
 
 	if ( noedit == 0 && M.verbose > 0 )
 		copyright();

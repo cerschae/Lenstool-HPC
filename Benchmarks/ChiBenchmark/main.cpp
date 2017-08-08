@@ -104,6 +104,10 @@ double **map_axx;
 double **map_ayy;
 #endif
 
+
+void chi_bruteforce_SOA_CPU_grid_gradient(double *chi, int *error, runmode_param *runmode, const struct Potential_SOA *lens, const struct grid_param *frame, const int *nimages_strongLensing, galaxy *images);
+
+
 int module_readCheckInput_readInput(int argc, char *argv[])
 {
 /// check if there is a correct number of arguments, and store the name of the input file in infile
@@ -229,9 +233,6 @@ int main(int argc, char *argv[])
 
 	module_readParameters_Grid(inputFile, &frame);
 
-
-
-
 	if (runmode.image == 1 or runmode.inverse == 1 or runmode.time > 0){
 
 		// This module function reads in the strong lensing images
@@ -276,10 +277,6 @@ int main(int argc, char *argv[])
 
 	std::cout << "--------------------------" << std::endl << std::endl;
 
-	double t_1(0),t_2(0),t_3(0),t_4(0);
-	double chi2(0);
-	double lhood0(0);
-	int error(0);
 
 	// Lenstool Bruteforce
 	//===========================================================================================================
@@ -290,26 +287,50 @@ int main(int argc, char *argv[])
 
 	if ( M.ichi2 != 0 )
 	{
-		int error;
+		setup_lenstool();
+		//
+		double chi2;
+		double lhood0(0);
+		int error(0);
+		double time;
+
+		if ( M.ichi2 != 0 )
+		{
+			int error;
 		//NPRINTF(stdout, "INFO: compute chires.dat\n");
 		readConstraints();
 		o_chires("chires.dat");
-		t_4 = -myseconds();
+		time = -myseconds();
 		error = o_chi_lhood0(&chi2, &lhood0, NULL);
-		t_4 += myseconds();
+		time += myseconds();
 		printf("INFO: chi2 %lf  Lhood %lf\n", chi2, -0.5 * ( chi2 + lhood0 )  );
 		o_global_free();
 	}
 
-	std::cout << "chi Lenstool Benchmark " << std::endl;
-	std::cout << " Chi : " << std::setprecision(15) << chi2 <<  std::endl;
-	std::cout << " Time  " << std::setprecision(15) << t_4 << std::endl;
+	std::cout << "Lenstool 6.8.1 chi Benchmark: ";
+	std::cout << " Chi : " << std::setprecision(15) << chi2 ;
+	std::cout << " Time  " << std::setprecision(15) << time << std::endl;
 	o_global_free();
-
+	}
 #endif
 
 	// Lenstool-GPU Bruteforce
 	//===========================================================================================================
+#if 0
+	{
+		std::cout << "LenstoolHPC dist chi Benchmark:\n ";
+		double chi2;
+		double time;
+		int error;
+		time = -myseconds();
+		chi_bruteforce_SOA_CPU_grid_gradient(&chi2, &error, &runmode, &lenses_SOA, &frame, nImagesSet, images);
+		time += myseconds();
+
+		std::cout << " Chi : " << std::setprecision(15) << chi2;
+		std::cout << " Time  " << std::setprecision(15) << time << std::endl;
+	}
+#endif
+
 
 
 #if 0
@@ -317,9 +338,9 @@ int main(int argc, char *argv[])
 	chi_bruteforce_SOA_CPU_grid_gradient(&chi2,&error,&runmode,&lenses_SOA,&frame,nImagesSet,images);
 	t_2 += myseconds();
 
-	std::cout << " chi_bruteforce_SOA_CPU_grid_gradient_unsorted Brute Force Benchmark " << std::endl;
-	std::cout << " Chi : " << std::setprecision(15) << chi2 <<  std::endl;
-	std::cout << " Time  " << std::setprecision(15) << t_2 << std::endl;
+		std::cout << " Chi : " << std::setprecision(15) << chi2;
+		std::cout << " Time  " << std::setprecision(15) << time << std::endl;
+	}
 #endif
 
 #if 1
