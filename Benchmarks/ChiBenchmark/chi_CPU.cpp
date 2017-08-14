@@ -133,8 +133,8 @@ void mychi_bruteforce_SOA_CPU_grid_gradient_orig(double *chi, int *error, runmod
 
                                         // Lens to Sourceplane conversion of triangles
                                         //@@trans_time -= myseconds();
-                                        mychi_transformtriangleImageToSourcePlane_SOA_grid_gradient_upper(&Tsup, sources[source_id].dr, &Tsupsource, grid_gradient_x, grid_gradient_y, x_id*grid_dim + y_id, grid_dim);
-                                        mychi_transformtriangleImageToSourcePlane_SOA_grid_gradient_lower(&Tinf, sources[source_id].dr, &Tinfsource, grid_gradient_x, grid_gradient_y, x_id*grid_dim + y_id, grid_dim);
+                                        mychi_transformtriangleImageToSourcePlane_SOA_grid_gradient_upper(&Tsup, sources[source_id].dr, &Tsupsource, grid_gradient_x, grid_gradient_y, y_id*grid_dim + x_id, grid_dim);
+                                        mychi_transformtriangleImageToSourcePlane_SOA_grid_gradient_lower(&Tinf, sources[source_id].dr, &Tinfsource, grid_gradient_x, grid_gradient_y, y_id*grid_dim + x_id, grid_dim);
                                         //@@trans_time += myseconds();
 
 					//@@p1_time -= myseconds();
@@ -416,8 +416,8 @@ void mychi_bruteforce_SOA_CPU_grid_gradient(double *chi, int *error, runmode_par
 					// Lens to Sourceplane conversion of triangles
 					// 
 					//double time = -myseconds();
-					mychi_transformtriangleImageToSourcePlane_SOA_grid_gradient_upper(&Tsup, sources[source_id].dr, &Tsupsource,grid_gradient_x, grid_gradient_y, x_id*grid_dim + y_id, grid_dim);
-					mychi_transformtriangleImageToSourcePlane_SOA_grid_gradient_lower(&Tinf, sources[source_id].dr, &Tinfsource,grid_gradient_x, grid_gradient_y, x_id*grid_dim + y_id, grid_dim);
+					mychi_transformtriangleImageToSourcePlane_SOA_grid_gradient_upper(&Tsup, sources[source_id].dr, &Tsupsource,grid_gradient_x, grid_gradient_y, y_id*grid_dim + x_id, grid_dim);
+					mychi_transformtriangleImageToSourcePlane_SOA_grid_gradient_lower(&Tinf, sources[source_id].dr, &Tinfsource,grid_gradient_x, grid_gradient_y, y_id*grid_dim + x_id, grid_dim);
 					//time += myseconds();
 					//printf("%d: trans_time2 = %f\n", omp_get_thread_num(), time);
 					//trans2_time += time;
@@ -684,16 +684,16 @@ inline
 void mychi_transformtriangleImageToSourcePlane_SOA_grid_gradient_upper( struct triplet *I, double dlsds, struct triplet *S, double *grad_x, double * grad_y, int grad_id, int nbgridcell)
 {
 	mychi_transformImageToSourcePlane_SOA_Packed( &I->a, dlsds,   &S->a, grad_x, grad_y, grad_id             );
-	mychi_transformImageToSourcePlane_SOA_Packed( &I->b, dlsds,   &S->b, grad_x, grad_y, grad_id + 1         );
-	mychi_transformImageToSourcePlane_SOA_Packed( &I->c, dlsds,   &S->c, grad_x, grad_y, grad_id + nbgridcell);
+	mychi_transformImageToSourcePlane_SOA_Packed( &I->b, dlsds,   &S->b, grad_x, grad_y, grad_id + nbgridcell);
+	mychi_transformImageToSourcePlane_SOA_Packed( &I->c, dlsds,   &S->c, grad_x, grad_y, grad_id + 1);
 }
 
 inline
 void mychi_transformtriangleImageToSourcePlane_SOA_grid_gradient_lower( struct triplet *I, double dlsds, struct triplet *S, double *grad_x, double * grad_y, int grad_id, int nbgridcell)
 {
 	mychi_transformImageToSourcePlane_SOA_Packed( &I->a, dlsds,   &S->a, grad_x, grad_y, grad_id + nbgridcell + 1);
-	mychi_transformImageToSourcePlane_SOA_Packed( &I->b, dlsds,   &S->b, grad_x, grad_y, grad_id + nbgridcell    );
-	mychi_transformImageToSourcePlane_SOA_Packed( &I->c, dlsds,   &S->c, grad_x, grad_y, grad_id + 1             );
+	mychi_transformImageToSourcePlane_SOA_Packed( &I->b, dlsds,   &S->b, grad_x, grad_y, grad_id + 1    );
+	mychi_transformImageToSourcePlane_SOA_Packed( &I->c, dlsds,   &S->c, grad_x, grad_y, grad_id + nbgridcell             );
 }
 
 
