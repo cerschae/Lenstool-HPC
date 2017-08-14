@@ -178,7 +178,7 @@ void mychi_bruteforce_SOA_CPU_grid_gradient_orig(double *chi, int *error, runmod
                                         int skip_image = 0;
 					//
 					//@@p2_time -= myseconds();
-                                        if(thread_found_image == 1 )
+                                        if (thread_found_image == 1)
 					{
                                                 skip_image = 0;
 						images_found++;
@@ -222,7 +222,6 @@ void mychi_bruteforce_SOA_CPU_grid_gradient_orig(double *chi, int *error, runmod
                                                                 {
                                                                         if(im_dist[i]>im_dist[second_closest_id]) second_closest_id=i;
                                                                 }
-                                                                ///////////////////////////////////////////////////////////////
                                                                 // Loop over all images in the set that are not yet allocated to a theoretical image
                                                                 // and allocate the closest one
                                                                 for(int i=0; i<nimages_strongLensing[source_id] && nimagesfound[image_id][i]==0; i++) // we search for an observed image not already linked (nimagesfound=0)
@@ -457,16 +456,13 @@ void mychi_bruteforce_SOA_CPU_grid_gradient(double *chi, int *error, runmode_par
 						{  // get the distance to each real image and keep the index of the closest real image
 
 							im_dist[i] = mychi_dist(im_position, images[index + i].center);
-							//printf("im_dist[i] %f, im_position %f %f , images[index+im_index].center %f %f\n",im_dist[i], im_position.x,im_position.y, images[index+i].center.x,images[index+i].center.y);
 							if(im_dist[i] < im_dist[im_index])
 							{
 								im_index = i;
 							}
-							//printf(" im_index %d im_dist actual %f im_dist %f \n",im_index, im_dist[im_index], im_dist[i]);
 						}
 					}
 					//p1_time += myseconds();
-					//continue;
 					//
 					int skip_image = 0;
 					//p2_time -= myseconds();

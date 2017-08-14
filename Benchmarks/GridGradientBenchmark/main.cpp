@@ -24,7 +24,7 @@
 #include "chi_CPU.hpp"
 #include "module_cosmodistances.h"
 #include "module_readParameters.hpp"
-#ifdef __USE_GPU
+#ifdef __WITH_GPU
 #include "grid_gradient_GPU.cuh"
 #endif
 
@@ -380,7 +380,7 @@ int main(int argc, char *argv[])
 	//
 	double *grid_gradient_x, *grid_gradient_y;
 
-#ifdef __USE_GPU
+#ifdef __WITH_GPU
 	// GPU test
 
 	std::cout << " GPU Test... "; 
@@ -441,7 +441,7 @@ int main(int argc, char *argv[])
 		std::cout << "  l2 difference norm cpu = " << std::setprecision(15) << norm_x << " " << std::setprecision(15) << norm_y << std::endl;
 	}
 	//
-#ifdef __USE_GPU
+#ifdef __WITH_GPU
 	{
 		double norm_x = 0.;
 		double norm_y = 0.;
