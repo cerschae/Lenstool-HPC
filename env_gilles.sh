@@ -5,6 +5,7 @@
 MYPATH=$(realpath "$(dirname "$PWD/${BASH_SOURCE[@]}")")
 #echo $MYPATH
 export LENSTOOL_ROOT=/users/fgilles/Projects/lenstool-6.8.1/
+#export LENSTOOL_ROOT=/users/fgilles/Projects/lenstool-6.8.1/src/
 #export LENSTOOLHPC_ROOT=/users/fgilles/GPU-Projects/lenstool-hpc-master/
 export LENSTOOLHPC_ROOT=$MYPATH
 export CFITSIO_ROOT=/users/fgilles/Projects/Libs/cfitsio/

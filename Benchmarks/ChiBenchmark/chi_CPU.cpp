@@ -66,7 +66,7 @@ void mychi_bruteforce_SOA_CPU_grid_gradient_orig(double *chi, int *error, runmod
         time += myseconds();
         printf("       Grid grad time = %f s.\n", time);
 
-        //printf ("@@nsets = %d nx = %d ny = %d\n", runmode->nsets, runmode->nbgridcells, runmode->nbgridcells);
+        printf ("@@nsets = %d nimagestot = %d maximgpersource = %d nx = %d ny = %d\n", runmode->nsets, runmode->nimagestot, MAXIMPERSOURCE, runmode->nbgridcells, runmode->nbgridcells);
 
         index = 0;
         *chi  = 0;
@@ -81,9 +81,8 @@ void mychi_bruteforce_SOA_CPU_grid_gradient_orig(double *chi, int *error, runmod
 	//
 	int images_found = 0;
 	//
-        for( int  source_id = 0; source_id < runmode->nsets; source_id ++)
+        for( int  source_id = 0; source_id < runmode->nsets; source_id ++) // nsets number of sources in the source plane
 	{
-
                 //////////////////////////////////////Initialisation//////////////////////////////////////
                 for (int i=0; i < nimages_strongLensing[source_id]; ++i){
                         for (int j=0; j < nimages_strongLensing[source_id]; ++j){
@@ -92,6 +91,7 @@ void mychi_bruteforce_SOA_CPU_grid_gradient_orig(double *chi, int *error, runmod
                 }
 		//
 		//printf("Num sources = %d, num images = %d, Nx = %d, Ny = %d\n", runmode->nsets,  nimages_strongLensing[source_id], runmode->nbgridcells, runmode->nbgridcells);  
+		//
                 for( int image_id = 0; image_id < nimages_strongLensing[source_id]; image_id++)
                 {
 			//printf("@@  nimages = %d\n",  nimages_strongLensing[source_id]);
@@ -321,25 +321,26 @@ void mychi_bruteforce_SOA_CPU_grid_gradient(double *chi, int *error, runmode_par
 // 	struct point im_position, temp; // position of the image found from a theoretical source + temp variable for comparison
 //	struct triplet Tsup, Tinf, Tsupsource, Tinfsource;// triangles for the computation of the images created by the theoretical sources
 	struct galaxy sources[runmode->nsets]; // theoretical sources (common for a set)
-	int nimagesfound[runmode->nimagestot][MAXIMPERSOURCE]; // number of images found from the theoretical sources
-	struct point tim[runmode->nimagestot][MAXIMPERSOURCE]; // theoretical images (computed from sources)
+	int    nimagesfound  [runmode->nsets][runmode->nimagestot][MAXIMPERSOURCE]; // number of images found from the theoretical sources
+	//double image_dist    [runmode->nsets][runmode->nimagestot][MAXIMPERSOURCE];
+	struct point tim     [runmode->nimagestot][MAXIMPERSOURCE]; // theoretical images (computed from sources)
 	//
 	double *grid_gradient_x, *grid_gradient_y;
 	//
 	grid_gradient_x = (double *)malloc((int) (runmode->nbgridcells) * (runmode->nbgridcells) * sizeof(double));
 	grid_gradient_y = (double *)malloc((int) (runmode->nbgridcells) * (runmode->nbgridcells) * sizeof(double));
 	//
+        printf ("@@nsets = %d nimagestot = %d maximgpersource = %d nx = %d ny = %d\n", runmode->nsets, runmode->nimagestot, MAXIMPERSOURCE, runmode->nbgridcells, runmode->nbgridcells);
+	//
 	const int grid_dim = runmode->nbgridcells;
 	//Packaging the image to sourceplane conversion
-	double time = -myseconds(); 
+	double time = -myseconds();
 	gradient_grid_CPU(grid_gradient_x, grid_gradient_y, frame, lens, runmode->nhalos, grid_dim);
 	time += myseconds();
 	printf("	Grid grad time = %f s.\n", time);
-	   //sleep(5);
-	
 	//
-	int index          = 0;       // index of the image within the total image array
-	*chi  = 0;
+	int index          = 0;       // index tracks the image within the total image array in the image plane
+	*chi  		   = 0;
 	//
 	double trans_time  = 0.;
 	double trans2_time = 0.;
@@ -358,30 +359,32 @@ void mychi_bruteforce_SOA_CPU_grid_gradient(double *chi, int *error, runmode_par
 	int numsets = 0;
 	for( int  source_id = 0; source_id < runmode->nsets; source_id ++)
 		numsets += nimages_strongLensing[source_id];
-	printf("@@Total numsets = %d\n", numsets); 	
+	printf("@@Total numsets = %d\n", numsets);
 	//
 	time = -myseconds();
 	//
+	// nsets     : number of images in the source plane
+	// nimagestot: number of images in the image plane
 	for( int  source_id = 0; source_id < runmode->nsets; source_id ++)
 	{
-		// number of images
-		unsigned short int nimages = nimages_strongLensing[source_id]; 
+		// number of images in the image plane for the specific image (1,3,5...)
+		unsigned short int nimages = nimages_strongLensing[source_id];
 		//memset(&nimagesfound[0], 0, nimages_strongLensing[source_id]*nimages_strongLensing[source_id]*sizeof(nimagesfound[0][0]));
 		//////////////////////////////////////Initialisation//////////////////////////////////////
 		//
 		for (unsigned short int i = 0; i < nimages; ++i)
 			for (unsigned short int j = 0; j < nimages; ++j)
-				nimagesfound[i][j] = 0;
+				nimagesfound[source_id][i][j] = 0;
 		//
-		printf("@@ source_id = %d, nimages = %d\n",  source_id, nimages_strongLensing[source_id]);
+		//@@printf("@@ source_id = %d, nimages = %d\n",  source_id, nimages_strongLensing[source_id]);
 		imagetime -= myseconds();
-		//____________________________ image loop ________________________________
+		//____________________________ image (constrains) loop ________________________________
 		for( unsigned short int image_id = 0; image_id < nimages; image_id++)
 		{
 			//printf("@@  nimages = %d\n",  nimages_strongLensing[source_id]);
-
 			//________ computation of theoretical sources _________
 			//double time = -myseconds();
+			// output: sources[source_id].center
 			mychi_transformImageToSourcePlane_SOA(runmode->nhalos, 
 							&images[index + image_id].center,
 							 images[index + image_id].dr, 
@@ -391,9 +394,10 @@ void mychi_bruteforce_SOA_CPU_grid_gradient(double *chi, int *error, runmode_par
 			// void mychi_transformImageToSourcePlane_SOA(const int Nlens, const struct point *image_point, double dlsds, const struct Potential_SOA *lens, struct point *source_point)
 			//
 			struct point Grad = module_potentialDerivatives_totalGradient_SOA(&images[index + image_id].center, lens, runmode->nhalos);
-			printf("	image %d %d = %f, %f\n", source_id, image_id, images[index + image_id].center.x, images[index + image_id].center.y);
+			//printf("	image %d, %d (%d) = (%.15f, %.15f) -> (%.15f, %.15f)\n", source_id, image_id, nimages, images[index + image_id].center.x, images[index + image_id].center.y, sources[source_id].center.x, sources[source_id].center.y );
 			//printf("Grad.x = %f, %f\n", Grad.x, grid_gradient_x[images[index + image_id].center.x/dx]); 
 			//
+			// find the position of the constrain in the source plane
 			sources[source_id].center.x = images[index + image_id].center.x - images[index + image_id].dr*Grad.x;
                         sources[source_id].center.y = images[index + image_id].center.y - images[index + image_id].dr*Grad.y;
 			//
@@ -406,12 +410,13 @@ void mychi_bruteforce_SOA_CPU_grid_gradient(double *chi, int *error, runmode_par
 			sources[source_id].dr       = images[index + image_id].dr;
 			sources[source_id].dls      = images[index + image_id].dls;
 			sources[source_id].dos      = images[index + image_id].dos;
+			int loc_images_found = 0;
 
 			loop_time -= myseconds();
-#pragma omp parallel for reduction(+: trans2_time, p1_time, p2_time, foundtime, images_found, images_total) 
-			for (int x_id = 0; x_id < runmode->nbgridcells - 1; ++x_id )
+#pragma omp parallel for reduction(+: trans2_time, p1_time, p2_time, foundtime, /*images_found,*/ images_total) 
+			for (int x_id = 0; (x_id < runmode->nbgridcells - 1) ; ++x_id )
 			{
-				for (int y_id = 0; y_id < runmode->nbgridcells - 1; ++y_id )
+				for (int y_id = 0; (y_id < runmode->nbgridcells - 1) /*&& (loc_images_found != nimages)*/; ++y_id )
 				{
 					images_total++;
 					double x_pos = frame->xmin + x_id*dx;
@@ -419,7 +424,7 @@ void mychi_bruteforce_SOA_CPU_grid_gradient(double *chi, int *error, runmode_par
 					//
 					// Define the upper + lower triangle, both together = square = pixel
 					// 
- 					struct triplet Tsup, Tinf, Tsupsource, Tinfsource;
+ 					struct triplet Tsup, Tinf;
 					//
 					Tsup.a.x = x_pos;
 					Tsup.b.x = x_pos;
@@ -437,74 +442,68 @@ void mychi_bruteforce_SOA_CPU_grid_gradient(double *chi, int *error, runmode_par
 					//
 					// Lens to Sourceplane conversion of triangles
 					// 
-					//double time = -myseconds();
-					mychi_transformtriangleImageToSourcePlane_SOA_grid_gradient_upper(&Tsup, sources[source_id].dr, &Tsupsource, grid_gradient_x, grid_gradient_y, x_id*grid_dim + y_id, grid_dim);
-					mychi_transformtriangleImageToSourcePlane_SOA_grid_gradient_lower(&Tinf, sources[source_id].dr, &Tinfsource, grid_gradient_x, grid_gradient_y, x_id*grid_dim + y_id, grid_dim);
-					//time += myseconds();
-					//printf("%d: trans_time2 = %f\n", omp_get_thread_num(), time);
-					//trans2_time += time;
+					// double time = -myseconds();
 					//
-					int    thread_found_image = 0;
-					int    image_index;
-					struct point image_position, temp;
+					int thread_found_image = 0;
+					int image_index;
+					//
+					struct point image_position; 
+					struct point temp;
 					double image_dist[MAXIMPERSOURCE];
-					//int    nimagesfound[runmode->nimagestot][MAXIMPERSOURCE]; // number of images found from the theoretical sources
+					//	
+					struct triplet Timage;
+					struct triplet Tsource;
 					//
-					//p1_time -= myseconds();
-					if (mychi_insideborder(&sources[source_id].center, &Tsupsource) == 1)
+					mychi_transformtriangleImageToSourcePlane_SOA_grid_gradient_upper(&Tsup, sources[source_id].dr, &Tsource, grid_gradient_x, grid_gradient_y, y_id*grid_dim + x_id, grid_dim);
+					//
+					if (mychi_insideborder(&sources[source_id].center, &Tsource) == 1)
 					{
-						printf("	-> Image sup found: (%f %f) (%f %f) (%f %f)\n", Tsupsource.a.x, Tsupsource.a.y, Tsupsource.b.x, Tsupsource.b.y, Tsupsource.c.x, Tsupsource.c.y);
-						thread_found_image = 1; // thread has just found an image
-						image_index  	   = 0;
-						image_position 	   = mychi_barycenter(&Tsup);
-						// get the distance to the real image
-						image_dist[image_index]  = mychi_dist(image_position, images[index + image_index].center);  
-						for (int i = 1; i < nimages_strongLensing[source_id]; i++)
-						{  
-							// get the distance to each real image and keep the index of the closest real image
+						thread_found_image = 1;
+						Timage = Tsup;
+					}
+					else 
+					{
+						mychi_transformtriangleImageToSourcePlane_SOA_grid_gradient_lower(&Tinf, sources[source_id].dr, &Tsource, grid_gradient_x, grid_gradient_y, y_id*grid_dim + x_id, grid_dim);
+						if (mychi_inside(&sources[source_id].center, &Tsource) == 1)
+						{
+							thread_found_image = 1;
+							Timage = Tinf;
+						}
+					}
+					if (thread_found_image)
+					{
+						//thread_found_image      = 1; // thread has just found an image
+						image_index             = 0;
+						image_position          = mychi_barycenter(&Timage);  // get the barycenter of the triangle
+						image_dist[image_index] = mychi_dist(image_position, images[index + image_index].center);  // get the distance to the real image
+						for(int i = 1; i < nimages_strongLensing[source_id]; i++)
+						{  // get the distance to each real image and keep the index of the closest real image
+
 							image_dist[i] = mychi_dist(image_position, images[index + i].center);
 							if (image_dist[i] < image_dist[image_index])
 							{
 								image_index = i;
 							}
 						}
-					}
-					//
-					if (mychi_inside(&sources[source_id].center, &Tinfsource) == 1)
-					{
-						printf("	-> Image inf found: (%f %f) (%f %f) (%f %f)\n", Tinfsource.a.x, Tinfsource.a.y, Tinfsource.b.x, Tinfsource.b.y, Tinfsource.c.x, Tinfsource.c.y);
-						thread_found_image      = 1; // thread has just found an image
-						image_index             = 0;
-						image_position          = mychi_barycenter(&Tinf);  // get the barycenter of the triangle
-						image_dist[image_index] = mychi_dist(image_position, images[index + image_index].center);  // get the distance to the real image
-						for(int i = 1; i < nimages_strongLensing[source_id]; i++)
-						{  // get the distance to each real image and keep the index of the closest real image
 
-							image_dist[i] = mychi_dist(image_position, images[index + i].center);
-							if(image_dist[i] < image_dist[image_index])
-							{
-								image_index = i;
-							}
-						}
 					}
+					// we should exit loops here
 					//
 					// p1_time += myseconds();
 					//
-					int skip_image = 0;
 					//
 					// p2_time -= myseconds();
 					//
 					if (thread_found_image == 1)
 					{
 						foundtime -= myseconds();
-						images_found++;
 						//printf("%d %d %d: found image\n", x_id, y_id, image_id); 
-						skip_image = 0;
+						int skip_image = 0;
 						// Sometimes due to the numerical errors at the centerpoint, 
 						// for SIE potentials an additional image will appear at the center of the Potential.
 						// This is due to the fact that it is not possible to simulate an infinity value 
 						// at the center correctly, Check that sis correspond to Nlens[0]
-						for (int iterator=0; iterator < runmode->Nlens[0]; ++iterator)
+						for (int iterator = 0; iterator < runmode->Nlens[0]; ++iterator)
 						{
 							if ( fabs(image_position.x - lens[0].position_x[iterator]) <= dx/2. and fabs(image_position.y  - lens[0].position_y[iterator]) <= dx/2.)
 							{
@@ -515,43 +514,47 @@ void mychi_bruteforce_SOA_CPU_grid_gradient(double *chi, int *error, runmode_par
 						//printf("%d %d %d %d\n", x_id, y_id,thread_found_image, skip_image);
 						if (!skip_image)
 						{
+#pragma omp atomic
+							images_found++;
+							//printf("			Images found: %d\n", images_found);
 							//checking whether a closest image has already been found
-							if (nimagesfound[image_id][image_index] == 0)
+							if (nimagesfound[source_id][image_id][image_index] == 0)
 							{ // if no image found up to now
-								
+
 								//image position is allocated to theoretical image
-								#pragma omp critical
+#pragma omp critical
 								tim[image_id][image_index] = image_position;  
-								#pragma omp atomic
-								nimagesfound[image_id][image_index]++;
+#pragma omp atomic
+								nimagesfound[source_id][image_id][image_index]++;
 							}
 							else 
-							if (nimagesfound[image_id][image_index] > 0)
-							{ // if we have already found an image
-								// If the new image we found is closer than the previous image
-								if(image_dist[image_index] < mychi_dist(images[index + image_index].center, tim[image_id][image_index]))
-								{
-									temp = tim[image_id][image_index]; // we store the position of the old image in temp
-									#pragma omp critical
-									tim[image_id][image_index] = image_position; // we link the observed image with the image we just found
-									//printf("tim2 %d %d = %f %f\n", image_id, im_index, im_position.x, im_position.y);
-								}
-								else
-								{
-									temp = image_position; // we store the position of the image we just found in temp
-								}
-								// initialising second_closest_id to the highest value
+								if (nimagesfound[source_id][image_id][image_index] > 0)
+								{ // if we have already found an image
+									// If the new image we found is closer than the previous image
+									if(image_dist[image_index] < mychi_dist(images[index + image_index].center, tim[image_id][image_index]))
+									{
+										temp = tim[image_id][image_index]; // we store the position of the old image in temp
+#pragma omp critical
+										tim[image_id][image_index] = image_position; // we link the observed image with the image we just found
+										//printf("tim2 %d %d = %f %f\n", image_id, im_index, im_position.x, im_position.y);
+									}
+									else
+									{
+										temp = image_position; // we store the position of the image we just found in temp
+									}
+									// initialising second_closest_id to the highest value
 								// Loop over all images in the set except the closest one
 								// and initialize to the furthest away image
 								int second_closest_id = 0;
 								for(int i = 1; i < nimages_strongLensing[source_id] && (i != image_index); i++)
 								{
-									if(image_dist[i]>image_dist[second_closest_id]) second_closest_id=i;
+									if(image_dist[i] > image_dist[second_closest_id]) second_closest_id=i;
 								}
 								///////////////////////////////////////////////////////////////
 								// Loop over all images in the set that are not yet allocated to a theoretical image
 								// and allocate the closest one
-								for(int i=0; i < nimages_strongLensing[source_id] && nimagesfound[image_id][i]==0; i++) // we search for an observed image not already linked (nimagesfound=0)
+								// we search for an observed image not already linked (nimagesfound=0)
+								for(int i = 0; i < nimages_strongLensing[source_id] && nimagesfound[source_id][image_id][i] == 0; i++) 
 								{
 									if(image_dist[i] < image_dist[second_closest_id])
 									{
@@ -563,20 +566,23 @@ void mychi_bruteforce_SOA_CPU_grid_gradient(double *chi, int *error, runmode_par
 										tim[image_id][image_index] = temp; // if we found an observed and not already linked image, we allocate the theoretical image temp
 									}
 								}
+								// increasing the total number of images found (If we find more than 1 theoretical image linked to 1 real image, 
+								// these theoretical
 								#pragma omp atomic
-								nimagesfound[image_id][image_index]++; // increasing the total number of images found (If we find more than 1 theoretical image linked to 1 real image, these theoretical
+								nimagesfound[source_id][image_id][image_index]++; 
 								// images are included in this number)
 							}
 						}
-						thread_found_image=0; // for next iteration
-						foundtime += myseconds();
+						//#pragma omp atomic
+						//loc_images_found++;
+						thread_found_image  = 0; // for next iteration
+						foundtime          += myseconds();
 					}
 					//
-
 					//p2_time += myseconds();
 				}
 			}
-//#pragma omp barrier
+#pragma omp barrier
 			loop_time += myseconds();
 
 		}
@@ -600,13 +606,14 @@ void mychi_bruteforce_SOA_CPU_grid_gradient(double *chi, int *error, runmode_par
 			{
 				// In the current method, we get the source in the source plane by ray tracing image in nimagesfound[i][i]. If we ray trace back,
 				// we arrive again at the same position and thus the chi2 from it is 0. Thus we do not calculate the chi2 (-> if i!=j)
-				if(nimagesfound[i][j] > 0)
+				if(nimagesfound[source_id][i][j] > 0)
 				{
 					chiimage = pow(images[index + j].center.x - tim[i][j].x, 2) + pow(images[index + j].center.y - tim[i][j].y, 2);  // compute the chi2
 					//printf("%d %d = %.15f\n", i, j, chiimage);
 					*chi    += chiimage;
 				}
-				else if(nimagesfound[i][j]==0)
+				else 
+				if(nimagesfound[source_id][i][j] == 0)
 				{
 					// If we do not find a correpsonding image, we add a big value to the chi2 to disfavor the model
 					*chi += 100.*nimages_strongLensing[source_id];

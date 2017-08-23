@@ -307,7 +307,7 @@ int main(int argc, char *argv[])
 
 	// Lenstool-GPU Bruteforce
 	//===========================================================================================================
-#if 1
+#if 0
 	{
 		std::cout << "LenstoolHPC dist chi Benchmark:\n ";
 		double chi2;

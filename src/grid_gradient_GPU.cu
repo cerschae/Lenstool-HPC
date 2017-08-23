@@ -259,7 +259,7 @@ module_potentialDerivatives_totalGradient_8_SOA_GPU_loc(double *grid_grad_x, dou
 /*
 __global__ void gradient_grid_kernel(double *grid_grad_x, double *grid_grad_y, const struct grid_param *frame, int Nlens,int nbgridcells, const struct Potential_SOA *lens) {
 
-	//*grad_x = *grad_y = 0.;
+	// *grad_x = *grad_y = 0.;
 
 	int bid=blockIdx.x; // index of the block (and of the set of images)
 	int tid=threadIdx.x; // index of the thread within the block
@@ -295,7 +295,7 @@ __global__ void gradient_grid_kernel(double *grid_grad_x, double *grid_grad_y, c
 /*
 __global__ void gradient_grid_kernel_v2(double *grid_grad_x, double *grid_grad_y, const struct grid_param *frame, int Nlens,int nbgridcells, const struct Potential_SOA *lens) 
 {
-	//*grad_x = *grad_y = 0.;
+	// *grad_x = *grad_y = 0.;
 
 	int bid =  blockIdx.x; // index of the block (and of the set of images)
 	int tid = threadIdx.x; // index of the thread within the block
