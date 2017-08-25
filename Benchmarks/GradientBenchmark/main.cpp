@@ -16,7 +16,7 @@
 //
 #include <mm_malloc.h>
 
-#define __WITH_LENSTOOL 1
+//#define __WITH_LENSTOOL 0
 //
 #ifdef __WITH_LENSTOOL
 #warning "linking with libtool..."
@@ -34,6 +34,7 @@
 #include "gradient_avx.hpp"
 #include "gradient_avx512f.hpp"
 #include "setup.hpp"
+#include <type.h>
 //
 #define NN 10000
 //
@@ -119,8 +120,8 @@ int main()
 	//Initialisation
 	//
         int nlenses;
-        double x, y;
-        double sol_grad_x, sol_grad_y;
+        type_t x, y;
+        type_t sol_grad_x, sol_grad_y;
 	point grad; // store the result
 	//pot* lens;
 #ifdef __WITH_LENSTOOL
@@ -164,7 +165,7 @@ int main()
 	point image_soa;
 	int nlenses_soa;
 	double x_soa, y_soa;
-	double sol_grad_x_soa, sol_grad_y_soa;
+	type_t sol_grad_x_soa, sol_grad_y_soa;
 	//
 	Potential_SOA   lens_soa;
 	setup_jauzac_SOA(&lens_soa, &nlenses_soa, &image_soa.x, &image_soa.y, &sol_grad_x_soa, &sol_grad_y_soa);
@@ -211,10 +212,18 @@ int main()
 		//                                //grad_soa = module_potentialDerivatives_totalGradient_81_SOA_AVX(&image_soa, &lens_soa, nlenses_soa);
 		//grad_soa = module_potentialDerivatives_totalGradient_81_SOA(&image_soa, &lens_soa, 0, nlenses_soa);
 		//grad_soa = module_potentialDerivatives_totalGradient_8_SOA(&image_soa, &lens_soa, 0, nlenses_soa);
+#ifdef 0 //_double
 		grad_soa_avx = module_potentialDerivatives_totalGradient_SOA_AVX(&image_soa, &lens_soa, nlenses_soa);
+#endif
 	}
 	t3 += myseconds();
 	//
+#ifdef _double
+	std::cout << " Double calculation   = "  << std::endl;
+#else
+	std::cout << " Float  calculation   = "  << std::endl;
+#endif
+
 	std::cout << " ref sol   = " << std::setprecision(15) << sol_grad_x << " " << std::setprecision(15) << sol_grad_y << std::endl;
 	//
 #ifdef __WITH_LENSTOOL

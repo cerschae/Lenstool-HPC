@@ -16,6 +16,7 @@
 
 
 #include <iostream>
+#include "type.h"
 
 
 
@@ -72,8 +73,8 @@
 #else
 struct point    
 {
-	double x;	
-	double y;
+	type_t x;
+	type_t y;
 };
 
 /** @brief Complex: Structure of 2 doubles
@@ -82,8 +83,8 @@ struct point
  */
 struct complex    
 {
-	double re;	
-	double im;
+	type_t re;
+	type_t im;
 };
 /** @brief Segment: Structure of two points
  */
@@ -123,10 +124,10 @@ typedef struct
  */
 struct matrix
 {
-	double  a;
-	double  b;
-	double  c;
-	double  d;
+	type_t  a;
+	type_t  b;
+	type_t  c;
+	type_t  d;
 };
 
 /** @brief ellipse: for shape computation
@@ -136,9 +137,9 @@ struct matrix
  */
 struct ellipse
 {
-	double  a;		
-	double  b;		
-	double  theta;	
+	type_t  a;
+	type_t  b;
+	type_t  theta;
 };
 
 #endif
@@ -158,11 +159,11 @@ struct galaxy
 	//char    name[IDSIZE];
 	struct point    center;		
 	struct ellipse  shape;		
-	double  mag;				
-	double  redshift;			
-	double  dls;         		
-	double  dos;          		
-	double  dr;           		
+	type_t  mag;
+	type_t  redshift;
+	type_t  dls;
+	type_t  dos;
+	type_t  dr;
 };
 
 
@@ -175,9 +176,9 @@ struct galaxy
 struct optimize_block
 {
 	int block; 			
-	double min;			
-	double max;			
-	double sigma;	
+	type_t min;
+	type_t max;
+	type_t sigma;
 };
 /** @brief two optimize_block to simulate a point
  */
@@ -249,27 +250,27 @@ struct Potential_SOA
 	char    type_name[10]; // PIEMD, NFW, SIES, point
 	char    name[20]; // name of the clump (e.g. name of the galaxy) : not compulsory
 	//struct point position; // position of the center of the halo
-	double* position_x; // position of the center of the halo
-	double* position_y; // position of the center of the halo
-	double* weight; // weight of the clump (the projected mass sigma0 for PIEMD, the density rhoscale for NFW)
-	double* b0; // Impact parameter
-	double*	vdisp;	//Dispersion velocity
-	double* ellipticity_angle; // orientation of the clump
-	double* ellipticity; // ellipticity of the mass distribition
-	double* ellipticity_potential; //ellipticity of the potential
-	double* rcore;  // core radius
-	double* rcut; // cut radius
-	double* rscale; // scale radius for NFW, Einasto
-	double*	exponent; // exponent for Einasto
-	double* alpha; // exponent for general NFW
-	double* einasto_kappacritic; // critical kappa for Einasto profile
-	double* z; // redshift of the clump
-	double* mag; //magnitude
-	double* lum; //luminosity
-	double* theta; //theta
-	double* anglecos; //theta precomputation of cosinus and sinus values
-	double* anglesin; //theta
-	double* sigma; // sigma
+	type_t* position_x; // position of the center of the halo
+	type_t* position_y; // position of the center of the halo
+	type_t* weight; // weight of the clump (the projected mass sigma0 for PIEMD, the density rhoscale for NFW)
+	type_t* b0; // Impact parameter
+	type_t*	vdisp;	//Dispersion velocity
+	type_t* ellipticity_angle; // orientation of the clump
+	type_t* ellipticity; // ellipticity of the mass distribition
+	type_t* ellipticity_potential; //ellipticity of the potential
+	type_t* rcore;  // core radius
+	type_t* rcut; // cut radius
+	type_t* rscale; // scale radius for NFW, Einasto
+	type_t*	exponent; // exponent for Einasto
+	type_t* alpha; // exponent for general NFW
+	type_t* einasto_kappacritic; // critical kappa for Einasto profile
+	type_t* z; // redshift of the clump
+	type_t* mag; //magnitude
+	type_t* lum; //luminosity
+	type_t* theta; //theta
+	type_t* anglecos; //theta precomputation of cosinus and sinus values
+	type_t* anglesin; //theta
+	type_t* sigma; // sigma
 };
 
 
@@ -279,23 +280,23 @@ struct Potential
        char    type_name[10]; // PIEMD, NFW, SIES, point
        char    name[20]; // name of the clump (e.g. name of the galaxy) : not compulsory
        struct  point position; // position of the center of the halo
-       double  weight; // weight of the clump (the projected mass sigma0 for PIEMD, the density rhoscale for NFW)
-       double  b0; // Impact parameter
-       double  vdisp;  //Dispersion velocity
-       double  ellipticity_angle; // orientation of the clump
-       double  ellipticity; // ellipticity of the mass distribition
-       double  ellipticity_potential; //ellipticity of the potential
-       double  rcore;  // core radius
-       double  rcut; // cut radius
-       double  rscale; // scale radius for NFW, Einasto
-       double  exponent; // exponent for Einasto
-       double  alpha; // exponent for general NFW
-       double  einasto_kappacritic; // critical kappa for Einasto profile
-       double  z; // redshift of the clump
-       double  mag; //magnitude
-       double  lum; //luminosity
-       double  theta; //theta
-       double  sigma; // sigma
+       type_t  weight; // weight of the clump (the projected mass sigma0 for PIEMD, the density rhoscale for NFW)
+       type_t  b0; // Impact parameter
+       type_t  vdisp;  //Dispersion velocity
+       type_t  ellipticity_angle; // orientation of the clump
+       type_t  ellipticity; // ellipticity of the mass distribition
+       type_t  ellipticity_potential; //ellipticity of the potential
+       type_t  rcore;  // core radius
+       type_t  rcut; // cut radius
+       type_t  rscale; // scale radius for NFW, Einasto
+       type_t  exponent; // exponent for Einasto
+       type_t  alpha; // exponent for general NFW
+       type_t  einasto_kappacritic; // critical kappa for Einasto profile
+       type_t  z; // redshift of the clump
+       type_t  mag; //magnitude
+       type_t  lum; //luminosity
+       type_t  theta; //theta
+       type_t  sigma; // sigma
 };
 
 
@@ -350,12 +351,12 @@ struct runmode_param
 	//Mass Mode
 	int		mass;
 	int		mass_gridcells;
-	double	z_mass;
-	double	z_mass_s;
+	type_t	z_mass;
+	type_t	z_mass_s;
 	//Potential Mode
 	int		potential;
 	int		pot_gridcells;
-	double	z_pot;
+	type_t	z_pot;
 	int 	nhalos;
 	//Potfile Mode
 	int		potfile;
@@ -364,7 +365,7 @@ struct runmode_param
 	//displacement Mode
 	int		dpl;
 	int		dpl_gridcells;
-	double	z_dpl;
+	type_t	z_dpl;
 	//Inverse Mode
 	int     inverse; 
 	//Arclet Mode
@@ -374,13 +375,13 @@ struct runmode_param
 	//Grid Mode
 	int 	grid;
 	int 	gridcells;
-	double 	zgrid;
+	type_t 	zgrid;
 	//Critic and caustic mode
 	int		cline;
 	//Amplification Mode
 	int 	amplif;
 	int 	amplif_gridcells;
-	double 	z_amplif;
+	type_t 	z_amplif;
 	//Time/Benchmark mode
 	int		time;
 	  //SOA variables
@@ -408,13 +409,13 @@ struct source_param
 
 struct grid_param
 {
-	double  xmin;
-	double  xmax;
-	double  ymin;
-	double  ymax;
-	double  lmin;
-	double  lmax;
-	double  rmax;
+	type_t  xmin;
+	type_t  xmax;
+	type_t  ymin;
+	type_t  ymax;
+	type_t  lmin;
+	type_t  lmax;
+	type_t  rmax;
 };
 
 /** @brief Control structure for cosmological parameters
@@ -432,13 +433,13 @@ struct grid_param
 struct cosmo_param  
 {
     int     model;            	
-    double  omegaM;				
-    double  omegaX;				
-    double  curvature;			
-    double  wX;					
-    double  wa;					
-    double  H0;					
-    double  h;					
+    type_t  omegaM;
+    type_t  omegaX;
+    type_t  curvature;
+    type_t  wX;
+    type_t  wa;
+    type_t  H0;
+    type_t  h;
 };
 
 /** @brief Control structure for potfile parameters
@@ -478,28 +479,28 @@ struct  potfile_param
 	int     ftype;
 	char    potfile[FILENAME_SIZE];
 	int     type;
-	double  zlens;
-	double  core;
-	double  corekpc;
-	double  mag0;
+	type_t  zlens;
+	type_t  core;
+	type_t  corekpc;
+	type_t  mag0;
 	int     select;
 	int     ircut;
-	double  cut, cut1, cut2;
-	double  cutkpc1, cutkpc2;
+	type_t  cut, cut1, cut2;
+	type_t  cutkpc1, cutkpc2;
 	int     isigma;
-	double  sigma, sigma1, sigma2;
+	type_t  sigma, sigma1, sigma2;
 	int     islope;
-	double  slope, slope1, slope2;
+	type_t  slope, slope1, slope2;
 	int     ivdslope;
-	double  vdslope, vdslope1, vdslope2;
+	type_t  vdslope, vdslope1, vdslope2;
 	int     ivdscat;
-	double  vdscat, vdscat1, vdscat2;
+	type_t  vdscat, vdscat1, vdscat2;
 	int     ircutscat;
-	double  rcutscat, rcutscat1, rcutscat2;
+	type_t  rcutscat, rcutscat1, rcutscat2;
 	int     ia;   // scaling relation of msm200
-	double  a, a1, a2;
+	type_t  a, a1, a2;
 	int     ib;   // scaling relation of msm200
-	double  b, b1, b2;
+	type_t  b, b1, b2;
 	int npotfile;
 };
 
@@ -523,17 +524,17 @@ struct  potfile_param
 struct cline_param
 {
 	int     nplan;
-	double  cz[NPZMAX];
-	double  dos[NPZMAX];	// distcosmo1 to redshift z
-	double  dls[NPZMAX];	// distcosmo2 between lens[0] and z
-	double  dlsds[NPZMAX];	// ratio of dl0s/dos
-	double  limitLow;   // minimum size of the squares in MARCHINGSQUARES or initial step size in SNAKE
-	double  dmax;
-	double  xmin;
-	double  xmax;
-	double  ymin;
-	double  ymax;
-	double  limitHigh; // maximum size of the squares in MARCHINGSQUARES algorithm
+	type_t  cz[NPZMAX];
+	type_t  dos[NPZMAX];	// distcosmo1 to redshift z
+	type_t  dls[NPZMAX];	// distcosmo2 between lens[0] and z
+	type_t  dlsds[NPZMAX];	// ratio of dl0s/dos
+	type_t  limitLow;   // minimum size of the squares in MARCHINGSQUARES or initial step size in SNAKE
+	type_t  dmax;
+	type_t  xmin;
+	type_t  xmax;
+	type_t  ymin;
+	type_t  ymax;
+	type_t  limitHigh; // maximum size of the squares in MARCHINGSQUARES algorithm
 	int nbgridcells; // nbgridcells * nbgridcells = number of pixels for critical line computation
 };
 

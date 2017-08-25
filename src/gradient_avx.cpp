@@ -28,6 +28,8 @@ void print256(__m256d __reg)
 //
 //
 //
+#ifdef 0 // _double
+
 inline
 static 
 void rotateCoordinateSystem_avx(__m256d Q_x, __m256d Q_y, const __m256d P_x, const __m256d P_y, double* angles)
@@ -506,4 +508,5 @@ struct point module_potentialDerivatives_totalGradient_SOA_AVX(const struct poin
         return(grad);
 }
 
+#endif
 

@@ -36,7 +36,8 @@ CPPFLAGS += -fPIC -ftz -qopenmp -xHost -fma -pedantic -lcfitsio
 #CPPFLAGS += -no-vec
 #CPPFLAGS += -qopt-prefetch-distance=64,8 -qopt-streaming-cache-evict=0 -fPIC -qopenmp -xMIC-AVX512 -fma -g -O3 -std=c++0x -Wall -pedantic
 #CPPFLAGS += -qopt-report=5 -S
-CXXFLAGS += -g -O3 -std=c++0x -Wall 
+CXXFLAGS += -g -O3 -std=c++0x -Wall #-D_double
+CXXFLAGS += -g -O3 -std=c++0x -Wall -D_double
 #
 #GEN_SM35 := -gencode=arch=compute_35,code=\"sm_35,compute_35\" #Target CC 3.5, for example
 
@@ -72,8 +73,9 @@ debug: $(PROGRAM_NAME)
 # compilation.
 
 $(PROGRAM_NAME): $(OBJECTS) 
-	$(CXX) $(CPPFLAGS) -shared -o $@ $(program_CXX_OBJS) $(program_C_OBJS) -llenstool 
-
+	#$(CXX) $(CPPFLAGS) -shared -o $@ $(program_CXX_OBJS) $(program_C_OBJS) -llenstool 
+	#$(CXX) $(CPPFLAGS) -shared -o $@ $(program_CXX_OBJS) $(program_C_OBJS)
+	$(CXX) $(CPPFLAGS) -shared -o $@ $(program_CXX_OBJS) $(program_C_OBJS) 
 
 
 
