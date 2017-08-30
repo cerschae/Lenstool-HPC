@@ -4,7 +4,7 @@
 //inline
 //struct point rotateCoordinateSystem(struct point P, double theta);
 inline
-struct point rotateCoordinateSystem(struct point P, double theta)
+struct point rotateCoordinateSystem(struct point P, type_t theta)
 {
         struct  point   Q;
 
@@ -26,7 +26,7 @@ struct point module_potentialDerivatives_totalGradient_81_SOA(const struct point
 struct point grad_halo(const struct point *pImage, const struct Potential *lens);
 //
 /** PIEMD **/
-complex piemd_1derivatives_ci05(double x, double y, double eps, double rc);
+complex piemd_1derivatives_ci05(type_t x, type_t y, type_t eps, type_t rc);
 //
 //struct point (*halo_func[100])(const struct point *pImage, const struct Potential_SOA *lens, int nhalos);
 

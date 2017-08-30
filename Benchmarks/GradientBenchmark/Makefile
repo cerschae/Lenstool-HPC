@@ -42,7 +42,7 @@ CPPFLAGS += $(foreach includelib,$(program_INCLUDE_LIBS),-L$(includelib))
 #CPPFLAGS += -ftz -qopenmp -xHost -llenstool -fma -pedantic -llenstoolhpc  -llt -lcfitsio -lwcs -lgsl -lgslcblas 
 CPPFLAGS += -ftz -qopenmp -xHost -fma -pedantic -llenstoolhpc  -llt -lcfitsio -lwcs -lgsl -lgslcblas 
 CPPFLAGS += -g -O3 -std=c++0x -Wall 
-CPPFLAGS += -D_double
+#CPPFLAGS += -D_double
 #CPPFLAGS += -D__WITH_LENSTOOL
 #CPPFLAGS += -D__USE_GPU
 #

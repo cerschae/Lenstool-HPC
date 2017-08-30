@@ -3352,50 +3352,6 @@ void module_readParameters_SingleLensingSourcesNumberSets(std::string infile, in
 	IM.close();
 }
 
-/* @brief Read in the position of sources that are just once lensed to see where their images lensed back into the image plane appear and what their shape looks like ("cleanlens", no MCMC)
- * !!Not used. Will be reworked!!
- * Read in the position of sources that are just once lensed to see where their images lensed back into the image plane appear and what their shape looks like ("cleanlens", no MCMC)
-* 
-* @param clean lens file, number of clean lens images
-* @return coordinates for each image, shape of each image, redshifts, number of sets, number of images per set 
-*/
-
-void module_readParameters_SingleLensingSources(std::string infile, point sources[], ellipse sources_shape[], type_t redshift[], int nimages_cleanlens[], int nsetofimages_cleanlens )
-{
-	std::string line1;
-	int index=0;
-        int setNumber=0;
-
-
-
-
-/*********initialisation of nimages_cleanlens array*********/
-// Get number of images per set
-for(int i=0; i<nsetofimages_cleanlens; i++){
-	nimages_cleanlens[i]=0;
-    }
-
-
-
-
-// Get number of sets of images
-    std::ifstream IM(infile.c_str(),std::ios::in);
-	if ( IM )
-    	{
-        	while( std::getline(IM,line1))
-        	{ 
-                        // Read in parameters
-			sscanf(line1.c_str(), "%d %lf %lf %lf %lf %lf %lf", &setNumber, &sources[index].x, &sources[index].y, &sources_shape[index].a, &sources_shape[index].b, &sources_shape[index].theta, &redshift[index]);
-			nimages_cleanlens[setNumber-1]++;  // We increase the number of images for set with number "setNumber-1" by 1 (we start with the 0th set)
-                        index++;
-		}
-	}
-	IM.close();
-
-
-
-
-}
 
 
 /** @brief Prints out cosmology

@@ -35,11 +35,11 @@
 /// Useful functions
 //
 complex
-piemd_1derivatives_ci05(double x, double y, double eps, double rc)
+piemd_1derivatives_ci05(type_t x, type_t y, type_t eps, type_t rc)
 {
-        double  sqe, cx1, cxro, cyro, rem2;
+        type_t  sqe, cx1, cxro, cyro, rem2;
         complex zci, znum, zden, zis, zres;
-        double norm;
+        type_t norm;
         //
         //std::cout << "piemd_lderivatives" << std::endl;
         sqe  = sqrt(eps);
@@ -101,7 +101,7 @@ struct point
 grad_halo(const struct point *pImage, const struct Potential *lens)
 {
 	struct point true_coord, true_coord_rot, result;
-	double X, Y, R, angular_deviation, u;
+	type_t X, Y, R, angular_deviation, u;
 	complex zis;
 	//
 	result.x = result.y = 0.;
@@ -133,7 +133,7 @@ grad_halo(const struct point *pImage, const struct Potential *lens)
 			result.y = lens->b0*zis.im;
 			break;
 		case(81): //PIEMD Kassiola & Kovner,1993 I0.5c-I0.5cut
-			double t05;
+			type_t t05;
 			if ( lens->ellipticity_potential > 2E-4 )
 			{
 				//printf("1 ");
@@ -216,7 +216,7 @@ struct point module_potentialDerivatives_totalGradient_5_SOA(const struct point 
                 true_coord.y = pImage->y - lens->position_y[i];
 		//
 		true_coord_rotation = rotateCoordinateSystem(true_coord, lens->ellipticity_angle[i]);
-		double R = sqrt(true_coord_rotation.x*true_coord_rotation.x*(1 - lens->ellipticity_potential[i])+true_coord_rotation.y*true_coord_rotation.y*(1 + lens->ellipticity_potential[i]));
+		type_t R = sqrt(true_coord_rotation.x*true_coord_rotation.x*(1 - lens->ellipticity_potential[i])+true_coord_rotation.y*true_coord_rotation.y*(1 + lens->ellipticity_potential[i]));
 		//
 		grad.x += (1 - lens->ellipticity[i]/3.)*lens->b0[i]*true_coord_rotation.x/R;
 		grad.y += (1 + lens->ellipticity[i]/3.)*lens->b0[i]*true_coord_rotation.y/R;
@@ -240,7 +240,7 @@ struct point module_potentialDerivatives_totalGradient_8_SOA(const struct point 
 		//IACA_START;
 		//
 		struct point true_coord, true_coord_rot; //, result;
-		//double       R, angular_deviation;
+		//type_t       R, angular_deviation;
 		complex      zis;
 		//
 		//result.x = result.y = 0.;
@@ -253,24 +253,24 @@ struct point module_potentialDerivatives_totalGradient_8_SOA(const struct point 
 		// Change the origin of the coordinate system to the center of the clump
 		true_coord_rot = rotateCoordinateSystem(true_coord, lens->ellipticity_angle[i]);
 		//
-		double x   = true_coord_rot.x;
-		double y   = true_coord_rot.y;
+		type_t x   = true_coord_rot.x;
+		type_t y   = true_coord_rot.y;
 		//@@printf("x = %f y = %f\n",  x, y);	
-		double eps = lens->ellipticity_potential[i];
-		double rc  = lens->rcore[i];
+		type_t eps = lens->ellipticity_potential[i];
+		type_t rc  = lens->rcore[i];
 		//
 		//std::cout << "piemd_lderivatives" << std::endl;
 		//
-		double sqe  = sqrt(eps);
+		type_t sqe  = sqrt(eps);
 		//
-		double cx1  = (1. - eps)/(1. + eps);
-		double cxro = (1. + eps)*(1. + eps);
-		double cyro = (1. - eps)*(1. - eps);
+		type_t cx1  = (1. - eps)/(1. + eps);
+		type_t cxro = (1. + eps)*(1. + eps);
+		type_t cyro = (1. - eps)*(1. - eps);
 		//
-		double rem2 = x*x/cxro + y*y/cyro;
+		type_t rem2 = x*x/cxro + y*y/cyro;
 		//
 		complex zci, znum, zden, zres;
-		double norm;
+		type_t norm;
 		//	
 		zci.re  = 0;
 		zci.im  = -0.5*(1. - eps*eps)/sqe;
@@ -347,32 +347,32 @@ struct point module_potentialDerivatives_totalGradient_8_SOA_v2(const struct poi
                 //
                 struct point true_coord, true_coord_rot; //, result;
                 complex      zis;
-                double b0   = lens->b0[i];
+                type_t b0   = lens->b0[i];
                 //
                 true_coord.x = pImage->x - lens->position_x[i];
                 true_coord.y = pImage->y - lens->position_y[i];
                 //
                 //true_coord_rot = rotateCoordinateSystem(true_coord, lens->ellipticity_angle[i]);
                 //
-                double cose = lens->anglecos[i];
-                double sine = lens->anglesin[i];
+                type_t cose = lens->anglecos[i];
+                type_t sine = lens->anglesin[i];
 		//
-                double x = true_coord.x*cose + true_coord.y*sine;
-                double y = true_coord.y*cose - true_coord.x*sine;
+                type_t x = true_coord.x*cose + true_coord.y*sine;
+                type_t y = true_coord.y*cose - true_coord.x*sine;
                 //
-                double eps = lens->ellipticity_potential[i];
-                double rc  = lens->rcore[i];
+                type_t eps = lens->ellipticity_potential[i];
+                type_t rc  = lens->rcore[i];
                 //
-                double sqe  = sqrt(eps);
+                type_t sqe  = sqrt(eps);
                 //
-                double cx1  = (1. - eps)/(1. + eps);
-                double cxro = (1. + eps)*(1. + eps);
-                double cyro = (1. - eps)*(1. - eps);
+                type_t cx1  = (1. - eps)/(1. + eps);
+                type_t cxro = (1. + eps)*(1. + eps);
+                type_t cyro = (1. - eps)*(1. - eps);
                 //
-                double rem2 = x*x/cxro + y*y/cyro;
+                type_t rem2 = x*x/cxro + y*y/cyro;
                 //
                 complex zci, znum, zden, zres;
-                double norm;
+                type_t norm;
                 //
                 zci.re  = 0;
                 zci.im  = -0.5*(1. - eps*eps)/sqe;
@@ -410,32 +410,32 @@ struct point module_potentialDerivatives_totalGradient_8_SOA_v2_novec(const stru
                 //
                 struct point true_coord, true_coord_rot; //, result;
                 complex      zis;
-                double b0   = lens->b0[i];
+                type_t b0   = lens->b0[i];
                 //
                 true_coord.x = pImage->x - lens->position_x[i];
                 true_coord.y = pImage->y - lens->position_y[i];
                 //
                 //true_coord_rot = rotateCoordinateSystem(true_coord, lens->ellipticity_angle[i]);
                 //
-                double cose = lens->anglecos[i];
-                double sine = lens->anglesin[i];
+                type_t cose = lens->anglecos[i];
+                type_t sine = lens->anglesin[i];
                 //
-                double x = true_coord.x*cose + true_coord.y*sine;
-                double y = true_coord.y*cose - true_coord.x*sine;
+                type_t x = true_coord.x*cose + true_coord.y*sine;
+                type_t y = true_coord.y*cose - true_coord.x*sine;
                 //
-                double eps = lens->ellipticity_potential[i];
-                double rc  = lens->rcore[i];
+                type_t eps = lens->ellipticity_potential[i];
+                type_t rc  = lens->rcore[i];
                 //
-                double sqe  = sqrt(eps);
+                type_t sqe  = sqrt(eps);
                 //
-                double cx1  = (1. - eps)/(1. + eps);
-                double cxro = (1. + eps)*(1. + eps);
-                double cyro = (1. - eps)*(1. - eps);
+                type_t cx1  = (1. - eps)/(1. + eps);
+                type_t cxro = (1. + eps)*(1. + eps);
+                type_t cyro = (1. - eps)*(1. - eps);
                 //
-                double rem2 = x*x/cxro + y*y/cyro;
+                type_t rem2 = x*x/cxro + y*y/cyro;
                 //
                 complex zci, znum, zden, zres;
-                double norm;
+                type_t norm;
                 //
                 zci.re  = 0;
                 zci.im  = -0.5*(1. - eps*eps)/sqe;
@@ -467,7 +467,7 @@ struct point module_potentialDerivatives_totalGradient_81_SOA(const struct point
                 //IACA_START;
                 //
                 struct point true_coord, true_coord_rot; //, result;
-                //double       R, angular_deviation;
+                //type_t       R, angular_deviation;
                 complex      zis;
                 //
                 //result.x = result.y = 0.;
@@ -478,24 +478,24 @@ struct point module_potentialDerivatives_totalGradient_81_SOA(const struct point
                 // Change the origin of the coordinate system to the center of the clump
                 true_coord_rot = rotateCoordinateSystem(true_coord, lens->ellipticity_angle[i]);
                 //
-                double x    = true_coord_rot.x;
-                double y    = true_coord_rot.y;
-                double eps  = lens->ellipticity_potential[i];
-                double rc   = lens->rcore[i];
-                double rcut = lens->rcut[i];
-		double b0   = lens->b0[i];
-		double t05  = b0*rcut/(rcut - rc);
+                type_t x    = true_coord_rot.x;
+                type_t y    = true_coord_rot.y;
+                type_t eps  = lens->ellipticity_potential[i];
+                type_t rc   = lens->rcore[i];
+                type_t rcut = lens->rcut[i];
+		type_t b0   = lens->b0[i];
+		type_t t05  = b0*rcut/(rcut - rc);
                 //
-                double sqe  = sqrt(eps);
+                type_t sqe  = sqrt(eps);
                 //
-                double cx1  = (1. - eps)/(1. + eps);
-                double cxro = (1. + eps)*(1. + eps);
-                double cyro = (1. - eps)*(1. - eps);
+                type_t cx1  = (1. - eps)/(1. + eps);
+                type_t cxro = (1. + eps)*(1. + eps);
+                type_t cyro = (1. - eps)*(1. - eps);
                 //
-                double rem2 = x*x/cxro + y*y/cyro;
+                type_t rem2 = x*x/cxro + y*y/cyro;
                 //
                 complex zci, znum, zden, zres_rc, zres_rcut;
-                double norm;
+                type_t norm;
                 //      
                 zci.re  = 0;
                 zci.im  = -0.5*(1. - eps*eps)/sqe;
@@ -539,7 +539,7 @@ struct point module_potentialDerivatives_totalGradient_81_SOA_v2(const struct po
                 //IACA_START;
                 //
                 struct point true_coord, true_coord_rot; //, result;
-                //double       R, angular_deviation;
+                //type_t       R, angular_deviation;
                 complex      zis;
                 //
                 //result.x = result.y = 0.;
@@ -548,27 +548,27 @@ struct point module_potentialDerivatives_totalGradient_81_SOA_v2(const struct po
                 true_coord.y = pImage->y - lens->position_y[i];
                 /*positionning at the potential center*/
                 // Change the origin of the coordinate system to the center of the clump
-                double cose = lens->anglecos[i];
-                double sine = lens->anglesin[i];
-                double x = true_coord.x*cose + true_coord.y*sine;
-                double y = true_coord.y*cose - true_coord.x*sine;
+                type_t cose = lens->anglecos[i];
+                type_t sine = lens->anglesin[i];
+                type_t x = true_coord.x*cose + true_coord.y*sine;
+                type_t y = true_coord.y*cose - true_coord.x*sine;
 		//
-                double eps  = lens->ellipticity_potential[i];
-                double rc   = lens->rcore[i];
-                double rcut = lens->rcut[i];
-                double b0   = lens->b0[i];
-                double t05  = b0*rcut/(rcut - rc);
+                type_t eps  = lens->ellipticity_potential[i];
+                type_t rc   = lens->rcore[i];
+                type_t rcut = lens->rcut[i];
+                type_t b0   = lens->b0[i];
+                type_t t05  = b0*rcut/(rcut - rc);
                 //
-                double sqe  = sqrt(eps);
+                type_t sqe  = sqrt(eps);
                 //
-                double cx1  = (1. - eps)/(1. + eps);
-                double cxro = (1. + eps)*(1. + eps);
-                double cyro = (1. - eps)*(1. - eps);
+                type_t cx1  = (1. - eps)/(1. + eps);
+                type_t cxro = (1. + eps)*(1. + eps);
+                type_t cyro = (1. - eps)*(1. - eps);
                 //
-                double rem2 = x*x/cxro + y*y/cyro;
+                type_t rem2 = x*x/cxro + y*y/cyro;
                 //
                 complex zci, znum, zden, zres_rc, zres_rcut;
-                double norm;
+                type_t norm;
                 //
                 zci.re  = 0;
                 zci.im  = -0.5*(1. - eps*eps)/sqe;
@@ -608,7 +608,7 @@ struct point module_potentialDerivatives_totalGradient_81_SOA_v2_novec(const str
                 //IACA_START;
                 //
                 struct point true_coord, true_coord_rot; //, result;
-                //double       R, angular_deviation;
+                //type_t       R, angular_deviation;
                 complex      zis;
                 //
                 //result.x = result.y = 0.;
@@ -617,27 +617,27 @@ struct point module_potentialDerivatives_totalGradient_81_SOA_v2_novec(const str
                 true_coord.y = pImage->y - lens->position_y[i];
                 /*positionning at the potential center*/
                 // Change the origin of the coordinate system to the center of the clump
-                double cose = lens->anglecos[i];
-                double sine = lens->anglesin[i];
-                double x = true_coord.x*cose + true_coord.y*sine;
-                double y = true_coord.y*cose - true_coord.x*sine;
+                type_t cose = lens->anglecos[i];
+                type_t sine = lens->anglesin[i];
+                type_t x = true_coord.x*cose + true_coord.y*sine;
+                type_t y = true_coord.y*cose - true_coord.x*sine;
                 //
-                double eps  = lens->ellipticity_potential[i];
-                double rc   = lens->rcore[i];
-                double rcut = lens->rcut[i];
-                double b0   = lens->b0[i];
-                double t05  = b0*rcut/(rcut - rc);
+                type_t eps  = lens->ellipticity_potential[i];
+                type_t rc   = lens->rcore[i];
+                type_t rcut = lens->rcut[i];
+                type_t b0   = lens->b0[i];
+                type_t t05  = b0*rcut/(rcut - rc);
                 //
-                double sqe  = sqrt(eps);
+                type_t sqe  = sqrt(eps);
                 //
-                double cx1  = (1. - eps)/(1. + eps);
-                double cxro = (1. + eps)*(1. + eps);
-                double cyro = (1. - eps)*(1. - eps);
+                type_t cx1  = (1. - eps)/(1. + eps);
+                type_t cxro = (1. + eps)*(1. + eps);
+                type_t cyro = (1. - eps)*(1. - eps);
                 //
-                double rem2 = x*x/cxro + y*y/cyro;
+                type_t rem2 = x*x/cxro + y*y/cyro;
                 //
                 complex zci, znum, zden, zres_rc, zres_rcut;
-                double norm;
+                type_t norm;
                 //
                 zci.re  = 0;
                 zci.im  = -0.5*(1. - eps*eps)/sqe;
