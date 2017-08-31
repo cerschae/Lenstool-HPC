@@ -52,9 +52,9 @@ CPPFLAGS += -fPIC
 LDFLAGS := -llenstoolhpc -llenstool -llenstoolhpc -llenstoolhpc_GPU -llt -lcfitsio -lwcs -lgsl -lgslcblas
 #
 #NVFLAGS := -O3 -g -G -rdc=true -ccbin icpc -Xcompiler '-Wall -fPIC -qopenmp' -D__WITH_LENSTOOL 
-NVFLAGS := -O3 -ccbin icpc -Xcompiler '-Wall -fPIC' -D__WITH_LENSTOOL
-NVFLAGS += -gencode arch=compute_60,code=sm_60
-#NVFLAGS += -arch=sm_60
+NVFLAGS := -O3 -ccbin icpc -Xcompiler '-Wall -fPIC' #-D__WITH_LENSTOOL
+#NVFLAGS += -gencode arch=compute_60,code=sm_60
+NVFLAGS += -arch=sm_35
 NVFLAGS += $(foreach includedir,$(program_INCLUDE_DIRS),-I$(includedir))
 NVFLAGS += $(foreach includelib,$(program_INCLUDE_LIBS),-L$(includelib))
 #

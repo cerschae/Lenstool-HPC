@@ -27,16 +27,9 @@ extern "C"
 {
 	double myseconds();
 }
-//
-//void
-//module_potentialDerivatives_totalGradient_SOA_CPU_GPU(double *grid_grad_x, double *grid_grad_y, const struct grid_param *frame, const struct Potential_SOA *lens_cpu, const struct Potential_SOA *lens_gpu, int nbgridcells, int nhalos);
-//
-//void
-//module_potentialDerivatives_totalGradient_SOA_CPU_GPU_v2(double *grid_grad_x, double *grid_grad_y, const struct grid_param *frame, const struct Potential_SOA *lens_cpu, const struct Potential_SOA *lens_gpu, int nbgridcells, int nhalos);
-//
-//
-//
-//
+
+__global__ void module_potentialDerivatives_totalGradient_SOA_GPU(double *grid_grad_x, double *grid_grad_y, const struct Potential_SOA *lens, const struct grid_param *frame, int nbgridcells, int nhalos);
+
 void gradient_grid_GPU_sorted(double *grid_grad_x, double *grid_grad_y, const struct grid_param *frame, const struct Potential_SOA *lens, int nhalos ,int nbgridcells)
 {
 
@@ -254,103 +247,6 @@ module_potentialDerivatives_totalGradient_8_SOA_GPU_loc(double *grid_grad_x, dou
 }
 
 
-
-
-/*
-__global__ void gradient_grid_kernel(double *grid_grad_x, double *grid_grad_y, const struct grid_param *frame, int Nlens,int nbgridcells, const struct Potential_SOA *lens) {
-
-	// *grad_x = *grad_y = 0.;
-
-	int bid=blockIdx.x; // index of the block (and of the set of images)
-	int tid=threadIdx.x; // index of the thread within the block
-
-	double dx,dy;        //pixelsize
-	int grid_dim, index;
-	struct point image_point, Grad;
-	dx = (frame->xmax - frame->xmin)/(nbgridcells-1);
-	dy = (frame->ymax - frame->ymin)/(nbgridcells-1);
-	grid_dim = (nbgridcells);
-
-	index = bid * threadsPerBlock + tid ;
-
-	while(index < grid_dim*grid_dim){
-
-		grid_grad_x[index] = 0.;
-		grid_grad_y[index] = 0.;
-
-		image_point.x = frame->xmin + (index/grid_dim)*dx;
-		image_point.y = frame->ymin + (index % grid_dim)*dy;
-
-		Grad = module_potentialDerivatives_totalGradient_SOA_GPU_cur(&image_point, lens, Nlens);
-
-		grid_grad_x[index] = Grad.x;
-		grid_grad_y[index] = Grad.y;
-
-		bid += gridDim.x;
-		index = bid * threadsPerBlock + tid;
-	}
-}
-*/
-
-/*
-__global__ void gradient_grid_kernel_v2(double *grid_grad_x, double *grid_grad_y, const struct grid_param *frame, int Nlens,int nbgridcells, const struct Potential_SOA *lens) 
-{
-	// *grad_x = *grad_y = 0.;
-
-	int bid =  blockIdx.x; // index of the block (and of the set of images)
-	int tid = threadIdx.x; // index of the thread within the block
-
-	double dx,dy;        //pixelsize
-	int grid_dim, index;
-	struct point image_point, Grad;
-	//
-	dx = (frame->xmax - frame->xmin)/(nbgridcells-1);
-	dy = (frame->ymax - frame->ymin)/(nbgridcells-1);
-	//
-	grid_dim = (nbgridcells);
-	//
-	int row = blockIdx.y * blockDim.y + threadIdx.y;
-	int col = blockIdx.x * blockDim.x + threadIdx.x;
-	//
-	index = col*nbgridcells + row ;
-	//
-	//while(index < grid_dim*grid_dim){
-
-	//grid_grad_x[index] = 0.;
-	//grid_grad_y[index] = 0.;
-
-	image_point.x = frame->xmin + col*dx;
-	image_point.y = frame->ymin + row*dy;
-
-	Grad = module_potentialDerivatives_totalGradient_SOA_GPU(&image_point, lens, Nlens);
-
-	grid_grad_x[index] = Grad.x;
-	grid_grad_y[index] = Grad.y;
-
-	bid += gridDim.x;
-	index = bid * threadsPerBlock + tid;
-	//}
-}
-*/
-
-
-/*
-typedef struct point (*halo_func_GPU_t) (const struct point *pImage, const struct Potential_SOA *lens, int shalos, int nhalos);
-
-__constant__ halo_func_GPU_t halo_func_GPU[100] =
-{
-	0, 0, 0, 0, 0, module_potentialDerivatives_totalGradient_5_SOA_GPU, 0, 0, module_potentialDerivatives_totalGradient_8_SOA_GPU,  0,
-	0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-	0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-	0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-	   0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-	   0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-	   0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-	   0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-	   0,  module_potentialDerivatives_totalGradient_81_SOA_GPU, 0, 0, 0, 0, 0, 0, 0, 0,
-	   0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	   };
-*/
 void
 module_potentialDerivatives_totalGradient_SOA_CPU_GPU(double *grid_grad_x, double *grid_grad_y, const struct grid_param *frame, const struct Potential_SOA *lens_cpu, const struct Potential_SOA *lens_gpu, int nbgridcells, int nhalos)
 {
@@ -370,19 +266,17 @@ module_potentialDerivatives_totalGradient_SOA_CPU_GPU(double *grid_grad_x, doubl
 	//cudasafe(cudaMalloc( (void**)&(dtimer), (int) nbgridcells*nbgridcells*sizeof(double)),"Gradientgpu.cu : totalGradient_SOA_CPU_GPU: " );
 	//
 	{
-		//dim3 dimBlock(BLOCK_SIZE_X/1, BLOCK_SIZE_Y);
-		//dim3 dimGrid (GRID_SIZE_X   , GRID_SIZE_Y );	
 		dim3 threads(BLOCK_SIZE_X, BLOCK_SIZE_Y/1);
 		dim3 grid   (GRID_SIZE_X , GRID_SIZE_Y);	
 		//
 		int count = nhalos;	
-		//printf("nhalos = %d, size of shared memory = %lf\n", nhalos, (double) (8*nhalos + BLOCK_SIZE_X*nbgridcells/BLOCK_SIZE_Y)*sizeof(double));
 		printf("nhalos = %d, size of shared memory = %lf\n", nhalos, (double) (8*nhalos + BLOCK_SIZE_X*BLOCK_SIZE_Y)*sizeof(double));
 		//
 		cudaMemset(grid_grad_x, 0, nbgridcells*nbgridcells*sizeof(double));
 		cudaMemset(grid_grad_y, 0, nbgridcells*nbgridcells*sizeof(double));
 		//
-		module_potentialDerivatives_totalGradient_8_SOA_GPU_cur<<<grid, threads>>> (grid_grad_x, grid_grad_y, lens_gpu, frame, nbgridcells, shalos, count);
+		//module_potentialDerivatives_totalGradient_8_SOA_GPU_cur<<<grid, threads>>> (grid_grad_x, grid_grad_y, lens_gpu, frame, nbgridcells, shalos, count);
+		module_potentialDerivatives_totalGradient_SOA_GPU<<<grid, threads>>> (grid_grad_x, grid_grad_y, lens_gpu, frame, nbgridcells, nhalos);
 		//module_potentialDerivatives_totalGradient_8_SOA_GPU_SM2<<<grid, threads>>> (grid_grad_x, grid_grad_y, lens_gpu, frame, nbgridcells, shalos, count);
 		//module_potentialDerivatives_totalGradient_8_SOA_GPU_SM4<<<dimGrid, dimBlock, (8*nhalos + BLOCK_SIZE_X*nbgridcells/BLOCK_SIZE_Y)*sizeof(double)>>> (grid_grad_x, grid_grad_y, lens_gpu, frame, nbgridcells, shalos, count/*, dtimer*/);
 		cudasafe(cudaGetLastError(), "module_potentialDerivative_totalGradient_SOA_CPU_GPU_8_SOA_GPU_SM4");
@@ -435,3 +329,5 @@ module_potentialDerivatives_totalGradient_SOA_CPU_GPU(double *grid_grad_x, doubl
 	return(grad);
 	 */
 }
+
+

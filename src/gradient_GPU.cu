@@ -39,6 +39,9 @@ void calculate_cossin_values(double *theta_cos, double *theta_sin, double *angle
 
 
 
+
+
+
 __global__
 void
 module_potentialDerivatives_totalGradient_8_SOA_GPU_cur(double *grid_grad_x, double *grid_grad_y, const struct Potential_SOA *lens, const struct grid_param *frame, int nbgridcells, int shalos, int nhalos)
@@ -696,3 +699,154 @@ module_potentialDerivatives_totalGradient_8_SOA_GPU_v2(double *grid_grad_x, doub
 	}
 }
 
+#if 1
+typedef struct point (*halo_func_GPU_t) (const struct point *pImage, const struct Potential_SOA *lens, int shalos, int nhalos);
+
+__constant__ halo_func_GPU_t halo_func_GPU[100] =
+{
+	0, 0, 0, 0, 0, module_potentialDerivatives_totalGradient_5_SOA_GPU, 0, 0, module_potentialDerivatives_totalGradient_8_SOA_GPU,  0,
+	0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+	0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+	0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+	   0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+	   0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+	   0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+	   0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+	   0,  module_potentialDerivatives_totalGradient_81_SOA_GPU, 0, 0, 0, 0, 0, 0, 0, 0,
+	   0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	   };
+#endif
+
+__device__ point module_potentialDerivatives_totalGradient_5_SOA_GPU(const struct point *pImage, const struct Potential_SOA *lens, int shalos, int nhalos){
+	printf("Type 5\n");
+
+}
+__device__ point module_potentialDerivatives_totalGradient_8_SOA_GPU(const struct point *image_point, const struct Potential_SOA *lens, int shalos, int nhalos){
+	struct point grad;
+	grad.x = 0;
+	grad.y = 0;
+	//
+	for(int i = shalos; i < shalos + nhalos; i++)
+	{
+        complex      zis;
+        // positioning at the potential center
+        // Change the origin of the coordinate system to the center of the clump
+        //@@if ((row == Ny) && (col == Nx)) printf("image_x = %f, %f image_y = %f, %f\n",  image_point.x, frame->xmin, image_point.y,frame->ymin);
+        double true_coord_x = image_point->x - __ldg(&lens->position_x[i]);
+        double true_coord_y = image_point->y - __ldg(&lens->position_y[i]);
+        //if ((row == Ny) && (col == Nx)) printf("x = %f y = %f\n",  true_coord_x, true_coord_y);
+        //
+        double cosi = __ldg(&lens->anglecos[i]);
+        double sinu = __ldg(&lens->anglesin[i]);
+        //
+        double x = true_coord_x*cosi + true_coord_y*sinu;
+        double y = true_coord_y*cosi - true_coord_x*sinu;
+        //
+        //if ((row == Ny) && (col == Nx)) printf("x = %f y = %f\n",  x, y);
+        //
+        double eps = __ldg(&lens->ellipticity_potential[i]);
+        //
+        double sqe  = sqrt(eps);
+        //
+        double rem2 = x*x/((1. + eps)*(1. + eps)) + y*y/((1. - eps)*(1. - eps));
+        //
+        complex zci;
+        complex znum, zden, zres;
+        double norm;
+        //
+        zci.re  = 0;
+        zci.im  = -0.5*(1. - eps*eps)/sqe;
+        //@@if ((col == Nx) && (row == Ny)) printf("%d %d, zis: %f %f\n", row, col, zci.re, zci.im);
+        //
+        double rc  = __ldg(&lens->rcore[i]);
+        double cx1  = (1. - eps)/(1. + eps);
+        znum.re = cx1*x;
+        znum.im = 2.*sqe*sqrt(rc*rc + rem2) - y/cx1;
+        //
+        zden.re = x;
+        zden.im = 2.*rc*sqe - y;
+        norm    = (zden.re*zden.re + zden.im*zden.im);     // zis = znum/zden
+        //@@if ((col == Nx) && (row == Ny)) printf("norm = %f\n", norm);
+        //
+        zis.re  = (znum.re*zden.re + znum.im*zden.im)/norm;
+        zis.im  = (znum.im*zden.re - znum.re*zden.im)/norm;
+        //
+        //@@if ((col == Nx) && (row == Ny)) printf("%d %d, zis: %f %f\n", row, col, zis.re, zis.im);
+        //
+        norm    = zis.re;
+        //
+        zis.re  = log(sqrt(norm*norm + zis.im*zis.im));  // ln(zis) = ln(|zis|)+i.Arg(zis)
+        zis.im  = atan2(zis.im, norm);
+        //
+        //@@if ((col == Nx) && (row == Ny)) printf("%d %d, zis: %f %f\n", row, col, zis.re, zis.im);
+        //
+        zres.re = zci.re*zis.re - zci.im*zis.im;   // Re( zci*ln(zis) )
+        zres.im = zci.im*zis.re + zis.im*zci.re;   // Im( zci*ln(zis) )
+        //
+        //@@if ((col == Nx) && (row == Ny)) printf("%d %d, zres: %f %f\n", row, col, zres.re, zres.im);
+        //
+        double b0  = __ldg(&lens->b0[i]);
+        grad.x += b0*(zres.re*cosi - zres.im*sinu);
+        grad.y += b0*(zres.im*cosi + zres.re*sinu);
+        //@@if ((col == Nx) && (row == Ny)) printf("grad: %f %f\n", grad.x, grad.y);
+	}
+	//IACA_END;
+	//
+	return(grad);
+
+}
+__device__ point module_potentialDerivatives_totalGradient_81_SOA_GPU(const struct point *pImage, const struct Potential_SOA *lens, int shalos, int nhalos){
+	printf("Type 81\n");
+
+}
+
+__global__
+void
+module_potentialDerivatives_totalGradient_SOA_GPU(double *grid_grad_x, double *grid_grad_y, const struct Potential_SOA *lens, const struct grid_param *frame, int nbgridcells, int nhalos)
+{
+    struct point grad, clumpgrad, image_point;
+    //
+    int col = blockIdx.x*blockDim.x + threadIdx.x;
+    int row = blockIdx.y*blockDim.y + threadIdx.y;
+
+    //
+    if ((row < nbgridcells) && (col < nbgridcells))
+    {
+        //
+        double dx = (frame->xmax - frame->xmin)/(nbgridcells-1);
+        double dy = (frame->ymax - frame->ymin)/(nbgridcells-1);
+		//
+		int index = row*nbgridcells + col;
+		// Create temp grad variable to minimise writing to global memory grid_grad
+		grad.x = 0;
+		grad.y = 0;
+		//
+		image_point.x = frame->xmin + col*dx;
+		image_point.y = frame->ymin + row*dy;
+		//
+		int shalos = 0;
+		while (shalos < nhalos)
+		{
+			int lens_type = lens->type[shalos];
+			int count     = 1;
+			while (lens->type[shalos + count] == lens_type) count++;
+			//
+			//if(row == 0 && col == 0) printf("type = %d, count %d , shalos %d \n", lens_type,count,shalos );
+			//
+			clumpgrad = (*halo_func_GPU[lens_type])(&image_point, lens, shalos, count);
+			//
+			grad.x += clumpgrad.x;
+			grad.y += clumpgrad.y;
+			shalos += count;
+		}
+		// Write to global memory
+		grid_grad_x[index] = grad.x;
+		grid_grad_y[index] = grad.y;
+	//if ((row == 0) && (col == 9))
+	//printf("%f %f: %f %f\n",  image_point.x, image_point.y, grid_grad_x[index], grid_grad_y[index]);
+    }
+
+
+
+
+}
