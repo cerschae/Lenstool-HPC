@@ -29,7 +29,12 @@ convert_to_LT(Potential_SOA* lenses, int nlenses)
                 lens[i].C.y                   = lenses->position_y[i];
                 //
                 lens[i].sigma                 = 1.; 			// disp
-                lens[i].type                  = lenses->type[i];
+                if (lenses->type[i] == 5) {
+                	lens[i].type = 1;
+                }
+                else{
+                	lens[i].type = lenses->type[i];
+                }
                 lens[i].emass                 = 0.11;
                 lens[i].epot                  = lenses->ellipticity_potential[i];
 		//printf("%f %f\n", lenses->ellipticity_potential[i], lenses->ellipticity[i]);

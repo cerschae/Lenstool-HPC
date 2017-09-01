@@ -1262,6 +1262,11 @@ std::ifstream IN(infile.c_str(), std::ios::in);
 			ilens->type=8;
 			strcpy(ilens->type_name,"PIEMD1");//ilens->type_name="point";
 		}
+		if(!strcmp(third.c_str(), "81") )
+		{
+			ilens->type=81;
+			strcpy(ilens->type_name,"PIEMD81");//ilens->type_name="point";
+		}
 		
         }
         

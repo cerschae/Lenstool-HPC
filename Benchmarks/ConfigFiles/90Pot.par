@@ -28,7 +28,7 @@ cosmology
 	wX        -1.000
 	end
 potentiel 1
-	profil     8									#Profile: 5 SIS, 8 PIEMD
+	profil	8								#Profile: 5 SIS, 8 PIEMD
 	x_centre     0.000								#X Position [arcsec]
 	y_centre     0.000								#Y Position [arcsec]
 	ellipticity     0.11					#Ellipticity
@@ -38,7 +38,7 @@ potentiel 1
 	z_lens     0.4									#Redshift of lens
 	end
 potentiel 2
-	profil     8									#Profile: 5 SIS, 8 PIEMD
+	profil	8									#Profile: 5 SIS, 8 PIEMD
 	x_centre     25.000								#X Position [arcsec]
 	y_centre     20.000								#Y Position [arcsec]
 	ellipticity     0.11							#Ellipticity
