@@ -14,3 +14,5 @@ export GSL_ROOT=/users/fgilles/Projects/Libs/gsl-2.2/
 
 export LD_LIBRARY_PATH=$LENSTOOLHPC_ROOT/src:$LD_LIBRARY_PATH 
 module load intel-compilers/2016.3.210 cuda80
+source /cm/shared/apps/INTEL/2016/impi/5.1.3.210/bin64/mpivars.sh
+CXX=mpiicpc
