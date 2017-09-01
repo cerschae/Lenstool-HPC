@@ -120,9 +120,9 @@ grad_halo(const struct point *pImage, const struct Potential *lens)
 			/*rotation of the coordiante axes to match the potential axes*/
 			//true_coord_rotation = rotateCoordinateSystem(true_coord, lens->ellipticity_angle);
 			//
-			R=sqrt(true_coord_rot.x*true_coord_rot.x*(1 - lens->ellipticity/3.) + true_coord_rot.y*true_coord_rot.y*(1 + lens->ellipticity/3.));	//ellippot = ellipmass/3
-			result.x = (1 - lens->ellipticity/3.)*lens->b0*true_coord_rot.x/(R);
-			result.y = (1 + lens->ellipticity/3.)*lens->b0*true_coord_rot.y/(R);
+			R=sqrt(true_coord_rot.x*true_coord_rot.x*(1 - lens->ellipticity_potential) + true_coord_rot.y*true_coord_rot.y*(1 + lens->ellipticity_potential));	//ellippot = ellipmass/3
+			result.x = (1 - lens->ellipticity_potential)*lens->b0*true_coord_rot.x/(R);
+			result.y = (1 + lens->ellipticity_potential)*lens->b0*true_coord_rot.y/(R);
 			break;
 		case(8): /* PIEMD */
 			/*rotation of the coordiante axes to match the potential axes*/
@@ -203,8 +203,9 @@ struct point module_potentialDerivatives_totalGradient(const int nhalos, const s
 struct point module_potentialDerivatives_totalGradient_5_SOA(const struct point *pImage, const struct Potential_SOA *lens, int shalos, int nhalos)
 {
         asm volatile("# module_potentialDerivatives_totalGradient_SIS_SOA begins");
+        //printf("# module_potentialDerivatives_totalGradient_SIS_SOA begins\n");
 	//
-	struct point grad, clumpgrad;
+	struct point grad, result;
         grad.x = 0;
         grad.y = 0;
 	for(int i = shalos; i < shalos + nhalos; i++)
@@ -216,12 +217,94 @@ struct point module_potentialDerivatives_totalGradient_5_SOA(const struct point 
                 true_coord.y = pImage->y - lens->position_y[i];
 		//
 		true_coord_rotation = rotateCoordinateSystem(true_coord, lens->ellipticity_angle[i]);
-		double R = sqrt(true_coord_rotation.x*true_coord_rotation.x*(1 - lens->ellipticity_potential[i])+true_coord_rotation.y*true_coord_rotation.y*(1 + lens->ellipticity_potential[i]));
 		//
-		grad.x += (1 - lens->ellipticity[i]/3.)*lens->b0[i]*true_coord_rotation.x/R;
-		grad.y += (1 + lens->ellipticity[i]/3.)*lens->b0[i]*true_coord_rotation.y/R;
+		double ell_pot = lens->ellipticity_potential[i];
+                //
+		double R = sqrt(true_coord_rotation.x*true_coord_rotation.x*(1 - ell_pot) + true_coord_rotation.y*true_coord_rotation.y*(1 + ell_pot));
+		//
+		result.x = (1 - ell_pot)*lens->b0[i]*true_coord_rotation.x/R;
+		result.y = (1 + ell_pot)*lens->b0[i]*true_coord_rotation.y/R;
+		//
+		result = rotateCoordinateSystem(result, -lens->ellipticity_angle[i]);
+		//
+		grad.x += result.x;
+		grad.y += result.y;
+		
 	}
 	return grad;
+}
+//
+//
+//
+struct point module_potentialDerivatives_totalGradient_5_SOA_v2(const struct point *pImage, const struct Potential_SOA *lens, int shalos, int nhalos)
+{
+        asm volatile("# module_potentialDerivatives_totalGradient_SIS_SOA_v2 begins");
+        //printf("# module_potentialDerivatives_totalGradient_SIS_SOA_v2 begins\n");
+        //
+        struct point grad, result;
+        grad.x = 0;
+        grad.y = 0;
+        for(int i = shalos; i < shalos + nhalos; i++)
+        {
+                //
+                struct point true_coord, true_coord_rotation;
+                //
+                true_coord.x = pImage->x - lens->position_x[i];
+                true_coord.y = pImage->y - lens->position_y[i];
+                //
+                //true_coord_rotation = rotateCoordinateSystem(true_coord, lens->ellipticity_angle[i]);
+		double cose = lens->anglecos[i];
+                double sine = lens->anglesin[i];
+		//
+		double x = true_coord.x*cose + true_coord.y*sine;
+                double y = true_coord.y*cose - true_coord.x*sine;
+		//
+		double ell_pot = lens->ellipticity_potential[i];
+		//
+		double R = sqrt(x*x*(1 - ell_pot) + y*y*(1 + ell_pot));
+		//
+		result.x = (1 - ell_pot)*lens->b0[i]*x/R;
+                result.y = (1 + ell_pot)*lens->b0[i]*y/R;
+                //
+                grad.x += result.x*cose - result.y*sine; 
+                grad.y += result.y*cose + result.x*sine; 
+        }
+        return grad;
+}
+//
+//
+//
+struct point module_potentialDerivatives_totalGradient_5_SOA_v2_novec(const struct point *pImage, const struct Potential_SOA *lens, int shalos, int nhalos)
+{
+        asm volatile("# module_potentialDerivatives_totalGradient_SIS_SOA begins");
+        //
+        struct point grad, result;
+        grad.x = 0;
+        grad.y = 0;
+#pragma novec
+	for(int i = shalos; i < shalos + nhalos; i++)
+        {
+                //
+                struct point true_coord, true_coord_rotation;
+                //
+                true_coord.x = pImage->x - lens->position_x[i];
+                true_coord.y = pImage->y - lens->position_y[i];
+                //
+                //true_coord_rotation = rotateCoordinateSystem(true_coord, lens->ellipticity_angle[i]);
+                double cose = lens->anglecos[i];
+                double sine = lens->anglesin[i];
+                //
+                double x = true_coord.x*cose + true_coord.y*sine;
+                double y = true_coord.y*cose - true_coord.x*sine;
+                //:
+                double R = sqrt(x*x*(1 - lens->ellipticity[i]/3.) + y*y*(1 + lens->ellipticity[i]/3.));
+                result.x = (1 - lens->ellipticity[i]/3.)*lens->b0[i]*x/R;
+                result.y = (1 + lens->ellipticity[i]/3.)*lens->b0[i]*y/R;
+                //
+                grad.x += result.x*cose - result.y*sine;
+                grad.y += result.y*cose + result.x*sine;
+        }
+        return grad;
 }
 //
 //
@@ -666,7 +749,7 @@ struct point module_potentialDerivatives_totalGradient_81_SOA_v2_novec(const str
 typedef struct point (*halo_func_t) (const struct point *pImage, const struct Potential_SOA *lens, int shalos, int nhalos); 
 halo_func_t halo_func[100] = 
 { 
-0, 0, 0, 0, 0, module_potentialDerivatives_totalGradient_5_SOA, 0, 0, module_potentialDerivatives_totalGradient_8_SOA_v2,  0,
+0, 0, 0, 0, 0, module_potentialDerivatives_totalGradient_5_SOA_v2, 0, 0, module_potentialDerivatives_totalGradient_8_SOA_v2,  0,
 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -703,7 +786,7 @@ struct point module_potentialDerivatives_totalGradient_SOA(const struct point *p
 		int lens_type = lens->type[shalos];
 		int count     = 1;
 		while (lens->type[shalos + count] == lens_type) count++;
-		//std::cerr << "type = " << lens_type << " " << count << " " << shalos << std::endl;
+		//std::cerr << "type = " << lens_type << " " << count << " " << shalos << " " << " func = " << halo_func[lens_type] << std::endl;
 		//	
 		clumpgrad = (*halo_func[lens_type])(pImage, lens, shalos, count);
 		//
@@ -720,7 +803,7 @@ struct point module_potentialDerivatives_totalGradient_SOA(const struct point *p
 typedef struct point (*halo_func_t_novec) (const struct point *pImage, const struct Potential_SOA *lens, int shalos, int nhalos);
 halo_func_t_novec halo_func_novec[100] =
 {
-0, 0, 0, 0, 0, module_potentialDerivatives_totalGradient_5_SOA, 0, 0, module_potentialDerivatives_totalGradient_8_SOA_v2_novec,  0,
+0, 0, 0, 0, 0, module_potentialDerivatives_totalGradient_5_SOA_v2_novec, 0, 0, module_potentialDerivatives_totalGradient_8_SOA_v2_novec,  0,
 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,

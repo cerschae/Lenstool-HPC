@@ -44,6 +44,218 @@ void rotateCoordinateSystem_avx(__m256d Q_x, __m256d Q_y, const __m256d P_x, con
 //
 //
 //
+struct point module_potentialDerivatives_totalGradient_5_SOA_AVX(const struct point *pImage, const struct Potential_SOA *lens, int
+shalos, int nhalos)
+{
+        asm volatile("# module_potentialDerivatives_totalGradient_SIS_SOA begins");
+        //
+        struct point grad, clumpgrad;
+        grad.x = 0;
+        grad.y = 0;
+        //
+        // smearing the image coordinates on registers
+        __m256d image_x  = _mm256_set1_pd(pImage->x);
+        __m256d image_y  = _mm256_set1_pd(pImage->y);
+        //
+        __m256d __grad_x = _mm256_set1_pd(0.);
+        __m256d __grad_y = _mm256_set1_pd(0.);
+        //
+        __m256d __result_x = _mm256_set1_pd(0.);
+        __m256d __result_y = _mm256_set1_pd(0.);
+        //
+        __m256d one      = _mm256_set1_pd( 1. );
+        //
+        int i;
+        int imax = shalos + nhalos;
+//#pragma unroll
+        for(i = shalos; i < imax - imax%4; i = i + 4)
+        {
+                //
+                struct point true_coord, true_coord_rotation;
+                //
+                __m256d b0                = _mm256_loadu_pd(&lens->b0[i]);
+                //
+                //true_coord.x = pImage->x - lens->position_x[i];
+                //true_coord.y = pImage->y - lens->position_y[i];
+                //
+                __m256d true_coord_x      = _mm256_sub_pd(image_x, _mm256_loadu_pd(&lens->position_x[i]));
+                __m256d true_coord_y      = _mm256_sub_pd(image_y, _mm256_loadu_pd(&lens->position_y[i]));
+                //
+                __m256d theta     = _mm256_loadu_pd(&lens->ellipticity_angle[i]);
+                /*positionning at the potential center*/
+                __m256d cos_theta;
+                __m256d sin_theta = _mm256_sincos_pd(&cos_theta, theta);
+                //
+                __m256d x         = _mm256_add_pd(_mm256_mul_pd(true_coord_x, cos_theta), _mm256_mul_pd(true_coord_y, sin_theta));
+                __m256d y         = _mm256_sub_pd(_mm256_mul_pd(true_coord_y, cos_theta), _mm256_mul_pd(true_coord_x, sin_theta));
+                //
+                //true_coord_rotation = rotateCoordinateSystem(true_coord, lens->ellipticity_angle[i]);
+                //
+                __m256d ell_pot               = _mm256_loadu_pd(&lens->ellipticity_potential[i]);
+                //
+                __m256d _R  = __SQRT(ADD(MUL(x, MUL(x, SUB(one, ell_pot))), MUL(y, MUL(y, ADD(one, ell_pot)))));
+                //
+                __result_x = MUL(MUL(SUB(one, ell_pot), b0), MUL(x, __INV(_R)));
+                __result_y = MUL(MUL(ADD(one, ell_pot), b0), MUL(y, __INV(_R)));
+                //
+                __grad_x = __grad_x + _mm256_sub_pd(_mm256_mul_pd(__result_x, cos_theta), _mm256_mul_pd(__result_y, sin_theta));
+                __grad_y = __grad_y + _mm256_add_pd(_mm256_mul_pd(__result_y, cos_theta), _mm256_mul_pd(__result_x, sin_theta));
+                //
+        }
+        //
+        grad.x  = ((double*) &__grad_x)[0];
+        grad.x += ((double*) &__grad_x)[1];
+        grad.x += ((double*) &__grad_x)[2];
+        grad.x += ((double*) &__grad_x)[3];
+        //
+        grad.y  = ((double*) &__grad_y)[0];
+        grad.y += ((double*) &__grad_y)[1];
+        grad.y += ((double*) &__grad_y)[2];
+        grad.y += ((double*) &__grad_y)[3];
+        //
+        // end of peeling
+        //
+        if (nhalos%4 > 0)
+        {
+                struct point grad_peel;
+                grad_peel = module_potentialDerivatives_totalGradient_5_SOA(pImage, lens, i, nhalos%4);
+                //
+                grad.x += grad_peel.x;
+                grad.y += grad_peel.y;
+        }
+        //
+
+
+        return grad;
+}
+//
+//
+//
+struct point module_potentialDerivatives_totalGradient_5_SOA_AVX_v2(const struct point *pImage, const struct Potential_SOA *lens, int shalos, int nhalos)
+{
+        asm volatile("# module_potentialDerivatives_totalGradient_SIS_SOA begins");
+        //
+        struct point grad, clumpgrad;
+        grad.x = 0;
+        grad.y = 0;
+	//
+        // smearing the image coordinates on registers
+        __m256d image_x  = _mm256_set1_pd(pImage->x);
+        __m256d image_y  = _mm256_set1_pd(pImage->y);
+        //
+        __m256d __grad_x = _mm256_set1_pd(0.);
+        __m256d __grad_y = _mm256_set1_pd(0.);
+	//
+	__m256d __result_x = _mm256_set1_pd(0.);
+        __m256d __result_y = _mm256_set1_pd(0.);
+	//
+	__m256d one      = _mm256_set1_pd( 1. );
+	//
+	int i;
+        int imax = shalos + nhalos;
+//#pragma unroll
+        for(i = shalos; i < imax - imax%4; i = i + 4)
+        {
+                //
+                struct point true_coord, true_coord_rotation;
+		//
+		__m256d b0        = _mm256_loadu_pd(&lens->b0[i]);
+		__m256d theta     = _mm256_loadu_pd(&lens->ellipticity_angle[i]);
+		__m256d ell_pot   = _mm256_loadu_pd(&lens->ellipticity_potential[i]);
+                //
+                //true_coord.x = pImage->x - lens->position_x[i];
+                //true_coord.y = pImage->y - lens->position_y[i];
+		//
+		__m256d true_coord_x      = _mm256_sub_pd(image_x, _mm256_loadu_pd(&lens->position_x[i]));
+                __m256d true_coord_y      = _mm256_sub_pd(image_y, _mm256_loadu_pd(&lens->position_y[i]));
+                //
+                /*positionning at the potential center*/
+		__m256d cos_theta = _mm256_loadu_pd(&lens->anglecos[i]);
+                __m256d sin_theta = _mm256_loadu_pd(&lens->anglesin[i]);
+                //
+		__m256d x         = _mm256_add_pd(_mm256_mul_pd(true_coord_x, cos_theta), _mm256_mul_pd(true_coord_y, sin_theta));
+                __m256d y         = _mm256_sub_pd(_mm256_mul_pd(true_coord_y, cos_theta), _mm256_mul_pd(true_coord_x, sin_theta));
+		//
+                //true_coord_rotation = rotateCoordinateSystem(true_coord, lens->ellipticity_angle[i]);
+		//
+		//	
+                __m256d _R  = __INV(__SQRT(ADD(MUL(x, MUL(x, SUB(one, ell_pot))), MUL(y, MUL(y, ADD(one, ell_pot))))));
+		//
+                __result_x = MUL(MUL(SUB(one, ell_pot), b0), MUL(x, _R));
+                __result_y = MUL(MUL(ADD(one, ell_pot), b0), MUL(y, _R));
+		//
+		__grad_x = __grad_x + _mm256_sub_pd(_mm256_mul_pd(__result_x, cos_theta), _mm256_mul_pd(__result_y, sin_theta));
+                __grad_y = __grad_y + _mm256_add_pd(_mm256_mul_pd(__result_y, cos_theta), _mm256_mul_pd(__result_x, sin_theta));
+		//
+        }
+	//
+	grad.x  = ((double*) &__grad_x)[0];
+        grad.x += ((double*) &__grad_x)[1];
+        grad.x += ((double*) &__grad_x)[2];
+        grad.x += ((double*) &__grad_x)[3];
+        //
+        grad.y  = ((double*) &__grad_y)[0];
+        grad.y += ((double*) &__grad_y)[1];
+        grad.y += ((double*) &__grad_y)[2];
+        grad.y += ((double*) &__grad_y)[3];
+        //
+        // end of peeling
+        //
+        if (nhalos%4 > 0)
+        {
+                struct point grad_peel;
+                grad_peel = module_potentialDerivatives_totalGradient_5_SOA(pImage, lens, i, nhalos%4);
+                //
+                grad.x += grad_peel.x;
+                grad.y += grad_peel.y;
+        }
+        //
+
+
+        return grad;
+}
+//
+//
+//
+#if 0
+struct point module_potentialDerivatives_totalGradient_5_SOA_AVX(const struct point *pImage, const struct Potential_SOA *lens, int shalos, int nhalos)
+{
+        asm volatile("# module_potentialDerivatives_totalGradient_SIS_SOA begins");
+        printf("# module_potentialDerivatives_totalGradient_SIS_SOA_AVX begins\n");
+        //
+        struct point grad, result;
+	//
+        grad.x = 0;
+        grad.y = 0;
+	//
+	for(int i = shalos; i < shalos + nhalos; i++)
+        {
+                //
+                struct point true_coord, true_coord_rotation;
+                //
+                true_coord.x = pImage->x - lens->position_x[i];
+                true_coord.y = pImage->y - lens->position_y[i];
+                //
+                //true_coord_rotation = rotateCoordinateSystem(true_coord, lens->ellipticity_angle[i]);
+                double cose = lens->anglecos[i];
+                double sine = lens->anglesin[i];
+                //
+                double x = true_coord.x*cose + true_coord.y*sine;
+                double y = true_coord.y*cose - true_coord.x*sine;
+                //:
+                double R = sqrt(x*x*(1 - lens->ellipticity[i]/3.) + y*y*(1 + lens->ellipticity[i]/3.));
+                result.x = (1 - lens->ellipticity[i]/3.)*lens->b0[i]*x/R;
+                result.y = (1 + lens->ellipticity[i]/3.)*lens->b0[i]*y/R;
+                //
+                grad.x += result.x*cose - result.y*sine;
+                grad.y += result.y*cose + result.x*sine;
+        }
+        return grad;
+}
+#endif
+//
+//
+//
 struct point module_potentialDerivatives_totalGradient_8_SOA_AVX(const struct point *pImage, const struct Potential_SOA *lens, const int shalos, const int nhalos)
 {
 	asm volatile("# module_potentialDerivatives_totalGradient_8_SOA_AVX begins");
@@ -460,7 +672,7 @@ struct point module_potentialDerivatives_totalGradient_81_SOA_AVX(const struct p
 typedef struct point (*halo_func_avx_t) (const struct point *pImage, const struct Potential_SOA *lens, int shalos, int nhalos);
 halo_func_avx_t halo_func_avx[100] =
 {
-0, 0, 0, 0,  0, 0,  0, 0, module_potentialDerivatives_totalGradient_8_SOA_AVX, 0,
+0, 0, 0, 0, 0, module_potentialDerivatives_totalGradient_5_SOA_AVX_v2, 0, 0, module_potentialDerivatives_totalGradient_8_SOA_AVX, 0,
 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
