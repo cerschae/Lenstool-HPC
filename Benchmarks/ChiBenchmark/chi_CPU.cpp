@@ -311,7 +311,7 @@ void mychi_bruteforce_SOA_CPU_grid_gradient(double *chi, int *error, runmode_par
 //	int thread_found_image = 0;   	// at each iteration in the lens plane, turn to 1 whether the thread find an image
 // 	struct point im_position, temp; // position of the image found from a theoretical source + temp variable for comparison
 //	struct triplet Tsup, Tinf, Tsupsource, Tinfsource;// triangles for the computation of the images created by the theoretical sources
-	struct galaxy sources[runmode->nsets]; // theoretical sources (common for a set)
+	struct galaxy sources[runmode->nsets][runmode->nimagestot]; // theoretical sources (common for a set)
 	int    nimagesfound  [runmode->nsets][runmode->nimagestot][MAXIMPERSOURCE]; // number of images found from the theoretical sources
 	int    locimagesfound[runmode->nsets][runmode->nimagestot];
 	struct point image_pos [runmode->nsets][runmode->nimagestot][MAXIMPERSOURCE];
@@ -337,7 +337,7 @@ void mychi_bruteforce_SOA_CPU_grid_gradient(double *chi, int *error, runmode_par
 	//
 	double chi2_time   = 0.;
 	double loop_time   = 0.;
-	double imagetime   = 0.;
+	double image_time  = 0.;
 	//
 	int images_found   = 0;
 	long int images_total   = 0;
@@ -353,17 +353,16 @@ void mychi_bruteforce_SOA_CPU_grid_gradient(double *chi, int *error, runmode_par
 	//
 	// nsets     : number of images in the source plane
 	// nimagestot: number of images in the image plane
-	loop_time -= myseconds();
 	//
+	image_time -= myseconds();
 	unsigned int nsets = runmode->nsets;
 	for( int  source_id = 0; source_id < runmode->nsets; source_id ++)
 	{
 		// number of images in the image plane for the specific image (1,3,5...)
 		unsigned short int nimages = nimages_strongLensing[source_id];
 		//@@printf("@@ source_id = %d, nimages = %d\n",  source_id, nimages_strongLensing[source_id]);
-		imagetime -= myseconds();
 		//____________________________ image (constrains) loop ________________________________
-		for( unsigned short int image_id = 0; image_id < nimages; image_id++)
+		for(unsigned short int image_id = 0; image_id < nimages; image_id++)
 		{
 			//printf("@@  nimages = %d\n",  nimages_strongLensing[source_id]);
 			//________ computation of theoretical sources _________
@@ -373,7 +372,7 @@ void mychi_bruteforce_SOA_CPU_grid_gradient(double *chi, int *error, runmode_par
 							&images[index + image_id].center,
 							 images[index + image_id].dr, 
 							 lens, 
-							&sources[source_id].center);
+							&sources[source_id][image_id].center);
 			//
 			// void mychi_transformImageToSourcePlane_SOA(const int Nlens, const struct point *image_point, double dlsds, const struct Potential_SOA *lens, struct point *source_point)
 			//
@@ -382,21 +381,40 @@ void mychi_bruteforce_SOA_CPU_grid_gradient(double *chi, int *error, runmode_par
 			//printf("Grad.x = %f, %f\n", Grad.x, grid_gradient_x[images[index + image_id].center.x/dx]); 
 			//
 			// find the position of the constrain in the source plane
-			sources[source_id].center.x = images[index + image_id].center.x - images[index + image_id].dr*Grad.x;
-                        sources[source_id].center.y = images[index + image_id].center.y - images[index + image_id].dr*Grad.y;
+			sources[source_id][image_id].center.x = images[index + image_id].center.x - images[index + image_id].dr*Grad.x;
+                        sources[source_id][image_id].center.y = images[index + image_id].center.y - images[index + image_id].dr*Grad.y;
 			//
 			//time += myseconds(); 
 			//
-			sources[source_id].redshift = images[index + image_id].redshift;
+			sources[source_id][image_id].redshift = images[index + image_id].redshift;
 			//
-			sources[source_id].dr       = images[index + image_id].dr;
-			sources[source_id].dls      = images[index + image_id].dls;
-			sources[source_id].dos      = images[index + image_id].dos;
-			int loc_images_found = 0;
+			sources[source_id][image_id].dr       = images[index + image_id].dr;
+			sources[source_id][image_id].dls      = images[index + image_id].dls;
+			sources[source_id][image_id].dos      = images[index + image_id].dos;
+#if 1
+		}
+		index += nimages; 
+	}
+	image_time += myseconds();
+	//
+	// main loop
+	//
+	loop_time -= myseconds();
+	index = 0;
+        for( int  source_id = 0; source_id < runmode->nsets; source_id ++)
+        {
+                // number of images in the image plane for the specific image (1,3,5...)
+                unsigned short int nimages = nimages_strongLensing[source_id];
+                //@@printf("@@ source_id = %d, nimages = %d\n",  source_id, nimages_strongLensing[source_id]);
+                //____________________________ image (constrains) loop ________________________________
+                for(unsigned short int image_id = 0; image_id < nimages; image_id++)
+		{
+#endif
 			//
 			//struct point image_pos [MAXIMPERSOURCE];
 			//
 			//printf("	source = %d, image = %d\n", source_id, image_id);
+			int loc_images_found = 0;
 #pragma omp parallel for reduction(+: images_total) 
 			for (int x_id = 0; (x_id < runmode->nbgridcells - 1) ; ++x_id )
 			{
@@ -431,19 +449,19 @@ void mychi_bruteforce_SOA_CPU_grid_gradient(double *chi, int *error, runmode_par
 					struct triplet Timage;
 					struct triplet Tsource;
 					//
-					mychi_transformtriangleImageToSourcePlane_SOA_grid_gradient_upper(&Tsup, sources[source_id].dr, &Tsource, grid_gradient_x, grid_gradient_y, y_id*grid_dim + x_id, grid_dim);
+					mychi_transformtriangleImageToSourcePlane_SOA_grid_gradient_upper(&Tsup, sources[source_id][image_id].dr, &Tsource, grid_gradient_x, grid_gradient_y, y_id*grid_dim + x_id, grid_dim);
 					//
 					int thread_found_image = 0;
 					//
-					if (mychi_insideborder(&sources[source_id].center, &Tsource) == 1)
+					if (mychi_insideborder(&sources[source_id][image_id].center, &Tsource) == 1)
 					{
 						thread_found_image = 1;
 						Timage = Tsup;
 					}
 					else 
 					{
-						mychi_transformtriangleImageToSourcePlane_SOA_grid_gradient_lower(&Tinf, sources[source_id].dr, &Tsource, grid_gradient_x, grid_gradient_y, y_id*grid_dim + x_id, grid_dim);
-						if (mychi_inside(&sources[source_id].center, &Tsource) == 1)
+						mychi_transformtriangleImageToSourcePlane_SOA_grid_gradient_lower(&Tinf, sources[source_id][image_id].dr, &Tsource, grid_gradient_x, grid_gradient_y, y_id*grid_dim + x_id, grid_dim);
+						if (mychi_inside(&sources[source_id][image_id].center, &Tsource) == 1)
 						{
 							thread_found_image = 1;
 							Timage = Tinf;
@@ -452,7 +470,7 @@ void mychi_bruteforce_SOA_CPU_grid_gradient(double *chi, int *error, runmode_par
 #if 1
 					if (thread_found_image)
 					{
-						//#pragma omp critical
+						#pragma omp critical
 						{
 							//thread_found_image      = 1; // thread has just found an image
 							//@@image_index             = 0;
@@ -471,6 +489,7 @@ void mychi_bruteforce_SOA_CPU_grid_gradient(double *chi, int *error, runmode_par
 		}
 		index += nimages_strongLensing[source_id];
 	}
+	//
 	loop_time += myseconds();
 	//
 	// image extraction to compute 
@@ -610,8 +629,6 @@ void mychi_bruteforce_SOA_CPU_grid_gradient(double *chi, int *error, runmode_par
 		//
 		}
 		//#pragma omp barrier
-
-		imagetime += myseconds();
 		//____________________________ end of image loop
 		//
 		//____________________________ computing the local chi square
@@ -669,6 +686,7 @@ void mychi_bruteforce_SOA_CPU_grid_gradient(double *chi, int *error, runmode_par
 	nthreads = omp_get_num_threads();
 	//
 	printf("	overall time  = %f s. using %d threads\n", time, nthreads);
+	printf("		- image  time = %f s.\n", image_time);
 	printf("		- loop   time = %f s.\n", loop_time);
 	printf("		- chi2   time = %f s.\n", chi2_time);
 	//
@@ -791,8 +809,12 @@ int mychi_inside(const struct point *P, struct triplet *T)
 
 	d  = mychi_determinant(&T->a, &T->b, &T->c);
 	s  = mychi_determinant(&T->a, &T->b, P)*d;
+	if (s < 0.) return 0;
 	s1 = mychi_determinant(&T->b, &T->c, P)*d;
+	if (s1 < 0.) return 0;
 	s2 = mychi_determinant(&T->c, &T->a, P)*d;
+	if (s2 < 0.) return 0;
+	return 1;
 
 	return((s > 0.) && (s1 > 0.) && (s2 > 0.));  // If all determinants are positive,
 	// the point must be inside the triangle
@@ -841,9 +863,12 @@ int mychi_insideborder(const struct point *P, struct triplet *T)
 
 	d  = mychi_determinant(&T->a, &T->b, &T->c);
 	s  = mychi_determinant(&T->a, &T->b, P)*d;
+	if (s < 0.) return 0;
 	s1 = mychi_determinant(&T->b, &T->c, P)*d;
+	if (s1 < 0.) return 0;
 	s2 = mychi_determinant(&T->c, &T->a, P)*d;
-
+	if (s2 < 0.) return 0;
+	return 1;
 	return((s >= 0.) && (s1 >= 0.) && (s2 >= 0.));  // If all determinants are positive or 0,
 	// the point must be inside the triangle or on its border
 
