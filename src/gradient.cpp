@@ -220,10 +220,10 @@ struct point module_potentialDerivatives_totalGradient_5_SOA(const struct point 
 		//
 		double ell_pot = lens->ellipticity_potential[i];
                 //
-		double R = sqrt(true_coord_rotation.x*true_coord_rotation.x*(1 - ell_pot) + true_coord_rotation.y*true_coord_rotation.y*(1 + ell_pot));
+		double R = 1./sqrt(true_coord_rotation.x*true_coord_rotation.x*(1 - ell_pot) + true_coord_rotation.y*true_coord_rotation.y*(1 + ell_pot));
 		//
-		result.x = (1 - ell_pot)*lens->b0[i]*true_coord_rotation.x/R;
-		result.y = (1 + ell_pot)*lens->b0[i]*true_coord_rotation.y/R;
+		result.x = (1 - ell_pot)*lens->b0[i]*true_coord_rotation.x*R;
+		result.y = (1 + ell_pot)*lens->b0[i]*true_coord_rotation.y*R;
 		//
 		result = rotateCoordinateSystem(result, -lens->ellipticity_angle[i]);
 		//
