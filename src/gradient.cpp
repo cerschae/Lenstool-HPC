@@ -797,10 +797,9 @@ struct point module_potentialDerivatives_totalGradient_SOA(const struct point *p
 
         return(grad);
 }
-
-
-
+//
 typedef struct point (*halo_func_t_novec) (const struct point *pImage, const struct Potential_SOA *lens, int shalos, int nhalos);
+//
 halo_func_t_novec halo_func_novec[100] =
 {
 0, 0, 0, 0, 0, module_potentialDerivatives_totalGradient_5_SOA_v2_novec, 0, 0, module_potentialDerivatives_totalGradient_8_SOA_v2_novec,  0,
@@ -817,8 +816,7 @@ halo_func_t_novec halo_func_novec[100] =
 //
 //
 //
-struct point module_potentialDerivatives_totalGradient_SOA_novec(const struct point *pImage, const struct Potential_SOA *lens, int
- nhalos)
+struct point module_potentialDerivatives_totalGradient_SOA_novec(const struct point *pImage, const struct Potential_SOA *lens, int nhalos)
 {
         struct point grad, clumpgrad;
         //

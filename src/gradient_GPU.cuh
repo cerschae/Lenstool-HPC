@@ -11,7 +11,19 @@
 //#include "cudafunctions.cuh"
 #include <fstream>
 #include <structure_hpc.h>
+//
+__global__
+void
+module_potentialDerivatives_totalGradient_SOA_GPU(double *grid_grad_x, double *grid_grad_y, const struct Potential_SOA *lens, const struct grid_param *frame, int nhalos, int nbgridcells);
+//
+__global__
+void
+module_potentialDerivatives_totalGradient_SOA_GPU(double *grid_grad_x, double *grid_grad_y, const struct Potential_SOA *lens, const struct grid_param *frame, int nhalos, double dx, double dy, int nbgridcells_x, int nbgridcells_y, int istart = 0, int jstart = 0);
+//
+//void
+//module_potentialDerivatives_totalGradient_SOA_CPU_GPU(double *grid_grad_x, double *grid_grad_y, const struct Potential_SOA *lens_cpu, const struct grid_param *frame, int nbgridcells, int nhalos);
 
+#if 0
 __device__ struct point module_potentialDerivatives_totalGradient_SOA_GPU(const struct point *pImage, const struct Potential_SOA *lens, int nhalos);
 
 __device__ inline struct point rotateCoordinateSystem_GPU(struct point P, double theta);
@@ -36,15 +48,12 @@ module_potentialDerivatives_totalGradient_8_SOA_GPU_SM3(double *grid_grad_x, dou
 
 __global__
 void
-module_potentialDerivatives_totalGradient_8_SOA_GPU_SM4(double *grid_grad_x, double *grid_grad_y, const struct Potential_SOA
-                lens, const struct grid_param *frame, int nbgridcells, int shalos, int nhalos/*, double* dtimer*/);
+module_potentialDerivatives_totalGradient_8_SOA_GPU_SM4(double *grid_grad_x, double *grid_grad_y, const struct Potential_SOA lens, const struct grid_param *frame, int nbgridcells, int shalos, int nhalos/*, double* dtimer*/);
 
 __global__
 void
 module_potentialDerivatives_totalGradient_8_SOA_GPU_v2(double *grid_grad_x, double *grid_grad_y, const struct Potential_SOA *lens, const struct grid_param *frame, int nbgridcells, int i, int nhalos);
 
-void
-module_potentialDerivatives_totalGradient_SOA_CPU_GPU(double *grid_grad_x, double *grid_grad_y, const struct grid_param *frame, const struct Potential_SOA *lens_cpu, const struct Potential_SOA *lens_gpu, int nbgridcells, int nhalos);
 
 
 
@@ -76,7 +85,7 @@ __device__
 static
 double
 atomicAdd_double(double* address, double val);
-
+#endif
 
 #define KERNEL_8 \
 double x = true_coord_x*cosi[i] + true_coord_y*sinu[i]; \

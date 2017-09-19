@@ -27,7 +27,7 @@ void gradient_grid_CPU(double *grid_grad_x, double *grid_grad_y, const struct gr
 //
 //static void gradient_grid_general_CPU_old(double *grid_grad_x, double *grid_grad_y, const struct grid_param *frame, int Nlens, int nbgridcells,  const struct Potential_SOA *lens);
 //
-static void gradient_grid_general_CPU(double *grid_grad_x, double *grid_grad_y, const struct grid_param *frame, const struct Potential_SOA *lens, int Nlens, double dx, double dy, int nbgridcells_x,  int nbgridcells_y, int istart, int jstart);
+//static void gradient_grid_general_CPU(double *grid_grad_x, double *grid_grad_y, const struct grid_param *frame, const struct Potential_SOA *lens, int Nlens, double dx, double dy, int nbgridcells_x,  int nbgridcells_y, int istart, int jstart);
 
 
 #endif /* GRID_GRADIENT_CPU_HPP_ */
