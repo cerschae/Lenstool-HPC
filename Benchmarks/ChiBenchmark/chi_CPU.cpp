@@ -112,6 +112,9 @@ void mychi_bruteforce_SOA_CPU_grid_gradient(double *chi, int *error, runmode_par
 #endif
 
 	//gradient_grid_CPU(grid_gradient_x, grid_gradient_y, frame, lens, runmode->nhalos, grid_size, loc_grid_size);
+#ifdef __WITH_MPI
+	MPI_Barrier(MPI_COMM_WORLD);
+#endif
 	time += myseconds();
 	if (verbose) printf("	Gridgrad time = %f s.\n", time);
 	//
@@ -198,8 +201,8 @@ void mychi_bruteforce_SOA_CPU_grid_gradient(double *chi, int *error, runmode_par
 	index 	      = 0;
 	int numimg    = 0;
 	//
-        for( int  source_id = 0; source_id < runmode->nsets; source_id ++)
-        {
+	for( int  source_id = 0; source_id < runmode->nsets; source_id ++)
+	{
 		// number of images in the image plane for the specific image (1,3,5...)
 		unsigned short int nimages = nimages_strongLensing[source_id];
 		//printf("@@ source_id = %d, nimages = %d\n",  source_id, nimages_strongLensing[source_id]);
@@ -214,15 +217,15 @@ void mychi_bruteforce_SOA_CPU_grid_gradient(double *chi, int *error, runmode_par
 			//if (verbose) printf("source = %d, image = %d\n", source_id, image_id);
 			//if (verbose) fflush(stdout);	
 			int loc_images_found = 0;
-#ifdef __WITH_MPI
-			MPI_Barrier(MPI_COMM_WORLD);
-#endif	
+			//#ifdef __WITH_MPI
+			//			MPI_Barrier(MPI_COMM_WORLD);
+			//#endif	
 #pragma omp parallel 
 #pragma omp for reduction(+: images_total) 
 			//for (int y_id = 0; y_id < (runmode->nbgridcells - 1); ++y_id )
 			//for (int y_id = 0; y_id < (y_len_loc - 1); ++y_id)
 			for (int y_id = 0; y_id < (y_bound - 1); ++y_id)
-			//for (int y_id = world_rank*y_pos_loc; y_id < (world_rank*y_pos_loc + y_len_loc - 1); ++y_id)
+				//for (int y_id = world_rank*y_pos_loc; y_id < (world_rank*y_pos_loc + y_len_loc - 1); ++y_id)
 			{
 				//for (int y_id = 0; (y_id < runmode->nbgridcells - 1) /*&& (loc_images_found != nimages)*/; ++y_id )
 				for (int x_id = 0; x_id < runmode->nbgridcells - 1 ; ++x_id)
@@ -299,21 +302,17 @@ void mychi_bruteforce_SOA_CPU_grid_gradient(double *chi, int *error, runmode_par
 #endif
 				}
 			}
-//		if(locimagesfound[source_id][image_id] != 0)
-//		{
-//			numimg += locimagesfound[source_id][image_id];
-			//printf("	-> %d: %d %d: number of images = %d, total = %d\n", world_rank, source_id, image_id, locimagesfound[source_id][image_id], totimg);
-//			fflush(stdout);
-//		}
-		MPI_Barrier(MPI_COMM_WORLD);
 #if 1
 		}
 		index += nimages_strongLensing[source_id];
 	}
-	//printf("%d: %d images found out of %d total images\n", world_rank, numimg, images_total);
-	//MPI_Barrier(MPI_COMM_WORLD);
+#ifdef __WITH_MPI
+	MPI_Barrier(MPI_COMM_WORLD);
+#endif
+	loop_time += myseconds();
 	//
 	double comm_time = -myseconds();
+	//
 	int          numimagesfound    [runmode->nsets][runmode->nimagestot];
 	memset(&numimagesfound, 0, runmode->nsets*runmode->nimagestot*sizeof(int));
 	struct point imagesposition    [runmode->nsets][runmode->nimagestot][MAXIMPERSOURCE];
@@ -327,16 +326,16 @@ void mychi_bruteforce_SOA_CPU_grid_gradient(double *chi, int *error, runmode_par
 	/*
 	//if (verbose)
 	{	
-		int image_sum = 0;
-		for (int ii = 0; ii < runmode->nsets; ++ii)
-			for (int jj = 0; jj < runmode->nimagestot; ++jj)
-			{
-				image_sum += locimagesfound[ii][jj];	
-			}
-		printf("%d: num images found = %d\n", world_rank, image_sum); 
+	int image_sum = 0;
+	for (int ii = 0; ii < runmode->nsets; ++ii)
+	for (int jj = 0; jj < runmode->nimagestot; ++jj)
+	{
+	image_sum += locimagesfound[ii][jj];	
+	}
+	printf("%d: num images found = %d\n", world_rank, image_sum); 
 	}
 	MPI_Barrier(MPI_COMM_WORLD);
-	*/
+	 */
 #ifdef __WITH_MPI
 	int total = 0;
 	//MPI_Reduce(&locimagesfound, &imagesfound, runmode->nsets*runmode->nimagestot, MPI_INT, MPI_SUM, 0, MPI_COMM_WORLD);
@@ -398,23 +397,23 @@ void mychi_bruteforce_SOA_CPU_grid_gradient(double *chi, int *error, runmode_par
 						numimg += img_len;
 
 						/*
-						if (verbose)
+						   if (verbose)
+						   {
+						//for( int  source_id = 0; source_id < runmode->nsets; source_id ++)
 						{
-							//for( int  source_id = 0; source_id < runmode->nsets; source_id ++)
-							{
-								// number of images in the image plane for the specific image (1,3,5...)
-								//unsigned short int nimages = nimages_strongLensing[source_id];
-								//____________________________ image (constrains) loop ________________________________
-								//for(unsigned short int image_id = 0; image_id < nimages; image_id++)
-								{
-									int img_len = numimagesfound[ii][jj];
-									for (int ij = 0; ij < img_len; ++ij)
-										printf("	-> images = %f %f\n", imagesposition[ii][jj][ij].x, imagesposition[ii][jj][ij].y);
-										//printf("ipe %d: source = %d image = %d: putting %d images to position %d number of images = %d, %f %f, total = %d\n", ipe, ii, jj, numimagesfound[ii][jj], imagesposition[ii][jj][ij].x, imagesposition[ii][jj][ij].y, totimg);
-								}
-							}
+						// number of images in the image plane for the specific image (1,3,5...)
+						//unsigned short int nimages = nimages_strongLensing[source_id];
+						//____________________________ image (constrains) loop ________________________________
+						//for(unsigned short int image_id = 0; image_id < nimages; image_id++)
+						{
+						int img_len = numimagesfound[ii][jj];
+						for (int ij = 0; ij < img_len; ++ij)
+						printf("	-> images = %f %f\n", imagesposition[ii][jj][ij].x, imagesposition[ii][jj][ij].y);
+						//printf("ipe %d: source = %d image = %d: putting %d images to position %d number of images = %d, %f %f, total = %d\n", ipe, ii, jj, numimagesfound[ii][jj], imagesposition[ii][jj][ij].x, imagesposition[ii][jj][ij].y, totimg);
 						}
-						*/
+						}
+						}
+						 */
 
 
 						//printf("%d: %d %d, img_len = %d, loc_length = %d\n", ipe, ii, jj, img_len, numimagesfound[ii][jj]);
@@ -427,7 +426,7 @@ void mychi_bruteforce_SOA_CPU_grid_gradient(double *chi, int *error, runmode_par
 					   int loc_length = numimagesfound_tmp[ii][jj];
 					   printf("	%d: point = %f %f\n", ij, imagesposition[ii][jj][loc_length + ij].x, imagesposition[ii][jj][loc_length + ij].y);
 					   }
-					   */
+					 */
 				}
 			}
 		}
@@ -436,20 +435,20 @@ void mychi_bruteforce_SOA_CPU_grid_gradient(double *chi, int *error, runmode_par
 	//
 	//
 	/*
-	if (0*verbose)
-		for( int  source_id = 0; source_id < runmode->nsets; source_id ++)
-		{
-			// number of images in the image plane for the specific image (1,3,5...)
-			unsigned short int nimages = nimages_strongLensing[source_id];
-			//____________________________ image (constrains) loop ________________________________
-			for(unsigned short int image_id = 0; image_id < nimages; image_id++)
-			{
-				int img_len = numimagesfound[source_id][image_id];
-				for (int ij = 0; ij < img_len; ++ij)
-					printf("***** %d: %d %d: number of images = %d, %f %f, total = %d\n", world_rank, source_id, image_id, numimagesfound[source_id][image_id], imagesposition[source_id][image_id][ij].x, imagesposition[source_id][image_id][ij].y, totimg);
-			}
-		}
-	*/
+	   if (0*verbose)
+	   for( int  source_id = 0; source_id < runmode->nsets; source_id ++)
+	   {
+	// number of images in the image plane for the specific image (1,3,5...)
+	unsigned short int nimages = nimages_strongLensing[source_id];
+	//____________________________ image (constrains) loop ________________________________
+	for(unsigned short int image_id = 0; image_id < nimages; image_id++)
+	{
+	int img_len = numimagesfound[source_id][image_id];
+	for (int ij = 0; ij < img_len; ++ij)
+	printf("***** %d: %d %d: number of images = %d, %f %f, total = %d\n", world_rank, source_id, image_id, numimagesfound[source_id][image_id], imagesposition[source_id][image_id][ij].x, imagesposition[source_id][image_id][ij].y, totimg);
+	}
+	}
+	 */
 	//
 	//
 	//MPI_Barrier(MPI_COMM_WORLD);
@@ -470,10 +469,9 @@ void mychi_bruteforce_SOA_CPU_grid_gradient(double *chi, int *error, runmode_par
 	//printf("--> total images found = %d\n", total, loc_images_found);
 	printf("--> total images found = %d\n", total);
 	images_total = total;
-	*/
+	 */
 #endif
 	//	
-	loop_time += myseconds();
 	//
 	// image extraction to compute 
 	//
@@ -676,12 +674,12 @@ void mychi_bruteforce_SOA_CPU_grid_gradient(double *chi, int *error, runmode_par
 	if (verbose)
 	{
 		//
-		int nthreads = 1;
+//		int nthreads = 1;
 		//
-#pragma omp parallel
-		nthreads = omp_get_num_threads();
+//#pragma omp parallel
+//		nthreads = omp_get_num_threads();
 		//
-		printf("	overall time  = %f s. using %d threads\n", time, nthreads);
+		printf("	overall time  = %f s.\n", time);
 		printf("		- image  time = %f s.\n", image_time);
 		printf("		- loop   time = %f s.\n", loop_time);
 		printf("		- comm   time = %f s.\n", comm_time);
@@ -849,7 +847,7 @@ v = (dot00 * dot12 - dot01 * dot02) * invDenom;
 // Check if point is in triangle
 return (u >= 0) && (v >= 0) && (u + v < 1);
 }
-*/
+ */
 
 /** @brief Return 1 if P is inside the triangle T or on its border, 0 otherwise.
  *

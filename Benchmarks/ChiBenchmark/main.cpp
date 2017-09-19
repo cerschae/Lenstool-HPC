@@ -186,7 +186,7 @@ int main(int argc, char *argv[])
 	numthreads = omp_get_num_threads();
 #endif
 	//
-	printf("Hello world from processor %s, rank %d out of %d processors and %d threads per rank\n", processor_name, world_rank, world_size, numthreads);
+	printf("Hello world from processor %s, rank %d out of %d processors and %d threads per rank\n", processor_name, world_rank, world_size, numthreads); fflush(stdout);
 #ifdef __WITH_MPI
 	MPI_Barrier(MPI_COMM_WORLD);
 #endif

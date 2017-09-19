@@ -465,7 +465,7 @@ std::ifstream IN(infile.c_str(), std::ios::in);
 		}
 
 
-printf(" nsets %d , nhalos %d , nimagestot %d npotfile %d \n",  runmode->nsets, runmode->nhalos, runmode->nimagestot,runmode->npotfile);
+//printf(" nsets %d , nhalos %d , nimagestot %d npotfile %d \n",  runmode->nsets, runmode->nhalos, runmode->nimagestot,runmode->npotfile);
 /*********** read narclets from arclets_filename ***************/
 /*  the arclets file must contain
 			id	x_center y_center   a   b   theta   redshift
