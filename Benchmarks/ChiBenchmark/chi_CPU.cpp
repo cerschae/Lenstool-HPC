@@ -371,7 +371,6 @@ void mychi_bruteforce_SOA_CPU_grid_gradient(double *chi, int *error, runmode_par
 				if (numimg != 0)
 				{
 					MPI_CHECK(MPI_Recv(&numimagesfound_tmp, runmode->nsets*runmode->nimagestot                 , MPI_INT   , ipe, 666 + ipe, MPI_COMM_WORLD, &status));
-					//MPI_CHECK(MPI_Recv(&imagesposition_tmp, runmode->nsets*runmode->nimagestot*MAXIMPERSOURCE, MPI_points, ipe, 667 + ipe, MPI_COMM_WORLD, &status));
 					MPI_CHECK(MPI_Recv(&imagesposition_tmp, runmode->nsets*runmode->nimagestot*MAXIMPERSOURCE*2, MPI_DOUBLE, ipe, 667 + ipe, MPI_COMM_WORLD, &status));
 				}
 			}
@@ -391,87 +390,18 @@ void mychi_bruteforce_SOA_CPU_grid_gradient(double *chi, int *error, runmode_par
 					{
 						//int loc_length = numimagesfound[ii][jj];
 						int loc_length = numimagesfound[ii][jj];
-						//printf("%d: %d %d, inserting %d images at position %d\n", ipe, ii, jj, img_len, loc_length);
 						memcpy(&imagesposition[ii][jj][loc_length], &imagesposition_tmp[ii][jj], img_len*sizeof(point));
 						numimagesfound[ii][jj] += img_len;
 						numimg += img_len;
 
-						/*
-						   if (verbose)
-						   {
-						//for( int  source_id = 0; source_id < runmode->nsets; source_id ++)
-						{
-						// number of images in the image plane for the specific image (1,3,5...)
-						//unsigned short int nimages = nimages_strongLensing[source_id];
-						//____________________________ image (constrains) loop ________________________________
-						//for(unsigned short int image_id = 0; image_id < nimages; image_id++)
-						{
-						int img_len = numimagesfound[ii][jj];
-						for (int ij = 0; ij < img_len; ++ij)
-						printf("	-> images = %f %f\n", imagesposition[ii][jj][ij].x, imagesposition[ii][jj][ij].y);
-						//printf("ipe %d: source = %d image = %d: putting %d images to position %d number of images = %d, %f %f, total = %d\n", ipe, ii, jj, numimagesfound[ii][jj], imagesposition[ii][jj][ij].x, imagesposition[ii][jj][ij].y, totimg);
-						}
-						}
-						}
-						 */
-
-
-						//printf("%d: %d %d, img_len = %d, loc_length = %d\n", ipe, ii, jj, img_len, numimagesfound[ii][jj]);
-						//for (int ij = 0; ij < img_len; ++ij)
-						//	printf("	%f %f\n", imagesposition[ii][jj][loc_length + ij].x, imagesposition[ii][jj][loc_length + ij].y);
 					}
-					/*
-					   for (int ij = 0; ii < img_len; ++ij)
-					   {
-					   int loc_length = numimagesfound_tmp[ii][jj];
-					   printf("	%d: point = %f %f\n", ij, imagesposition[ii][jj][loc_length + ij].x, imagesposition[ii][jj][loc_length + ij].y);
-					   }
-					 */
 				}
 			}
 		}
-		//printf("%d: num images found = %d, size of point = %d\n", ipe, image_sum, sizeof(point));
 	}
-	//
-	//
-	/*
-	   if (0*verbose)
-	   for( int  source_id = 0; source_id < runmode->nsets; source_id ++)
-	   {
-	// number of images in the image plane for the specific image (1,3,5...)
-	unsigned short int nimages = nimages_strongLensing[source_id];
-	//____________________________ image (constrains) loop ________________________________
-	for(unsigned short int image_id = 0; image_id < nimages; image_id++)
-	{
-	int img_len = numimagesfound[source_id][image_id];
-	for (int ij = 0; ij < img_len; ++ij)
-	printf("***** %d: %d %d: number of images = %d, %f %f, total = %d\n", world_rank, source_id, image_id, numimagesfound[source_id][image_id], imagesposition[source_id][image_id][ij].x, imagesposition[source_id][image_id][ij].y, totimg);
-	}
-	}
-	 */
-	//
-	//
 	//MPI_Barrier(MPI_COMM_WORLD);
 	comm_time += myseconds();
-	//
-	//memcpy(imagesfound, locimagesfound, runmode->nsets*runmode->nimagestot*sizeof(int));
-	//	
-	/*
-	   if (verbose) printf("--> total images found = %ld\n", images_total);
-	   int total_images_found[runmode->nsets][runmode->nimagestot];		
-	//if (verbose)
-	memset(&total_images_found, 0, runmode->nsets*runmode->nimagestot*sizeof(int)); 
-	//MPI_Reduce(&locimagesfound[0], &images_found, runmode->nsets*runmode->nimagestot*sizeof(int), MPI_INT, MPI_SUM, 0, MPI_COMM_WORLD); 
-	for (int ii = 0; ii < runmode->nsets; ++ii)
-	for (int jj = 0; jj < runmode->nimagestot; ++jj)
-	total += total_images_found[ii][jj];	
-	//
-	//printf("--> total images found = %d\n", total, loc_images_found);
-	printf("--> total images found = %d\n", total);
-	images_total = total;
-	 */
 #endif
-	//	
 	//
 	// image extraction to compute 
 	//
@@ -506,14 +436,8 @@ void mychi_bruteforce_SOA_CPU_grid_gradient(double *chi, int *error, runmode_par
 					//
 					int image_index = 0;
 					//
-					//image_position = imagesposition_tmp[source_id][image_id][ii]; 
 					image_position = imagesposition[source_id][image_id][ii]; 
-					//image_position = image_pos[source_id][image_id][ii]; 
-					//image_position = image_pos[ii]; 
-					//printf("	* source %d, image %d, %d = %f %f\n", source_id, image_id, ii, image_position.x, image_position.y);
-					//printf("	* source %d, image %d, %d = %f %f\n", source_id, image_id, ii, imagesposition/*_tmp*/[source_id][image_id][ii].x, imagesposition/*_tmp*/[source_id][image_id][ii].y); 
 					image_dist[0] = mychi_dist(image_position, images[index + 0].center);  // get the distance to the real image
-					//printf("        *** image %d = %f %f, distance = %f\n", index, images[index + 0].center.x, images[index + 0].center.y, image_dist[0]);
 					for(int i = 1; i < nimages_strongLensing[source_id]; i++)
 					{  // get the distance to each real image and keep the index of the closest real image
 
@@ -524,14 +448,11 @@ void mychi_bruteforce_SOA_CPU_grid_gradient(double *chi, int *error, runmode_par
 							image_index = i;
 						}
 					}
-					//printf("	-> %f %f %d\n", image_position.x, image_position.y, image_index);
 					//
 					// we should exit loops here
 					//
 					// p1_time += myseconds();
 					//
-					//if (thread_found_image == 1)
-					//printf("%d %d %d: found image\n", x_id, y_id, image_id); 
 					int skip_image = 0;
 					// Sometimes due to the numerical errors at the centerpoint, 
 					// for SIE potentials an additional image will appear at the center of the Potential.
