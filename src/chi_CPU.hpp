@@ -17,12 +17,12 @@ void chi_bruteforce_SOA_CPU_grid_gradient(double *chi, int *error, runmode_param
 void chi_transformImageToSourcePlane(const runmode_param *runmode, const struct point *image_point, double dlsds, const struct Potential *lens, struct point *source_point);
 void chi_transformImageToSourcePlane_SOA(const int Nlens, const struct point *image_point, double dlsds, const struct Potential_SOA *lens, struct point *source_point);
 void chi_transformImageToSourcePlane_SOA_AVX(const int *Nlens, const struct point *image_point, double dlsds, const struct Potential_SOA *lens, struct point *source_point);
-void chi_transformImageToSourcePlane_SOA_Packed(const int *Nlens, const struct point *image_point, double dlsds, struct point *source_point, double *grad_x, double * grad_y, int grad_id);
+void chi_transformImageToSourcePlane_SOA_Packed(const int *Nlens, const struct point *image_point, double dlsds, struct point *source_point, type_t *grad_x, type_t * grad_y, int grad_id);
 
 void chi_transformtriangleImageToSourcePlane(const runmode_param *runmode, struct triplet *I, double dlsds, const struct Potential *lens, struct triplet *S);
 void chi_transformtriangleImageToSourcePlane_SOA( struct triplet *I, double dlsds, const struct Potential_SOA *lens, struct triplet *S);
-void chi_transformtriangleImageToSourcePlane_SOA_grid_gradient_upper( struct triplet *I, double dlsds, struct triplet *S, double *grad_x, double * grad_y, int grad_id, int nbgridcell);
-void chi_transformtriangleImageToSourcePlane_SOA_grid_gradient_lower( struct triplet *I, double dlsds, struct triplet *S, double *grad_x, double * grad_y, int grad_id, int nbgridcell);
+void chi_transformtriangleImageToSourcePlane_SOA_grid_gradient_upper( struct triplet *I, double dlsds, struct triplet *S, type_t *grad_x, type_t * grad_y, int grad_id, int nbgridcell);
+void chi_transformtriangleImageToSourcePlane_SOA_grid_gradient_lower( struct triplet *I, double dlsds, struct triplet *S, type_t *grad_x, type_t * grad_y, int grad_id, int nbgridcell);
 
 double chi_determinant(const struct point *A,const struct point *B,const struct point *C);
 int chi_inside(const struct point *P, struct triplet *T);

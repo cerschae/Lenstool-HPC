@@ -34,10 +34,10 @@ void chi_bruteforce_SOA_CPU_grid_gradient(double *chi, int *error, runmode_param
   struct point tim[runmode->nimagestot][MAXIMPERSOURCE]; // theoretical images (computed from sources)
 
 
-  double *grid_gradient_x, *grid_gradient_y;
+  type_t *grid_gradient_x, *grid_gradient_y;
 
-  grid_gradient_x = (double *)malloc((int) (runmode->nbgridcells) * (runmode->nbgridcells) * sizeof(double));
-  grid_gradient_y = (double *)malloc((int) (runmode->nbgridcells) * (runmode->nbgridcells) * sizeof(double));
+  grid_gradient_x = (type_t *)malloc((int) (runmode->nbgridcells) * (runmode->nbgridcells) * sizeof(type_t));
+  grid_gradient_y = (type_t *)malloc((int) (runmode->nbgridcells) * (runmode->nbgridcells) * sizeof(type_t));
   grid_dim = runmode->nbgridcells;
   //Packaging the image to sourceplane conversion
   gradient_grid_CPU(grid_gradient_x,grid_gradient_y,frame,lens,runmode->nhalos,grid_dim);
@@ -264,7 +264,7 @@ void chi_transformImageToSourcePlane_SOA(const int Nlens, const struct point *im
     //printf("dlsds %f", dlsds);
 }
 
-void chi_transformImageToSourcePlane_SOA_Packed( const struct point *image_point, double dlsds, struct point *source_point, double *grad_x, double * grad_y, int grad_id)
+void chi_transformImageToSourcePlane_SOA_Packed( const struct point *image_point, double dlsds, struct point *source_point, type_t *grad_x, type_t * grad_y, int grad_id)
 {
 
     source_point->x = image_point->x - dlsds * grad_x[grad_id];
@@ -288,14 +288,14 @@ void chi_transformImageToSourcePlane_SOA_Packed( const struct point *image_point
 *
 */
 
-void chi_transformtriangleImageToSourcePlane_SOA_grid_gradient_upper( struct triplet *I, double dlsds, struct triplet *S, double *grad_x, double * grad_y, int grad_id, int nbgridcell)
+void chi_transformtriangleImageToSourcePlane_SOA_grid_gradient_upper( struct triplet *I, double dlsds, struct triplet *S, type_t *grad_x, type_t * grad_y, int grad_id, int nbgridcell)
 {
   chi_transformImageToSourcePlane_SOA_Packed( &I->a, dlsds,   &S->a, grad_x, grad_y, grad_id);
   chi_transformImageToSourcePlane_SOA_Packed( &I->b, dlsds,   &S->b, grad_x, grad_y, grad_id+nbgridcell);
   chi_transformImageToSourcePlane_SOA_Packed( &I->c, dlsds,   &S->c, grad_x, grad_y, grad_id+1);
 }
 
-void chi_transformtriangleImageToSourcePlane_SOA_grid_gradient_lower( struct triplet *I, double dlsds, struct triplet *S, double *grad_x, double * grad_y, int grad_id, int nbgridcell)
+void chi_transformtriangleImageToSourcePlane_SOA_grid_gradient_lower( struct triplet *I, double dlsds, struct triplet *S, type_t *grad_x, type_t * grad_y, int grad_id, int nbgridcell)
 {
   chi_transformImageToSourcePlane_SOA_Packed( &I->a, dlsds,   &S->a, grad_x, grad_y, grad_id+nbgridcell+1);
   chi_transformImageToSourcePlane_SOA_Packed( &I->b, dlsds,   &S->b, grad_x, grad_y, grad_id+1);

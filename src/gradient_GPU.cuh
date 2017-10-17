@@ -18,7 +18,11 @@ __device__ inline struct point rotateCoordinateSystem_GPU(struct point P, double
 __device__ inline struct point rotateCoordinateSystem_GPU_2(struct point P, double cosi, double sinu);
 //
 //__device__
-inline struct point module_potentialDerivatives_totalGradient_5_SOA_GPU(const struct point *pImage, const struct Potential_SOA *lens, int shalos, int nhalos);
+__device__ point module_potentialDerivatives_totalGradient_5_SOA_GPU(const struct point *pImage, const struct Potential_SOA *lens, int shalos, int nhalos);
+__device__ point module_potentialDerivatives_totalGradient_8_SOA_GPU(const struct point *pImage, const struct Potential_SOA *lens, int shalos, int nhalos);
+__device__ point module_potentialDerivatives_totalGradient_81_SOA_GPU(const struct point *pImage, const struct Potential_SOA *lens, int shalos, int nhalos);
+
+__global__ void module_potentialDerivatives_totalGradient_SOA_GPU(double *grid_grad_x, double *grid_grad_y, const struct Potential_SOA *lens, const struct grid_param *frame, int nbgridcells, int nhalos);
 
 __global__
 void

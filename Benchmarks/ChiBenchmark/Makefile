@@ -19,8 +19,6 @@ program_INCLUDE_DIRS := . /usr/local/cuda/include/ #C++ Include directories
 program_INCLUDE_DIRS += /usr/include/cfitsio/ 
 program_INCLUDE_DIRS += /users/fgilles/Projects/Libs/cfitsio/include
 program_INCLUDE_DIRS += /users/fgilles/bin/iaca-lin32/include
-program_INCLUDE_DIRS += /users/fgilles/GPU-Projects/lenstool-master/src
-program_INCLUDE_DIRS += /home/epfl/cerschae/lenstool-hpc/src 
 program_INCLUDE_DIRS += /usr/include
 program_INCLUDE_DIRS += $(LENSTOOLHPC_ROOT)/src 
 program_INCLUDE_DIRS += $(LENSTOOL_ROOT)/include 
@@ -32,7 +30,6 @@ program_INCLUDE_DIRS += $(CFITSIO_ROOT)
 #
 program_INCLUDE_LIBS := /usr/lib64/ #Include libraries
 program_INCLUDE_LIBS += /users/fgilles/Projects/Libs/cfitsio/lib #Include libraries
-program_INCLUDE_LIBS += /users/fgilles/GPU-Projects/lenstool-master/src
 program_INCLUDE_LIBS += $(LENSTOOLHPC_ROOT)/src 
 program_INCLUDE_LIBS += $(LENSTOOL_ROOT)/include 
 program_INCLUDE_LIBS += $(LENSTOOL_ROOT)/src 

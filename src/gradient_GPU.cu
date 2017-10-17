@@ -1,6 +1,7 @@
 #include <fstream>
 #include "grid_gradient_GPU.cuh"
 #include "gradient_GPU.cuh"
+#include "gradient.hpp"
 
 #define BLOCK_SIZE_X 8
 #define BLOCK_SIZE_Y 16
@@ -12,7 +13,7 @@
 #ifdef _SHARED_MEM
 #define SHARED __shared__
 #warning "shared memory"
-extern __shared__ double shared[];
+extern __shared__ type_t shared[];
 #else
 #define SHARED 
 #endif
@@ -24,12 +25,12 @@ extern "C" {
 double myseconds();
 }
 void
-module_potentialDerivatives_totalGradient_SOA_CPU_GPU(double *grid_grad_x, double *grid_grad_y, const struct grid_param *frame, const struct Potential_SOA *lens_cpu, const struct Potential_SOA *lens_gpu, int nbgridcells, int nhalos);
+module_potentialDerivatives_totalGradient_SOA_CPU_GPU(type_t *grid_grad_x, type_t *grid_grad_y, const struct grid_param *frame, const struct Potential_SOA *lens_cpu, const struct Potential_SOA *lens_gpu, int nbgridcells, int nhalos);
 
 void
-module_potentialDerivatives_totalGradient_SOA_CPU_GPU_v2(double *grid_grad_x, double *grid_grad_y, const struct grid_param *frame, const struct Potential_SOA *lens_cpu, const struct Potential_SOA *lens_gpu, int nbgridcells, int nhalos);
+module_potentialDerivatives_totalGradient_SOA_CPU_GPU_v2(type_t *grid_grad_x, type_t *grid_grad_y, const struct grid_param *frame, const struct Potential_SOA *lens_cpu, const struct Potential_SOA *lens_gpu, int nbgridcells, int nhalos);
 
-void calculate_cossin_values(double *theta_cos, double *theta_sin, double *angles, int nhalos ){
+void calculate_cossin_values(type_t *theta_cos, type_t *theta_sin, type_t *angles, int nhalos ){
 	for(int i = 0 ; i < nhalos; i++)
 	{
 		theta_cos[i] = cos(angles[i]);
@@ -39,9 +40,12 @@ void calculate_cossin_values(double *theta_cos, double *theta_sin, double *angle
 
 
 
+
+
+
 __global__
 void
-module_potentialDerivatives_totalGradient_8_SOA_GPU_cur(double *grid_grad_x, double *grid_grad_y, const struct Potential_SOA *lens, const struct grid_param *frame, int nbgridcells, int shalos, int nhalos)
+module_potentialDerivatives_totalGradient_8_SOA_GPU_cur(type_t *grid_grad_x, type_t *grid_grad_y, const struct Potential_SOA *lens, const struct grid_param *frame, int nbgridcells, int shalos, int nhalos)
 {
         //asm volatile("# module_potentialDerivatives_totalGradient_SOA begins");
         // 6 DP loads, i.e. 48 Bytes: position_x, position_y, ellipticity_angle, ellipticity_potential, rcore, b0
@@ -62,8 +66,8 @@ module_potentialDerivatives_totalGradient_8_SOA_GPU_cur(double *grid_grad_x, dou
                 //grid_grad_x[index] = 0.;
                 //grid_grad_y[index] = 0.;
                 //
-                double dx = (frame->xmax - frame->xmin)/(nbgridcells-1);
-                double dy = (frame->ymax - frame->ymin)/(nbgridcells-1);
+                type_t dx = (frame->xmax - frame->xmin)/(nbgridcells-1);
+                type_t dy = (frame->ymax - frame->ymin)/(nbgridcells-1);
                 //
                 image_point.x = frame->xmin + col*dx;
                 image_point.y = frame->ymin + row*dy;
@@ -71,41 +75,41 @@ module_potentialDerivatives_totalGradient_8_SOA_GPU_cur(double *grid_grad_x, dou
                 for(int i = shalos; i < shalos + nhalos; i++)
                 {
                         struct point true_coord, true_coord_rot; //, result;
-                        //double       R, angular_deviation;
+                        //type_t       R, angular_deviation;
                         complex      zis;
                         //
                         // positionning at the potential center
                         // Change the origin of the coordinate system to the center of the clump
                         //
 			//@@if ((row == Ny) && (col == Nx)) printf("image_x = %f, %f image_y = %f, %f\n",  image_point.x, frame->xmin, image_point.y,frame->ymin);
-			double true_coord_x = image_point.x - __ldg(&lens->position_x[i]);
-                        double true_coord_y = image_point.y - __ldg(&lens->position_y[i]);
+			type_t true_coord_x = image_point.x - __ldg(&lens->position_x[i]);
+                        type_t true_coord_y = image_point.y - __ldg(&lens->position_y[i]);
 			//if ((row == Ny) && (col == Nx)) printf("x = %f y = %f\n",  true_coord_x, true_coord_y);	
 			//
-                        double cosi = __ldg(&lens->anglecos[i]);
-                        double sinu = __ldg(&lens->anglesin[i]);
+                        type_t cosi = __ldg(&lens->anglecos[i]);
+                        type_t sinu = __ldg(&lens->anglesin[i]);
 			//
-                        double x = true_coord_x*cosi + true_coord_y*sinu;
-                        double y = true_coord_y*cosi - true_coord_x*sinu;
+                        type_t x = true_coord_x*cosi + true_coord_y*sinu;
+                        type_t y = true_coord_y*cosi - true_coord_x*sinu;
 			//
 			//if ((row == Ny) && (col == Nx)) printf("x = %f y = %f\n",  x, y);	
                         //
-                        double eps = __ldg(&lens->ellipticity_potential[i]);
+                        type_t eps = __ldg(&lens->ellipticity_potential[i]);
                         //
-                        double sqe  = sqrt(eps);
+                        type_t sqe  = sqrt(eps);
                         //
-                        double rem2 = x*x/((1. + eps)*(1. + eps)) + y*y/((1. - eps)*(1. - eps));
+                        type_t rem2 = x*x/((1. + eps)*(1. + eps)) + y*y/((1. - eps)*(1. - eps));
                         //
                         complex zci;
                         complex znum, zden, zres;
-                        double norm;
+                        type_t norm;
                         //
 			zci.re  = 0;
                         zci.im  = -0.5*(1. - eps*eps)/sqe;
 			//@@if ((col == Nx) && (row == Ny)) printf("%d %d, zis: %f %f\n", row, col, zci.re, zci.im);
                         //
-                        double rc  = __ldg(&lens->rcore[i]);
-                        double cx1  = (1. - eps)/(1. + eps);
+                        type_t rc  = __ldg(&lens->rcore[i]);
+                        type_t cx1  = (1. - eps)/(1. + eps);
                         znum.re = cx1*x;
                         znum.im = 2.*sqe*sqrt(rc*rc + rem2) - y/cx1;
                         //
@@ -131,7 +135,7 @@ module_potentialDerivatives_totalGradient_8_SOA_GPU_cur(double *grid_grad_x, dou
 			//
 			//@@if ((col == Nx) && (row == Ny)) printf("%d %d, zres: %f %f\n", row, col, zres.re, zres.im);
                         //
-                        double b0  = __ldg(&lens->b0[i]);
+                        type_t b0  = __ldg(&lens->b0[i]);
                         grad.x += b0*(zres.re*cosi - zres.im*sinu);
                         grad.y += b0*(zres.im*cosi + zres.re*sinu);
 			//@@if ((col == Nx) && (row == Ny)) printf("grad: %f %f\n", grad.x, grad.y);
@@ -147,26 +151,26 @@ module_potentialDerivatives_totalGradient_8_SOA_GPU_cur(double *grid_grad_x, dou
 
 __global__
 void
-module_potentialDerivatives_totalGradient_8_SOA_GPU_SM2(double *grid_grad_x, double *grid_grad_y, const struct Potential_SOA *lens, const struct grid_param *frame, int nbgridcells, int shalos, int nhalos)
+module_potentialDerivatives_totalGradient_8_SOA_GPU_SM2(type_t *grid_grad_x, type_t *grid_grad_y, const struct Potential_SOA *lens, const struct grid_param *frame, int nbgridcells, int shalos, int nhalos)
 {
 	//
         //asm volatile("# module_potentialDerivatives_totalGradient_SOA begins");
         // 6 DP loads, i.e. 48 Bytes: position_x, position_y, ellipticity_angle, ellipticity_potential, rcore, b0
         //
-        double grad_x, grad_y;
-	double clumpgrad_x, clumpgrad_y;
-	double image_point_x, image_point_y;
+        type_t grad_x, grad_y;
+	type_t clumpgrad_x, clumpgrad_y;
+	type_t image_point_x, image_point_y;
 	//
-	SHARED double cosi	[200];
-	SHARED double sinu	[200];
-	SHARED double rc	[200];
-	SHARED double b0	[200];
-	SHARED double epsi	[200];
-	SHARED double position_x[200];
-	SHARED double position_y[200];
-	SHARED double rsqe	[200];
-	SHARED double sonepeps	[200];
-	SHARED double sonemeps	[200];
+	SHARED type_t cosi	[200];
+	SHARED type_t sinu	[200];
+	SHARED type_t rc	[200];
+	SHARED type_t b0	[200];
+	SHARED type_t epsi	[200];
+	SHARED type_t position_x[200];
+	SHARED type_t position_y[200];
+	SHARED type_t rsqe	[200];
+	SHARED type_t sonepeps	[200];
+	SHARED type_t sonemeps	[200];
         //
         grad_x = 0;
         grad_y = 0;
@@ -180,8 +184,8 @@ module_potentialDerivatives_totalGradient_8_SOA_GPU_SM2(double *grid_grad_x, dou
 	//grid_grad_x[index] = 0.;
 	//grid_grad_y[index] = 0.;
 	//
-	double dx = (frame->xmax - frame->xmin)/(nbgridcells-1);
-	double dy = (frame->ymax - frame->ymin)/(nbgridcells-1);
+	type_t dx = (frame->xmax - frame->xmin)/(nbgridcells-1);
+	type_t dy = (frame->ymax - frame->ymin)/(nbgridcells-1);
 	//
 	image_point_x = frame->xmin + col*dx;
 	image_point_y = frame->ymin + row*dy;
@@ -207,35 +211,35 @@ module_potentialDerivatives_totalGradient_8_SOA_GPU_SM2(double *grid_grad_x, dou
 		for(int i = 0; i < nhalos; i++)
 		{
 			//
-			double true_coord_x = image_point_x - position_x[i];
-			double true_coord_y = image_point_y - position_y[i];
+			type_t true_coord_x = image_point_x - position_x[i];
+			type_t true_coord_y = image_point_y - position_y[i];
 			//
-			double x = true_coord_x*cosi[i] + true_coord_y*sinu[i];
-			double y = true_coord_y*cosi[i] - true_coord_x*sinu[i];
+			type_t x = true_coord_x*cosi[i] + true_coord_y*sinu[i];
+			type_t y = true_coord_y*cosi[i] - true_coord_x*sinu[i];
 			//
-			double eps     = epsi[i]; 
-			//double onemeps = 1 - eps; 
-			//double onepeps = 1 + eps; 
+			type_t eps     = epsi[i];
+			//type_t onemeps = 1 - eps;
+			//type_t onepeps = 1 + eps;
 			//
-			//double eps     = epsi[i]; 
-			double onemeps = sonemeps[i]; 
-			double onepeps = sonepeps[i];
+			//type_t eps     = epsi[i];
+			type_t onemeps = sonemeps[i];
+			type_t onepeps = sonepeps[i];
 			//
-			//double sqe  = sqrt(eps);
-			double sqe  = rsqe[i];
-			double rem2 = x*x/(onepeps*onepeps) + y*y/(onemeps*onemeps);
+			//type_t sqe  = sqrt(eps);
+			type_t sqe  = rsqe[i];
+			type_t rem2 = x*x/(onepeps*onepeps) + y*y/(onemeps*onemeps);
 			//
 			complex      zis;
 			//
-			double znum_re, znum_im;
-			double zres_re, zres_im;
-			double norm;
-			double zden_re, zden_im;
-			double  zis_re,  zis_im;
+			type_t znum_re, znum_im;
+			type_t zres_re, zres_im;
+			type_t norm;
+			type_t zden_re, zden_im;
+			type_t  zis_re,  zis_im;
 			//
-			double zci_im  = -0.5*(1. - eps*eps)/sqe;
+			type_t zci_im  = -0.5*(1. - eps*eps)/sqe;
 			//
-			double cx1  = onemeps/onepeps; 
+			type_t cx1  = onemeps/onepeps;
 			//
 			znum_re = cx1*x;
 			znum_im = 2.*sqe*sqrt(rc[i]*rc[i] + rem2) - y/cx1;
@@ -269,30 +273,30 @@ module_potentialDerivatives_totalGradient_8_SOA_GPU_SM2(double *grid_grad_x, dou
 //
 __global__
 void
-module_potentialDerivatives_totalGradient_8_SOA_GPU_SM3(double *grid_grad_x, double *grid_grad_y, const struct Potential_SOA
+module_potentialDerivatives_totalGradient_8_SOA_GPU_SM3(type_t *grid_grad_x, type_t *grid_grad_y, const struct Potential_SOA
  *lens, const struct grid_param *frame, int nbgridcells, int shalos, int nhalos)
 {
         //
         //asm volatile("# module_potentialDerivatives_totalGradient_SOA begins");
         // 6 DP loads, i.e. 48 Bytes: position_x, position_y, ellipticity_angle, ellipticity_potential, rcore, b0
         //
-        double grad_x, grad_y;
-        double clumpgrad_x, clumpgrad_y;
-        double image_point_x, image_point_y;
+        type_t grad_x, grad_y;
+        type_t clumpgrad_x, clumpgrad_y;
+        type_t image_point_x, image_point_y;
         //
-        SHARED double cosi      [200];
-        SHARED double sinu      [200];
-        SHARED double rci       [200];
-        SHARED double b0        [200];
-        SHARED double epsi      [200];
-        SHARED double position_x[200];
-        SHARED double position_y[200];
-        SHARED double rsqe      [200];
-	//SHARED double sgrad_x   [(BLOCK_SIZE_X + 1)*BLOCK_SIZE_Y];
-	//SHARED double sgrad_y   [(BLOCK_SIZE_X + 1)*BLOCK_SIZE_Y]; 
+        SHARED type_t cosi      [200];
+        SHARED type_t sinu      [200];
+        SHARED type_t rci       [200];
+        SHARED type_t b0        [200];
+        SHARED type_t epsi      [200];
+        SHARED type_t position_x[200];
+        SHARED type_t position_y[200];
+        SHARED type_t rsqe      [200];
+	//SHARED type_t sgrad_x   [(BLOCK_SIZE_X + 1)*BLOCK_SIZE_Y];
+	//SHARED type_t sgrad_y   [(BLOCK_SIZE_X + 1)*BLOCK_SIZE_Y];
 
-        //SHARED double sonepeps  [200];
-        //SHARED double sonemeps  [200];
+        //SHARED type_t sonepeps  [200];
+        //SHARED type_t sonemeps  [200];
         //
         grad_x         = 0;
         grad_y 	       = 0;
@@ -307,8 +311,8 @@ module_potentialDerivatives_totalGradient_8_SOA_GPU_SM3(double *grid_grad_x, dou
 	//
 	//if (threadIdx.x == 0) printf("%d %d %d: row = %d, col = %d, grid_size = %d\n", blockIdx.y, gridDim.y, threadIdx.y, row, col, grid_size);
         //
-	double dx = (frame->xmax - frame->xmin)/(nbgridcells-1);
-	double dy = (frame->ymax - frame->ymin)/(nbgridcells-1);
+	type_t dx = (frame->xmax - frame->xmin)/(nbgridcells-1);
+	type_t dy = (frame->ymax - frame->ymin)/(nbgridcells-1);
 	//if (threadIdx.x == 0) printf("dx = %f, dy = %f\n", dx, dy);
 	//
 	image_point_x = frame->xmin + col*dx;
@@ -342,26 +346,26 @@ module_potentialDerivatives_totalGradient_8_SOA_GPU_SM3(double *grid_grad_x, dou
 		{
 			//int index  = iloc; 
 #if 1
-			double rc      = rci[i];
-			double eps     = epsi[i];
-			double onemeps = 1 - eps;
-			double onepeps = 1 + eps;
+			type_t rc      = rci[i];
+			type_t eps     = epsi[i];
+			type_t onemeps = 1 - eps;
+			type_t onepeps = 1 + eps;
 			//
-			double sqe = rsqe[i];
-			double cx1 = onemeps/onepeps;
+			type_t sqe = rsqe[i];
+			type_t cx1 = onemeps/onepeps;
 			//
 			//
-			//double zci_im = 1;
-			double zci_im  = -0.5*(1. - eps*eps)/sqe;
-			double inv_onepeps = 1./(onepeps*onepeps);
-			double inv_onemeps = 1./(onemeps*onemeps);
+			//type_t zci_im = 1;
+			type_t zci_im  = -0.5*(1. - eps*eps)/sqe;
+			type_t inv_onepeps = 1./(onepeps*onepeps);
+			type_t inv_onemeps = 1./(onemeps*onemeps);
 #endif
 			//
 			{
 				//KERNEL_8;
-				double grad_x = grad_y = 0.;
-				double true_coord_y = image_point_y - position_y[i];
-				double true_coord_x = image_point_x - position_x[i];
+				type_t grad_x = grad_y = 0.;
+				type_t true_coord_y = image_point_y - position_y[i];
+				type_t true_coord_x = image_point_x - position_x[i];
 				KERNEL_8_reg(0);
 				grid_grad_x[iglob +  0] += grad_x;
 				grid_grad_y[iglob +  0] += grad_y;
@@ -369,9 +373,9 @@ module_potentialDerivatives_totalGradient_8_SOA_GPU_SM3(double *grid_grad_x, dou
 			/*
 			{
 				//KERNEL_8;
-				double grad_x = grad_y = 0.;
-				double true_coord_y = image_point_y - position_y[i];
-				double true_coord_x = image_point_x - position_x[i] + BLOCK_SIZE_X/2*dx;
+				type_t grad_x = grad_y = 0.;
+				type_t true_coord_y = image_point_y - position_y[i];
+				type_t true_coord_x = image_point_x - position_x[i] + BLOCK_SIZE_X/2*dx;
 				KERNEL_8_reg(0);
 				grid_grad_x[iglob + BLOCK_SIZE_X/2] += grad_x;
 				grid_grad_y[iglob + BLOCK_SIZE_X/2] += grad_y;
@@ -386,29 +390,29 @@ module_potentialDerivatives_totalGradient_8_SOA_GPU_SM3(double *grid_grad_x, dou
 //
 __global__
 void
-module_potentialDerivatives_totalGradient_8_SOA_GPU_SM4(double *grid_grad_x, double *grid_grad_y, const struct Potential_SOA
-		lens, const struct grid_param *frame, int nbgridcells, int shalos, int nhalos/*, double* dtimer*/)
+module_potentialDerivatives_totalGradient_8_SOA_GPU_SM4(type_t *grid_grad_x, type_t *grid_grad_y, const struct Potential_SOA
+		lens, const struct grid_param *frame, int nbgridcells, int shalos, int nhalos/*, type_t* dtimer*/)
 {
 	//
 	//asm volatile("# module_potentialDerivatives_totalGradient_SOA begins");
 	// 6 DP loads, i.e. 48 Bytes: position_x, position_y, ellipticity_angle, ellipticity_potential, rcore, b0
 	//
-	double grad_x, grad_y;
-	double clumpgrad_x, clumpgrad_y;
-	double image_point_x, image_point_y;
+	type_t grad_x, grad_y;
+	type_t clumpgrad_x, clumpgrad_y;
+	type_t image_point_x, image_point_y;
 	//
 	//
-	double* cosi       = &shared[0*nhalos];
-	double* sinu       = &shared[1*nhalos];
-	double* rc         = &shared[2*nhalos];
-	double* b0         = &shared[3*nhalos];
-	double* epsi       = &shared[4*nhalos];
-	double* position_x = &shared[5*nhalos];
-	double* position_y = &shared[6*nhalos];
-	double* rsqe       = &shared[7*nhalos];
+	type_t* cosi       = &shared[0*nhalos];
+	type_t* sinu       = &shared[1*nhalos];
+	type_t* rc         = &shared[2*nhalos];
+	type_t* b0         = &shared[3*nhalos];
+	type_t* epsi       = &shared[4*nhalos];
+	type_t* position_x = &shared[5*nhalos];
+	type_t* position_y = &shared[6*nhalos];
+	type_t* rsqe       = &shared[7*nhalos];
 
-	//SHARED double sonepeps  [200];
-	//SHARED double sonemeps  [200];
+	//SHARED type_t sonepeps  [200];
+	//SHARED type_t sonemeps  [200];
 	//
 	grad_x         = 0;
 	grad_y         = 0;
@@ -419,7 +423,7 @@ module_potentialDerivatives_totalGradient_8_SOA_GPU_SM4(double *grid_grad_x, dou
 	//
 	//
 #if 1
-	//SHARED double sgrad_x [
+	//SHARED type_t sgrad_x [
 	if (/*(threadIdx.x == 0) &&*/ (blockIdx.x == 0))
 	{
 		if (threadIdx.x == 0) printf("blockDim.x = %d, blockIdx.x = %d grimdDim.x = %d threadIdx.x = %d\n", blockDim.x, blockIdx.x, gridDim.x, threadIdx.x);
@@ -428,15 +432,15 @@ module_potentialDerivatives_totalGradient_8_SOA_GPU_SM4(double *grid_grad_x, dou
 	}
 	__syncthreads();
 #endif
-	double* sgrad_x    = &shared[8*nhalos];
-	double* sgrad_y    = &shared[8*nhalos + (grid_size + 1)*blockDim.x];
+	type_t* sgrad_x    = &shared[8*nhalos];
+	type_t* sgrad_y    = &shared[8*nhalos + (grid_size + 1)*blockDim.x];
 	//
 	//
 	//grid_grad_x[index] = 0.;
 	//grid_grad_y[index] = 0.;
 	//
-	double dx = (frame->xmax - frame->xmin)/(nbgridcells-1);
-	double dy = (frame->ymax - frame->ymin)/(nbgridcells-1);
+	type_t dx = (frame->xmax - frame->xmin)/(nbgridcells-1);
+	type_t dy = (frame->ymax - frame->ymin)/(nbgridcells-1);
 	//
 	//if (threadIdx.x == 0) printf("dx = %f, dy = %f\n", dx, dy);
 	//
@@ -491,23 +495,23 @@ module_potentialDerivatives_totalGradient_8_SOA_GPU_SM4(double *grid_grad_x, dou
                 {
                         int sindex  = threadIdx.x*grid_size; 
 #if 0
-                        double eps     = epsi[i];
-                        double onemeps = 1 - eps;
-                        double onepeps = 1 + eps;
+                        type_t eps     = epsi[i];
+                        type_t onemeps = 1 - eps;
+                        type_t onepeps = 1 + eps;
                         //
-                        double sqe = rsqe[i];
-                        double cx1 = onemeps/onepeps;
+                        type_t sqe = rsqe[i];
+                        type_t cx1 = onemeps/onepeps;
                         //
                         //
-                        //double x = true_coord_y*sinu[i];
-                        //double y = true_coord_y*cosi[i];
-                        double true_coord_y = image_point_y - position_y[i];
-                        double true_coord_x = image_point_x - position_x[i] /*+ icol*dx*/;
+                        //type_t x = true_coord_y*sinu[i];
+                        //type_t y = true_coord_y*cosi[i];
+                        type_t true_coord_y = image_point_y - position_y[i];
+                        type_t true_coord_x = image_point_x - position_x[i] /*+ icol*dx*/;
                         //
                         complex zci;
                         zci.im  = -0.5*(1. - eps*eps)/sqe;
-                        double inv_onepeps = 1./(onepeps*onepeps);
-                        double inv_onemeps = 1./(onemeps*onemeps);
+                        type_t inv_onepeps = 1./(onepeps*onepeps);
+                        type_t inv_onemeps = 1./(onemeps*onemeps);
 #endif
                         //
                         for(int icol = 0; icol < grid_size; ++icol)
@@ -521,8 +525,8 @@ module_potentialDerivatives_totalGradient_8_SOA_GPU_SM4(double *grid_grad_x, dou
                                         //
                                         //x += true_coord_x*cosi[i];
                                         //y -= true_coord_x*sinu[i];
-                                        double x = true_coord_x*cosi[i] + true_coord_y*sinu[i];
-                                        double y = true_coord_y*cosi[i] - true_coord_x*sinu[i];
+                                        type_t x = true_coord_x*cosi[i] + true_coord_y*sinu[i];
+                                        type_t y = true_coord_y*cosi[i] - true_coord_x*sinu[i];
                                         //
                                         //if ((row == 1) && (col == 0)) printf("i = %d, eps = %f\n", i, eps);
                                         //
@@ -532,14 +536,14 @@ module_potentialDerivatives_totalGradient_8_SOA_GPU_SM4(double *grid_grad_x, dou
                                         //
                                         //double sqe  = sqrt(eps);
                                         //double rem2 = x*x/(onepeps*onepeps) + y*y/(onemeps*onemeps);
-                                        double rem2 = x*x*inv_onepeps + y*y*inv_onemeps;
+                                        type_t rem2 = x*x*inv_onepeps + y*y*inv_onemeps;
                                         //
                                         //
                                         //double znum_re, znum_im;
                                         //double zres_re, zres_im;
                                         //double zden_re, zden_im;
                                         //double  zis_re,  zis_im;
-                                        double norm;
+                                        type_t norm;
                                         //
                                         complex      zis;
                                         complex      znum;
@@ -602,7 +606,7 @@ module_potentialDerivatives_totalGradient_8_SOA_GPU_SM4(double *grid_grad_x, dou
 
 __global__
 void
-module_potentialDerivatives_totalGradient_8_SOA_GPU_v2(double *grid_grad_x, double *grid_grad_y, const struct Potential_SOA *lens, const struct grid_param *frame, int nbgridcells, int i, int nhalos)
+module_potentialDerivatives_totalGradient_8_SOA_GPU_v2(type_t *grid_grad_x, type_t *grid_grad_y, const struct Potential_SOA *lens, const struct grid_param *frame, int nbgridcells, int i, int nhalos)
 {
 	//asm volatile("# module_potentialDerivatives_totalGradient_SOA begins");
 	// 6 DP loads, i.e. 48 Bytes: position_x, position_y, ellipticity_angle, ellipticity_potential, rcore, b0
@@ -622,11 +626,11 @@ module_potentialDerivatives_totalGradient_8_SOA_GPU_v2(double *grid_grad_x, doub
 		//grid_grad_x[index] = 0.;
 		//grid_grad_y[index] = 0.;
 		//
-		double dx = (frame->xmax - frame->xmin)/(nbgridcells-1);
-		double dy = (frame->ymax - frame->ymin)/(nbgridcells-1);
+		type_t dx = (frame->xmax - frame->xmin)/(nbgridcells-1);
+		type_t dy = (frame->ymax - frame->ymin)/(nbgridcells-1);
 		//
 #if 0
-		/*SHARED*/ double img_pt[2];
+		/*SHARED*/ type_t img_pt[2];
 		if ((row == 0) && (col == 0))
 		{
 			img_pt[0] = frame->xmin + col*dx;
@@ -644,7 +648,7 @@ module_potentialDerivatives_totalGradient_8_SOA_GPU_v2(double *grid_grad_x, doub
 		//IACA_START;
 		//
 		struct point true_coord, true_coord_rot; //, result;
-		//double       R, angular_deviation;
+		//type_t       R, angular_deviation;
 		complex      zis;
 		//
 		//result.x = result.y = 0.;
@@ -656,27 +660,27 @@ module_potentialDerivatives_totalGradient_8_SOA_GPU_v2(double *grid_grad_x, doub
 		true_coord.x = image_point.x - __ldg(&lens->position_x[i]);
 		true_coord.y = image_point.y - __ldg(&lens->position_y[i]);
 #endif
-		double cosi = __ldg(&lens->anglecos[i]);
-		double sinu = __ldg(&lens->anglesin[i]);
+		type_t cosi = __ldg(&lens->anglecos[i]);
+		type_t sinu = __ldg(&lens->anglesin[i]);
 		// positionning at the potential center
 		// Change the origin of the coordinate system to the center of the clump
-		double x = true_coord.x*cosi + true_coord.y*sinu;
-		double y = true_coord.y*cosi - true_coord.x*sinu;
+		type_t x = true_coord.x*cosi + true_coord.y*sinu;
+		type_t y = true_coord.y*cosi - true_coord.x*sinu;
 		//
-		double eps = __ldg(&lens->ellipticity_potential[i]);
+		type_t eps = __ldg(&lens->ellipticity_potential[i]);
 		//
-		double sqe  = sqrt(eps);
+		type_t sqe  = sqrt(eps);
 		//
-		double rem2 = x*x/((1. + eps)*(1. + eps)) + y*y/((1. - eps)*(1. - eps));
+		type_t rem2 = x*x/((1. + eps)*(1. + eps)) + y*y/((1. - eps)*(1. - eps));
 		//
 		complex zci;
 		complex znum, zden, zres;
-		double norm;
+		type_t norm;
 		//
 		zci.im  = -0.5*(1. - eps*eps)/sqe;
 		//
-		double rc  = __ldg(&lens->rcore[i]);
-		double cx1  = (1. - eps)/(1. + eps);
+		type_t rc  = __ldg(&lens->rcore[i]);
+		type_t cx1  = (1. - eps)/(1. + eps);
 		znum.re = cx1*x;
 		znum.im = 2.*sqe*sqrt(rc*rc + rem2) - y/cx1;
 		//
@@ -687,7 +691,7 @@ module_potentialDerivatives_totalGradient_8_SOA_GPU_v2(double *grid_grad_x, doub
 		zis.re  = (znum.re*zden.re + znum.im*zden.im)/norm;
 		zis.im  = (znum.im*zden.re - znum.re*zden.im)/norm;
 		//
-		double b0  = __ldg(&lens->b0[i]);
+		type_t b0  = __ldg(&lens->b0[i]);
 		grad.x += b0*(zres.re*cosi - zres.im*sinu);
 		grad.y += b0*(zres.im*cosi + zres.re*sinu);
 		//
@@ -696,3 +700,247 @@ module_potentialDerivatives_totalGradient_8_SOA_GPU_v2(double *grid_grad_x, doub
 	}
 }
 
+#if 1
+typedef struct point (*halo_func_GPU_t) (const struct point *pImage, const struct Potential_SOA *lens, int shalos, int nhalos);
+
+__constant__ halo_func_GPU_t halo_func_GPU[100] =
+{
+	0, 0, 0, 0, 0, module_potentialDerivatives_totalGradient_5_SOA_GPU, 0, 0, module_potentialDerivatives_totalGradient_8_SOA_GPU,  0,
+	0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+	0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+	0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+	   0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+	   0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+	   0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+	   0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+	   0,  module_potentialDerivatives_totalGradient_81_SOA_GPU, 0, 0, 0, 0, 0, 0, 0, 0,
+	   0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	   };
+#endif
+
+__device__ point module_potentialDerivatives_totalGradient_5_SOA_GPU(const struct point *pImage, const struct Potential_SOA *lens, int shalos, int nhalos){
+    //asm volatile("# module_potentialDerivatives_totalGradient_SIS_SOA_v2 begins");
+    //printf("# module_potentialDerivatives_totalGradient_SIS_SOA_v2 begins\n");
+    //
+    struct point grad, result;
+    grad.x = 0;
+    grad.y = 0;
+    for(int i = shalos; i < shalos + nhalos; i++)
+    {
+            //
+		struct point true_coord, true_coord_rotation;
+		//
+		true_coord.x = pImage->x - lens->position_x[i];
+		true_coord.y = pImage->y - lens->position_y[i];
+		//
+		//true_coord_rotation = rotateCoordinateSystem(true_coord, lens->ellipticity_angle[i]);
+		type_t cose = lens->anglecos[i];
+		type_t sine = lens->anglesin[i];
+		//
+		type_t x = true_coord.x*cose + true_coord.y*sine;
+		type_t y = true_coord.y*cose - true_coord.x*sine;
+		//
+		type_t ell_pot = lens->ellipticity_potential[i];
+		//
+		type_t b0_inv_R = lens->b0[i]/sqrt(x*x*(1 - ell_pot) + y*y*(1 + ell_pot));
+		//
+		result.x = (1 - ell_pot)*x*b0_inv_R;
+		result.y = (1 + ell_pot)*y*b0_inv_R;
+		//
+		grad.x += result.x*cose - result.y*sine;
+		grad.y += result.y*cose + result.x*sine;
+    }
+    return grad;
+
+}
+__device__ point module_potentialDerivatives_totalGradient_8_SOA_GPU(const struct point *image_point, const struct Potential_SOA *lens, int shalos, int nhalos){
+	struct point grad;
+	grad.x = 0;
+	grad.y = 0;
+	//
+	for(int i = shalos; i < shalos + nhalos; i++)
+	{
+        complex      zis;
+        // positioning at the potential center
+        // Change the origin of the coordinate system to the center of the clump
+        //@@if ((row == Ny) && (col == Nx)) printf("image_x = %f, %f image_y = %f, %f\n",  image_point.x, frame->xmin, image_point.y,frame->ymin);
+        type_t true_coord_x = image_point->x - __ldg(&lens->position_x[i]);
+        type_t true_coord_y = image_point->y - __ldg(&lens->position_y[i]);
+        //if ((row == Ny) && (col == Nx)) printf("x = %f y = %f\n",  true_coord_x, true_coord_y);
+        //
+        type_t cosi = __ldg(&lens->anglecos[i]);
+        type_t sinu = __ldg(&lens->anglesin[i]);
+        //
+        type_t x = true_coord_x*cosi + true_coord_y*sinu;
+        type_t y = true_coord_y*cosi - true_coord_x*sinu;
+        //
+        //if ((row == Ny) && (col == Nx)) printf("x = %f y = %f\n",  x, y);
+        //
+        type_t eps = __ldg(&lens->ellipticity_potential[i]);
+        //
+        type_t sqe  = sqrt(eps);
+        //
+        type_t rem2 = x*x/((1. + eps)*(1. + eps)) + y*y/((1. - eps)*(1. - eps));
+        //
+        complex zci;
+        complex znum, zden, zres;
+        type_t norm;
+        //
+        zci.re  = 0;
+        zci.im  = -0.5*(1. - eps*eps)/sqe;
+        //@@if ((col == Nx) && (row == Ny)) printf("%d %d, zis: %f %f\n", row, col, zci.re, zci.im);
+        //
+        type_t rc  = __ldg(&lens->rcore[i]);
+        type_t cx1  = (1. - eps)/(1. + eps);
+        znum.re = cx1*x;
+        znum.im = 2.*sqe*sqrt(rc*rc + rem2) - y/cx1;
+        //
+        zden.re = x;
+        zden.im = 2.*rc*sqe - y;
+        norm    = (zden.re*zden.re + zden.im*zden.im);     // zis = znum/zden
+        //@@if ((col == Nx) && (row == Ny)) printf("norm = %f\n", norm);
+        //
+        zis.re  = (znum.re*zden.re + znum.im*zden.im)/norm;
+        zis.im  = (znum.im*zden.re - znum.re*zden.im)/norm;
+        //
+        //@@if ((col == Nx) && (row == Ny)) printf("%d %d, zis: %f %f\n", row, col, zis.re, zis.im);
+        //
+        norm    = zis.re;
+        //
+        zis.re  = log(sqrt(norm*norm + zis.im*zis.im));  // ln(zis) = ln(|zis|)+i.Arg(zis)
+        zis.im  = atan2(zis.im, norm);
+        //
+        //@@if ((col == Nx) && (row == Ny)) printf("%d %d, zis: %f %f\n", row, col, zis.re, zis.im);
+        //
+        zres.re = zci.re*zis.re - zci.im*zis.im;   // Re( zci*ln(zis) )
+        zres.im = zci.im*zis.re + zis.im*zci.re;   // Im( zci*ln(zis) )
+        //
+        //@@if ((col == Nx) && (row == Ny)) printf("%d %d, zres: %f %f\n", row, col, zres.re, zres.im);
+        //
+        type_t b0  = __ldg(&lens->b0[i]);
+        grad.x += b0*(zres.re*cosi - zres.im*sinu);
+        grad.y += b0*(zres.im*cosi + zres.re*sinu);
+        //@@if ((col == Nx) && (row == Ny)) printf("grad: %f %f\n", grad.x, grad.y);
+	}
+	//IACA_END;
+	//
+	return(grad);
+
+}
+__device__ point module_potentialDerivatives_totalGradient_81_SOA_GPU(const struct point *pImage, const struct Potential_SOA *lens, int shalos, int nhalos){
+    //asm volatile("# module_potentialDerivatives_totalGradient_81_SOA begins");
+    //std::cout << "# module_potentialDerivatives_totalGradient_81_SOA begins" << std::endl;
+    // 6 DP loads, i.e. 48 Bytes: position_x, position_y, ellipticity_angle, ellipticity_potential, rcore, b0
+    //
+    struct point grad, clumpgrad;
+    grad.x = 0;
+    grad.y = 0;
+    for(int i = shalos; i < shalos + nhalos; i++)
+    {
+		//IACA_START;
+		//
+		struct point true_coord, true_coord_rot; //, result;
+		//type_t       R, angular_deviation;
+		complex      zis;
+		//
+		//result.x = result.y = 0.;
+		//
+		true_coord.x = pImage->x - lens->position_x[i];
+		true_coord.y = pImage->y - lens->position_y[i];
+		/*positionning at the potential center*/
+		// Change the origin of the coordinate system to the center of the clump
+		type_t cose = lens->anglecos[i];
+		type_t sine = lens->anglesin[i];
+		type_t x = true_coord.x*cose + true_coord.y*sine;
+		type_t y = true_coord.y*cose - true_coord.x*sine;
+		//
+		type_t eps  = lens->ellipticity_potential[i];
+		type_t rc   = lens->rcore[i];
+		type_t rcut = lens->rcut[i];
+		type_t b0   = lens->b0[i];
+		type_t t05  = b0*rcut/(rcut - rc);
+		//
+		type_t sqe  = sqrt(eps);
+		//
+		type_t cx1  = (1. - eps)/(1. + eps);
+		type_t cxro = (1. + eps)*(1. + eps);
+		type_t cyro = (1. - eps)*(1. - eps);
+		//
+		type_t rem2 = x*x/cxro + y*y/cyro;
+		//
+		complex zci, znum, zden, zres_rc, zres_rcut;
+		type_t norm;
+		//
+		zci.re  = 0;
+		zci.im  = -0.5*(1. - eps*eps)/sqe;
+		//
+		// step 1
+		{
+		KERNEL(rc, zres_rc)
+		}
+		// step 2
+		{
+		KERNEL(rcut, zres_rcut)
+		}
+		zis.re  = t05*(zres_rc.re - zres_rcut.re);
+		zis.im  = t05*(zres_rc.im - zres_rcut.im);
+		// rotation
+		grad.x += (zis.re*cose - zis.im*sine);
+		grad.y += (zis.im*cose + zis.re*sine);
+            //
+    }
+    //
+    return(grad);
+
+}
+
+__global__
+void
+module_potentialDerivatives_totalGradient_SOA_GPU(type_t *grid_grad_x, type_t *grid_grad_y, const struct Potential_SOA *lens, const struct grid_param *frame, int nbgridcells, int nhalos)
+{
+    struct point grad, clumpgrad, image_point;
+    //
+    int col = blockIdx.x*blockDim.x + threadIdx.x;
+    int row = blockIdx.y*blockDim.y + threadIdx.y;
+
+    //
+    if ((row < nbgridcells) && (col < nbgridcells))
+    {
+        //
+        type_t dx = (frame->xmax - frame->xmin)/(nbgridcells-1);
+        type_t dy = (frame->ymax - frame->ymin)/(nbgridcells-1);
+		//
+		int index = row*nbgridcells + col;
+		// Create temp grad variable to minimise writing to global memory grid_grad
+		grad.x = 0;
+		grad.y = 0;
+		//
+		image_point.x = frame->xmin + col*dx;
+		image_point.y = frame->ymin + row*dy;
+		//
+		int shalos = 0;
+		while (shalos < nhalos)
+		{
+			int lens_type = lens->type[shalos];
+			int count     = 1;
+			while (lens->type[shalos + count] == lens_type) count++;
+			//
+			//if(row == 0 && col == 0) printf("type = %d, count %d , shalos %d \n", lens_type,count,shalos );
+			//
+			clumpgrad = (*halo_func_GPU[lens_type])(&image_point, lens, shalos, count);
+			//
+			grad.x += clumpgrad.x;
+			grad.y += clumpgrad.y;
+			shalos += count;
+		}
+		// Write to global memory
+		grid_grad_x[index] = grad.x;
+		grid_grad_y[index] = grad.y;
+	//if ((row == 0) && (col == 9))
+	//printf("%f %f: %f %f\n",  image_point.x, image_point.y, grid_grad_x[index], grid_grad_y[index]);
+    }
+
+
+
+
+}

@@ -1,21 +1,21 @@
 #include "grid_gradient_CPU.hpp"
-
-
-
-void gradient_grid_CPU(double *grid_grad_x, double *grid_grad_y, const struct grid_param *frame, const struct Potential_SOA *lens, int nhalos, int nbgridcells)
+//
+//
+//
+void gradient_grid_CPU(type_t *grid_grad_x, type_t *grid_grad_y, const struct grid_param *frame, const struct Potential_SOA *lens, int nhalos, int nbgridcells, int istart, int jstart)
 {
-	gradient_grid_general_CPU(grid_grad_x, grid_grad_y,frame, nhalos, nbgridcells, lens);
+	gradient_grid_general_CPU(grid_grad_x, grid_grad_y, frame, nhalos, nbgridcells, lens, istart, jstart);
 }
 
-void gradient_grid_general_CPU_old(double *grid_grad_x, double *grid_grad_y, const struct grid_param *frame, int Nlens,int nbgridcells, const struct Potential_SOA *lens)
+void gradient_grid_general_CPU_old(type_t *grid_grad_x, type_t *grid_grad_y, const struct grid_param *frame, int Nlens,int nbgridcells, const struct Potential_SOA *lens)
 {
 	int bid=0; // index of the block (and of the set of images)
 	int tid=0; // index of the thread within the block
 
-	double dx,dy,x_pos,y_pos;        //pixelsize
+	type_t dx,dy,x_pos,y_pos;        //pixelsize
 	int grid_dim, index;
 	point Grad, image_point, true_coord_rotation;
-	double      R;
+	type_t      R;
 	dx = (frame->xmax - frame->xmin)/(nbgridcells-1);
 	dy = (frame->ymax - frame->ymin)/(nbgridcells-1);
 	grid_dim = (nbgridcells);
@@ -45,24 +45,26 @@ void gradient_grid_general_CPU_old(double *grid_grad_x, double *grid_grad_y, con
 }
 
 
-void gradient_grid_general_CPU(double *grid_grad_x, double *grid_grad_y, const struct grid_param *frame, int Nlens,int nbgridcells, const struct Potential_SOA *lens)
+void gradient_grid_general_CPU(type_t *grid_grad_x, type_t *grid_grad_y, const struct grid_param *frame, int Nlens, int nbgridcells, const struct Potential_SOA *lens, int istart, int jstart)
 {
-	int bid=0; // index of the block (and of the set of images)
-	int tid=0; // index of the thread within the block
-
-	double dx,dy,x_pos,y_pos;        //pixelsize
-	int grid_dim, index;
-	point Grad, image_point, true_coord_rotation;
-	double      R;
+	int bid = 0; // index of the block (and of the set of images)
+	int tid = 0; // index of the thread within the block
+	//
+	type_t dx,dy,x_pos,y_pos;        //pixelsize
+	int    grid_dim, index;
+	point  Grad, image_point, true_coord_rotation;
+	type_t R;
+	//
 	dx = (frame->xmax - frame->xmin)/(nbgridcells-1);
 	dy = (frame->ymax - frame->ymin)/(nbgridcells-1);
 	grid_dim = (nbgridcells);
-
+	//
 	index = bid ;
-
-#pragma omp parallel for private(Grad, image_point)
-	for (int jj = 0; jj < nbgridcells; ++jj) 
-		for (int ii = 0; ii < nbgridcells; ++ii)
+	//
+#pragma omp parallel
+#pragma omp for private(Grad, image_point)
+	for (int jj = jstart; jj < nbgridcells; ++jj) 
+		for (int ii = istart; ii < nbgridcells; ++ii)
 		{
 			//  (index < grid_dim*grid_dim)
 
@@ -83,5 +85,4 @@ void gradient_grid_general_CPU(double *grid_grad_x, double *grid_grad_y, const s
 			//bid += 1;
 			//index = bid * 1 + tid;
 		}
-
 }

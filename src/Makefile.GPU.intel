@@ -37,22 +37,26 @@ program_INCLUDE_LIBS += $(WCSTOOL_ROOT)
 # Compiler flags
 CPPFLAGS += $(foreach includedir,$(program_INCLUDE_DIRS),-I$(includedir))
 CPPFLAGS += $(foreach includelib,$(program_INCLUDE_LIBS),-L$(includelib))
-CPPFLAGS += -D__WITH_LENSTOOL 
+#CPPFLAGS += -D__WITH_LENSTOOL 
 CPPFLAGS += -qopenmp -xHost -g -O3 -std=c++0x -Wall -pedantic
 CPPFLAGS += -fma -qopenmp -ftz
 CPPFLAGS += -xHost -pedantic  
 CPPFLAGS += -fPIC
+CPPFLAGS += -D_double
 #CPPFLAGS += -no-vec
 #CPPFLAGS += -qopenmp -march=core-avx2 -g -O3 -std=c++0x -Wall -pedantic
 #CPPFLAGS += -llenstoolhpc -qopenmp -xHost -g -O3 -std=c++0x -Wall -pedantic
 #CPPFLAGS += -llenstoolhpc -qopenmp -axMIC-AVX512,CORE-AVX2 -g -O3 -std=c++0x -Wall -pedantic
 #CPPFLAGS += -qopt-prefetch-distance=64,8 -qopt-streaming-cache-evict=0 -llenstoolhpc -qopenmp -xMIC-AVX512 -g -O3 -std=c++0x -Wall -pedantic
-LDFLAGS := -llenstool -llenstoolhpc  -llt -lcfitsio -lwcs -lgsl -lgslcblas
+#LDFLAGS := -llenstool -llenstoolhpc  -llt -lcfitsio -lwcs -lgsl -lgslcblas
+LDFLAGS := -llenstoolhpc  -llt -lcfitsio -lwcs -lgsl -lgslcblas
 #
 #NVFLAGS := -O3 -g -G -rdc=true -ccbin icpc -Xcompiler '-Wall -fPIC -qopenmp' -D__WITH_LENSTOOL 
-NVFLAGS := -O3 -ccbin icpc -Xcompiler '-Wall -fPIC' -D__WITH_LENSTOOL
+NVFLAGS := -O3 -ccbin icpc -Xcompiler '-Wall -fPIC' #-D__WITH_LENSTOOL
+NVFLAGS += -D_double
 NVFLAGS += -gencode arch=compute_60,code=sm_60
-#NVFLAGS += -arch=sm_60
+NVFLAGS += -use_fast_math
+#NVFLAGS += -arch=sm_35
 NVFLAGS += $(foreach includedir,$(program_INCLUDE_DIRS),-I$(includedir))
 NVFLAGS += $(foreach includelib,$(program_INCLUDE_LIBS),-L$(includelib))
 #
@@ -80,7 +84,7 @@ CPU_OBJECTS = $(program_CXX_OBJS) $(program_C_OBJS)
 	$(CXX) $(CXXFLAGS)  -o $@ $< $(CPPFLAGS)
 #
 $(PROGRAM_NAME): $(GPU_OBJECTS) 
-	nvcc -arch=sm_60 $(program_CU_OBJS) --shared -o liblenstoolhpc_GPU.so
+	nvcc -arch=sm_35 $(program_CU_OBJS) --shared -o liblenstoolhpc_GPU.so
 
 
 #$(PROGRAM_NAME): $(CPU_OBJECTS) 

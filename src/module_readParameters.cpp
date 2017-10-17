@@ -1036,7 +1036,7 @@ void module_readParameters_limit(std::string infile, struct potentialoptimizatio
     std::string first, second, line1, line2;
     int i=0;
 
- double DTR=acos(-1.)/180.;	/* 1 deg in rad  = pi/180 */
+ type_t DTR=acos(-1.)/180.;	/* 1 deg in rad  = pi/180 */
 
 /*** initialize the block variables to zero (= not to be optimized) ***/
 for(int index=0; index<nhalos; index++)
@@ -1264,6 +1264,11 @@ std::ifstream IN(infile.c_str(), std::ios::in);
 			ilens->type=8;
 			strcpy(ilens->type_name,"PIEMD1");//ilens->type_name="point";
 		}
+		if(!strcmp(third.c_str(), "81") )
+		{
+			ilens->type=81;
+			strcpy(ilens->type_name,"PIEMD81");//ilens->type_name="point";
+		}
 		
         }
         
@@ -1456,7 +1461,7 @@ void module_readParameters_PotentialSOA(std::string infile, Potential *lens, Pot
 	lens_SOA->anglecos = 	new double[nhalos];
 	lens_SOA->anglesin = 		new double[nhalos];
 
-	printf("anglecos = %p\n", &lens_SOA->anglecos[0]);
+
 	int N_type[100];
 	int Indice_type[100];
 	int ind;
@@ -1499,7 +1504,7 @@ void module_readParameters_PotentialSOA(std::string infile, Potential *lens, Pot
 		}
 	}
 
-
+	printf("Bla anglecos = %f\n", lens_SOA->anglecos[0]);
 
 }
 
@@ -3075,7 +3080,7 @@ void module_readParameters_PotentialSOA(std::string infile, Potential *lens, Pot
 	lens_SOA->anglecos = 	new type_t[nhalos];
 	lens_SOA->anglesin = 		new type_t[nhalos];
 
-	printf("anglecos = %p\n", &lens_SOA->anglecos[0]);
+
 	int N_type[100];
 	int Indice_type[100];
 	int ind;
@@ -3117,7 +3122,7 @@ void module_readParameters_PotentialSOA(std::string infile, Potential *lens, Pot
 			Indice_type[lens[i].type-1] += 1;
 		}
 	}
-
+	printf("anglecos = %f\n", lens_SOA->anglecos[0]);
 
 
 }

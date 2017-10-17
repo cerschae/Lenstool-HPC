@@ -26,12 +26,12 @@
 
 // Declare static functions that will only be used in this module
 // The functions are defined further below
-static double module_cosmodistances_cosmo_root(double z,cosmo_param C);
-static double module_cosmodistances_sk(double x, double k);
-static double module_cosmodistances_chi1(double z,cosmo_param C);
-static double module_cosmodistances_chi2(double z1, double z2,cosmo_param C);
-static double module_cosmodistances_chiz(double z,cosmo_param C);
-static double module_cosmodistances_integral_chiz_ab(double a, double b,cosmo_param C);
+static type_t module_cosmodistances_cosmo_root(type_t z,cosmo_param C);
+static type_t module_cosmodistances_sk(type_t x, type_t k);
+static type_t module_cosmodistances_chi1(type_t z,cosmo_param C);
+static type_t module_cosmodistances_chi2(type_t z1, type_t z2,cosmo_param C);
+static type_t module_cosmodistances_chiz(type_t z,cosmo_param C);
+static type_t module_cosmodistances_integral_chiz_ab(type_t a, type_t b,cosmo_param C);
 
 
 
@@ -47,7 +47,7 @@ static double module_cosmodistances_integral_chiz_ab(double a, double b,cosmo_pa
 * @param cosmoratio     variable where result is stored
 * @param cosmopar      cosmological parameter
 */
-void module_cosmodistances_lensSourceToSource( const int nsetofimages, int nImagesSet[], double z_lens, galaxy source[], double cosmoratio[], cosmo_param cosmopar){
+void module_cosmodistances_lensSourceToSource( const int nsetofimages, int nImagesSet[], type_t z_lens, galaxy source[], type_t cosmoratio[], cosmo_param cosmopar){
 
 
         //int imageCounter = 0;  // Count the total number of images up to now
@@ -68,10 +68,10 @@ void module_cosmodistances_lensSourceToSource( const int nsetofimages, int nImag
 * @param z          redshift of object
 * @param cosmopar      cosmological parameter
 */
-double module_cosmodistances_observerObject(double z, cosmo_param cosmopar)
+type_t module_cosmodistances_observerObject(type_t z, cosmo_param cosmopar)
 
 {
-    double g;
+    type_t g;
 
     if (cosmopar.omegaX == 0.)
     {
@@ -101,9 +101,9 @@ double module_cosmodistances_observerObject(double z, cosmo_param cosmopar)
 * @param z2          redshift of object 2
 * @param cosmopar      cosmological parameter
 */
-double module_cosmodistances_objectObject(double z1, double z2, cosmo_param cosmopar)
+type_t module_cosmodistances_objectObject(type_t z1, type_t z2, cosmo_param cosmopar)
 {
-    double  g1, g2;
+    type_t  g1, g2;
 
     if ( z1 >= z2 )
         return 0.;
@@ -139,7 +139,7 @@ double module_cosmodistances_objectObject(double z1, double z2, cosmo_param cosm
 * @param cosmopar      cosmological parameter
 */
 
-double module_cosmodistances_lensSourceToObserverSource(double zl, double zs, cosmo_param cosmopar)
+type_t module_cosmodistances_lensSourceToObserverSource(type_t zl, type_t zs, cosmo_param cosmopar)
 {
     if ( zl >= zs ){
   printf("*******************\nWarning, a source is between the lens and the observer\n*******************\n");
@@ -158,7 +158,7 @@ double module_cosmodistances_lensSourceToObserverSource(double zl, double zs, co
 */
 
 // Calculate square root
-static double module_cosmodistances_cosmo_root(double z,cosmo_param C)
+static type_t module_cosmodistances_cosmo_root(type_t z,cosmo_param C)
 {
     return(sqrt(1. + C.omegaM*z));
 }
@@ -172,7 +172,7 @@ static double module_cosmodistances_cosmo_root(double z,cosmo_param C)
 * @param x
 * @param k      curvature
 */
-static double module_cosmodistances_sk(double x, double k)
+static type_t module_cosmodistances_sk(type_t x, type_t k)
 {
     if (k > 0)
         return(sin(x));
@@ -190,11 +190,11 @@ static double module_cosmodistances_sk(double x, double k)
 * @param C      cosmological parameter
 */
 
-static double module_cosmodistances_chiz(double z,cosmo_param C)
+static type_t module_cosmodistances_chiz(type_t z,cosmo_param C)
 {
-    double x;
-    double yy, yyy, y4;
-    double r0, e1, e2, frac;
+    type_t x;
+    type_t yy, yyy, y4;
+    type_t r0, e1, e2, frac;
 
     x = 1 + z;
 
@@ -247,9 +247,9 @@ static double module_cosmodistances_chiz(double z,cosmo_param C)
 * @param z      redshift
 * @param C      cosmological parameter
 */
-static double module_cosmodistances_chi1(double z,cosmo_param C)
+static type_t module_cosmodistances_chi1(type_t z,cosmo_param C)
 {
-    double rez;
+    type_t rez;
     rez = module_cosmodistances_integral_chiz_ab(0., z,C);
     return rez;
 }
@@ -263,9 +263,9 @@ static double module_cosmodistances_chi1(double z,cosmo_param C)
 * @param zs      redshift source
 * @param C      cosmological parameter
 */
-static double module_cosmodistances_chi2(double z1, double z2,cosmo_param C)
+static type_t module_cosmodistances_chi2(type_t z1, type_t z2,cosmo_param C)
 {
-   double rez;
+   type_t rez;
    rez = module_cosmodistances_integral_chiz_ab(z1, z2,C);
    return rez;
 }
@@ -279,10 +279,10 @@ static double module_cosmodistances_chi2(double z1, double z2,cosmo_param C)
 * @param b
 * @param C    cosmological parameter
 */
-static double module_cosmodistances_integral_chiz_ab(double a, double b,cosmo_param C)
+static type_t module_cosmodistances_integral_chiz_ab(type_t a, type_t b,cosmo_param C)
 {
    int i,nit;
-   double res, epsilon=1.e-5; /// accuracy of the integration
+   type_t res, epsilon=1.e-5; /// accuracy of the integration
 
    nit=(b-a)/epsilon;
    res=epsilon*(module_cosmodistances_chiz(a,C)+module_cosmodistances_chiz(b,C))/2.;
@@ -306,7 +306,7 @@ static double module_cosmodistances_integral_chiz_ab(double a, double b,cosmo_pa
 
 // Debug function to print the calculated output of the functions
 
-int module_cosmodistances_debug(int runmode[], double strongLensingRatios_lensSourceToSource[], double weakLensingRatios_lensSourceToSource[], double weakLensing_observerSource[], int numberCleanLens, double cleanlensRatios_lensSourceToSource[], double cleanlens_observerSource[], std::string DEBUG)
+int module_cosmodistances_debug(int runmode[], type_t strongLensingRatios_lensSourceToSource[], type_t weakLensingRatios_lensSourceToSource[], type_t weakLensing_observerSource[], int numberCleanLens, type_t cleanlensRatios_lensSourceToSource[], type_t cleanlens_observerSource[], std::string DEBUG)
 {
 if (strcasecmp(DEBUG.c_str(), "True") == 0)  // If we are in debug mode
 {

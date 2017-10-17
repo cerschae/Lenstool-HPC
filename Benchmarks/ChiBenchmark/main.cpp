@@ -12,6 +12,7 @@
 #include <sys/time.h>
 #include <fstream>
 #include <sys/stat.h>
+#include <unistd.h>
 //
 #include <mm_malloc.h>
 //
@@ -21,6 +22,9 @@
 #include "chi_CPU.hpp"
 #include "module_cosmodistances.h"
 #include "module_readParameters.hpp"
+
+
+
 #include<omp.h>
 
 //#define __WITH_LENSTOOL 0
@@ -159,7 +163,8 @@ int module_readCheckInput_readInput(int argc, char *argv[])
 int main(int argc, char *argv[])
 {
 
-
+	double wallclock = myseconds();
+	printf("Reading parameter file at time %f s...\n", myseconds() - wallclock);
 	// Setting Up the problem
 	//===========================================================================================================
 
@@ -253,31 +258,32 @@ int main(int argc, char *argv[])
 	}
 
 
-	if (runmode.source == 1){
+	if (runmode.source == 1)
+	{
 		//Initialisation to default values.(Setting sources to z = 1.5 default value)
-		for(int i = 0; i < runmode.nsets; ++i){
+		for(int i = 0; i < runmode.nsets; ++i)
+		{
 			sources[i].redshift = 1.5;
 		}
 		// This module function reads in the strong lensing sources
 		module_readParameters_readSources(&runmode, sources);
 		//Calculating cosmoratios
-		for(int i = 0; i < runmode.nsets; ++i){
-
+		for(int i = 0; i < runmode.nsets; ++i)
+		{
 			sources[i].dls = module_cosmodistances_objectObject(lenses[0].z, sources[i].redshift, cosmology);
 			sources[i].dos = module_cosmodistances_observerObject(sources[i].redshift, cosmology);
 			sources[i].dr = module_cosmodistances_lensSourceToObserverSource(lenses[0].z, sources[i].redshift, cosmology);
 		}
 		module_readParameters_debug_source(runmode.debug, sources, runmode.nsets);
-
 	}
-
+	//
 	std::cout << "--------------------------" << std::endl << std::endl;
-
-
+	//
 	// Lenstool Bruteforce
 	//===========================================================================================================
-#ifdef __WITH_LENSTOOL
+#ifdef __WITH_LENSTOOLL
 	{
+		printf("Calling lenstool at time %f s\n", myseconds() - wallclock);
 		setup_lenstool();
 		//
 		double chi2;
@@ -309,12 +315,13 @@ int main(int argc, char *argv[])
 	//===========================================================================================================
 #if 0
 	{
+		printf("Calling lenstoolhpc orig at time %f s\n", myseconds() - wallclock);
 		std::cout << "LenstoolHPC dist chi Benchmark:\n ";
 		double chi2;
 		double time;
 		int error;
 		time = -myseconds();
-		chi_bruteforce_SOA_CPU_grid_gradient(&chi2, &error, &runmode, &lenses_SOA, &frame, nImagesSet, images);
+		mychi_bruteforce_SOA_CPU_grid_gradient_orig(&chi2, &error, &runmode, &lenses_SOA, &frame, nImagesSet, images);
 		time += myseconds();
 
 		std::cout << " Chi : " << std::setprecision(15) << chi2;
@@ -326,7 +333,8 @@ int main(int argc, char *argv[])
 
 #if 1
 	{
-		std::cout << "MylenstoolHPC chi Benchmark:\n "; 
+		//std::cout << "MylenstoolHPC chi Benchmark:\n "; 
+		printf("Calling lenstoolhpc at time %f s\n", myseconds() - wallclock);
 		double chi2;
 		double time;
 		int error;
@@ -339,6 +347,7 @@ int main(int argc, char *argv[])
 	}
 #endif
 
+		printf("Ending execution at time %f s\n", myseconds() - wallclock);
 
 
 }

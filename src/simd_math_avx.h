@@ -14,13 +14,24 @@ inline __m256d operator * (__m256d a, __m256d b) {return _mm256_mul_pd(a, b);}
 inline __m256d operator / (__m256d a, __m256d b) {return _mm256_div_pd(a, b);}
 #endif
 
+#define ADD(x,y) _mm256_add_pd(x, y)
+#define SUB(x,y) _mm256_sub_pd(x, y)
+#define MUL(x,y) _mm256_mul_pd(x, y)
+#define SET(x)   _mm256_set1_pd(x)
+
+#define __INV INVCLASSIC
 //#define __INV RCP
 //#define __INV RCP_1NR
-#define __INV  RCP_2NR
+//#define __INV  RCP_2NR
 #define __SQRT _mm256_sqrt_pd
 //#define __SQRT SQRT
 //#define __SQRT SQRT_1NR
 //#define __SQRT SQRT_2NR
+
+inline __m256d INVCLASSIC(const __m256d d){
+	return _mm256_div_pd(_mm256_set1_pd( 1. ),d);
+}
+
 
 
 inline __m256d RCP(const __m256d d)
@@ -65,6 +76,7 @@ inline __m256d RCP_2NR(const __m256d d)
   //asm volatile("# RCP_2NR ends");
         return x0;
 }
+
 //
 inline __m256d SQRT(const __m256d d)
 {

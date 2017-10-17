@@ -44,17 +44,20 @@ CPPFLAGS += -D__WITH_LENSTOOL
 CPPFLAGS += -D__WITH_GPU
 CPPFLAGS += -qopenmp -g -O3 -Wall -pedantic
 CPPFLAGS += -fPIC
+CPPFLAGS += -D_double
 #CPPFLAGS += -no-vec
 #CPPFLAGS += -qopenmp -march=core-avx2 -g -O3 -std=c++0x -Wall -pedantic
 #CPPFLAGS += -llenstoolhpc -qopenmp -xHost -g -O3 -std=c++0x -Wall -pedantic
 #CPPFLAGS += -llenstoolhpc -qopenmp -axMIC-AVX512,CORE-AVX2 -g -O3 -std=c++0x -Wall -pedantic
 #CPPFLAGS += -qopt-prefetch-distance=64,8 -qopt-streaming-cache-evict=0 -llenstoolhpc -qopenmp -xMIC-AVX512 -g -O3 -std=c++0x -Wall -pedantic
-LDFLAGS := -llenstoolhpc -llenstool -llenstoolhpc -llenstoolhpc_GPU -llt -lcfitsio -lwcs -lgsl -lgslcblas
+LDFLAGS := -llenstoolhpc  -llenstoolhpc -llenstoolhpc_GPU -llt -lcfitsio -lwcs -lgsl -lgslcblas -llenstool #Do not keep lenstool for the float calculation, it creates conflictinthe structure.h file
 #
 #NVFLAGS := -O3 -g -G -rdc=true -ccbin icpc -Xcompiler '-Wall -fPIC -qopenmp' -D__WITH_LENSTOOL 
 NVFLAGS := -O3 -ccbin icpc -Xcompiler '-Wall -fPIC' -D__WITH_LENSTOOL
+NVFLAGS += -D_double
 NVFLAGS += -gencode arch=compute_60,code=sm_60
-#NVFLAGS += -arch=sm_60
+#NVFLAGS += -use_fast_math
+#NVFLAGS += -arch=sm_35
 NVFLAGS += $(foreach includedir,$(program_INCLUDE_DIRS),-I$(includedir))
 NVFLAGS += $(foreach includelib,$(program_INCLUDE_LIBS),-L$(includelib))
 #

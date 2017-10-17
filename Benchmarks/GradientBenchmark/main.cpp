@@ -36,7 +36,7 @@
 #include "setup.hpp"
 #include <type.h>
 //
-#define NN 10000
+#define NN 100000
 //
 //
 //
@@ -93,7 +93,7 @@ struct point    gimage[NGGMAX][NGGMAX], gsource_global[NGGMAX][NGGMAX];
 struct biline   radial[NMAX], tangent[NMAX];
 struct galaxie  arclet[NAMAX], source[NFMAX], image[NFMAX][NIMAX];
 struct galaxie  cimage[NFMAX];
-struct pointgal     gianti[NPMAX][NIMAX];
+struct pointgal gianti[NPMAX][NIMAX];
 
 struct point    SC;
 double elix;
@@ -171,8 +171,10 @@ int main()
 	setup_jauzac_SOA(&lens_soa, &nlenses_soa, &image_soa.x, &image_soa.y, &sol_grad_x_soa, &sol_grad_y_soa);
 	//
 	std::cout << "Benchmark for Gradient Calculation using  " << nlenses_soa << " lenses with type " << lens_soa.type[0] << ", image: " << image_soa.x << " " << image_soa.y << std::endl;
+	//
 	// AVX version
 	//
+#if 0
 	point grad_soa_novec;
 	double t21 = -myseconds();
         for (int ii = 0; ii < NN; ++ii)
@@ -180,13 +182,17 @@ int main()
                 //grad_soa = module_potentialDerivatives_totalGradient_SOA_AVX512(&image_soa, &lens_soa, nlenses_soa);
                 //grad_soa = module_potentialDerivatives_totalGradient_8_SOA_AVX(&image_soa, &lens_soa, nlenses_soa);
                 //
-                //grad_soa_avx = module_potentialDerivatives_totalGradient_81_SOA_AVX(&image_soa, &lens_soa, 0, nlenses_soa)
-;
+                //grad_soa_avx = module_potentialDerivatives_totalGradient_81_SOA_AVX(&image_soa, &lens_soa, 0, nlenses_soa);
                 grad_soa_novec = module_potentialDerivatives_totalGradient_SOA_novec(&image_soa, &lens_soa, nlenses_soa);
                 //grad_soa = module_potentialDerivatives_totalGradient_SOA(&image_soa, &lens_soa, 0, nlenses_soa);
         }
         t21 += myseconds();	
+	std::cout << "1" << std::endl;
+#endif
 	//
+	// no vectorization
+	//
+#if 1
 	point grad_soa; // store the result
 	t2 = -myseconds();
 	for (int ii = 0; ii < NN; ++ii)
@@ -199,6 +205,7 @@ int main()
 		//grad_soa = module_potentialDerivatives_totalGradient_SOA(&image_soa, &lens_soa, 0, nlenses_soa);
 	}	
 	t2 += myseconds();
+#endif
 	//__SSC_MARK(0x222);
 	//
 	// autovectorized version
@@ -212,7 +219,7 @@ int main()
 		//                                //grad_soa = module_potentialDerivatives_totalGradient_81_SOA_AVX(&image_soa, &lens_soa, nlenses_soa);
 		//grad_soa = module_potentialDerivatives_totalGradient_81_SOA(&image_soa, &lens_soa, 0, nlenses_soa);
 		//grad_soa = module_potentialDerivatives_totalGradient_8_SOA(&image_soa, &lens_soa, 0, nlenses_soa);
-#ifdef 0 //_double
+#ifdef _double
 		grad_soa_avx = module_potentialDerivatives_totalGradient_SOA_AVX(&image_soa, &lens_soa, nlenses_soa);
 #endif
 	}
@@ -232,7 +239,7 @@ int main()
 	//
 	std::cout << " grad           = " << std::setprecision(15) << grad.x << " " << std::setprecision(15) << grad.y << ", time = " << t1 << " s., speedup = " << (double) t0/t1 << std::endl;
 	//
-	std::cout << " grad novec     = " << std::setprecision(15) << grad.x << " " << std::setprecision(15) << grad.y << ", time = " << t21 << " s., speedup = " << (double) t0/t21 << std::endl;
+	//std::cout << " grad novec     = " << std::setprecision(15) << grad.x << " " << std::setprecision(15) << grad.y << ", time = " << t21 << " s., speedup = " << (double) t0/t21 << std::endl;
 	//
 	std::cout << " grad SIMD      = " << std::setprecision(15) << grad_soa.x << " " << std::setprecision(15) << grad_soa.y << ", time = " << t2 << " s., speedup = " << (double) t0/t2 << std::endl;
 	//
