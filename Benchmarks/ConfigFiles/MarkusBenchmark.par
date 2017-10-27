@@ -1,0 +1,5638 @@
+runmode
+   	source 0 sources.cat
+    image 1  ../ConfigFiles/219Img.txt
+    nbgridcells 6730
+    end
+frame
+ 	#dmax 45                    #either dmax or x and y have to be declared when a grid is used
+    xmin     -10100.000
+    xmax     10100.000
+    ymin     -10100.000
+    ymax     10100.000
+    end
+cosmology
+	model    1
+    H0        70.000
+    omegaM    0.300
+    omegaX    0.700
+    omegaK    0.000
+    wA    0.000
+    wX        -1.000
+    end
+potentiel 0
+	profil  5                #Profile: 5 SIS, 8 PIEMD
+    x_centre     20.000                #X Position [arcsec]
+    y_centre     25.000                #Y Position [arcsec]
+    ellipticity     0.05          #Mass Ellipticity
+    v_disp     1000.                  #Dispersion Velocity [km/s]
+    z_lens     0.3                  #Redshift of lens
+    end
+potentiel 0
+	profil  5                  #Profile: 5 SIS, 8 PIEMD
+    x_centre     -12.000                #X Position [arcsec]
+    y_centre     -27.000                #Y Position [arcsec]
+    ellipticity     0.04              #Mass Ellipticity
+    v_disp     950.                  #Dispersion Velocity [km/s]
+    z_lens     0.3                  #Redshift of lens
+    end
+potentiel 1
+	profile 5
+	x_centre -55.505
+	y_centre 67.222
+	ellipticity 0.096
+	v_disp 120.000
+	z_lens 0.3
+	end
+potentiel 2
+	profile 5
+	x_centre -36.324
+	y_centre -23.956
+	ellipticity 0.039
+	v_disp 127.000
+	z_lens 0.3
+	end
+potentiel 3
+	profile 5
+	x_centre 51.657
+	y_centre -55.378
+	ellipticity 0.084
+	v_disp 128.000
+	z_lens 0.3
+	end
+potentiel 4
+	profile 5
+	x_centre 15.600
+	y_centre 11.667
+	ellipticity 0.096
+	v_disp 115.000
+	z_lens 0.3
+	end
+potentiel 5
+	profile 5
+	x_centre -52.152
+	y_centre 10.600
+	ellipticity 0.108
+	v_disp 120.000
+	z_lens 0.3
+	end
+potentiel 6
+	profile 5
+	x_centre -15.943
+	y_centre -5.822
+	ellipticity 0.135
+	v_disp 113.000
+	z_lens 0.3
+	end
+potentiel 7
+	profile 5
+	x_centre -1.371
+	y_centre -24.333
+	ellipticity 0.126
+	v_disp 125.000
+	z_lens 0.3
+	end
+potentiel 8
+	profile 5
+	x_centre -12.095
+	y_centre -54.067
+	ellipticity 0.138
+	v_disp 120.000
+	z_lens 0.3
+	end
+potentiel 9
+	profile 5
+	x_centre 46.476
+	y_centre -55.422
+	ellipticity 0.045
+	v_disp 124.000
+	z_lens 0.3
+	end
+potentiel 10
+	profile 5
+	x_centre -19.467
+	y_centre -50.000
+	ellipticity 0.093
+	v_disp 118.000
+	z_lens 0.3
+	end
+potentiel 11
+	profile 5
+	x_centre -46.171
+	y_centre 66.200
+	ellipticity 0.135
+	v_disp 126.000
+	z_lens 0.3
+	end
+potentiel 12
+	profile 5
+	x_centre 54.648
+	y_centre -16.244
+	ellipticity 0.129
+	v_disp 127.000
+	z_lens 0.3
+	end
+potentiel 13
+	profile 5
+	x_centre 2.876
+	y_centre 46.067
+	ellipticity 0.120
+	v_disp 116.000
+	z_lens 0.3
+	end
+potentiel 14
+	profile 5
+	x_centre 18.800
+	y_centre -32.556
+	ellipticity 0.123
+	v_disp 123.000
+	z_lens 0.3
+	end
+potentiel 15
+	profile 5
+	x_centre 22.857
+	y_centre -37.222
+	ellipticity 0.069
+	v_disp 117.000
+	z_lens 0.3
+	end
+potentiel 16
+	profile 5
+	x_centre -51.467
+	y_centre 21.156
+	ellipticity 0.039
+	v_disp 126.000
+	z_lens 0.3
+	end
+potentiel 17
+	profile 5
+	x_centre -23.295
+	y_centre 28.111
+	ellipticity 0.063
+	v_disp 114.000
+	z_lens 0.3
+	end
+potentiel 18
+	profile 5
+	x_centre -49.295
+	y_centre 57.933
+	ellipticity 0.108
+	v_disp 113.000
+	z_lens 0.3
+	end
+potentiel 19
+	profile 5
+	x_centre 51.257
+	y_centre 65.756
+	ellipticity 0.093
+	v_disp 118.000
+	z_lens 0.3
+	end
+potentiel 20
+	profile 5
+	x_centre -17.390
+	y_centre 62.622
+	ellipticity 0.078
+	v_disp 123.000
+	z_lens 0.3
+	end
+potentiel 21
+	profile 5
+	x_centre 49.124
+	y_centre -66.089
+	ellipticity 0.114
+	v_disp 125.000
+	z_lens 0.3
+	end
+potentiel 22
+	profile 5
+	x_centre -3.181
+	y_centre 43.400
+	ellipticity 0.075
+	v_disp 125.000
+	z_lens 0.3
+	end
+potentiel 23
+	profile 5
+	x_centre 49.543
+	y_centre 62.844
+	ellipticity 0.102
+	v_disp 127.000
+	z_lens 0.3
+	end
+potentiel 24
+	profile 5
+	x_centre -27.676
+	y_centre -7.711
+	ellipticity 0.069
+	v_disp 123.000
+	z_lens 0.3
+	end
+potentiel 25
+	profile 5
+	x_centre -53.448
+	y_centre 61.022
+	ellipticity 0.108
+	v_disp 125.000
+	z_lens 0.3
+	end
+potentiel 26
+	profile 5
+	x_centre -38.762
+	y_centre 41.133
+	ellipticity 0.000
+	v_disp 118.000
+	z_lens 0.3
+	end
+potentiel 27
+	profile 5
+	x_centre 24.552
+	y_centre 65.689
+	ellipticity 0.090
+	v_disp 119.000
+	z_lens 0.3
+	end
+potentiel 28
+	profile 5
+	x_centre -53.600
+	y_centre -43.756
+	ellipticity 0.072
+	v_disp 112.000
+	z_lens 0.3
+	end
+potentiel 29
+	profile 5
+	x_centre -37.352
+	y_centre -64.667
+	ellipticity 0.144
+	v_disp 126.000
+	z_lens 0.3
+	end
+potentiel 30
+	profile 5
+	x_centre 59.657
+	y_centre -38.289
+	ellipticity 0.090
+	v_disp 123.000
+	z_lens 0.3
+	end
+potentiel 31
+	profile 5
+	x_centre 17.410
+	y_centre -7.800
+	ellipticity 0.054
+	v_disp 124.000
+	z_lens 0.3
+	end
+potentiel 32
+	profile 5
+	x_centre 49.448
+	y_centre -25.711
+	ellipticity 0.093
+	v_disp 127.000
+	z_lens 0.3
+	end
+potentiel 33
+	profile 5
+	x_centre 28.362
+	y_centre 60.911
+	ellipticity 0.105
+	v_disp 123.000
+	z_lens 0.3
+	end
+potentiel 34
+	profile 5
+	x_centre 44.362
+	y_centre -51.489
+	ellipticity 0.084
+	v_disp 127.000
+	z_lens 0.3
+	end
+potentiel 35
+	profile 5
+	x_centre 44.324
+	y_centre 1.222
+	ellipticity 0.147
+	v_disp 112.000
+	z_lens 0.3
+	end
+potentiel 36
+	profile 5
+	x_centre -47.714
+	y_centre 39.622
+	ellipticity 0.060
+	v_disp 113.000
+	z_lens 0.3
+	end
+potentiel 37
+	profile 5
+	x_centre 31.810
+	y_centre 13.867
+	ellipticity 0.141
+	v_disp 123.000
+	z_lens 0.3
+	end
+potentiel 38
+	profile 5
+	x_centre 48.381
+	y_centre 31.711
+	ellipticity 0.114
+	v_disp 117.000
+	z_lens 0.3
+	end
+potentiel 39
+	profile 5
+	x_centre 42.514
+	y_centre 48.733
+	ellipticity 0.117
+	v_disp 125.000
+	z_lens 0.3
+	end
+potentiel 40
+	profile 5
+	x_centre -29.390
+	y_centre 63.933
+	ellipticity 0.135
+	v_disp 118.000
+	z_lens 0.3
+	end
+potentiel 41
+	profile 5
+	x_centre -52.838
+	y_centre -22.667
+	ellipticity 0.012
+	v_disp 130.000
+	z_lens 0.3
+	end
+potentiel 42
+	profile 5
+	x_centre 32.229
+	y_centre 44.667
+	ellipticity 0.057
+	v_disp 116.000
+	z_lens 0.3
+	end
+potentiel 43
+	profile 5
+	x_centre -33.657
+	y_centre 46.244
+	ellipticity 0.006
+	v_disp 124.000
+	z_lens 0.3
+	end
+potentiel 44
+	profile 5
+	x_centre 56.648
+	y_centre -46.244
+	ellipticity 0.036
+	v_disp 121.000
+	z_lens 0.3
+	end
+potentiel 45
+	profile 5
+	x_centre 17.162
+	y_centre -48.422
+	ellipticity 0.138
+	v_disp 125.000
+	z_lens 0.3
+	end
+potentiel 46
+	profile 5
+	x_centre 8.057
+	y_centre 54.778
+	ellipticity 0.090
+	v_disp 110.000
+	z_lens 0.3
+	end
+potentiel 47
+	profile 5
+	x_centre -7.962
+	y_centre -36.333
+	ellipticity 0.051
+	v_disp 128.000
+	z_lens 0.3
+	end
+potentiel 48
+	profile 5
+	x_centre -29.029
+	y_centre 10.289
+	ellipticity 0.024
+	v_disp 129.000
+	z_lens 0.3
+	end
+potentiel 49
+	profile 5
+	x_centre -9.562
+	y_centre -40.444
+	ellipticity 0.036
+	v_disp 127.000
+	z_lens 0.3
+	end
+potentiel 50
+	profile 5
+	x_centre 3.238
+	y_centre 36.800
+	ellipticity 0.114
+	v_disp 126.000
+	z_lens 0.3
+	end
+potentiel 51
+	profile 5
+	x_centre -24.000
+	y_centre 64.378
+	ellipticity 0.048
+	v_disp 128.000
+	z_lens 0.3
+	end
+potentiel 52
+	profile 5
+	x_centre 51.124
+	y_centre -37.422
+	ellipticity 0.099
+	v_disp 120.000
+	z_lens 0.3
+	end
+potentiel 53
+	profile 5
+	x_centre 1.600
+	y_centre 18.000
+	ellipticity 0.021
+	v_disp 115.000
+	z_lens 0.3
+	end
+potentiel 54
+	profile 5
+	x_centre -0.933
+	y_centre -2.733
+	ellipticity 0.033
+	v_disp 117.000
+	z_lens 0.3
+	end
+potentiel 55
+	profile 5
+	x_centre 15.314
+	y_centre 15.844
+	ellipticity 0.093
+	v_disp 118.000
+	z_lens 0.3
+	end
+potentiel 56
+	profile 5
+	x_centre 7.410
+	y_centre -42.578
+	ellipticity 0.147
+	v_disp 130.000
+	z_lens 0.3
+	end
+potentiel 57
+	profile 5
+	x_centre -14.286
+	y_centre -38.444
+	ellipticity 0.072
+	v_disp 127.000
+	z_lens 0.3
+	end
+potentiel 58
+	profile 5
+	x_centre 6.362
+	y_centre 47.822
+	ellipticity 0.096
+	v_disp 118.000
+	z_lens 0.3
+	end
+potentiel 59
+	profile 5
+	x_centre -40.210
+	y_centre -50.000
+	ellipticity 0.123
+	v_disp 118.000
+	z_lens 0.3
+	end
+potentiel 60
+	profile 5
+	x_centre 4.248
+	y_centre -47.178
+	ellipticity 0.102
+	v_disp 114.000
+	z_lens 0.3
+	end
+potentiel 61
+	profile 5
+	x_centre 4.076
+	y_centre 9.867
+	ellipticity 0.126
+	v_disp 113.000
+	z_lens 0.3
+	end
+potentiel 62
+	profile 5
+	x_centre 7.619
+	y_centre 32.289
+	ellipticity 0.024
+	v_disp 129.000
+	z_lens 0.3
+	end
+potentiel 63
+	profile 5
+	x_centre 55.962
+	y_centre -24.933
+	ellipticity 0.060
+	v_disp 130.000
+	z_lens 0.3
+	end
+potentiel 64
+	profile 5
+	x_centre 45.771
+	y_centre 43.711
+	ellipticity 0.054
+	v_disp 112.000
+	z_lens 0.3
+	end
+potentiel 65
+	profile 5
+	x_centre -44.324
+	y_centre 22.222
+	ellipticity 0.027
+	v_disp 128.000
+	z_lens 0.3
+	end
+potentiel 66
+	profile 5
+	x_centre 21.086
+	y_centre -3.733
+	ellipticity 0.138
+	v_disp 115.000
+	z_lens 0.3
+	end
+potentiel 67
+	profile 5
+	x_centre 5.676
+	y_centre -26.867
+	ellipticity 0.096
+	v_disp 120.000
+	z_lens 0.3
+	end
+potentiel 68
+	profile 5
+	x_centre 28.133
+	y_centre 65.844
+	ellipticity 0.063
+	v_disp 122.000
+	z_lens 0.3
+	end
+potentiel 69
+	profile 5
+	x_centre -45.905
+	y_centre -8.733
+	ellipticity 0.078
+	v_disp 111.000
+	z_lens 0.3
+	end
+potentiel 70
+	profile 5
+	x_centre 34.171
+	y_centre -18.267
+	ellipticity 0.039
+	v_disp 110.000
+	z_lens 0.3
+	end
+potentiel 71
+	profile 5
+	x_centre 23.181
+	y_centre 15.156
+	ellipticity 0.123
+	v_disp 128.000
+	z_lens 0.3
+	end
+potentiel 72
+	profile 5
+	x_centre -5.505
+	y_centre -13.489
+	ellipticity 0.060
+	v_disp 122.000
+	z_lens 0.3
+	end
+potentiel 73
+	profile 5
+	x_centre 17.010
+	y_centre 49.333
+	ellipticity 0.063
+	v_disp 110.000
+	z_lens 0.3
+	end
+potentiel 74
+	profile 5
+	x_centre 42.895
+	y_centre -11.267
+	ellipticity 0.102
+	v_disp 119.000
+	z_lens 0.3
+	end
+potentiel 75
+	profile 5
+	x_centre 1.486
+	y_centre -46.200
+	ellipticity 0.051
+	v_disp 129.000
+	z_lens 0.3
+	end
+potentiel 76
+	profile 5
+	x_centre -5.848
+	y_centre 15.711
+	ellipticity 0.051
+	v_disp 122.000
+	z_lens 0.3
+	end
+potentiel 77
+	profile 5
+	x_centre -16.724
+	y_centre 57.778
+	ellipticity 0.039
+	v_disp 116.000
+	z_lens 0.3
+	end
+potentiel 78
+	profile 5
+	x_centre 19.924
+	y_centre 39.444
+	ellipticity 0.150
+	v_disp 111.000
+	z_lens 0.3
+	end
+potentiel 79
+	profile 5
+	x_centre -29.467
+	y_centre 9.289
+	ellipticity 0.138
+	v_disp 113.000
+	z_lens 0.3
+	end
+potentiel 80
+	profile 5
+	x_centre 47.048
+	y_centre 33.689
+	ellipticity 0.060
+	v_disp 119.000
+	z_lens 0.3
+	end
+potentiel 81
+	profile 5
+	x_centre 42.419
+	y_centre -64.644
+	ellipticity 0.111
+	v_disp 112.000
+	z_lens 0.3
+	end
+potentiel 82
+	profile 5
+	x_centre 8.724
+	y_centre 24.689
+	ellipticity 0.021
+	v_disp 116.000
+	z_lens 0.3
+	end
+potentiel 83
+	profile 5
+	x_centre -58.952
+	y_centre 35.600
+	ellipticity 0.039
+	v_disp 125.000
+	z_lens 0.3
+	end
+potentiel 84
+	profile 5
+	x_centre -35.010
+	y_centre -32.578
+	ellipticity 0.054
+	v_disp 130.000
+	z_lens 0.3
+	end
+potentiel 85
+	profile 5
+	x_centre -59.962
+	y_centre 25.556
+	ellipticity 0.069
+	v_disp 115.000
+	z_lens 0.3
+	end
+potentiel 86
+	profile 5
+	x_centre -31.505
+	y_centre -43.511
+	ellipticity 0.009
+	v_disp 127.000
+	z_lens 0.3
+	end
+potentiel 87
+	profile 5
+	x_centre 14.762
+	y_centre -58.556
+	ellipticity 0.012
+	v_disp 114.000
+	z_lens 0.3
+	end
+potentiel 88
+	profile 5
+	x_centre -18.438
+	y_centre 46.756
+	ellipticity 0.063
+	v_disp 129.000
+	z_lens 0.3
+	end
+potentiel 89
+	profile 5
+	x_centre 17.619
+	y_centre 58.333
+	ellipticity 0.024
+	v_disp 128.000
+	z_lens 0.3
+	end
+potentiel 90
+	profile 5
+	x_centre -34.076
+	y_centre -14.044
+	ellipticity 0.147
+	v_disp 115.000
+	z_lens 0.3
+	end
+potentiel 91
+	profile 5
+	x_centre 50.819
+	y_centre -66.311
+	ellipticity 0.009
+	v_disp 116.000
+	z_lens 0.3
+	end
+potentiel 92
+	profile 5
+	x_centre -40.743
+	y_centre 14.289
+	ellipticity 0.030
+	v_disp 127.000
+	z_lens 0.3
+	end
+potentiel 93
+	profile 5
+	x_centre 46.495
+	y_centre 26.533
+	ellipticity 0.129
+	v_disp 121.000
+	z_lens 0.3
+	end
+potentiel 94
+	profile 5
+	x_centre -59.181
+	y_centre 45.467
+	ellipticity 0.129
+	v_disp 130.000
+	z_lens 0.3
+	end
+potentiel 95
+	profile 5
+	x_centre -44.248
+	y_centre -1.444
+	ellipticity 0.102
+	v_disp 116.000
+	z_lens 0.3
+	end
+potentiel 96
+	profile 5
+	x_centre -38.914
+	y_centre -16.711
+	ellipticity 0.015
+	v_disp 112.000
+	z_lens 0.3
+	end
+potentiel 97
+	profile 5
+	x_centre -11.314
+	y_centre -61.467
+	ellipticity 0.015
+	v_disp 119.000
+	z_lens 0.3
+	end
+potentiel 98
+	profile 5
+	x_centre -27.295
+	y_centre -2.689
+	ellipticity 0.066
+	v_disp 121.000
+	z_lens 0.3
+	end
+potentiel 99
+	profile 5
+	x_centre -44.781
+	y_centre 22.867
+	ellipticity 0.000
+	v_disp 115.000
+	z_lens 0.3
+	end
+potentiel 100
+	profile 5
+	x_centre 37.924
+	y_centre 8.578
+	ellipticity 0.102
+	v_disp 117.000
+	z_lens 0.3
+	end
+potentiel 101
+	profile 5
+	x_centre -54.248
+	y_centre 36.733
+	ellipticity 0.012
+	v_disp 113.000
+	z_lens 0.3
+	end
+potentiel 102
+	profile 5
+	x_centre 18.038
+	y_centre -42.000
+	ellipticity 0.072
+	v_disp 118.000
+	z_lens 0.3
+	end
+potentiel 103
+	profile 5
+	x_centre 20.114
+	y_centre 24.578
+	ellipticity 0.060
+	v_disp 125.000
+	z_lens 0.3
+	end
+potentiel 104
+	profile 5
+	x_centre -11.429
+	y_centre -43.778
+	ellipticity 0.114
+	v_disp 118.000
+	z_lens 0.3
+	end
+potentiel 105
+	profile 5
+	x_centre -47.905
+	y_centre 32.244
+	ellipticity 0.048
+	v_disp 127.000
+	z_lens 0.3
+	end
+potentiel 106
+	profile 5
+	x_centre 41.695
+	y_centre 33.733
+	ellipticity 0.090
+	v_disp 113.000
+	z_lens 0.3
+	end
+potentiel 107
+	profile 5
+	x_centre 25.352
+	y_centre -32.667
+	ellipticity 0.141
+	v_disp 110.000
+	z_lens 0.3
+	end
+potentiel 108
+	profile 5
+	x_centre 15.848
+	y_centre -37.756
+	ellipticity 0.141
+	v_disp 112.000
+	z_lens 0.3
+	end
+potentiel 109
+	profile 5
+	x_centre 11.181
+	y_centre 27.800
+	ellipticity 0.081
+	v_disp 128.000
+	z_lens 0.3
+	end
+potentiel 110
+	profile 5
+	x_centre -53.448
+	y_centre -68.089
+	ellipticity 0.135
+	v_disp 115.000
+	z_lens 0.3
+	end
+potentiel 111
+	profile 5
+	x_centre -41.676
+	y_centre -38.133
+	ellipticity 0.081
+	v_disp 117.000
+	z_lens 0.3
+	end
+potentiel 112
+	profile 5
+	x_centre -31.162
+	y_centre -21.600
+	ellipticity 0.087
+	v_disp 128.000
+	z_lens 0.3
+	end
+potentiel 113
+	profile 5
+	x_centre -31.867
+	y_centre -51.444
+	ellipticity 0.072
+	v_disp 128.000
+	z_lens 0.3
+	end
+potentiel 114
+	profile 5
+	x_centre -21.657
+	y_centre -55.000
+	ellipticity 0.114
+	v_disp 130.000
+	z_lens 0.3
+	end
+potentiel 115
+	profile 5
+	x_centre 9.429
+	y_centre -20.156
+	ellipticity 0.066
+	v_disp 117.000
+	z_lens 0.3
+	end
+potentiel 116
+	profile 5
+	x_centre 2.171
+	y_centre 48.778
+	ellipticity 0.093
+	v_disp 111.000
+	z_lens 0.3
+	end
+potentiel 117
+	profile 5
+	x_centre 23.733
+	y_centre -61.511
+	ellipticity 0.057
+	v_disp 120.000
+	z_lens 0.3
+	end
+potentiel 118
+	profile 5
+	x_centre 54.629
+	y_centre 44.667
+	ellipticity 0.081
+	v_disp 110.000
+	z_lens 0.3
+	end
+potentiel 119
+	profile 5
+	x_centre -12.133
+	y_centre 32.222
+	ellipticity 0.096
+	v_disp 114.000
+	z_lens 0.3
+	end
+potentiel 120
+	profile 5
+	x_centre -36.914
+	y_centre 7.089
+	ellipticity 0.093
+	v_disp 124.000
+	z_lens 0.3
+	end
+potentiel 121
+	profile 5
+	x_centre -3.524
+	y_centre 46.733
+	ellipticity 0.132
+	v_disp 117.000
+	z_lens 0.3
+	end
+potentiel 122
+	profile 5
+	x_centre -44.152
+	y_centre -51.444
+	ellipticity 0.138
+	v_disp 113.000
+	z_lens 0.3
+	end
+potentiel 123
+	profile 5
+	x_centre 18.457
+	y_centre 66.200
+	ellipticity 0.018
+	v_disp 125.000
+	z_lens 0.3
+	end
+potentiel 124
+	profile 5
+	x_centre -14.819
+	y_centre -11.711
+	ellipticity 0.048
+	v_disp 121.000
+	z_lens 0.3
+	end
+potentiel 125
+	profile 5
+	x_centre -13.048
+	y_centre 36.689
+	ellipticity 0.000
+	v_disp 127.000
+	z_lens 0.3
+	end
+potentiel 126
+	profile 5
+	x_centre -9.676
+	y_centre 9.644
+	ellipticity 0.135
+	v_disp 118.000
+	z_lens 0.3
+	end
+potentiel 127
+	profile 5
+	x_centre 7.029
+	y_centre 54.378
+	ellipticity 0.045
+	v_disp 115.000
+	z_lens 0.3
+	end
+potentiel 128
+	profile 5
+	x_centre -21.390
+	y_centre -54.956
+	ellipticity 0.048
+	v_disp 121.000
+	z_lens 0.3
+	end
+potentiel 129
+	profile 5
+	x_centre -35.943
+	y_centre -34.222
+	ellipticity 0.129
+	v_disp 118.000
+	z_lens 0.3
+	end
+potentiel 130
+	profile 5
+	x_centre -19.657
+	y_centre -42.200
+	ellipticity 0.075
+	v_disp 129.000
+	z_lens 0.3
+	end
+potentiel 131
+	profile 5
+	x_centre 55.105
+	y_centre 58.333
+	ellipticity 0.123
+	v_disp 112.000
+	z_lens 0.3
+	end
+potentiel 132
+	profile 5
+	x_centre -25.410
+	y_centre 23.467
+	ellipticity 0.006
+	v_disp 121.000
+	z_lens 0.3
+	end
+potentiel 133
+	profile 5
+	x_centre -42.190
+	y_centre 56.311
+	ellipticity 0.030
+	v_disp 117.000
+	z_lens 0.3
+	end
+potentiel 134
+	profile 5
+	x_centre -22.000
+	y_centre -28.200
+	ellipticity 0.114
+	v_disp 121.000
+	z_lens 0.3
+	end
+potentiel 135
+	profile 5
+	x_centre 0.114
+	y_centre -27.978
+	ellipticity 0.021
+	v_disp 123.000
+	z_lens 0.3
+	end
+potentiel 136
+	profile 5
+	x_centre 10.629
+	y_centre 55.756
+	ellipticity 0.018
+	v_disp 124.000
+	z_lens 0.3
+	end
+potentiel 137
+	profile 5
+	x_centre -10.629
+	y_centre -61.267
+	ellipticity 0.111
+	v_disp 127.000
+	z_lens 0.3
+	end
+potentiel 138
+	profile 5
+	x_centre 44.476
+	y_centre -11.244
+	ellipticity 0.057
+	v_disp 112.000
+	z_lens 0.3
+	end
+potentiel 139
+	profile 5
+	x_centre -15.238
+	y_centre 25.578
+	ellipticity 0.147
+	v_disp 130.000
+	z_lens 0.3
+	end
+potentiel 140
+	profile 5
+	x_centre 22.057
+	y_centre -50.511
+	ellipticity 0.027
+	v_disp 110.000
+	z_lens 0.3
+	end
+potentiel 141
+	profile 5
+	x_centre -16.648
+	y_centre -46.711
+	ellipticity 0.057
+	v_disp 117.000
+	z_lens 0.3
+	end
+potentiel 142
+	profile 5
+	x_centre -3.429
+	y_centre 6.600
+	ellipticity 0.012
+	v_disp 119.000
+	z_lens 0.3
+	end
+potentiel 143
+	profile 5
+	x_centre 10.610
+	y_centre -19.244
+	ellipticity 0.099
+	v_disp 117.000
+	z_lens 0.3
+	end
+potentiel 144
+	profile 5
+	x_centre -17.524
+	y_centre 8.600
+	ellipticity 0.078
+	v_disp 126.000
+	z_lens 0.3
+	end
+potentiel 145
+	profile 5
+	x_centre 46.095
+	y_centre 6.933
+	ellipticity 0.006
+	v_disp 120.000
+	z_lens 0.3
+	end
+potentiel 146
+	profile 5
+	x_centre -58.114
+	y_centre 48.044
+	ellipticity 0.015
+	v_disp 121.000
+	z_lens 0.3
+	end
+potentiel 147
+	profile 5
+	x_centre -36.114
+	y_centre -65.244
+	ellipticity 0.126
+	v_disp 123.000
+	z_lens 0.3
+	end
+potentiel 148
+	profile 5
+	x_centre -25.371
+	y_centre -67.044
+	ellipticity 0.069
+	v_disp 116.000
+	z_lens 0.3
+	end
+potentiel 149
+	profile 5
+	x_centre 21.886
+	y_centre -68.200
+	ellipticity 0.090
+	v_disp 110.000
+	z_lens 0.3
+	end
+potentiel 150
+	profile 5
+	x_centre 29.867
+	y_centre 41.689
+	ellipticity 0.111
+	v_disp 118.000
+	z_lens 0.3
+	end
+potentiel 151
+	profile 5
+	x_centre -3.943
+	y_centre 63.467
+	ellipticity 0.129
+	v_disp 129.000
+	z_lens 0.3
+	end
+potentiel 152
+	profile 5
+	x_centre -50.705
+	y_centre 15.844
+	ellipticity 0.030
+	v_disp 127.000
+	z_lens 0.3
+	end
+potentiel 153
+	profile 5
+	x_centre -0.343
+	y_centre 10.933
+	ellipticity 0.024
+	v_disp 130.000
+	z_lens 0.3
+	end
+potentiel 154
+	profile 5
+	x_centre 29.029
+	y_centre -43.867
+	ellipticity 0.003
+	v_disp 129.000
+	z_lens 0.3
+	end
+potentiel 155
+	profile 5
+	x_centre 54.571
+	y_centre -63.222
+	ellipticity 0.084
+	v_disp 130.000
+	z_lens 0.3
+	end
+potentiel 156
+	profile 5
+	x_centre -7.448
+	y_centre 27.289
+	ellipticity 0.111
+	v_disp 124.000
+	z_lens 0.3
+	end
+potentiel 157
+	profile 5
+	x_centre -5.314
+	y_centre -19.444
+	ellipticity 0.036
+	v_disp 117.000
+	z_lens 0.3
+	end
+potentiel 158
+	profile 5
+	x_centre -18.400
+	y_centre -68.756
+	ellipticity 0.144
+	v_disp 122.000
+	z_lens 0.3
+	end
+potentiel 159
+	profile 5
+	x_centre 56.495
+	y_centre -8.311
+	ellipticity 0.027
+	v_disp 115.000
+	z_lens 0.3
+	end
+potentiel 160
+	profile 5
+	x_centre 59.524
+	y_centre -65.867
+	ellipticity 0.063
+	v_disp 121.000
+	z_lens 0.3
+	end
+potentiel 161
+	profile 5
+	x_centre 6.743
+	y_centre 10.378
+	ellipticity 0.033
+	v_disp 112.000
+	z_lens 0.3
+	end
+potentiel 162
+	profile 5
+	x_centre -30.571
+	y_centre 39.311
+	ellipticity 0.021
+	v_disp 111.000
+	z_lens 0.3
+	end
+potentiel 163
+	profile 5
+	x_centre 21.600
+	y_centre 17.311
+	ellipticity 0.051
+	v_disp 115.000
+	z_lens 0.3
+	end
+potentiel 164
+	profile 5
+	x_centre -1.695
+	y_centre -67.222
+	ellipticity 0.120
+	v_disp 120.000
+	z_lens 0.3
+	end
+potentiel 165
+	profile 5
+	x_centre -15.810
+	y_centre -54.711
+	ellipticity 0.030
+	v_disp 112.000
+	z_lens 0.3
+	end
+potentiel 166
+	profile 5
+	x_centre -39.067
+	y_centre -52.422
+	ellipticity 0.066
+	v_disp 126.000
+	z_lens 0.3
+	end
+potentiel 167
+	profile 5
+	x_centre -31.810
+	y_centre -16.333
+	ellipticity 0.024
+	v_disp 129.000
+	z_lens 0.3
+	end
+potentiel 168
+	profile 5
+	x_centre 37.238
+	y_centre 52.289
+	ellipticity 0.009
+	v_disp 112.000
+	z_lens 0.3
+	end
+potentiel 169
+	profile 5
+	x_centre 8.362
+	y_centre 61.044
+	ellipticity 0.051
+	v_disp 117.000
+	z_lens 0.3
+	end
+potentiel 170
+	profile 5
+	x_centre 32.533
+	y_centre -40.644
+	ellipticity 0.084
+	v_disp 130.000
+	z_lens 0.3
+	end
+potentiel 171
+	profile 5
+	x_centre -41.029
+	y_centre 56.756
+	ellipticity 0.039
+	v_disp 127.000
+	z_lens 0.3
+	end
+potentiel 172
+	profile 5
+	x_centre -23.905
+	y_centre -48.289
+	ellipticity 0.078
+	v_disp 112.000
+	z_lens 0.3
+	end
+potentiel 173
+	profile 5
+	x_centre -27.600
+	y_centre 7.133
+	ellipticity 0.123
+	v_disp 117.000
+	z_lens 0.3
+	end
+potentiel 174
+	profile 5
+	x_centre -15.390
+	y_centre 49.200
+	ellipticity 0.030
+	v_disp 120.000
+	z_lens 0.3
+	end
+potentiel 175
+	profile 5
+	x_centre -3.714
+	y_centre 42.467
+	ellipticity 0.066
+	v_disp 119.000
+	z_lens 0.3
+	end
+potentiel 176
+	profile 5
+	x_centre 20.095
+	y_centre 40.000
+	ellipticity 0.066
+	v_disp 114.000
+	z_lens 0.3
+	end
+potentiel 177
+	profile 5
+	x_centre 11.562
+	y_centre -48.733
+	ellipticity 0.012
+	v_disp 115.000
+	z_lens 0.3
+	end
+potentiel 178
+	profile 5
+	x_centre 0.819
+	y_centre -43.867
+	ellipticity 0.051
+	v_disp 120.000
+	z_lens 0.3
+	end
+potentiel 179
+	profile 5
+	x_centre 8.914
+	y_centre 59.911
+	ellipticity 0.054
+	v_disp 126.000
+	z_lens 0.3
+	end
+potentiel 180
+	profile 5
+	x_centre -54.667
+	y_centre -25.533
+	ellipticity 0.039
+	v_disp 120.000
+	z_lens 0.3
+	end
+potentiel 181
+	profile 5
+	x_centre -49.143
+	y_centre 62.378
+	ellipticity 0.057
+	v_disp 121.000
+	z_lens 0.3
+	end
+potentiel 182
+	profile 5
+	x_centre -36.743
+	y_centre -69.333
+	ellipticity 0.069
+	v_disp 113.000
+	z_lens 0.3
+	end
+potentiel 183
+	profile 5
+	x_centre -52.114
+	y_centre -33.044
+	ellipticity 0.117
+	v_disp 125.000
+	z_lens 0.3
+	end
+potentiel 184
+	profile 5
+	x_centre 9.200
+	y_centre -63.867
+	ellipticity 0.003
+	v_disp 126.000
+	z_lens 0.3
+	end
+potentiel 185
+	profile 5
+	x_centre 29.429
+	y_centre -43.111
+	ellipticity 0.036
+	v_disp 114.000
+	z_lens 0.3
+	end
+potentiel 186
+	profile 5
+	x_centre 27.543
+	y_centre -25.578
+	ellipticity 0.114
+	v_disp 112.000
+	z_lens 0.3
+	end
+potentiel 187
+	profile 5
+	x_centre 18.610
+	y_centre -45.067
+	ellipticity 0.024
+	v_disp 114.000
+	z_lens 0.3
+	end
+potentiel 188
+	profile 5
+	x_centre -52.400
+	y_centre 63.489
+	ellipticity 0.147
+	v_disp 123.000
+	z_lens 0.3
+	end
+potentiel 189
+	profile 5
+	x_centre 55.086
+	y_centre 29.022
+	ellipticity 0.150
+	v_disp 130.000
+	z_lens 0.3
+	end
+potentiel 190
+	profile 5
+	x_centre -20.457
+	y_centre 12.822
+	ellipticity 0.039
+	v_disp 111.000
+	z_lens 0.3
+	end
+potentiel 191
+	profile 5
+	x_centre -49.619
+	y_centre -65.956
+	ellipticity 0.126
+	v_disp 112.000
+	z_lens 0.3
+	end
+potentiel 192
+	profile 5
+	x_centre 2.419
+	y_centre -36.200
+	ellipticity 0.114
+	v_disp 128.000
+	z_lens 0.3
+	end
+potentiel 193
+	profile 5
+	x_centre -41.676
+	y_centre -57.733
+	ellipticity 0.051
+	v_disp 130.000
+	z_lens 0.3
+	end
+potentiel 194
+	profile 5
+	x_centre 5.962
+	y_centre -56.711
+	ellipticity 0.021
+	v_disp 119.000
+	z_lens 0.3
+	end
+potentiel 195
+	profile 5
+	x_centre -19.162
+	y_centre 11.689
+	ellipticity 0.081
+	v_disp 130.000
+	z_lens 0.3
+	end
+potentiel 196
+	profile 5
+	x_centre -22.457
+	y_centre 10.578
+	ellipticity 0.036
+	v_disp 113.000
+	z_lens 0.3
+	end
+potentiel 197
+	profile 5
+	x_centre 31.695
+	y_centre -58.622
+	ellipticity 0.042
+	v_disp 125.000
+	z_lens 0.3
+	end
+potentiel 198
+	profile 5
+	x_centre -43.924
+	y_centre 8.711
+	ellipticity 0.150
+	v_disp 121.000
+	z_lens 0.3
+	end
+potentiel 199
+	profile 5
+	x_centre -15.752
+	y_centre 12.422
+	ellipticity 0.147
+	v_disp 115.000
+	z_lens 0.3
+	end
+potentiel 200
+	profile 5
+	x_centre 30.819
+	y_centre -42.978
+	ellipticity 0.069
+	v_disp 120.000
+	z_lens 0.3
+	end
+potentiel 201
+	profile 5
+	x_centre -11.467
+	y_centre 27.733
+	ellipticity 0.135
+	v_disp 113.000
+	z_lens 0.3
+	end
+potentiel 202
+	profile 5
+	x_centre -56.381
+	y_centre 36.644
+	ellipticity 0.147
+	v_disp 110.000
+	z_lens 0.3
+	end
+potentiel 203
+	profile 5
+	x_centre 3.200
+	y_centre 5.489
+	ellipticity 0.066
+	v_disp 115.000
+	z_lens 0.3
+	end
+potentiel 204
+	profile 5
+	x_centre -48.305
+	y_centre 8.267
+	ellipticity 0.150
+	v_disp 113.000
+	z_lens 0.3
+	end
+potentiel 205
+	profile 5
+	x_centre -34.286
+	y_centre -21.378
+	ellipticity 0.003
+	v_disp 123.000
+	z_lens 0.3
+	end
+potentiel 206
+	profile 5
+	x_centre -43.905
+	y_centre 49.467
+	ellipticity 0.039
+	v_disp 116.000
+	z_lens 0.3
+	end
+potentiel 207
+	profile 5
+	x_centre 10.762
+	y_centre -15.022
+	ellipticity 0.066
+	v_disp 122.000
+	z_lens 0.3
+	end
+potentiel 208
+	profile 5
+	x_centre 55.124
+	y_centre 24.267
+	ellipticity 0.027
+	v_disp 123.000
+	z_lens 0.3
+	end
+potentiel 209
+	profile 5
+	x_centre 51.524
+	y_centre -33.000
+	ellipticity 0.093
+	v_disp 113.000
+	z_lens 0.3
+	end
+potentiel 210
+	profile 5
+	x_centre -16.743
+	y_centre 65.867
+	ellipticity 0.018
+	v_disp 127.000
+	z_lens 0.3
+	end
+potentiel 211
+	profile 5
+	x_centre 34.229
+	y_centre 53.933
+	ellipticity 0.147
+	v_disp 130.000
+	z_lens 0.3
+	end
+potentiel 212
+	profile 5
+	x_centre -46.190
+	y_centre -10.467
+	ellipticity 0.126
+	v_disp 110.000
+	z_lens 0.3
+	end
+potentiel 213
+	profile 5
+	x_centre -17.924
+	y_centre -56.844
+	ellipticity 0.054
+	v_disp 110.000
+	z_lens 0.3
+	end
+potentiel 214
+	profile 5
+	x_centre 33.581
+	y_centre -52.200
+	ellipticity 0.042
+	v_disp 116.000
+	z_lens 0.3
+	end
+potentiel 215
+	profile 5
+	x_centre 44.686
+	y_centre -46.667
+	ellipticity 0.135
+	v_disp 115.000
+	z_lens 0.3
+	end
+potentiel 216
+	profile 5
+	x_centre 15.276
+	y_centre -33.444
+	ellipticity 0.081
+	v_disp 112.000
+	z_lens 0.3
+	end
+potentiel 217
+	profile 5
+	x_centre -24.552
+	y_centre -68.600
+	ellipticity 0.045
+	v_disp 130.000
+	z_lens 0.3
+	end
+potentiel 218
+	profile 5
+	x_centre 43.962
+	y_centre 65.289
+	ellipticity 0.033
+	v_disp 116.000
+	z_lens 0.3
+	end
+potentiel 219
+	profile 5
+	x_centre -17.886
+	y_centre 12.578
+	ellipticity 0.102
+	v_disp 129.000
+	z_lens 0.3
+	end
+potentiel 220
+	profile 5
+	x_centre 24.838
+	y_centre -3.889
+	ellipticity 0.147
+	v_disp 119.000
+	z_lens 0.3
+	end
+potentiel 221
+	profile 5
+	x_centre 4.914
+	y_centre -17.289
+	ellipticity 0.123
+	v_disp 121.000
+	z_lens 0.3
+	end
+potentiel 222
+	profile 5
+	x_centre 32.781
+	y_centre -51.978
+	ellipticity 0.015
+	v_disp 126.000
+	z_lens 0.3
+	end
+potentiel 223
+	profile 5
+	x_centre -3.314
+	y_centre 30.356
+	ellipticity 0.117
+	v_disp 116.000
+	z_lens 0.3
+	end
+potentiel 224
+	profile 5
+	x_centre 3.029
+	y_centre -16.956
+	ellipticity 0.066
+	v_disp 112.000
+	z_lens 0.3
+	end
+potentiel 225
+	profile 5
+	x_centre -27.524
+	y_centre 53.867
+	ellipticity 0.132
+	v_disp 114.000
+	z_lens 0.3
+	end
+potentiel 226
+	profile 5
+	x_centre 2.457
+	y_centre 24.467
+	ellipticity 0.042
+	v_disp 123.000
+	z_lens 0.3
+	end
+potentiel 227
+	profile 5
+	x_centre -18.629
+	y_centre -5.556
+	ellipticity 0.045
+	v_disp 118.000
+	z_lens 0.3
+	end
+potentiel 228
+	profile 5
+	x_centre 19.543
+	y_centre 14.756
+	ellipticity 0.111
+	v_disp 123.000
+	z_lens 0.3
+	end
+potentiel 229
+	profile 5
+	x_centre 15.810
+	y_centre 11.156
+	ellipticity 0.144
+	v_disp 112.000
+	z_lens 0.3
+	end
+potentiel 230
+	profile 5
+	x_centre -7.486
+	y_centre 42.689
+	ellipticity 0.099
+	v_disp 115.000
+	z_lens 0.3
+	end
+potentiel 231
+	profile 5
+	x_centre -29.714
+	y_centre -15.378
+	ellipticity 0.057
+	v_disp 116.000
+	z_lens 0.3
+	end
+potentiel 232
+	profile 5
+	x_centre -48.476
+	y_centre 6.844
+	ellipticity 0.102
+	v_disp 112.000
+	z_lens 0.3
+	end
+potentiel 233
+	profile 5
+	x_centre -17.886
+	y_centre 50.467
+	ellipticity 0.075
+	v_disp 117.000
+	z_lens 0.3
+	end
+potentiel 234
+	profile 5
+	x_centre 0.724
+	y_centre 43.644
+	ellipticity 0.150
+	v_disp 129.000
+	z_lens 0.3
+	end
+potentiel 235
+	profile 5
+	x_centre -37.486
+	y_centre -18.711
+	ellipticity 0.039
+	v_disp 121.000
+	z_lens 0.3
+	end
+potentiel 236
+	profile 5
+	x_centre -42.305
+	y_centre 26.333
+	ellipticity 0.012
+	v_disp 113.000
+	z_lens 0.3
+	end
+potentiel 237
+	profile 5
+	x_centre -47.410
+	y_centre 23.400
+	ellipticity 0.135
+	v_disp 120.000
+	z_lens 0.3
+	end
+potentiel 238
+	profile 5
+	x_centre 35.867
+	y_centre 49.978
+	ellipticity 0.018
+	v_disp 119.000
+	z_lens 0.3
+	end
+potentiel 239
+	profile 5
+	x_centre -26.648
+	y_centre 50.533
+	ellipticity 0.147
+	v_disp 129.000
+	z_lens 0.3
+	end
+potentiel 240
+	profile 5
+	x_centre 41.238
+	y_centre 30.178
+	ellipticity 0.045
+	v_disp 110.000
+	z_lens 0.3
+	end
+potentiel 241
+	profile 5
+	x_centre -39.086
+	y_centre -49.956
+	ellipticity 0.018
+	v_disp 120.000
+	z_lens 0.3
+	end
+potentiel 242
+	profile 5
+	x_centre -43.352
+	y_centre -43.200
+	ellipticity 0.045
+	v_disp 115.000
+	z_lens 0.3
+	end
+potentiel 243
+	profile 5
+	x_centre -42.229
+	y_centre -32.244
+	ellipticity 0.072
+	v_disp 114.000
+	z_lens 0.3
+	end
+potentiel 244
+	profile 5
+	x_centre 27.600
+	y_centre 41.711
+	ellipticity 0.000
+	v_disp 114.000
+	z_lens 0.3
+	end
+potentiel 245
+	profile 5
+	x_centre -28.343
+	y_centre -69.244
+	ellipticity 0.105
+	v_disp 127.000
+	z_lens 0.3
+	end
+potentiel 246
+	profile 5
+	x_centre 6.229
+	y_centre -42.756
+	ellipticity 0.099
+	v_disp 111.000
+	z_lens 0.3
+	end
+potentiel 247
+	profile 5
+	x_centre 15.029
+	y_centre -30.244
+	ellipticity 0.084
+	v_disp 116.000
+	z_lens 0.3
+	end
+potentiel 248
+	profile 5
+	x_centre -35.048
+	y_centre -45.689
+	ellipticity 0.147
+	v_disp 114.000
+	z_lens 0.3
+	end
+potentiel 249
+	profile 5
+	x_centre -14.781
+	y_centre 55.622
+	ellipticity 0.033
+	v_disp 127.000
+	z_lens 0.3
+	end
+potentiel 250
+	profile 5
+	x_centre -34.724
+	y_centre 15.778
+	ellipticity 0.111
+	v_disp 125.000
+	z_lens 0.3
+	end
+potentiel 251
+	profile 5
+	x_centre -9.695
+	y_centre -39.000
+	ellipticity 0.132
+	v_disp 127.000
+	z_lens 0.3
+	end
+potentiel 252
+	profile 5
+	x_centre -36.210
+	y_centre -37.067
+	ellipticity 0.150
+	v_disp 121.000
+	z_lens 0.3
+	end
+potentiel 253
+	profile 5
+	x_centre -53.600
+	y_centre -20.178
+	ellipticity 0.114
+	v_disp 112.000
+	z_lens 0.3
+	end
+potentiel 254
+	profile 5
+	x_centre 59.543
+	y_centre -49.733
+	ellipticity 0.066
+	v_disp 128.000
+	z_lens 0.3
+	end
+potentiel 255
+	profile 5
+	x_centre 32.495
+	y_centre 11.511
+	ellipticity 0.135
+	v_disp 124.000
+	z_lens 0.3
+	end
+potentiel 256
+	profile 5
+	x_centre 48.952
+	y_centre -16.978
+	ellipticity 0.135
+	v_disp 119.000
+	z_lens 0.3
+	end
+potentiel 257
+	profile 5
+	x_centre -53.962
+	y_centre 60.178
+	ellipticity 0.141
+	v_disp 130.000
+	z_lens 0.3
+	end
+potentiel 258
+	profile 5
+	x_centre -29.486
+	y_centre 62.178
+	ellipticity 0.060
+	v_disp 110.000
+	z_lens 0.3
+	end
+potentiel 259
+	profile 5
+	x_centre 33.771
+	y_centre 51.156
+	ellipticity 0.027
+	v_disp 110.000
+	z_lens 0.3
+	end
+potentiel 260
+	profile 5
+	x_centre -39.848
+	y_centre -33.022
+	ellipticity 0.036
+	v_disp 118.000
+	z_lens 0.3
+	end
+potentiel 261
+	profile 5
+	x_centre -55.390
+	y_centre -45.156
+	ellipticity 0.069
+	v_disp 117.000
+	z_lens 0.3
+	end
+potentiel 262
+	profile 5
+	x_centre 0.876
+	y_centre 15.022
+	ellipticity 0.012
+	v_disp 125.000
+	z_lens 0.3
+	end
+potentiel 263
+	profile 5
+	x_centre 25.181
+	y_centre -27.667
+	ellipticity 0.075
+	v_disp 115.000
+	z_lens 0.3
+	end
+potentiel 264
+	profile 5
+	x_centre 47.905
+	y_centre -21.867
+	ellipticity 0.129
+	v_disp 128.000
+	z_lens 0.3
+	end
+potentiel 265
+	profile 5
+	x_centre -51.924
+	y_centre -49.156
+	ellipticity 0.024
+	v_disp 116.000
+	z_lens 0.3
+	end
+potentiel 266
+	profile 5
+	x_centre 0.362
+	y_centre 3.156
+	ellipticity 0.009
+	v_disp 122.000
+	z_lens 0.3
+	end
+potentiel 267
+	profile 5
+	x_centre -20.495
+	y_centre -17.933
+	ellipticity 0.003
+	v_disp 122.000
+	z_lens 0.3
+	end
+potentiel 268
+	profile 5
+	x_centre -31.524
+	y_centre 14.067
+	ellipticity 0.075
+	v_disp 128.000
+	z_lens 0.3
+	end
+potentiel 269
+	profile 5
+	x_centre -7.352
+	y_centre -7.889
+	ellipticity 0.138
+	v_disp 126.000
+	z_lens 0.3
+	end
+potentiel 270
+	profile 5
+	x_centre -5.410
+	y_centre 28.111
+	ellipticity 0.084
+	v_disp 120.000
+	z_lens 0.3
+	end
+potentiel 271
+	profile 5
+	x_centre -22.743
+	y_centre 13.911
+	ellipticity 0.027
+	v_disp 117.000
+	z_lens 0.3
+	end
+potentiel 272
+	profile 5
+	x_centre -20.990
+	y_centre 17.578
+	ellipticity 0.144
+	v_disp 126.000
+	z_lens 0.3
+	end
+potentiel 273
+	profile 5
+	x_centre 50.229
+	y_centre -49.311
+	ellipticity 0.018
+	v_disp 124.000
+	z_lens 0.3
+	end
+potentiel 274
+	profile 5
+	x_centre 36.210
+	y_centre -21.133
+	ellipticity 0.009
+	v_disp 122.000
+	z_lens 0.3
+	end
+potentiel 275
+	profile 5
+	x_centre 1.829
+	y_centre -6.289
+	ellipticity 0.054
+	v_disp 124.000
+	z_lens 0.3
+	end
+potentiel 276
+	profile 5
+	x_centre 46.800
+	y_centre 4.844
+	ellipticity 0.105
+	v_disp 124.000
+	z_lens 0.3
+	end
+potentiel 277
+	profile 5
+	x_centre 34.819
+	y_centre -59.733
+	ellipticity 0.045
+	v_disp 127.000
+	z_lens 0.3
+	end
+potentiel 278
+	profile 5
+	x_centre -33.924
+	y_centre -7.378
+	ellipticity 0.054
+	v_disp 121.000
+	z_lens 0.3
+	end
+potentiel 279
+	profile 5
+	x_centre -5.067
+	y_centre 52.600
+	ellipticity 0.081
+	v_disp 124.000
+	z_lens 0.3
+	end
+potentiel 280
+	profile 5
+	x_centre -39.924
+	y_centre -36.467
+	ellipticity 0.150
+	v_disp 119.000
+	z_lens 0.3
+	end
+potentiel 281
+	profile 5
+	x_centre 50.914
+	y_centre -24.133
+	ellipticity 0.021
+	v_disp 125.000
+	z_lens 0.3
+	end
+potentiel 282
+	profile 5
+	x_centre -33.924
+	y_centre 34.689
+	ellipticity 0.033
+	v_disp 126.000
+	z_lens 0.3
+	end
+potentiel 283
+	profile 5
+	x_centre -50.781
+	y_centre 3.222
+	ellipticity 0.009
+	v_disp 110.000
+	z_lens 0.3
+	end
+potentiel 284
+	profile 5
+	x_centre 15.962
+	y_centre 26.933
+	ellipticity 0.081
+	v_disp 128.000
+	z_lens 0.3
+	end
+potentiel 285
+	profile 5
+	x_centre -27.200
+	y_centre 68.267
+	ellipticity 0.063
+	v_disp 122.000
+	z_lens 0.3
+	end
+potentiel 286
+	profile 5
+	x_centre -53.638
+	y_centre 14.000
+	ellipticity 0.084
+	v_disp 110.000
+	z_lens 0.3
+	end
+potentiel 287
+	profile 5
+	x_centre 53.676
+	y_centre 20.533
+	ellipticity 0.096
+	v_disp 127.000
+	z_lens 0.3
+	end
+potentiel 288
+	profile 5
+	x_centre 17.200
+	y_centre -4.044
+	ellipticity 0.030
+	v_disp 123.000
+	z_lens 0.3
+	end
+potentiel 289
+	profile 5
+	x_centre -53.905
+	y_centre -57.978
+	ellipticity 0.102
+	v_disp 126.000
+	z_lens 0.3
+	end
+potentiel 290
+	profile 5
+	x_centre -19.524
+	y_centre 44.200
+	ellipticity 0.129
+	v_disp 122.000
+	z_lens 0.3
+	end
+potentiel 291
+	profile 5
+	x_centre -46.171
+	y_centre 34.533
+	ellipticity 0.066
+	v_disp 128.000
+	z_lens 0.3
+	end
+potentiel 292
+	profile 5
+	x_centre 54.400
+	y_centre 65.378
+	ellipticity 0.108
+	v_disp 127.000
+	z_lens 0.3
+	end
+potentiel 293
+	profile 5
+	x_centre 0.610
+	y_centre -51.822
+	ellipticity 0.054
+	v_disp 116.000
+	z_lens 0.3
+	end
+potentiel 294
+	profile 5
+	x_centre 5.771
+	y_centre 25.244
+	ellipticity 0.063
+	v_disp 111.000
+	z_lens 0.3
+	end
+potentiel 295
+	profile 5
+	x_centre -26.000
+	y_centre 60.378
+	ellipticity 0.033
+	v_disp 126.000
+	z_lens 0.3
+	end
+potentiel 296
+	profile 5
+	x_centre -29.848
+	y_centre -22.600
+	ellipticity 0.051
+	v_disp 130.000
+	z_lens 0.3
+	end
+potentiel 297
+	profile 5
+	x_centre 37.467
+	y_centre -62.000
+	ellipticity 0.027
+	v_disp 124.000
+	z_lens 0.3
+	end
+potentiel 298
+	profile 5
+	x_centre 14.781
+	y_centre 49.067
+	ellipticity 0.123
+	v_disp 112.000
+	z_lens 0.3
+	end
+potentiel 299
+	profile 5
+	x_centre -9.352
+	y_centre 56.556
+	ellipticity 0.144
+	v_disp 125.000
+	z_lens 0.3
+	end
+potentiel 300
+	profile 5
+	x_centre -40.057
+	y_centre -42.578
+	ellipticity 0.081
+	v_disp 130.000
+	z_lens 0.3
+	end
+potentiel 301
+	profile 5
+	x_centre 26.552
+	y_centre -48.756
+	ellipticity 0.021
+	v_disp 122.000
+	z_lens 0.3
+	end
+potentiel 302
+	profile 5
+	x_centre -58.667
+	y_centre -42.244
+	ellipticity 0.129
+	v_disp 118.000
+	z_lens 0.3
+	end
+potentiel 303
+	profile 5
+	x_centre -45.143
+	y_centre 47.733
+	ellipticity 0.033
+	v_disp 130.000
+	z_lens 0.3
+	end
+potentiel 304
+	profile 5
+	x_centre -6.000
+	y_centre 31.089
+	ellipticity 0.030
+	v_disp 127.000
+	z_lens 0.3
+	end
+potentiel 305
+	profile 5
+	x_centre 10.762
+	y_centre 67.111
+	ellipticity 0.012
+	v_disp 127.000
+	z_lens 0.3
+	end
+potentiel 306
+	profile 5
+	x_centre -35.429
+	y_centre 67.978
+	ellipticity 0.069
+	v_disp 120.000
+	z_lens 0.3
+	end
+potentiel 307
+	profile 5
+	x_centre 45.448
+	y_centre 11.178
+	ellipticity 0.141
+	v_disp 118.000
+	z_lens 0.3
+	end
+potentiel 308
+	profile 5
+	x_centre -2.267
+	y_centre -27.267
+	ellipticity 0.117
+	v_disp 119.000
+	z_lens 0.3
+	end
+potentiel 309
+	profile 5
+	x_centre 57.848
+	y_centre 39.111
+	ellipticity 0.021
+	v_disp 122.000
+	z_lens 0.3
+	end
+potentiel 310
+	profile 5
+	x_centre -51.295
+	y_centre -15.467
+	ellipticity 0.108
+	v_disp 124.000
+	z_lens 0.3
+	end
+potentiel 311
+	profile 5
+	x_centre 11.600
+	y_centre -31.333
+	ellipticity 0.108
+	v_disp 125.000
+	z_lens 0.3
+	end
+potentiel 312
+	profile 5
+	x_centre 3.962
+	y_centre 5.556
+	ellipticity 0.147
+	v_disp 128.000
+	z_lens 0.3
+	end
+potentiel 313
+	profile 5
+	x_centre -20.590
+	y_centre 63.600
+	ellipticity 0.120
+	v_disp 122.000
+	z_lens 0.3
+	end
+potentiel 314
+	profile 5
+	x_centre 47.829
+	y_centre -62.533
+	ellipticity 0.093
+	v_disp 111.000
+	z_lens 0.3
+	end
+potentiel 315
+	profile 5
+	x_centre -6.495
+	y_centre -16.733
+	ellipticity 0.105
+	v_disp 110.000
+	z_lens 0.3
+	end
+potentiel 316
+	profile 5
+	x_centre 22.076
+	y_centre -1.044
+	ellipticity 0.090
+	v_disp 130.000
+	z_lens 0.3
+	end
+potentiel 317
+	profile 5
+	x_centre 28.990
+	y_centre 9.978
+	ellipticity 0.144
+	v_disp 113.000
+	z_lens 0.3
+	end
+potentiel 318
+	profile 5
+	x_centre 11.448
+	y_centre 50.822
+	ellipticity 0.000
+	v_disp 118.000
+	z_lens 0.3
+	end
+potentiel 319
+	profile 5
+	x_centre 40.171
+	y_centre -31.244
+	ellipticity 0.120
+	v_disp 124.000
+	z_lens 0.3
+	end
+potentiel 320
+	profile 5
+	x_centre -7.943
+	y_centre 36.911
+	ellipticity 0.144
+	v_disp 121.000
+	z_lens 0.3
+	end
+potentiel 321
+	profile 5
+	x_centre -21.752
+	y_centre -53.133
+	ellipticity 0.021
+	v_disp 121.000
+	z_lens 0.3
+	end
+potentiel 322
+	profile 5
+	x_centre 36.267
+	y_centre -9.200
+	ellipticity 0.072
+	v_disp 119.000
+	z_lens 0.3
+	end
+potentiel 323
+	profile 5
+	x_centre -17.448
+	y_centre 69.756
+	ellipticity 0.111
+	v_disp 111.000
+	z_lens 0.3
+	end
+potentiel 324
+	profile 5
+	x_centre -46.686
+	y_centre -29.444
+	ellipticity 0.087
+	v_disp 119.000
+	z_lens 0.3
+	end
+potentiel 325
+	profile 5
+	x_centre -48.400
+	y_centre -28.200
+	ellipticity 0.132
+	v_disp 114.000
+	z_lens 0.3
+	end
+potentiel 326
+	profile 5
+	x_centre 21.238
+	y_centre 9.889
+	ellipticity 0.054
+	v_disp 130.000
+	z_lens 0.3
+	end
+potentiel 327
+	profile 5
+	x_centre -5.810
+	y_centre 7.400
+	ellipticity 0.084
+	v_disp 120.000
+	z_lens 0.3
+	end
+potentiel 328
+	profile 5
+	x_centre -44.457
+	y_centre -26.400
+	ellipticity 0.009
+	v_disp 127.000
+	z_lens 0.3
+	end
+potentiel 329
+	profile 5
+	x_centre 54.438
+	y_centre 42.644
+	ellipticity 0.129
+	v_disp 121.000
+	z_lens 0.3
+	end
+potentiel 330
+	profile 5
+	x_centre 33.562
+	y_centre -62.867
+	ellipticity 0.027
+	v_disp 130.000
+	z_lens 0.3
+	end
+potentiel 331
+	profile 5
+	x_centre -12.629
+	y_centre -54.200
+	ellipticity 0.081
+	v_disp 119.000
+	z_lens 0.3
+	end
+potentiel 332
+	profile 5
+	x_centre 17.371
+	y_centre -9.556
+	ellipticity 0.105
+	v_disp 116.000
+	z_lens 0.3
+	end
+potentiel 333
+	profile 5
+	x_centre 0.819
+	y_centre -21.844
+	ellipticity 0.096
+	v_disp 117.000
+	z_lens 0.3
+	end
+potentiel 334
+	profile 5
+	x_centre 49.562
+	y_centre -52.089
+	ellipticity 0.129
+	v_disp 118.000
+	z_lens 0.3
+	end
+potentiel 335
+	profile 5
+	x_centre -48.267
+	y_centre 12.000
+	ellipticity 0.045
+	v_disp 121.000
+	z_lens 0.3
+	end
+potentiel 336
+	profile 5
+	x_centre 3.905
+	y_centre 25.156
+	ellipticity 0.054
+	v_disp 118.000
+	z_lens 0.3
+	end
+potentiel 337
+	profile 5
+	x_centre 46.000
+	y_centre 53.889
+	ellipticity 0.105
+	v_disp 115.000
+	z_lens 0.3
+	end
+potentiel 338
+	profile 5
+	x_centre -35.905
+	y_centre -13.089
+	ellipticity 0.012
+	v_disp 113.000
+	z_lens 0.3
+	end
+potentiel 339
+	profile 5
+	x_centre -45.390
+	y_centre -36.956
+	ellipticity 0.000
+	v_disp 110.000
+	z_lens 0.3
+	end
+potentiel 340
+	profile 5
+	x_centre -30.076
+	y_centre -44.178
+	ellipticity 0.045
+	v_disp 115.000
+	z_lens 0.3
+	end
+potentiel 341
+	profile 5
+	x_centre -21.714
+	y_centre 54.689
+	ellipticity 0.084
+	v_disp 112.000
+	z_lens 0.3
+	end
+potentiel 342
+	profile 5
+	x_centre 28.895
+	y_centre -48.511
+	ellipticity 0.051
+	v_disp 126.000
+	z_lens 0.3
+	end
+potentiel 343
+	profile 5
+	x_centre -32.400
+	y_centre 26.889
+	ellipticity 0.081
+	v_disp 117.000
+	z_lens 0.3
+	end
+potentiel 344
+	profile 5
+	x_centre -17.867
+	y_centre -60.556
+	ellipticity 0.039
+	v_disp 111.000
+	z_lens 0.3
+	end
+potentiel 345
+	profile 5
+	x_centre -59.086
+	y_centre -69.111
+	ellipticity 0.099
+	v_disp 122.000
+	z_lens 0.3
+	end
+potentiel 346
+	profile 5
+	x_centre 15.752
+	y_centre -18.911
+	ellipticity 0.060
+	v_disp 119.000
+	z_lens 0.3
+	end
+potentiel 347
+	profile 5
+	x_centre -34.476
+	y_centre 11.067
+	ellipticity 0.027
+	v_disp 112.000
+	z_lens 0.3
+	end
+potentiel 348
+	profile 5
+	x_centre -58.629
+	y_centre -44.156
+	ellipticity 0.045
+	v_disp 117.000
+	z_lens 0.3
+	end
+potentiel 349
+	profile 5
+	x_centre 35.238
+	y_centre 39.244
+	ellipticity 0.018
+	v_disp 111.000
+	z_lens 0.3
+	end
+potentiel 350
+	profile 5
+	x_centre -22.762
+	y_centre -4.800
+	ellipticity 0.144
+	v_disp 122.000
+	z_lens 0.3
+	end
+potentiel 351
+	profile 5
+	x_centre 9.219
+	y_centre 56.133
+	ellipticity 0.003
+	v_disp 122.000
+	z_lens 0.3
+	end
+potentiel 352
+	profile 5
+	x_centre -28.857
+	y_centre 62.822
+	ellipticity 0.021
+	v_disp 111.000
+	z_lens 0.3
+	end
+potentiel 353
+	profile 5
+	x_centre -54.095
+	y_centre -6.022
+	ellipticity 0.129
+	v_disp 113.000
+	z_lens 0.3
+	end
+potentiel 354
+	profile 5
+	x_centre -14.419
+	y_centre -45.600
+	ellipticity 0.084
+	v_disp 113.000
+	z_lens 0.3
+	end
+potentiel 355
+	profile 5
+	x_centre -11.657
+	y_centre 23.422
+	ellipticity 0.084
+	v_disp 110.000
+	z_lens 0.3
+	end
+potentiel 356
+	profile 5
+	x_centre -49.771
+	y_centre -22.089
+	ellipticity 0.126
+	v_disp 124.000
+	z_lens 0.3
+	end
+potentiel 357
+	profile 5
+	x_centre 15.581
+	y_centre -61.556
+	ellipticity 0.090
+	v_disp 118.000
+	z_lens 0.3
+	end
+potentiel 358
+	profile 5
+	x_centre 23.124
+	y_centre -17.800
+	ellipticity 0.111
+	v_disp 128.000
+	z_lens 0.3
+	end
+potentiel 359
+	profile 5
+	x_centre -13.162
+	y_centre -29.378
+	ellipticity 0.042
+	v_disp 123.000
+	z_lens 0.3
+	end
+potentiel 360
+	profile 5
+	x_centre -20.419
+	y_centre -50.733
+	ellipticity 0.051
+	v_disp 119.000
+	z_lens 0.3
+	end
+potentiel 361
+	profile 5
+	x_centre -31.943
+	y_centre -33.267
+	ellipticity 0.003
+	v_disp 125.000
+	z_lens 0.3
+	end
+potentiel 362
+	profile 5
+	x_centre 29.886
+	y_centre -57.689
+	ellipticity 0.135
+	v_disp 129.000
+	z_lens 0.3
+	end
+potentiel 363
+	profile 5
+	x_centre -20.914
+	y_centre -58.067
+	ellipticity 0.048
+	v_disp 120.000
+	z_lens 0.3
+	end
+potentiel 364
+	profile 5
+	x_centre -14.095
+	y_centre -51.889
+	ellipticity 0.054
+	v_disp 119.000
+	z_lens 0.3
+	end
+potentiel 365
+	profile 5
+	x_centre 30.876
+	y_centre -68.822
+	ellipticity 0.129
+	v_disp 110.000
+	z_lens 0.3
+	end
+potentiel 366
+	profile 5
+	x_centre -8.686
+	y_centre 48.800
+	ellipticity 0.150
+	v_disp 115.000
+	z_lens 0.3
+	end
+potentiel 367
+	profile 5
+	x_centre -10.171
+	y_centre -45.800
+	ellipticity 0.006
+	v_disp 123.000
+	z_lens 0.3
+	end
+potentiel 368
+	profile 5
+	x_centre 37.657
+	y_centre -22.400
+	ellipticity 0.069
+	v_disp 121.000
+	z_lens 0.3
+	end
+potentiel 369
+	profile 5
+	x_centre 7.448
+	y_centre -5.800
+	ellipticity 0.048
+	v_disp 128.000
+	z_lens 0.3
+	end
+potentiel 370
+	profile 5
+	x_centre -1.848
+	y_centre 42.489
+	ellipticity 0.051
+	v_disp 112.000
+	z_lens 0.3
+	end
+potentiel 371
+	profile 5
+	x_centre 58.895
+	y_centre 39.044
+	ellipticity 0.009
+	v_disp 118.000
+	z_lens 0.3
+	end
+potentiel 372
+	profile 5
+	x_centre -54.590
+	y_centre -47.333
+	ellipticity 0.057
+	v_disp 130.000
+	z_lens 0.3
+	end
+potentiel 373
+	profile 5
+	x_centre 55.695
+	y_centre 30.867
+	ellipticity 0.075
+	v_disp 120.000
+	z_lens 0.3
+	end
+potentiel 374
+	profile 5
+	x_centre 39.352
+	y_centre -11.844
+	ellipticity 0.042
+	v_disp 124.000
+	z_lens 0.3
+	end
+potentiel 375
+	profile 5
+	x_centre 0.629
+	y_centre 8.289
+	ellipticity 0.048
+	v_disp 125.000
+	z_lens 0.3
+	end
+potentiel 376
+	profile 5
+	x_centre -28.248
+	y_centre 67.333
+	ellipticity 0.066
+	v_disp 129.000
+	z_lens 0.3
+	end
+potentiel 377
+	profile 5
+	x_centre 46.819
+	y_centre -11.222
+	ellipticity 0.141
+	v_disp 114.000
+	z_lens 0.3
+	end
+potentiel 378
+	profile 5
+	x_centre 1.676
+	y_centre 69.222
+	ellipticity 0.114
+	v_disp 127.000
+	z_lens 0.3
+	end
+potentiel 379
+	profile 5
+	x_centre -26.895
+	y_centre 40.533
+	ellipticity 0.141
+	v_disp 121.000
+	z_lens 0.3
+	end
+potentiel 380
+	profile 5
+	x_centre 48.914
+	y_centre -43.000
+	ellipticity 0.033
+	v_disp 125.000
+	z_lens 0.3
+	end
+potentiel 381
+	profile 5
+	x_centre 23.429
+	y_centre 5.556
+	ellipticity 0.051
+	v_disp 130.000
+	z_lens 0.3
+	end
+potentiel 382
+	profile 5
+	x_centre 32.400
+	y_centre 44.733
+	ellipticity 0.114
+	v_disp 122.000
+	z_lens 0.3
+	end
+potentiel 383
+	profile 5
+	x_centre 27.638
+	y_centre -42.356
+	ellipticity 0.126
+	v_disp 127.000
+	z_lens 0.3
+	end
+potentiel 384
+	profile 5
+	x_centre 44.152
+	y_centre 44.644
+	ellipticity 0.012
+	v_disp 116.000
+	z_lens 0.3
+	end
+potentiel 385
+	profile 5
+	x_centre 26.038
+	y_centre -8.933
+	ellipticity 0.141
+	v_disp 114.000
+	z_lens 0.3
+	end
+potentiel 386
+	profile 5
+	x_centre -28.324
+	y_centre -0.689
+	ellipticity 0.036
+	v_disp 125.000
+	z_lens 0.3
+	end
+potentiel 387
+	profile 5
+	x_centre -2.171
+	y_centre 7.733
+	ellipticity 0.129
+	v_disp 111.000
+	z_lens 0.3
+	end
+potentiel 388
+	profile 5
+	x_centre -5.448
+	y_centre -68.200
+	ellipticity 0.075
+	v_disp 124.000
+	z_lens 0.3
+	end
+potentiel 389
+	profile 5
+	x_centre -13.048
+	y_centre -47.556
+	ellipticity 0.081
+	v_disp 119.000
+	z_lens 0.3
+	end
+potentiel 390
+	profile 5
+	x_centre -50.057
+	y_centre 56.822
+	ellipticity 0.057
+	v_disp 116.000
+	z_lens 0.3
+	end
+potentiel 391
+	profile 5
+	x_centre -48.019
+	y_centre -29.867
+	ellipticity 0.141
+	v_disp 125.000
+	z_lens 0.3
+	end
+potentiel 392
+	profile 5
+	x_centre -46.971
+	y_centre -44.778
+	ellipticity 0.045
+	v_disp 111.000
+	z_lens 0.3
+	end
+potentiel 393
+	profile 5
+	x_centre -43.448
+	y_centre 10.400
+	ellipticity 0.006
+	v_disp 127.000
+	z_lens 0.3
+	end
+potentiel 394
+	profile 5
+	x_centre 44.267
+	y_centre -22.867
+	ellipticity 0.147
+	v_disp 121.000
+	z_lens 0.3
+	end
+potentiel 395
+	profile 5
+	x_centre -32.819
+	y_centre 24.956
+	ellipticity 0.009
+	v_disp 122.000
+	z_lens 0.3
+	end
+potentiel 396
+	profile 5
+	x_centre -12.248
+	y_centre 14.444
+	ellipticity 0.030
+	v_disp 124.000
+	z_lens 0.3
+	end
+potentiel 397
+	profile 5
+	x_centre 29.543
+	y_centre 49.489
+	ellipticity 0.000
+	v_disp 128.000
+	z_lens 0.3
+	end
+potentiel 398
+	profile 5
+	x_centre -3.238
+	y_centre 17.244
+	ellipticity 0.042
+	v_disp 126.000
+	z_lens 0.3
+	end
+potentiel 399
+	profile 5
+	x_centre -8.076
+	y_centre 63.889
+	ellipticity 0.057
+	v_disp 116.000
+	z_lens 0.3
+	end
+potentiel 400
+	profile 5
+	x_centre 27.543
+	y_centre 22.178
+	ellipticity 0.048
+	v_disp 124.000
+	z_lens 0.3
+	end
+potentiel 401
+	profile 5
+	x_centre -14.152
+	y_centre -55.111
+	ellipticity 0.030
+	v_disp 129.000
+	z_lens 0.3
+	end
+potentiel 402
+	profile 5
+	x_centre -34.705
+	y_centre 34.089
+	ellipticity 0.129
+	v_disp 112.000
+	z_lens 0.3
+	end
+potentiel 403
+	profile 5
+	x_centre -37.067
+	y_centre -13.800
+	ellipticity 0.024
+	v_disp 110.000
+	z_lens 0.3
+	end
+potentiel 404
+	profile 5
+	x_centre 15.790
+	y_centre -19.156
+	ellipticity 0.144
+	v_disp 113.000
+	z_lens 0.3
+	end
+potentiel 405
+	profile 5
+	x_centre -51.695
+	y_centre -53.889
+	ellipticity 0.135
+	v_disp 118.000
+	z_lens 0.3
+	end
+potentiel 406
+	profile 5
+	x_centre 30.476
+	y_centre -66.467
+	ellipticity 0.147
+	v_disp 124.000
+	z_lens 0.3
+	end
+potentiel 407
+	profile 5
+	x_centre 40.971
+	y_centre 36.578
+	ellipticity 0.135
+	v_disp 121.000
+	z_lens 0.3
+	end
+potentiel 408
+	profile 5
+	x_centre 13.143
+	y_centre 9.578
+	ellipticity 0.006
+	v_disp 111.000
+	z_lens 0.3
+	end
+potentiel 409
+	profile 5
+	x_centre 47.943
+	y_centre 6.667
+	ellipticity 0.048
+	v_disp 114.000
+	z_lens 0.3
+	end
+potentiel 410
+	profile 5
+	x_centre 20.914
+	y_centre -67.067
+	ellipticity 0.045
+	v_disp 129.000
+	z_lens 0.3
+	end
+potentiel 411
+	profile 5
+	x_centre 16.705
+	y_centre 58.089
+	ellipticity 0.045
+	v_disp 121.000
+	z_lens 0.3
+	end
+potentiel 412
+	profile 5
+	x_centre 4.800
+	y_centre 62.044
+	ellipticity 0.045
+	v_disp 121.000
+	z_lens 0.3
+	end
+potentiel 413
+	profile 5
+	x_centre -57.600
+	y_centre 54.022
+	ellipticity 0.000
+	v_disp 117.000
+	z_lens 0.3
+	end
+potentiel 414
+	profile 5
+	x_centre 34.210
+	y_centre -48.067
+	ellipticity 0.111
+	v_disp 130.000
+	z_lens 0.3
+	end
+potentiel 415
+	profile 5
+	x_centre -16.171
+	y_centre 4.689
+	ellipticity 0.093
+	v_disp 111.000
+	z_lens 0.3
+	end
+potentiel 416
+	profile 5
+	x_centre -49.524
+	y_centre 20.444
+	ellipticity 0.021
+	v_disp 118.000
+	z_lens 0.3
+	end
+potentiel 417
+	profile 5
+	x_centre 4.210
+	y_centre -0.844
+	ellipticity 0.027
+	v_disp 116.000
+	z_lens 0.3
+	end
+potentiel 418
+	profile 5
+	x_centre -31.752
+	y_centre -67.422
+	ellipticity 0.129
+	v_disp 114.000
+	z_lens 0.3
+	end
+potentiel 419
+	profile 5
+	x_centre -44.571
+	y_centre -25.022
+	ellipticity 0.072
+	v_disp 113.000
+	z_lens 0.3
+	end
+potentiel 420
+	profile 5
+	x_centre -16.838
+	y_centre 50.378
+	ellipticity 0.006
+	v_disp 128.000
+	z_lens 0.3
+	end
+potentiel 421
+	profile 5
+	x_centre -9.352
+	y_centre 8.200
+	ellipticity 0.132
+	v_disp 123.000
+	z_lens 0.3
+	end
+potentiel 422
+	profile 5
+	x_centre 57.333
+	y_centre -41.844
+	ellipticity 0.138
+	v_disp 113.000
+	z_lens 0.3
+	end
+potentiel 423
+	profile 5
+	x_centre -10.114
+	y_centre 26.089
+	ellipticity 0.072
+	v_disp 115.000
+	z_lens 0.3
+	end
+potentiel 424
+	profile 5
+	x_centre -35.238
+	y_centre -39.067
+	ellipticity 0.093
+	v_disp 114.000
+	z_lens 0.3
+	end
+potentiel 425
+	profile 5
+	x_centre 28.781
+	y_centre 16.289
+	ellipticity 0.066
+	v_disp 121.000
+	z_lens 0.3
+	end
+potentiel 426
+	profile 5
+	x_centre -58.876
+	y_centre -65.222
+	ellipticity 0.147
+	v_disp 122.000
+	z_lens 0.3
+	end
+potentiel 427
+	profile 5
+	x_centre -35.390
+	y_centre 22.889
+	ellipticity 0.120
+	v_disp 112.000
+	z_lens 0.3
+	end
+potentiel 428
+	profile 5
+	x_centre 2.457
+	y_centre 0.022
+	ellipticity 0.060
+	v_disp 111.000
+	z_lens 0.3
+	end
+potentiel 429
+	profile 5
+	x_centre 2.495
+	y_centre -39.733
+	ellipticity 0.021
+	v_disp 120.000
+	z_lens 0.3
+	end
+potentiel 430
+	profile 5
+	x_centre 49.543
+	y_centre -5.333
+	ellipticity 0.102
+	v_disp 127.000
+	z_lens 0.3
+	end
+potentiel 431
+	profile 5
+	x_centre -12.114
+	y_centre 67.267
+	ellipticity 0.102
+	v_disp 125.000
+	z_lens 0.3
+	end
+potentiel 432
+	profile 5
+	x_centre 15.600
+	y_centre 25.733
+	ellipticity 0.042
+	v_disp 124.000
+	z_lens 0.3
+	end
+potentiel 433
+	profile 5
+	x_centre 38.305
+	y_centre -49.933
+	ellipticity 0.093
+	v_disp 119.000
+	z_lens 0.3
+	end
+potentiel 434
+	profile 5
+	x_centre -50.305
+	y_centre -42.844
+	ellipticity 0.072
+	v_disp 118.000
+	z_lens 0.3
+	end
+potentiel 435
+	profile 5
+	x_centre 25.505
+	y_centre -44.333
+	ellipticity 0.039
+	v_disp 112.000
+	z_lens 0.3
+	end
+potentiel 436
+	profile 5
+	x_centre -21.086
+	y_centre -58.578
+	ellipticity 0.015
+	v_disp 114.000
+	z_lens 0.3
+	end
+potentiel 437
+	profile 5
+	x_centre 50.305
+	y_centre -26.956
+	ellipticity 0.117
+	v_disp 111.000
+	z_lens 0.3
+	end
+potentiel 438
+	profile 5
+	x_centre 30.419
+	y_centre -32.756
+	ellipticity 0.102
+	v_disp 116.000
+	z_lens 0.3
+	end
+potentiel 439
+	profile 5
+	x_centre -30.552
+	y_centre 52.000
+	ellipticity 0.135
+	v_disp 130.000
+	z_lens 0.3
+	end
+potentiel 440
+	profile 5
+	x_centre 38.895
+	y_centre -1.733
+	ellipticity 0.147
+	v_disp 125.000
+	z_lens 0.3
+	end
+potentiel 441
+	profile 5
+	x_centre 19.352
+	y_centre 10.489
+	ellipticity 0.036
+	v_disp 117.000
+	z_lens 0.3
+	end
+potentiel 442
+	profile 5
+	x_centre -34.762
+	y_centre -56.333
+	ellipticity 0.024
+	v_disp 130.000
+	z_lens 0.3
+	end
+potentiel 443
+	profile 5
+	x_centre 53.390
+	y_centre -55.044
+	ellipticity 0.117
+	v_disp 123.000
+	z_lens 0.3
+	end
+potentiel 444
+	profile 5
+	x_centre 49.771
+	y_centre -34.689
+	ellipticity 0.132
+	v_disp 127.000
+	z_lens 0.3
+	end
+potentiel 445
+	profile 5
+	x_centre -6.876
+	y_centre -1.200
+	ellipticity 0.018
+	v_disp 130.000
+	z_lens 0.3
+	end
+potentiel 446
+	profile 5
+	x_centre 3.352
+	y_centre 28.111
+	ellipticity 0.108
+	v_disp 121.000
+	z_lens 0.3
+	end
+potentiel 447
+	profile 5
+	x_centre 9.619
+	y_centre 51.711
+	ellipticity 0.120
+	v_disp 114.000
+	z_lens 0.3
+	end
+potentiel 448
+	profile 5
+	x_centre 7.905
+	y_centre 5.556
+	ellipticity 0.048
+	v_disp 127.000
+	z_lens 0.3
+	end
+potentiel 449
+	profile 5
+	x_centre 41.124
+	y_centre -25.222
+	ellipticity 0.015
+	v_disp 127.000
+	z_lens 0.3
+	end
+potentiel 450
+	profile 5
+	x_centre -37.467
+	y_centre 11.267
+	ellipticity 0.066
+	v_disp 123.000
+	z_lens 0.3
+	end
+potentiel 451
+	profile 5
+	x_centre -29.200
+	y_centre 15.400
+	ellipticity 0.129
+	v_disp 127.000
+	z_lens 0.3
+	end
+potentiel 452
+	profile 5
+	x_centre -24.667
+	y_centre -31.356
+	ellipticity 0.084
+	v_disp 119.000
+	z_lens 0.3
+	end
+potentiel 453
+	profile 5
+	x_centre 43.181
+	y_centre -6.733
+	ellipticity 0.027
+	v_disp 125.000
+	z_lens 0.3
+	end
+potentiel 454
+	profile 5
+	x_centre -29.619
+	y_centre 59.822
+	ellipticity 0.090
+	v_disp 129.000
+	z_lens 0.3
+	end
+potentiel 455
+	profile 5
+	x_centre 39.638
+	y_centre 16.644
+	ellipticity 0.135
+	v_disp 122.000
+	z_lens 0.3
+	end
+potentiel 456
+	profile 5
+	x_centre 27.314
+	y_centre 2.711
+	ellipticity 0.078
+	v_disp 110.000
+	z_lens 0.3
+	end
+potentiel 457
+	profile 5
+	x_centre 18.667
+	y_centre 14.067
+	ellipticity 0.099
+	v_disp 112.000
+	z_lens 0.3
+	end
+potentiel 458
+	profile 5
+	x_centre 45.352
+	y_centre -25.822
+	ellipticity 0.111
+	v_disp 127.000
+	z_lens 0.3
+	end
+potentiel 459
+	profile 5
+	x_centre -2.076
+	y_centre 24.644
+	ellipticity 0.078
+	v_disp 127.000
+	z_lens 0.3
+	end
+potentiel 460
+	profile 5
+	x_centre -31.733
+	y_centre 37.378
+	ellipticity 0.096
+	v_disp 122.000
+	z_lens 0.3
+	end
+potentiel 461
+	profile 5
+	x_centre -24.133
+	y_centre -32.067
+	ellipticity 0.069
+	v_disp 113.000
+	z_lens 0.3
+	end
+potentiel 462
+	profile 5
+	x_centre -13.448
+	y_centre 30.578
+	ellipticity 0.045
+	v_disp 113.000
+	z_lens 0.3
+	end
+potentiel 463
+	profile 5
+	x_centre 0.438
+	y_centre 5.644
+	ellipticity 0.012
+	v_disp 110.000
+	z_lens 0.3
+	end
+potentiel 464
+	profile 5
+	x_centre -27.238
+	y_centre -15.089
+	ellipticity 0.102
+	v_disp 115.000
+	z_lens 0.3
+	end
+potentiel 465
+	profile 5
+	x_centre 5.448
+	y_centre 11.956
+	ellipticity 0.090
+	v_disp 113.000
+	z_lens 0.3
+	end
+potentiel 466
+	profile 5
+	x_centre -39.219
+	y_centre 64.644
+	ellipticity 0.021
+	v_disp 115.000
+	z_lens 0.3
+	end
+potentiel 467
+	profile 5
+	x_centre 3.486
+	y_centre 41.067
+	ellipticity 0.063
+	v_disp 122.000
+	z_lens 0.3
+	end
+potentiel 468
+	profile 5
+	x_centre -27.524
+	y_centre -16.200
+	ellipticity 0.129
+	v_disp 119.000
+	z_lens 0.3
+	end
+potentiel 469
+	profile 5
+	x_centre -55.981
+	y_centre 37.778
+	ellipticity 0.045
+	v_disp 125.000
+	z_lens 0.3
+	end
+potentiel 470
+	profile 5
+	x_centre -8.400
+	y_centre -57.711
+	ellipticity 0.102
+	v_disp 116.000
+	z_lens 0.3
+	end
+potentiel 471
+	profile 5
+	x_centre -48.743
+	y_centre -26.689
+	ellipticity 0.018
+	v_disp 125.000
+	z_lens 0.3
+	end
+potentiel 472
+	profile 5
+	x_centre -56.438
+	y_centre 19.178
+	ellipticity 0.078
+	v_disp 124.000
+	z_lens 0.3
+	end
+potentiel 473
+	profile 5
+	x_centre 22.762
+	y_centre 68.933
+	ellipticity 0.075
+	v_disp 119.000
+	z_lens 0.3
+	end
+potentiel 474
+	profile 5
+	x_centre -38.152
+	y_centre 23.889
+	ellipticity 0.099
+	v_disp 127.000
+	z_lens 0.3
+	end
+potentiel 475
+	profile 5
+	x_centre -50.495
+	y_centre -11.578
+	ellipticity 0.069
+	v_disp 120.000
+	z_lens 0.3
+	end
+potentiel 476
+	profile 5
+	x_centre 3.962
+	y_centre -43.333
+	ellipticity 0.069
+	v_disp 125.000
+	z_lens 0.3
+	end
+potentiel 477
+	profile 5
+	x_centre 47.257
+	y_centre 41.889
+	ellipticity 0.042
+	v_disp 110.000
+	z_lens 0.3
+	end
+potentiel 478
+	profile 5
+	x_centre -6.990
+	y_centre 67.956
+	ellipticity 0.009
+	v_disp 113.000
+	z_lens 0.3
+	end
+potentiel 479
+	profile 5
+	x_centre -14.933
+	y_centre -54.933
+	ellipticity 0.057
+	v_disp 119.000
+	z_lens 0.3
+	end
+potentiel 480
+	profile 5
+	x_centre 5.257
+	y_centre -52.222
+	ellipticity 0.000
+	v_disp 123.000
+	z_lens 0.3
+	end
+potentiel 481
+	profile 5
+	x_centre -20.590
+	y_centre -58.756
+	ellipticity 0.096
+	v_disp 114.000
+	z_lens 0.3
+	end
+potentiel 482
+	profile 5
+	x_centre 23.333
+	y_centre -41.200
+	ellipticity 0.090
+	v_disp 119.000
+	z_lens 0.3
+	end
+potentiel 483
+	profile 5
+	x_centre 12.457
+	y_centre -59.489
+	ellipticity 0.030
+	v_disp 119.000
+	z_lens 0.3
+	end
+potentiel 484
+	profile 5
+	x_centre 57.886
+	y_centre -9.178
+	ellipticity 0.009
+	v_disp 111.000
+	z_lens 0.3
+	end
+potentiel 485
+	profile 5
+	x_centre -23.943
+	y_centre 0.644
+	ellipticity 0.066
+	v_disp 127.000
+	z_lens 0.3
+	end
+potentiel 486
+	profile 5
+	x_centre -45.790
+	y_centre -46.111
+	ellipticity 0.147
+	v_disp 124.000
+	z_lens 0.3
+	end
+potentiel 487
+	profile 5
+	x_centre 37.771
+	y_centre 46.289
+	ellipticity 0.066
+	v_disp 128.000
+	z_lens 0.3
+	end
+potentiel 488
+	profile 5
+	x_centre -56.286
+	y_centre 50.711
+	ellipticity 0.117
+	v_disp 119.000
+	z_lens 0.3
+	end
+potentiel 489
+	profile 5
+	x_centre 43.162
+	y_centre 57.711
+	ellipticity 0.042
+	v_disp 127.000
+	z_lens 0.3
+	end
+potentiel 490
+	profile 5
+	x_centre -3.086
+	y_centre -26.444
+	ellipticity 0.105
+	v_disp 123.000
+	z_lens 0.3
+	end
+potentiel 491
+	profile 5
+	x_centre 53.314
+	y_centre -34.067
+	ellipticity 0.051
+	v_disp 110.000
+	z_lens 0.3
+	end
+potentiel 492
+	profile 5
+	x_centre 43.124
+	y_centre -32.911
+	ellipticity 0.000
+	v_disp 120.000
+	z_lens 0.3
+	end
+potentiel 493
+	profile 5
+	x_centre 17.867
+	y_centre 4.822
+	ellipticity 0.054
+	v_disp 126.000
+	z_lens 0.3
+	end
+potentiel 494
+	profile 5
+	x_centre 22.876
+	y_centre -0.244
+	ellipticity 0.093
+	v_disp 112.000
+	z_lens 0.3
+	end
+potentiel 495
+	profile 5
+	x_centre -12.095
+	y_centre 62.689
+	ellipticity 0.099
+	v_disp 123.000
+	z_lens 0.3
+	end
+potentiel 496
+	profile 5
+	x_centre 55.638
+	y_centre -27.089
+	ellipticity 0.144
+	v_disp 117.000
+	z_lens 0.3
+	end
+potentiel 497
+	profile 5
+	x_centre 59.105
+	y_centre -47.400
+	ellipticity 0.063
+	v_disp 117.000
+	z_lens 0.3
+	end
+potentiel 498
+	profile 5
+	x_centre -46.629
+	y_centre -46.756
+	ellipticity 0.123
+	v_disp 124.000
+	z_lens 0.3
+	end
+potentiel 499
+	profile 5
+	x_centre -44.229
+	y_centre -23.444
+	ellipticity 0.039
+	v_disp 129.000
+	z_lens 0.3
+	end
+potentiel 500
+	profile 5
+	x_centre -40.476
+	y_centre 3.356
+	ellipticity 0.144
+	v_disp 111.000
+	z_lens 0.3
+	end
+potentiel 501
+	profile 5
+	x_centre 1.562
+	y_centre 52.533
+	ellipticity 0.141
+	v_disp 127.000
+	z_lens 0.3
+	end
+potentiel 502
+	profile 5
+	x_centre 57.429
+	y_centre -25.822
+	ellipticity 0.078
+	v_disp 119.000
+	z_lens 0.3
+	end
+potentiel 503
+	profile 5
+	x_centre -4.705
+	y_centre 13.889
+	ellipticity 0.060
+	v_disp 128.000
+	z_lens 0.3
+	end
+potentiel 504
+	profile 5
+	x_centre 44.952
+	y_centre 51.578
+	ellipticity 0.135
+	v_disp 130.000
+	z_lens 0.3
+	end
+potentiel 505
+	profile 5
+	x_centre 51.295
+	y_centre 56.422
+	ellipticity 0.015
+	v_disp 111.000
+	z_lens 0.3
+	end
+potentiel 506
+	profile 5
+	x_centre -1.181
+	y_centre 30.111
+	ellipticity 0.051
+	v_disp 125.000
+	z_lens 0.3
+	end
+potentiel 507
+	profile 5
+	x_centre 55.638
+	y_centre -55.956
+	ellipticity 0.081
+	v_disp 130.000
+	z_lens 0.3
+	end
+potentiel 508
+	profile 5
+	x_centre -16.305
+	y_centre -17.400
+	ellipticity 0.003
+	v_disp 112.000
+	z_lens 0.3
+	end
+potentiel 509
+	profile 5
+	x_centre 23.276
+	y_centre -62.578
+	ellipticity 0.042
+	v_disp 115.000
+	z_lens 0.3
+	end
+potentiel 510
+	profile 5
+	x_centre 16.838
+	y_centre 43.022
+	ellipticity 0.036
+	v_disp 125.000
+	z_lens 0.3
+	end
+potentiel 511
+	profile 5
+	x_centre 52.229
+	y_centre 14.889
+	ellipticity 0.012
+	v_disp 117.000
+	z_lens 0.3
+	end
+potentiel 512
+	profile 5
+	x_centre -50.781
+	y_centre 65.867
+	ellipticity 0.000
+	v_disp 110.000
+	z_lens 0.3
+	end
+potentiel 513
+	profile 5
+	x_centre 58.914
+	y_centre -43.311
+	ellipticity 0.012
+	v_disp 113.000
+	z_lens 0.3
+	end
+potentiel 514
+	profile 5
+	x_centre 25.714
+	y_centre -22.778
+	ellipticity 0.030
+	v_disp 126.000
+	z_lens 0.3
+	end
+potentiel 515
+	profile 5
+	x_centre -30.248
+	y_centre 37.933
+	ellipticity 0.096
+	v_disp 115.000
+	z_lens 0.3
+	end
+potentiel 516
+	profile 5
+	x_centre 56.895
+	y_centre 20.756
+	ellipticity 0.114
+	v_disp 130.000
+	z_lens 0.3
+	end
+potentiel 517
+	profile 5
+	x_centre -16.457
+	y_centre 12.600
+	ellipticity 0.135
+	v_disp 129.000
+	z_lens 0.3
+	end
+potentiel 518
+	profile 5
+	x_centre -3.048
+	y_centre -39.511
+	ellipticity 0.084
+	v_disp 118.000
+	z_lens 0.3
+	end
+potentiel 519
+	profile 5
+	x_centre -20.876
+	y_centre -4.400
+	ellipticity 0.021
+	v_disp 112.000
+	z_lens 0.3
+	end
+potentiel 520
+	profile 5
+	x_centre -0.324
+	y_centre -12.022
+	ellipticity 0.012
+	v_disp 114.000
+	z_lens 0.3
+	end
+potentiel 521
+	profile 5
+	x_centre -42.057
+	y_centre -48.733
+	ellipticity 0.120
+	v_disp 124.000
+	z_lens 0.3
+	end
+potentiel 522
+	profile 5
+	x_centre 50.819
+	y_centre 54.756
+	ellipticity 0.015
+	v_disp 122.000
+	z_lens 0.3
+	end
+potentiel 523
+	profile 5
+	x_centre 38.914
+	y_centre -27.644
+	ellipticity 0.033
+	v_disp 126.000
+	z_lens 0.3
+	end
+potentiel 524
+	profile 5
+	x_centre 29.790
+	y_centre -50.956
+	ellipticity 0.120
+	v_disp 124.000
+	z_lens 0.3
+	end
+potentiel 525
+	profile 5
+	x_centre 1.714
+	y_centre -7.222
+	ellipticity 0.006
+	v_disp 130.000
+	z_lens 0.3
+	end
+potentiel 526
+	profile 5
+	x_centre 54.133
+	y_centre 57.822
+	ellipticity 0.108
+	v_disp 115.000
+	z_lens 0.3
+	end
+potentiel 527
+	profile 5
+	x_centre -31.295
+	y_centre -17.200
+	ellipticity 0.108
+	v_disp 119.000
+	z_lens 0.3
+	end
+potentiel 528
+	profile 5
+	x_centre -57.943
+	y_centre 27.600
+	ellipticity 0.102
+	v_disp 129.000
+	z_lens 0.3
+	end
+potentiel 529
+	profile 5
+	x_centre 4.210
+	y_centre -6.622
+	ellipticity 0.126
+	v_disp 127.000
+	z_lens 0.3
+	end
+potentiel 530
+	profile 5
+	x_centre 30.743
+	y_centre -50.200
+	ellipticity 0.099
+	v_disp 123.000
+	z_lens 0.3
+	end
+potentiel 531
+	profile 5
+	x_centre 6.952
+	y_centre 31.422
+	ellipticity 0.048
+	v_disp 111.000
+	z_lens 0.3
+	end
+potentiel 532
+	profile 5
+	x_centre 50.781
+	y_centre -61.289
+	ellipticity 0.057
+	v_disp 117.000
+	z_lens 0.3
+	end
+potentiel 533
+	profile 5
+	x_centre -46.952
+	y_centre 48.511
+	ellipticity 0.087
+	v_disp 128.000
+	z_lens 0.3
+	end
+potentiel 534
+	profile 5
+	x_centre -48.457
+	y_centre 15.956
+	ellipticity 0.123
+	v_disp 121.000
+	z_lens 0.3
+	end
+potentiel 535
+	profile 5
+	x_centre 20.114
+	y_centre -3.400
+	ellipticity 0.069
+	v_disp 118.000
+	z_lens 0.3
+	end
+potentiel 536
+	profile 5
+	x_centre 58.724
+	y_centre 23.844
+	ellipticity 0.105
+	v_disp 117.000
+	z_lens 0.3
+	end
+potentiel 537
+	profile 5
+	x_centre -34.590
+	y_centre 19.178
+	ellipticity 0.096
+	v_disp 117.000
+	z_lens 0.3
+	end
+potentiel 538
+	profile 5
+	x_centre -36.400
+	y_centre 2.800
+	ellipticity 0.102
+	v_disp 119.000
+	z_lens 0.3
+	end
+potentiel 539
+	profile 5
+	x_centre 38.495
+	y_centre 69.178
+	ellipticity 0.048
+	v_disp 120.000
+	z_lens 0.3
+	end
+potentiel 540
+	profile 5
+	x_centre 2.800
+	y_centre 68.511
+	ellipticity 0.024
+	v_disp 118.000
+	z_lens 0.3
+	end
+potentiel 541
+	profile 5
+	x_centre -2.152
+	y_centre -0.956
+	ellipticity 0.036
+	v_disp 128.000
+	z_lens 0.3
+	end
+potentiel 542
+	profile 5
+	x_centre 45.333
+	y_centre -50.867
+	ellipticity 0.006
+	v_disp 125.000
+	z_lens 0.3
+	end
+potentiel 543
+	profile 5
+	x_centre 0.095
+	y_centre 57.111
+	ellipticity 0.012
+	v_disp 127.000
+	z_lens 0.3
+	end
+potentiel 544
+	profile 5
+	x_centre -57.295
+	y_centre -49.822
+	ellipticity 0.093
+	v_disp 114.000
+	z_lens 0.3
+	end
+potentiel 545
+	profile 5
+	x_centre 43.200
+	y_centre 54.756
+	ellipticity 0.057
+	v_disp 123.000
+	z_lens 0.3
+	end
+potentiel 546
+	profile 5
+	x_centre 20.476
+	y_centre -18.578
+	ellipticity 0.039
+	v_disp 113.000
+	z_lens 0.3
+	end
+potentiel 547
+	profile 5
+	x_centre 52.267
+	y_centre 30.622
+	ellipticity 0.036
+	v_disp 110.000
+	z_lens 0.3
+	end
+potentiel 548
+	profile 5
+	x_centre -47.105
+	y_centre 7.778
+	ellipticity 0.027
+	v_disp 127.000
+	z_lens 0.3
+	end
+potentiel 549
+	profile 5
+	x_centre 22.305
+	y_centre 31.667
+	ellipticity 0.135
+	v_disp 115.000
+	z_lens 0.3
+	end
+potentiel 550
+	profile 5
+	x_centre 41.752
+	y_centre -29.311
+	ellipticity 0.102
+	v_disp 127.000
+	z_lens 0.3
+	end
+potentiel 551
+	profile 5
+	x_centre -24.552
+	y_centre 61.711
+	ellipticity 0.090
+	v_disp 110.000
+	z_lens 0.3
+	end
+potentiel 552
+	profile 5
+	x_centre -27.695
+	y_centre 33.133
+	ellipticity 0.132
+	v_disp 126.000
+	z_lens 0.3
+	end
+potentiel 553
+	profile 5
+	x_centre 36.686
+	y_centre -3.533
+	ellipticity 0.030
+	v_disp 112.000
+	z_lens 0.3
+	end
+potentiel 554
+	profile 5
+	x_centre 54.381
+	y_centre -42.200
+	ellipticity 0.144
+	v_disp 128.000
+	z_lens 0.3
+	end
+potentiel 555
+	profile 5
+	x_centre -26.267
+	y_centre -41.778
+	ellipticity 0.039
+	v_disp 115.000
+	z_lens 0.3
+	end
+potentiel 556
+	profile 5
+	x_centre 45.886
+	y_centre 59.644
+	ellipticity 0.144
+	v_disp 112.000
+	z_lens 0.3
+	end
+potentiel 557
+	profile 5
+	x_centre -19.562
+	y_centre -1.133
+	ellipticity 0.084
+	v_disp 123.000
+	z_lens 0.3
+	end
+potentiel 558
+	profile 5
+	x_centre -54.343
+	y_centre 40.289
+	ellipticity 0.087
+	v_disp 130.000
+	z_lens 0.3
+	end
+potentiel 559
+	profile 5
+	x_centre 56.114
+	y_centre 7.667
+	ellipticity 0.030
+	v_disp 127.000
+	z_lens 0.3
+	end
+potentiel 560
+	profile 5
+	x_centre 36.571
+	y_centre -20.356
+	ellipticity 0.021
+	v_disp 115.000
+	z_lens 0.3
+	end
+potentiel 561
+	profile 5
+	x_centre 19.143
+	y_centre 39.800
+	ellipticity 0.093
+	v_disp 120.000
+	z_lens 0.3
+	end
+potentiel 562
+	profile 5
+	x_centre -16.305
+	y_centre -1.378
+	ellipticity 0.123
+	v_disp 117.000
+	z_lens 0.3
+	end
+potentiel 563
+	profile 5
+	x_centre 1.752
+	y_centre 1.000
+	ellipticity 0.075
+	v_disp 126.000
+	z_lens 0.3
+	end
+potentiel 564
+	profile 5
+	x_centre -46.838
+	y_centre 41.156
+	ellipticity 0.060
+	v_disp 113.000
+	z_lens 0.3
+	end
+potentiel 565
+	profile 5
+	x_centre 4.552
+	y_centre -21.644
+	ellipticity 0.078
+	v_disp 125.000
+	z_lens 0.3
+	end
+potentiel 566
+	profile 5
+	x_centre 45.181
+	y_centre -29.044
+	ellipticity 0.066
+	v_disp 127.000
+	z_lens 0.3
+	end
+potentiel 567
+	profile 5
+	x_centre -53.733
+	y_centre -5.222
+	ellipticity 0.105
+	v_disp 111.000
+	z_lens 0.3
+	end
+potentiel 568
+	profile 5
+	x_centre 43.162
+	y_centre 9.956
+	ellipticity 0.048
+	v_disp 112.000
+	z_lens 0.3
+	end
+potentiel 569
+	profile 5
+	x_centre 30.610
+	y_centre -37.333
+	ellipticity 0.081
+	v_disp 125.000
+	z_lens 0.3
+	end
+potentiel 570
+	profile 5
+	x_centre 2.286
+	y_centre 40.778
+	ellipticity 0.012
+	v_disp 126.000
+	z_lens 0.3
+	end
+potentiel 571
+	profile 5
+	x_centre -15.733
+	y_centre -25.756
+	ellipticity 0.078
+	v_disp 130.000
+	z_lens 0.3
+	end
+potentiel 572
+	profile 5
+	x_centre -43.790
+	y_centre 14.289
+	ellipticity 0.039
+	v_disp 125.000
+	z_lens 0.3
+	end
+potentiel 573
+	profile 5
+	x_centre 34.552
+	y_centre -9.933
+	ellipticity 0.114
+	v_disp 125.000
+	z_lens 0.3
+	end
+potentiel 574
+	profile 5
+	x_centre -15.886
+	y_centre 45.978
+	ellipticity 0.033
+	v_disp 125.000
+	z_lens 0.3
+	end
+potentiel 575
+	profile 5
+	x_centre 45.162
+	y_centre 48.289
+	ellipticity 0.069
+	v_disp 111.000
+	z_lens 0.3
+	end
+potentiel 576
+	profile 5
+	x_centre 57.181
+	y_centre 38.689
+	ellipticity 0.138
+	v_disp 120.000
+	z_lens 0.3
+	end
+potentiel 577
+	profile 5
+	x_centre -7.657
+	y_centre 20.911
+	ellipticity 0.135
+	v_disp 121.000
+	z_lens 0.3
+	end
+potentiel 578
+	profile 5
+	x_centre 19.048
+	y_centre -15.178
+	ellipticity 0.141
+	v_disp 111.000
+	z_lens 0.3
+	end
+potentiel 579
+	profile 5
+	x_centre 35.581
+	y_centre -68.267
+	ellipticity 0.123
+	v_disp 126.000
+	z_lens 0.3
+	end
+potentiel 580
+	profile 5
+	x_centre -43.810
+	y_centre 32.667
+	ellipticity 0.150
+	v_disp 114.000
+	z_lens 0.3
+	end
+potentiel 581
+	profile 5
+	x_centre -18.457
+	y_centre 63.933
+	ellipticity 0.006
+	v_disp 114.000
+	z_lens 0.3
+	end
+potentiel 582
+	profile 5
+	x_centre 15.143
+	y_centre 19.400
+	ellipticity 0.051
+	v_disp 129.000
+	z_lens 0.3
+	end
+potentiel 583
+	profile 5
+	x_centre -11.562
+	y_centre -46.556
+	ellipticity 0.129
+	v_disp 112.000
+	z_lens 0.3
+	end
+potentiel 584
+	profile 5
+	x_centre 54.476
+	y_centre -41.489
+	ellipticity 0.078
+	v_disp 126.000
+	z_lens 0.3
+	end
+potentiel 585
+	profile 5
+	x_centre -15.543
+	y_centre -61.733
+	ellipticity 0.033
+	v_disp 119.000
+	z_lens 0.3
+	end
+potentiel 586
+	profile 5
+	x_centre -31.581
+	y_centre 24.000
+	ellipticity 0.090
+	v_disp 117.000
+	z_lens 0.3
+	end
+potentiel 587
+	profile 5
+	x_centre 21.752
+	y_centre 37.889
+	ellipticity 0.150
+	v_disp 130.000
+	z_lens 0.3
+	end
+potentiel 588
+	profile 5
+	x_centre 17.962
+	y_centre -58.289
+	ellipticity 0.060
+	v_disp 117.000
+	z_lens 0.3
+	end
+potentiel 589
+	profile 5
+	x_centre -36.686
+	y_centre -5.133
+	ellipticity 0.006
+	v_disp 120.000
+	z_lens 0.3
+	end
+potentiel 590
+	profile 5
+	x_centre 24.114
+	y_centre 22.000
+	ellipticity 0.075
+	v_disp 127.000
+	z_lens 0.3
+	end
+potentiel 591
+	profile 5
+	x_centre -41.181
+	y_centre 61.689
+	ellipticity 0.141
+	v_disp 123.000
+	z_lens 0.3
+	end
+potentiel 592
+	profile 5
+	x_centre 26.000
+	y_centre 20.956
+	ellipticity 0.030
+	v_disp 117.000
+	z_lens 0.3
+	end
+potentiel 593
+	profile 5
+	x_centre 50.305
+	y_centre -33.333
+	ellipticity 0.075
+	v_disp 130.000
+	z_lens 0.3
+	end
+potentiel 594
+	profile 5
+	x_centre 29.162
+	y_centre -54.889
+	ellipticity 0.009
+	v_disp 129.000
+	z_lens 0.3
+	end
+potentiel 595
+	profile 5
+	x_centre 14.476
+	y_centre 16.667
+	ellipticity 0.111
+	v_disp 116.000
+	z_lens 0.3
+	end
+potentiel 596
+	profile 5
+	x_centre -31.600
+	y_centre 51.756
+	ellipticity 0.072
+	v_disp 118.000
+	z_lens 0.3
+	end
+potentiel 597
+	profile 5
+	x_centre 46.152
+	y_centre 11.067
+	ellipticity 0.111
+	v_disp 128.000
+	z_lens 0.3
+	end
+potentiel 598
+	profile 5
+	x_centre -34.305
+	y_centre -38.311
+	ellipticity 0.132
+	v_disp 112.000
+	z_lens 0.3
+	end
+potentiel 599
+	profile 5
+	x_centre 9.010
+	y_centre 57.667
+	ellipticity 0.036
+	v_disp 112.000
+	z_lens 0.3
+	end
+potentiel 600
+	profile 5
+	x_centre -14.038
+	y_centre 53.111
+	ellipticity 0.072
+	v_disp 119.000
+	z_lens 0.3
+	end
+potentiel 601
+	profile 5
+	x_centre -24.876
+	y_centre 13.356
+	ellipticity 0.093
+	v_disp 114.000
+	z_lens 0.3
+	end
+potentiel 602
+	profile 5
+	x_centre -5.810
+	y_centre -28.889
+	ellipticity 0.063
+	v_disp 128.000
+	z_lens 0.3
+	end
+potentiel 603
+	profile 5
+	x_centre 32.781
+	y_centre 14.333
+	ellipticity 0.036
+	v_disp 114.000
+	z_lens 0.3
+	end
+potentiel 604
+	profile 5
+	x_centre 5.867
+	y_centre -20.289
+	ellipticity 0.093
+	v_disp 116.000
+	z_lens 0.3
+	end
+potentiel 605
+	profile 5
+	x_centre 22.667
+	y_centre 19.600
+	ellipticity 0.117
+	v_disp 117.000
+	z_lens 0.3
+	end
+potentiel 606
+	profile 5
+	x_centre 45.619
+	y_centre 15.400
+	ellipticity 0.108
+	v_disp 120.000
+	z_lens 0.3
+	end
+potentiel 607
+	profile 5
+	x_centre 29.143
+	y_centre 10.733
+	ellipticity 0.078
+	v_disp 118.000
+	z_lens 0.3
+	end
+potentiel 608
+	profile 5
+	x_centre -36.438
+	y_centre -54.511
+	ellipticity 0.075
+	v_disp 128.000
+	z_lens 0.3
+	end
+potentiel 609
+	profile 5
+	x_centre -48.648
+	y_centre 17.467
+	ellipticity 0.036
+	v_disp 114.000
+	z_lens 0.3
+	end
+potentiel 610
+	profile 5
+	x_centre 4.381
+	y_centre 11.733
+	ellipticity 0.018
+	v_disp 115.000
+	z_lens 0.3
+	end
+potentiel 611
+	profile 5
+	x_centre 28.895
+	y_centre -40.889
+	ellipticity 0.030
+	v_disp 114.000
+	z_lens 0.3
+	end
+potentiel 612
+	profile 5
+	x_centre 13.333
+	y_centre -20.156
+	ellipticity 0.093
+	v_disp 115.000
+	z_lens 0.3
+	end
+potentiel 613
+	profile 5
+	x_centre 6.762
+	y_centre -47.222
+	ellipticity 0.021
+	v_disp 120.000
+	z_lens 0.3
+	end
+potentiel 614
+	profile 5
+	x_centre 17.029
+	y_centre -5.844
+	ellipticity 0.069
+	v_disp 117.000
+	z_lens 0.3
+	end
+potentiel 615
+	profile 5
+	x_centre 27.276
+	y_centre 14.111
+	ellipticity 0.135
+	v_disp 117.000
+	z_lens 0.3
+	end
+potentiel 616
+	profile 5
+	x_centre -47.771
+	y_centre -31.667
+	ellipticity 0.078
+	v_disp 127.000
+	z_lens 0.3
+	end
+potentiel 617
+	profile 5
+	x_centre -13.619
+	y_centre 34.267
+	ellipticity 0.147
+	v_disp 123.000
+	z_lens 0.3
+	end
+potentiel 618
+	profile 5
+	x_centre 36.210
+	y_centre 40.689
+	ellipticity 0.051
+	v_disp 114.000
+	z_lens 0.3
+	end
+potentiel 619
+	profile 5
+	x_centre 50.876
+	y_centre 17.533
+	ellipticity 0.003
+	v_disp 130.000
+	z_lens 0.3
+	end
+potentiel 620
+	profile 5
+	x_centre -51.638
+	y_centre 5.622
+	ellipticity 0.069
+	v_disp 110.000
+	z_lens 0.3
+	end
+potentiel 621
+	profile 5
+	x_centre -27.181
+	y_centre -15.756
+	ellipticity 0.051
+	v_disp 122.000
+	z_lens 0.3
+	end
+potentiel 622
+	profile 5
+	x_centre 53.695
+	y_centre -4.200
+	ellipticity 0.135
+	v_disp 123.000
+	z_lens 0.3
+	end
+potentiel 623
+	profile 5
+	x_centre -58.152
+	y_centre -15.178
+	ellipticity 0.063
+	v_disp 110.000
+	z_lens 0.3
+	end
+potentiel 624
+	profile 5
+	x_centre -4.571
+	y_centre -2.089
+	ellipticity 0.150
+	v_disp 122.000
+	z_lens 0.3
+	end
+potentiel 625
+	profile 5
+	x_centre 28.876
+	y_centre 8.422
+	ellipticity 0.141
+	v_disp 110.000
+	z_lens 0.3
+	end
+potentiel 626
+	profile 5
+	x_centre -47.162
+	y_centre 64.178
+	ellipticity 0.093
+	v_disp 123.000
+	z_lens 0.3
+	end
+potentiel 627
+	profile 5
+	x_centre -56.838
+	y_centre 52.578
+	ellipticity 0.045
+	v_disp 119.000
+	z_lens 0.3
+	end
+potentiel 628
+	profile 5
+	x_centre 28.800
+	y_centre 22.622
+	ellipticity 0.003
+	v_disp 128.000
+	z_lens 0.3
+	end
+potentiel 629
+	profile 5
+	x_centre -36.248
+	y_centre 44.333
+	ellipticity 0.078
+	v_disp 116.000
+	z_lens 0.3
+	end
+potentiel 630
+	profile 5
+	x_centre 40.476
+	y_centre -51.867
+	ellipticity 0.120
+	v_disp 129.000
+	z_lens 0.3
+	end
+potentiel 631
+	profile 5
+	x_centre 14.305
+	y_centre 25.644
+	ellipticity 0.105
+	v_disp 113.000
+	z_lens 0.3
+	end
+potentiel 632
+	profile 5
+	x_centre 33.429
+	y_centre 46.933
+	ellipticity 0.093
+	v_disp 114.000
+	z_lens 0.3
+	end
+potentiel 633
+	profile 5
+	x_centre -5.486
+	y_centre 44.600
+	ellipticity 0.039
+	v_disp 124.000
+	z_lens 0.3
+	end
+potentiel 634
+	profile 5
+	x_centre -53.943
+	y_centre -13.333
+	ellipticity 0.129
+	v_disp 121.000
+	z_lens 0.3
+	end
+potentiel 635
+	profile 5
+	x_centre 22.095
+	y_centre -67.667
+	ellipticity 0.039
+	v_disp 115.000
+	z_lens 0.3
+	end
+potentiel 636
+	profile 5
+	x_centre -24.248
+	y_centre -55.378
+	ellipticity 0.009
+	v_disp 126.000
+	z_lens 0.3
+	end
+potentiel 637
+	profile 5
+	x_centre -2.171
+	y_centre 13.822
+	ellipticity 0.141
+	v_disp 113.000
+	z_lens 0.3
+	end
+potentiel 638
+	profile 5
+	x_centre -12.457
+	y_centre -42.822
+	ellipticity 0.138
+	v_disp 112.000
+	z_lens 0.3
+	end
+potentiel 639
+	profile 5
+	x_centre 51.067
+	y_centre 68.733
+	ellipticity 0.048
+	v_disp 126.000
+	z_lens 0.3
+	end
+potentiel 640
+	profile 5
+	x_centre 23.238
+	y_centre -14.978
+	ellipticity 0.069
+	v_disp 118.000
+	z_lens 0.3
+	end
+potentiel 641
+	profile 5
+	x_centre -27.067
+	y_centre 6.511
+	ellipticity 0.024
+	v_disp 126.000
+	z_lens 0.3
+	end
+potentiel 642
+	profile 5
+	x_centre 23.829
+	y_centre 19.178
+	ellipticity 0.021
+	v_disp 123.000
+	z_lens 0.3
+	end
+potentiel 643
+	profile 5
+	x_centre 33.771
+	y_centre -67.422
+	ellipticity 0.123
+	v_disp 129.000
+	z_lens 0.3
+	end
+potentiel 644
+	profile 5
+	x_centre 7.657
+	y_centre -15.556
+	ellipticity 0.057
+	v_disp 110.000
+	z_lens 0.3
+	end
+potentiel 645
+	profile 5
+	x_centre 13.943
+	y_centre 43.067
+	ellipticity 0.060
+	v_disp 130.000
+	z_lens 0.3
+	end
+potentiel 646
+	profile 5
+	x_centre -39.524
+	y_centre 16.422
+	ellipticity 0.063
+	v_disp 122.000
+	z_lens 0.3
+	end
+potentiel 647
+	profile 5
+	x_centre -8.781
+	y_centre 58.022
+	ellipticity 0.027
+	v_disp 120.000
+	z_lens 0.3
+	end
+potentiel 648
+	profile 5
+	x_centre 53.790
+	y_centre 10.489
+	ellipticity 0.084
+	v_disp 130.000
+	z_lens 0.3
+	end
+potentiel 649
+	profile 5
+	x_centre -34.952
+	y_centre 65.222
+	ellipticity 0.000
+	v_disp 120.000
+	z_lens 0.3
+	end
+potentiel 650
+	profile 5
+	x_centre -59.448
+	y_centre -13.978
+	ellipticity 0.135
+	v_disp 121.000
+	z_lens 0.3
+	end
+potentiel 651
+	profile 5
+	x_centre 12.286
+	y_centre -5.889
+	ellipticity 0.057
+	v_disp 129.000
+	z_lens 0.3
+	end
+potentiel 652
+	profile 5
+	x_centre -14.114
+	y_centre 15.333
+	ellipticity 0.114
+	v_disp 113.000
+	z_lens 0.3
+	end
+potentiel 653
+	profile 5
+	x_centre 36.171
+	y_centre 49.711
+	ellipticity 0.012
+	v_disp 129.000
+	z_lens 0.3
+	end
+potentiel 654
+	profile 5
+	x_centre -32.114
+	y_centre 48.222
+	ellipticity 0.063
+	v_disp 117.000
+	z_lens 0.3
+	end
+potentiel 655
+	profile 5
+	x_centre -6.000
+	y_centre -9.378
+	ellipticity 0.147
+	v_disp 123.000
+	z_lens 0.3
+	end
+potentiel 656
+	profile 5
+	x_centre -3.410
+	y_centre 61.578
+	ellipticity 0.147
+	v_disp 112.000
+	z_lens 0.3
+	end
+potentiel 657
+	profile 5
+	x_centre 19.314
+	y_centre -20.289
+	ellipticity 0.135
+	v_disp 121.000
+	z_lens 0.3
+	end
+potentiel 658
+	profile 5
+	x_centre 37.162
+	y_centre 62.911
+	ellipticity 0.012
+	v_disp 119.000
+	z_lens 0.3
+	end
+potentiel 659
+	profile 5
+	x_centre -43.505
+	y_centre -59.600
+	ellipticity 0.021
+	v_disp 124.000
+	z_lens 0.3
+	end
+potentiel 660
+	profile 5
+	x_centre -37.619
+	y_centre 14.133
+	ellipticity 0.015
+	v_disp 123.000
+	z_lens 0.3
+	end
+potentiel 661
+	profile 5
+	x_centre 6.914
+	y_centre -55.244
+	ellipticity 0.150
+	v_disp 113.000
+	z_lens 0.3
+	end
+potentiel 662
+	profile 5
+	x_centre 10.552
+	y_centre 61.511
+	ellipticity 0.015
+	v_disp 123.000
+	z_lens 0.3
+	end
+potentiel 663
+	profile 5
+	x_centre 59.505
+	y_centre -1.356
+	ellipticity 0.012
+	v_disp 113.000
+	z_lens 0.3
+	end
+potentiel 664
+	profile 5
+	x_centre 23.505
+	y_centre -14.378
+	ellipticity 0.018
+	v_disp 124.000
+	z_lens 0.3
+	end
+potentiel 665
+	profile 5
+	x_centre 39.410
+	y_centre -10.578
+	ellipticity 0.075
+	v_disp 114.000
+	z_lens 0.3
+	end
+potentiel 666
+	profile 5
+	x_centre -53.371
+	y_centre -25.600
+	ellipticity 0.102
+	v_disp 117.000
+	z_lens 0.3
+	end
+potentiel 667
+	profile 5
+	x_centre 37.867
+	y_centre -7.911
+	ellipticity 0.051
+	v_disp 113.000
+	z_lens 0.3
+	end
+potentiel 668
+	profile 5
+	x_centre 52.324
+	y_centre 34.089
+	ellipticity 0.063
+	v_disp 113.000
+	z_lens 0.3
+	end
+potentiel 669
+	profile 5
+	x_centre 26.057
+	y_centre 20.956
+	ellipticity 0.102
+	v_disp 113.000
+	z_lens 0.3
+	end
+potentiel 670
+	profile 5
+	x_centre 18.590
+	y_centre 67.400
+	ellipticity 0.027
+	v_disp 127.000
+	z_lens 0.3
+	end
+potentiel 671
+	profile 5
+	x_centre 49.048
+	y_centre 25.956
+	ellipticity 0.117
+	v_disp 127.000
+	z_lens 0.3
+	end
+potentiel 672
+	profile 5
+	x_centre -38.971
+	y_centre -53.956
+	ellipticity 0.138
+	v_disp 122.000
+	z_lens 0.3
+	end
+potentiel 673
+	profile 5
+	x_centre -9.238
+	y_centre -38.289
+	ellipticity 0.129
+	v_disp 113.000
+	z_lens 0.3
+	end
+potentiel 674
+	profile 5
+	x_centre 54.571
+	y_centre 32.822
+	ellipticity 0.081
+	v_disp 125.000
+	z_lens 0.3
+	end
+potentiel 675
+	profile 5
+	x_centre -21.886
+	y_centre -30.378
+	ellipticity 0.045
+	v_disp 111.000
+	z_lens 0.3
+	end
+potentiel 676
+	profile 5
+	x_centre 11.943
+	y_centre 27.733
+	ellipticity 0.075
+	v_disp 120.000
+	z_lens 0.3
+	end
+potentiel 677
+	profile 5
+	x_centre -6.686
+	y_centre -18.111
+	ellipticity 0.093
+	v_disp 126.000
+	z_lens 0.3
+	end
+potentiel 678
+	profile 5
+	x_centre -16.381
+	y_centre -69.622
+	ellipticity 0.066
+	v_disp 130.000
+	z_lens 0.3
+	end
+potentiel 679
+	profile 5
+	x_centre -59.848
+	y_centre -69.022
+	ellipticity 0.045
+	v_disp 128.000
+	z_lens 0.3
+	end
+potentiel 680
+	profile 5
+	x_centre 18.857
+	y_centre 24.956
+	ellipticity 0.021
+	v_disp 125.000
+	z_lens 0.3
+	end
+potentiel 681
+	profile 5
+	x_centre -46.667
+	y_centre 66.689
+	ellipticity 0.087
+	v_disp 124.000
+	z_lens 0.3
+	end
+potentiel 682
+	profile 5
+	x_centre 38.971
+	y_centre -27.400
+	ellipticity 0.027
+	v_disp 127.000
+	z_lens 0.3
+	end
+potentiel 683
+	profile 5
+	x_centre -40.533
+	y_centre 40.844
+	ellipticity 0.141
+	v_disp 117.000
+	z_lens 0.3
+	end
+potentiel 684
+	profile 5
+	x_centre 27.581
+	y_centre -12.356
+	ellipticity 0.141
+	v_disp 125.000
+	z_lens 0.3
+	end
+potentiel 685
+	profile 5
+	x_centre 29.810
+	y_centre 5.644
+	ellipticity 0.054
+	v_disp 126.000
+	z_lens 0.3
+	end
+potentiel 686
+	profile 5
+	x_centre -19.505
+	y_centre -11.356
+	ellipticity 0.057
+	v_disp 118.000
+	z_lens 0.3
+	end
+potentiel 687
+	profile 5
+	x_centre -31.562
+	y_centre 49.622
+	ellipticity 0.075
+	v_disp 121.000
+	z_lens 0.3
+	end
+potentiel 688
+	profile 5
+	x_centre 0.705
+	y_centre -69.267
+	ellipticity 0.087
+	v_disp 111.000
+	z_lens 0.3
+	end
+potentiel 689
+	profile 5
+	x_centre -30.190
+	y_centre -11.356
+	ellipticity 0.117
+	v_disp 113.000
+	z_lens 0.3
+	end
+potentiel 690
+	profile 5
+	x_centre -26.514
+	y_centre -59.267
+	ellipticity 0.009
+	v_disp 126.000
+	z_lens 0.3
+	end
+potentiel 691
+	profile 5
+	x_centre -52.971
+	y_centre -15.911
+	ellipticity 0.147
+	v_disp 126.000
+	z_lens 0.3
+	end
+potentiel 692
+	profile 5
+	x_centre 54.914
+	y_centre 47.067
+	ellipticity 0.030
+	v_disp 116.000
+	z_lens 0.3
+	end
+potentiel 693
+	profile 5
+	x_centre -29.314
+	y_centre -41.978
+	ellipticity 0.078
+	v_disp 116.000
+	z_lens 0.3
+	end
+potentiel 694
+	profile 5
+	x_centre 26.267
+	y_centre -7.311
+	ellipticity 0.018
+	v_disp 124.000
+	z_lens 0.3
+	end
+potentiel 695
+	profile 5
+	x_centre 0.305
+	y_centre 41.889
+	ellipticity 0.141
+	v_disp 110.000
+	z_lens 0.3
+	end
+potentiel 696
+	profile 5
+	x_centre -2.076
+	y_centre -44.489
+	ellipticity 0.069
+	v_disp 116.000
+	z_lens 0.3
+	end
+potentiel 697
+	profile 5
+	x_centre -19.486
+	y_centre -20.378
+	ellipticity 0.060
+	v_disp 119.000
+	z_lens 0.3
+	end
+potentiel 698
+	profile 5
+	x_centre 12.552
+	y_centre 58.933
+	ellipticity 0.147
+	v_disp 129.000
+	z_lens 0.3
+	end
+potentiel 699
+	profile 5
+	x_centre 1.562
+	y_centre -18.867
+	ellipticity 0.036
+	v_disp 120.000
+	z_lens 0.3
+	end
+potentiel 700
+	profile 5
+	x_centre -42.057
+	y_centre 6.733
+	ellipticity 0.006
+	v_disp 118.000
+	z_lens 0.3
+	end
+finish
