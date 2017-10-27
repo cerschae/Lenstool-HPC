@@ -379,6 +379,7 @@ int main(int argc, char *argv[])
 	int Nstat = 1;
 	for(int ii = 0; ii < Nstat; ++ii) {
 		gradient_grid_CPU(grid_gradient_x_cpu, grid_gradient_y_cpu, &frame, &lenses_SOA, runmode.nhalos, grid_dim);
+		//gradient_grid_CPU_print(grid_gradient_x_cpu, grid_gradient_y_cpu, &frame, &lenses_SOA, runmode.nhalos, grid_dim);
 		}
 	t_1 += myseconds();
 	//

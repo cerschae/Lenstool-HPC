@@ -1,4 +1,5 @@
 #include <iostream>
+#include <iomanip>
 #include <string.h>
 //#include <cuda_runtime.h>
 #include <math.h>
@@ -214,7 +215,7 @@ struct point module_potentialDerivatives_totalGradient_5_SOA(const struct point 
 		struct point true_coord, true_coord_rotation;
 		//
 		true_coord.x = pImage->x - lens->position_x[i];
-                true_coord.y = pImage->y - lens->position_y[i];
+		true_coord.y = pImage->y - lens->position_y[i];
 		//
 		true_coord_rotation = rotateCoordinateSystem(true_coord, lens->ellipticity_angle[i]);
 		type_t ell_pot = lens->ellipticity_potential[i];
@@ -245,31 +246,132 @@ struct point module_potentialDerivatives_totalGradient_5_SOA_v2(const struct poi
         grad.y = 0;
         for(int i = shalos; i < shalos + nhalos; i++)
         {
-                //
-                struct point true_coord, true_coord_rotation;
-                //
-                true_coord.x = pImage->x - lens->position_x[i];
-                true_coord.y = pImage->y - lens->position_y[i];
-                //
-                //true_coord_rotation = rotateCoordinateSystem(true_coord, lens->ellipticity_angle[i]);
-		type_t cose = lens->anglecos[i];
-                type_t sine = lens->anglesin[i];
 		//
-		type_t x = true_coord.x*cose + true_coord.y*sine;
-                type_t y = true_coord.y*cose - true_coord.x*sine;
-		//
-		type_t ell_pot = lens->ellipticity_potential[i];
-		//
-		type_t R = sqrt(x*x*(1 - ell_pot) + y*y*(1 + ell_pot));
-		//
-		result.x = (1 - ell_pot)*lens->b0[i]*x/R;
-                result.y = (1 + ell_pot)*lens->b0[i]*y/R;
-                //
-                grad.x += result.x*cose - result.y*sine; 
-                grad.y += result.y*cose + result.x*sine; 
+			struct point true_coord, true_coord_rotation;
+			//
+			true_coord.x = pImage->x - lens->position_x[i];
+			true_coord.y = pImage->y - lens->position_y[i];
+			//
+			//true_coord_rotation = rotateCoordinateSystem(true_coord, lens->ellipticity_angle[i]);
+			type_t cose = lens->anglecos[i];
+			type_t sine = lens->anglesin[i];
+			//
+			type_t x = true_coord.x*cose + true_coord.y*sine;
+			type_t y = true_coord.y*cose - true_coord.x*sine;
+			//
+			type_t ell_pot = lens->ellipticity_potential[i];
+			//
+			type_t R = sqrt(x*x*(1 - ell_pot) + y*y*(1 + ell_pot));
+			//
+			result.x = (1 - ell_pot)*lens->b0[i]*x/R;
+			result.y = (1 + ell_pot)*lens->b0[i]*y/R;
+			//
+			grad.x += result.x*cose - result.y*sine;
+			grad.y += result.y*cose + result.x*sine;
         }
         return grad;
 }
+
+struct point module_potentialDerivatives_totalGradient_5_SOA_print(const struct point *pImage, const struct Potential_SOA *lens, int shalos, int nhalos, int index)
+{
+        asm volatile("# module_potentialDerivatives_totalGradient_SIS_SOA_v2 begins");
+        //printf("# module_potentialDerivatives_totalGradient_SIS_SOA_v2 begins\n");
+        //
+        struct point grad, result;
+    	std::ofstream myfile;
+        grad.x = 0;
+        grad.y = 0;
+
+#ifdef _double
+        std::string name = "Double_";
+#else
+        std::string name = "Float_";
+#endif
+
+        for(int i = shalos; i < shalos + nhalos; i++)
+        {
+		//
+			struct point true_coord, true_coord_rotation;
+			//
+			true_coord.x = pImage->x - lens->position_x[i];
+			true_coord.y = pImage->y - lens->position_y[i];
+			////
+        	myfile.open (name + "pImage->x_1.txt", std::ios_base::app);
+        	myfile << index << " " << pImage->x << std::setprecision(7)  << " " << std::endl;
+        	myfile.close();
+        	/**
+        	myfile.open (name + "pImage->y_1.txt", std::ios_base::app);
+        	myfile << index << " " << pImage->y << std::setprecision(7)  << " " << std::endl;
+        	myfile.close();
+        	*/
+        	myfile.open (name + "true_coord.x_2.txt", std::ios_base::app);
+        	myfile << index << " " << true_coord.x << std::setprecision(7)  << " " << std::endl;
+        	myfile.close();
+        	/*
+        	myfile.open (name + "true_coord.y_2.txt", std::ios_base::app);
+        	myfile << index << " " << true_coord.y << std::setprecision(7)  << " " << std::endl;
+        	myfile.close();
+			*///
+			type_t cose = lens->anglecos[i];
+			type_t sine = lens->anglesin[i];
+			////
+        	myfile.open (name + "lens->anglecos[i]_3.txt", std::ios_base::app);
+        	myfile << index << " " << lens->anglecos[i] << std::setprecision(7)  << " " << std::endl;
+        	myfile.close();
+        	//
+        	myfile.open (name + "lens->anglesin[i]_3.txt", std::ios_base::app);
+        	myfile << index << " " << lens->anglesin[i] << std::setprecision(7)  << " " << std::endl;
+        	myfile.close();
+			////
+			type_t x = true_coord.x*cose + true_coord.y*sine;
+			type_t y = true_coord.y*cose - true_coord.x*sine;
+			////
+        	myfile.open (name + "x_4.txt", std::ios_base::app);
+        	myfile << index << " " << x << std::setprecision(7)  << " " << std::endl;
+        	myfile.close();
+        	/*
+        	myfile.open (name + "y_4.txt", std::ios_base::app);
+        	myfile << index << " " << y << std::setprecision(7)  << " " << std::endl;
+        	myfile.close();
+        	*////
+			type_t ell_pot = lens->ellipticity_potential[i];
+			//
+			type_t R = sqrt(x*x*(1 - ell_pot) + y*y*(1 + ell_pot));
+			//
+			result.x = (1 - ell_pot)*lens->b0[i]*x/R;
+			result.y = (1 + ell_pot)*lens->b0[i]*y/R;
+			////
+        	myfile.open (name + "ell_pot_5.txt", std::ios_base::app);
+        	myfile << index << " " << ell_pot << std::setprecision(7)  << " " << std::endl;
+        	myfile.close();
+        	//
+        	myfile.open (name + "R_5.txt", std::ios_base::app);
+        	myfile << index << " " << R << std::setprecision(7)  << " " << std::endl;
+        	myfile.close();
+        	myfile.open (name + "x_6.txt", std::ios_base::app);
+        	myfile << index << " " << x << std::setprecision(7)  << " " << std::endl;
+        	myfile.close();
+        	/*
+        	myfile.open (name + "y_6.txt", std::ios_base::app);
+        	myfile << index << " " << y << std::setprecision(7)  << " " << std::endl;
+        	myfile.close();
+        	*///
+			grad.x += result.x*cose - result.y*sine;
+			grad.y += result.y*cose + result.x*sine;
+			////
+        	myfile.open (name + "grad.x_7.txt", std::ios_base::app);
+        	myfile << index << " " << grad.x << std::setprecision(7)  << " " << std::endl;
+        	myfile.close();
+        	/*
+        	myfile.open (name + "grad.y_7.txt", std::ios_base::app);
+        	myfile << index << " " << grad.y << std::setprecision(7)  << " " << std::endl;
+        	myfile.close();
+			*////
+        }
+        return grad;
+}
+
+
 //
 //
 //
