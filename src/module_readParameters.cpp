@@ -21,6 +21,7 @@
 #include <fstream>
 #include <cmath>
 #include "module_readParameters.hpp"
+#include <iomanip>
 
 
 
@@ -1281,6 +1282,7 @@ std::ifstream IN(infile.c_str(), std::ios::in);
 		 !strcmp(second.c_str(), "x_center") )
         {
             ilens->position.x=atof(third.c_str());
+            std::cout << "PositionX : " << std::setprecision(15) << ilens->position.x << std::endl;
         }
         else if (!strcmp(second.c_str(), "y_centre") ||  // Get y center
 		 !strcmp(second.c_str(), "y_center") )
@@ -2894,12 +2896,14 @@ std::ifstream IN(infile.c_str(), std::ios::in);
         else if (!strcmp(second.c_str(), "name"))    // Get name of lens
         {
             sscanf(third.c_str(),"%s",ilens->name);
+
         }
 
         else if (!strcmp(second.c_str(), "x_centre") ||  // Get x center
 		 !strcmp(second.c_str(), "x_center") )
         {
             ilens->position.x=atof(third.c_str());
+            std::cout << "PositionX : " << std::setprecision(15) << ilens->position.x << std::endl;
         }
         else if (!strcmp(second.c_str(), "y_centre") ||  // Get y center
 		 !strcmp(second.c_str(), "y_center") )

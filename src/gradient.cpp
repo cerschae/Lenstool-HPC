@@ -268,6 +268,9 @@ struct point module_potentialDerivatives_totalGradient_5_SOA_v2(const struct poi
 			//
 			grad.x += result.x*cose - result.y*sine;
 			grad.y += result.y*cose + result.x*sine;
+
+			grad.x = x/R;
+			grad.y = y/R;
         }
         return grad;
 }
@@ -296,6 +299,7 @@ struct point module_potentialDerivatives_totalGradient_5_SOA_print(const struct 
 			true_coord.x = pImage->x - lens->position_x[i];
 			true_coord.y = pImage->y - lens->position_y[i];
 			////
+			/*
         	myfile.open (name + "pImage->x_1.txt", std::ios_base::app);
         	myfile << index << " " << pImage->x << std::setprecision(7)  << " " << std::endl;
         	myfile.close();
@@ -304,6 +308,7 @@ struct point module_potentialDerivatives_totalGradient_5_SOA_print(const struct 
         	myfile << index << " " << pImage->y << std::setprecision(7)  << " " << std::endl;
         	myfile.close();
         	*/
+			/*
         	myfile.open (name + "true_coord.x_2.txt", std::ios_base::app);
         	myfile << index << " " << true_coord.x << std::setprecision(7)  << " " << std::endl;
         	myfile.close();
@@ -315,6 +320,7 @@ struct point module_potentialDerivatives_totalGradient_5_SOA_print(const struct 
 			type_t cose = lens->anglecos[i];
 			type_t sine = lens->anglesin[i];
 			////
+
         	myfile.open (name + "lens->anglecos[i]_3.txt", std::ios_base::app);
         	myfile << index << " " << lens->anglecos[i] << std::setprecision(7)  << " " << std::endl;
         	myfile.close();
@@ -326,6 +332,7 @@ struct point module_potentialDerivatives_totalGradient_5_SOA_print(const struct 
 			type_t x = true_coord.x*cose + true_coord.y*sine;
 			type_t y = true_coord.y*cose - true_coord.x*sine;
 			////
+			/*
         	myfile.open (name + "x_4.txt", std::ios_base::app);
         	myfile << index << " " << x << std::setprecision(7)  << " " << std::endl;
         	myfile.close();
@@ -341,6 +348,7 @@ struct point module_potentialDerivatives_totalGradient_5_SOA_print(const struct 
 			result.x = (1 - ell_pot)*lens->b0[i]*x/R;
 			result.y = (1 + ell_pot)*lens->b0[i]*y/R;
 			////
+			/*
         	myfile.open (name + "ell_pot_5.txt", std::ios_base::app);
         	myfile << index << " " << ell_pot << std::setprecision(7)  << " " << std::endl;
         	myfile.close();
@@ -359,6 +367,7 @@ struct point module_potentialDerivatives_totalGradient_5_SOA_print(const struct 
 			grad.x += result.x*cose - result.y*sine;
 			grad.y += result.y*cose + result.x*sine;
 			////
+			/*
         	myfile.open (name + "grad.x_7.txt", std::ios_base::app);
         	myfile << index << " " << grad.x << std::setprecision(7)  << " " << std::endl;
         	myfile.close();

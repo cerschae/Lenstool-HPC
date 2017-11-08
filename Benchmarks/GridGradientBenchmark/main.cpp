@@ -536,13 +536,13 @@ int main(int argc, char *argv[])
 
 #if 1
 		std::cout << " CPUTEST " << std::endl;
-		myfile.open ("lenstoolCPU_grid_x.txt");
+		myfile.open ("Float_x_R_XMIN0.txt");
 		for (int ii = 0; ii < grid_dim*grid_dim; ++ii)
 		{
 			myfile << ii << " " << grid_gradient_x_cpu[ii]<< std::setprecision(15)  << " " << std::endl;
 		}
 		myfile.close();
-		myfile.open ("lenstoolCPU_grid_y.txt");
+		myfile.open ("Float_y_R_XMIN0.txt");
 		for (int ii = 0; ii < grid_dim*grid_dim; ++ii)
 		{
 			myfile << ii << " " << grid_gradient_y_cpu[ii]<< std::setprecision(15)  << " " << std::endl;
@@ -550,15 +550,15 @@ int main(int argc, char *argv[])
 		myfile.close();
 #endif
 
-#if 1
+#if 0
 		std::cout << " GPUTEST " << std::endl;
-		myfile.open ("lenstoolGPU_grid_x.txt");
+		myfile.open ("Float_true_coord.x_2.txt");
 		for (int ii = 0; ii < grid_dim*grid_dim; ++ii)
 		{
 			myfile << ii << " " << grid_gradient_x_gpu[ii]<< std::setprecision(15)  << " " << std::endl;
 		}
 		myfile.close();
-		myfile.open ("lenstoolGPU_grid_y.txt");
+		myfile.open ("Float_x_4.txt");
 		for (int ii = 0; ii < grid_dim*grid_dim; ++ii)
 		{
 			myfile << ii << " " << grid_gradient_y_gpu[ii]<< std::setprecision(15)  << " " << std::endl;
