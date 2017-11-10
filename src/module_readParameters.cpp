@@ -223,195 +223,92 @@ void read_runmode(std::istream &IN, struct runmode_param *runmode){
 
 }
 
-void module_readParameters_readRunmode(std::string infile, struct runmode_param *runmode)
-{
-
+void read_runmode_potential(std::istream &IN, int &numberPotentials){
 	std::string  first, second, third, fourth, fifth, line1, line2;
-	int Nsis(0), Npiemd(0);
-	/// Set default values
 
-	runmode->nbgridcells = 1000;
-	runmode->source = 0;
-	runmode->image = 0;
-	runmode->imagefile = "Empty";
-	runmode->multi = 0;
-	runmode->mass = 0;
-	runmode->mass_gridcells = 1000;
-	runmode->z_mass = 0.4;
-	runmode->z_mass_s = 0.8;
-	runmode->potential = 0;
-	runmode->pot_gridcells = 1000;
-	runmode->potfile = 0; //weird seg fault due to this line, haven't figured out why
-	runmode->npotfile = 0;
-	runmode->z_pot = 0.8;
-	runmode->dpl = 0;
-	runmode->dpl_gridcells = 1000;
-	runmode->z_dpl = 0.8;
-	runmode->inverse = 0;
-	runmode->arclet = 0;
-	runmode->debug = 0;
-	runmode->nimagestot = 0;
-	runmode->nsets = 0;
-	runmode->gridcells = 1000;
-	runmode->cline = 0;
-	runmode->time = 0;
+	numberPotentials += 1;
+	std::getline(IN,line2);
+	std::istringstream read2(line2);
+	double z(0);
+	read2 >> second >> third;
+	//std::cout << second  << third << std::endl;
+	while (strncmp(second.c_str(), "end", 3))    // Read until we reach end
+	{
+		if (!strcmp(second.c_str(), "z_lens"))  // Get redshift
+		{
+			z=atof(third.c_str());
+		}
+		// Read the next line
+		std::getline(IN,line2);
+		std::istringstream read2(line2);
+		read2 >> second >> third;
+	}
+	// Check if redshift from current halo was initialized
+	if ( z == 0. )
+		{
+			fprintf(stderr, "ERROR: A redshift is not defined for a potential \n");
+			exit(-1);
+		}
+}
 
-	int j=0;
-	std::string imageFile_name;
-	int imageIndex=0;
-	int numberPotentials=0, numberLimits=0;
+void read_runmode_image(std::istream &IN, struct runmode_param *runmode){
+	std::string  first, second, third, fourth, fifth, line1, line2;
 
-/*************************** read nhalos, imfile_name, pixel_size, multipleimagesarea_size and runmode from configuration file *********************/
+    std::getline(IN,line2);
+ 	std::istringstream read2(line2);
+ 	double z(0);
+ 	read2 >> second >> third;
+ 	while (strncmp(second.c_str(), "end", 3))    // Read until we reach end
+		{
+			if ( !strcmp(second.c_str(), "multfile") )
+			{
+				char filename[FILENAME_SIZE];
+				sscanf(line2.c_str(), " %*s %d %s ", &runmode->multi, &filename);
+				runmode->imagefile = filename;
+			}
+			//std::cout << runmode->multi << runmode->imagefile << std::endl;
+			// Read the next line
+			std::getline(IN,line2);
+			std::istringstream read2(line2);
+			read2 >> second >> third;
+		}
+}
 
-std::ifstream IN(infile.c_str(), std::ios::in);
-    if ( IN )
-    {
-	std::getline(IN,line1);
-	std::istringstream read1(line1); // create a stream for the line
-	read1 >> first;  // Read the first word
-	//std::cout<<first;
-        while(  strncmp(first.c_str(), "fini",4) != 0  )    // Continue until we reach finish
-        {
-        	//std::cout<<first;
-        	//printf(first.c_str());
-			if ( strncmp(first.c_str(), "runmode", 7) == 0){    // Read in runmode information
-				read_runmode(IN,runmode);
-		    }
+void read_runmode_potfile(std::istream &IN, struct runmode_param *runmode){
+	std::string  first, second, third, fourth, fifth, line1, line2;
 
+    runmode->potfile = 1;
 
-			else if (!strncmp(first.c_str(), "potent", 6)) // each time we find a "potential" string in the configuration file, we add an halo
-            {
-                numberPotentials++;
-                std::getline(IN,line2);
-            	std::istringstream read2(line2);
-            	double z(0);
-            	read2 >> second >> third;
-            	//std::cout << second  << third << std::endl;
-            	if (strcmp(second.c_str(), "end") == 0)  // Move to next potential and initialize it
-                {
-           	    if ( z == 0. )  // Check if redshift from current halo was initialized
-                    {
-                        fprintf(stderr, "ERROR: A redshift is not defined for a potential \n");
-                        exit(-1);
-                    }
+    std::getline(IN,line2);
+	std::istringstream read2(line2);
+	read2 >> second >> third >> fourth;    // Read in 4 words
+	while (strncmp(second.c_str(), "end", 3))    // Read until we reach end
+	{
 
-                    break; // Break while loop and move to next potential
+	if ( !strcmp(second.c_str(), "filein") )
+	{
+		//std::cerr<< third << " " << fourth << " " << runmode->potfilename << std::endl;
+		runmode->potfilename = fourth;
+		//std::cerr<< line2 << runmode->potfilename;
+		break;
 
-                }
+	}
+	// Read the next line
+	std::getline(IN,line2);
+	std::istringstream read2(line2);
+	read2 >> second >> third;
+	}
+}
 
-         	// Read in values
-
-                if ( !strcmp(second.c_str(), "profil") ||  // Get profile
-                     !strcmp(second.c_str(), "profile") )
-                {
-        		if(!strcmp(third.c_str(), "SIE") ||
-        		   !strcmp(third.c_str(), "5") )
-        		{
-        			Nsis += 1;
-        		}
-        		if(!strcmp(third.c_str(), "8") )
-        		{
-        			Npiemd += 1;
-        		}
-                }
-                else if (!strcmp(second.c_str(), "z_lens"))  // Get redshift
-                {
-
-                    z=atof(third.c_str());
-                }
-            }
-            else if (!strncmp(first.c_str(), "image", 5)) // same for the limit of the potential
-            {
-                std::getline(IN,line2);
-            	std::istringstream read2(line2);
-            	double z(0);
-            	read2 >> second >> third;
-            	while (strncmp(second.c_str(), "end", 3))    // Read until we reach end
-				{
-					if ( !strcmp(second.c_str(), "multfile") )
-					{
-						char filename[FILENAME_SIZE];
-	            		sscanf(line2.c_str(), " %*s %d %s ", &runmode->multi, &filename);
-	            		runmode->imagefile = filename;
-					}
-					//std::cout << runmode->multi << runmode->imagefile << std::endl;
-					// Read the next line
-					std::getline(IN,line2);
-					std::istringstream read2(line2);
-					read2 >> second >> third;
-				}
-            }
-            else if (!strncmp(first.c_str(), "limit", 5)) // same for the limit of the potential
-            {
-                numberLimits++;
-            }
-            else if (!strncmp(first.c_str(), "cline", 5))
-            {
-                runmode->cline = 1;
-            }
-			/*
-            else if (!strncmp(first.c_str(), "potfile", 7))
-            {
-                runmode->potfile = 0;
-                std::getline(IN,line2);
-				std::istringstream read2(line2);
-				read2 >> second >> third >> fourth;    // Read in 4 words
-				while (strncmp(second.c_str(), "end", 3))    // Read until we reach end
-				{
-				if ( !strcmp(second.c_str(), "filein") )
-				{
-					runmode->potfilename = fourth;
-					std::cerr<< line2 << runmode->potfilename;
-					break;
-
-				}
-				// Read the next line
-				std::getline(IN,line2);
-				std::istringstream read2(line2);
-				read2 >> second >> third;
-				}
-            }*/
-
-
-	    // read the next line
-	    std::getline(IN,line1);
-	    std::istringstream read1(line1);
-	    read1 >> first;
-	    //std::cout<<first;
-        }
-
-        IN.close();
-	
-        //if(numberLimits!=numberPotentials) printf("Warning : Number of clumps different than number of limits in %s\n", infile.c_str()); // must be limits for each halo
-	runmode->nhalos=numberPotentials;
-    }
-    else
-    {
-        fprintf(stderr, "ERROR: file %s not found\n", infile.c_str());
-        exit(-1);
-    }
-
-
-
-/******************************** read nset and nimagestot from imfile_name **********************/
-/* the images file must contain
-	1 x_center y_center a b theta redshift
-	1    .        .     . .   .       .
-	1
-	2
-	2
-	2
-	2
-	2
-   So here we have 3 images in the first set of images, 5 in the second, and 8 images in total
-*/
-
-	/*TODO ImageFile_name is a crude method of getting the image information. Rethink it.*/
+void read_runmode_countimages(struct runmode_param *runmode){
+	std::string line2;
 	int old_j = 0;
+	int j = 0;
+	int imageIndex = 0;
 
 	if (runmode->image == 1 or runmode->inverse == 1 or runmode->time >= 1 or runmode->multi >= 1){
 
-		imageFile_name = runmode->imagefile;
+		std::string imageFile_name = runmode->imagefile;
 		std::ifstream IM(imageFile_name.c_str(), std::ios::in);
 
 		if ( IM )
@@ -422,7 +319,7 @@ std::ifstream IN(infile.c_str(), std::ios::in);
 				continue;
 			}
 			else{
-				j=atoi(line2.c_str());
+				int j=atoi(line2.c_str());
 				if(j != old_j){				//If a new set has been reached, increase the nset iterator and update old j
 					runmode->nsets +=1;
 					old_j = j;
@@ -432,19 +329,23 @@ std::ifstream IN(infile.c_str(), std::ios::in);
 			}
 		}
 		else{
-			
+
 			fprintf(stderr, "ERROR: file %s not found\n", imageFile_name.c_str());
 			exit(-1);
 		}
-        
+
 	runmode->nimagestot=imageIndex;
 	IM.close();
 	}
-	
-	if (runmode->source == 1){
+}
+
+void read_runmode_countsources(struct runmode_param *runmode){
+	std::string  imageFile_name,line1, line2;
+
+	if (runmode->source == 1 and runmode->image == 0 and runmode->multi == 0 ){
 		imageFile_name = runmode->sourfile;
 		//printf("Source to image mode activated\n");
-	
+
 	std::ifstream IM(imageFile_name.c_str(), std::ios::in);
 	//printf(" Booo says hello again \n");
     	if ( IM ){
@@ -455,15 +356,19 @@ std::ifstream IN(infile.c_str(), std::ios::in);
 			runmode->nsets = i ;
 	    	}
 		else{
-			
+
 			fprintf(stderr, "ERROR: file %s not found\n", imageFile_name.c_str());
 			exit(-1);
 		}
-        
-	runmode->nimagestot=imageIndex;	// Important 
+
+	runmode->nimagestot= 0;	// Important
 	IM.close();
-	
+
 	}
+}
+
+void read_runmode_countpotfile(struct runmode_param *runmode){
+	std::string  imageFile_name,line1, line2;
 
 	if (runmode->potfile == 1){
 			imageFile_name = runmode->potfilename;
@@ -489,9 +394,117 @@ std::ifstream IN(infile.c_str(), std::ios::in);
 		IM.close();
 
 		}
+}
 
 
-std::cerr <<"nsets: " <<runmode->nsets <<" nhalos: " << runmode->nhalos << " nimagestot: " << runmode->nimagestot << " npotfile: " << runmode->npotfile<< std::endl;
+void module_readParameters_readRunmode(std::string infile, struct runmode_param *runmode)
+{
+
+	std::string  first, second, third, fourth, fifth, line1, line2;
+	int Nsis(0), Npiemd(0);
+	/// Set default values
+
+	runmode->nbgridcells = 1000;
+	runmode->source = 0;
+	runmode->image = 0;
+	runmode->imagefile = "Empty";
+	//std::cerr << runmode->imagefile <<std::endl;
+	runmode->multi = 0;
+	runmode->mass = 0;
+	runmode->mass_gridcells = 1000;
+	runmode->z_mass = 0.4;
+	runmode->z_mass_s = 0.8;
+	runmode->potential = 0;
+	runmode->pot_gridcells = 1000;
+	runmode->potfile = 0; //weird seg fault due to this line, haven't figured out why
+	runmode->npotfile = 0;
+	runmode->potfilename = "Empty";
+	//std::cerr << runmode->potfilename <<std::endl;
+	runmode->z_pot = 0.8;
+	runmode->dpl = 0;
+	runmode->dpl_gridcells = 1000;
+	runmode->z_dpl = 0.8;
+	runmode->inverse = 0;
+	runmode->arclet = 0;
+	runmode->debug = 0;
+	runmode->nimagestot = 0;
+	runmode->nsets = 0;
+	runmode->gridcells = 1000;
+	runmode->cline = 0;
+	runmode->time = 0;
+	//std::cerr << "1" <<std::endl;
+	int j=0;
+	std::string imageFile_name;
+	int imageIndex=0;
+	int numberPotentials=0, numberLimits=0;
+
+/*************************** read nhalos, imfile_name, pixel_size, multipleimagesarea_size and runmode from configuration file *********************/
+
+std::ifstream IN(infile.c_str(), std::ios::in);
+    if ( IN )
+    {
+	std::getline(IN,line1);
+	std::istringstream read1(line1); // create a stream for the line
+	read1 >> first;  // Read the first word
+	//std::cout<<first;
+        while(  strncmp(first.c_str(), "fini",4) != 0  )    // Continue until we reach finish
+        {
+			if ( strncmp(first.c_str(), "runmode", 7) == 0){    // Read in runmode information
+				read_runmode(IN,runmode);
+		    }
+			else if (!strncmp(first.c_str(), "potent", 6)) // each time we find a "potential" string in the configuration file, we add an halo
+            {
+				read_runmode_potential(IN,numberPotentials);
+				//std::cerr<<numberPotentials << std::endl;
+            }
+            else if (!strncmp(first.c_str(), "image", 5)) // same for the limit of the potential
+            {
+            	read_runmode_image(IN,runmode);
+            }
+            else if (!strncmp(first.c_str(), "limit", 5)) // same for the limit of the potential
+            {
+                numberLimits++;
+            }
+            else if (!strncmp(first.c_str(), "cline", 5))
+            {
+                runmode->cline = 1;
+            }
+
+            else if (!strncmp(first.c_str(), "potfile", 7))
+            {
+            	read_runmode_potfile(IN,runmode);
+            }
+
+
+	    // read the next line
+	    std::getline(IN,line1);
+	    std::istringstream read1(line1);
+	    read1 >> first;
+	    //std::cout<<first;
+        }
+
+        IN.close();
+	
+        //if(numberLimits!=numberPotentials) printf("Warning : Number of clumps different than number of limits in %s\n", infile.c_str()); // must be limits for each halo
+	runmode->nhalos=numberPotentials;
+    }
+    else
+    {
+        fprintf(stderr, "ERROR: file %s not found\n", infile.c_str());
+        exit(-1);
+    }
+
+    //
+    //getting nimage value (number of images), nset value (number of sources) and npotfile
+    //if image or multi mode is activated get nimage and nset
+    read_runmode_countimages(runmode);
+	//if source mode is activated, get nset
+    read_runmode_countsources(runmode);
+    //if potfile mode, count number of potential in potfile
+    read_runmode_countpotfile(runmode);
+
+
+std::cerr <<"nsets: " <<runmode->nsets <<" nhalos: " << runmode->nhalos << " nimagestot: " << runmode->nimagestot << " npotfile: " << runmode->npotfile << " multi: " << runmode->multi<< std::endl;
 
 }
 

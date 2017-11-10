@@ -27,7 +27,7 @@
 
 
 
-// Function (Master) declarations: Call Slave functions for reading
+////Function (Master) declarations: Call Slave functions for reading
 void module_readParameters_readCosmology(std::string infile, cosmo_param &Cosmology);
 void module_readParameters_readRunmode(std::string infile, struct runmode_param *Runmode_param);
 void module_readParameters_readImages(const struct runmode_param *runmode, galaxy image[], int nImagesSet[]);
@@ -47,8 +47,16 @@ void module_readParameters_readpotfiles_param(std::string infile, potfile_param 
 void module_readParameters_readpotfiles(const runmode_param *runmode, potfile_param *potfile, Potential *lens);
 
 
-//Function (Slave) declarations
+////Function (Slave) declarations
+//for read_Runmode
 void read_runmode(std::istream &IN, struct runmode_param *runmode);
+void read_runmode_potential(std::istream &IN, int &numberPotentials);
+void read_runmode_image(std::istream &IN, struct runmode_param *runmode);
+void read_runmode_potfile(std::istream &IN, struct runmode_param *runmode);
+void read_runmode_countimages(struct runmode_param *runmode);
+void read_runmode_countsources(struct runmode_param *runmode);
+void read_runmode_countpotfile(struct runmode_param *runmode);
+
 
 //Debug and printing functions
 void module_readParameters_debug_cosmology(int DEBUG, cosmo_param cosmology);

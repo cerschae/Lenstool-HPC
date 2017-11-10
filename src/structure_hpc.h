@@ -347,6 +347,7 @@ struct runmode_param
 	//Image Mode
 	int     image;
 	std::string    imagefile;
+	std::string		potfilename;
 	int		nimagestot;
 	//Mult Mode
 	int     multi;
@@ -363,7 +364,6 @@ struct runmode_param
 	//Potfile Mode
 	int		potfile;
 	int		npotfile;
-	std::string		potfilename;
 	//displacement Mode
 	int		dpl;
 	int		dpl_gridcells;
