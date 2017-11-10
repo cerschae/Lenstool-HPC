@@ -348,6 +348,8 @@ struct runmode_param
 	int     image;
 	std::string    imagefile;
 	int		nimagestot;
+	//Mult Mode
+	int     multi;
 	//Mass Mode
 	int		mass;
 	int		mass_gridcells;

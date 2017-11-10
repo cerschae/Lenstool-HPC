@@ -66,7 +66,7 @@ void module_readParameters_readCosmology(std::string infile, cosmo_param &Cosmol
 	std::getline(IN,line1);
 	std::istringstream read1(line1); // create a stream for the line
 	read1 >> first;
-	while(strncmp(first.c_str(), "finish",6) != 0) // read line by line until finish is reached
+	while(strncmp(first.c_str(), "fini",4) != 0 ) // read line by line until finish is reached
         {
             if ( strncmp(first.c_str(), "cosmolog", 8) == 0){ // if the line contains information about cosmology
 
@@ -152,25 +152,98 @@ void module_readParameters_readCosmology(std::string infile, cosmo_param &Cosmol
 * @param runmode runmode parameter
 */
 
+void read_runmode(std::istream &IN, struct runmode_param *runmode){
+	std::string  first, second, third, fourth, fifth, line1, line2;
+	std::getline(IN,line2);
+					std::istringstream read2(line2);
+					read2 >> second >> third >> fourth;    // Read in 4 words
+		    		while (strncmp(second.c_str(), "end", 3))    // Read until we reach end
+		    		{
+						if ( !strcmp(second.c_str(), "nbgridcells") )
+		        		{
+							sscanf(line2.c_str(), " %*s %d ", &runmode->nbgridcells);
+		        		}
+
+		        		if ( !strcmp(second.c_str(), "source") )
+		        		{
+							char filename[FILENAME_SIZE];
+		            		sscanf(line2.c_str(), " %*s %d %s ", &runmode->source, &filename);
+		            		runmode->sourfile = filename;
+		        		}
+
+						if ( !strcmp(second.c_str(), "image") )
+		        		{
+							char filename[FILENAME_SIZE];
+		            		sscanf(line2.c_str(), " %*s %d %s ", &runmode->image, &filename);
+		            		runmode->imagefile = filename;
+		        		}
+		        		if ( !strcmp(second.c_str(), "inverse") )
+		        		{
+							sscanf(line2.c_str(), " %*s %d ", &runmode->inverse);
+		        		}
+		        		if ( !strcmp(second.c_str(), "mass") )
+		        		{
+							sscanf(line2.c_str(), " %*s %d %d %lf %lf", &runmode->mass, &runmode->mass_gridcells, &runmode->z_mass, &runmode->z_mass_s);
+		        		}
+		        		if ( !strcmp(second.c_str(), "poten") )
+		        		{
+							sscanf(line2.c_str(), " %*s %d %d %lf", &runmode->potential, &runmode->pot_gridcells, &runmode->z_pot);
+		        		}
+		        		if ( !strcmp(second.c_str(), "dpl") )
+		        		{
+							sscanf(line2.c_str(), " %*s %d %d %lf", &runmode->dpl, &runmode->dpl_gridcells, &runmode->z_dpl);
+		        		}
+		        		if ( !strcmp(second.c_str(), "grid") )
+		        		{
+							sscanf(line2.c_str(), " %*s %d %d %lf", &runmode->grid, &runmode->gridcells, &runmode->zgrid);
+		        		}
+		        		if ( !strcmp(second.c_str(), "amplif") )
+		        		{
+							sscanf(line2.c_str(), " %*s %d %d %lf", &runmode->amplif, &runmode->amplif_gridcells, &runmode->z_amplif);
+		        		}
+						if ( !strcmp(second.c_str(), "arclets") )
+		        		{
+		            		runmode->arclet = 1;  // Not supported yet
+		        		}
+						if ( !strcmp(second.c_str(), "time") )
+		        		{
+							sscanf(line2.c_str(), " %*s %d ", &runmode->time);
+
+		        		}
+						if( !strncmp(second.c_str(), "Debug",5) )    // Read in if we are in debug mode
+						{
+						runmode->debug = 1;
+						}
+
+						// Read the next line
+						std::getline(IN,line2);
+						std::istringstream read2(line2);
+						read2 >> second >> third;
+		    		}
+
+}
 
 void module_readParameters_readRunmode(std::string infile, struct runmode_param *runmode)
 {
+
 	std::string  first, second, third, fourth, fifth, line1, line2;
 	int Nsis(0), Npiemd(0);
 	/// Set default values
+
 	runmode->nbgridcells = 1000;
 	runmode->source = 0;
 	runmode->image = 0;
 	runmode->imagefile = "Empty";
+	runmode->multi = 0;
 	runmode->mass = 0;
 	runmode->mass_gridcells = 1000;
 	runmode->z_mass = 0.4;
 	runmode->z_mass_s = 0.8;
 	runmode->potential = 0;
 	runmode->pot_gridcells = 1000;
-	runmode->z_pot = 0.8;
-	runmode->potfile = 0;
+	runmode->potfile = 0; //weird seg fault due to this line, haven't figured out why
 	runmode->npotfile = 0;
+	runmode->z_pot = 0.8;
 	runmode->dpl = 0;
 	runmode->dpl_gridcells = 1000;
 	runmode->z_dpl = 0.8;
@@ -182,7 +255,7 @@ void module_readParameters_readRunmode(std::string infile, struct runmode_param 
 	runmode->gridcells = 1000;
 	runmode->cline = 0;
 	runmode->time = 0;
-	
+
 	int j=0;
 	std::string imageFile_name;
 	int imageIndex=0;
@@ -197,86 +270,15 @@ std::ifstream IN(infile.c_str(), std::ios::in);
 	std::istringstream read1(line1); // create a stream for the line
 	read1 >> first;  // Read the first word
 	//std::cout<<first;
-        while( strcmp(first.c_str(),"finish") != 0  )    // Continue until we reach finish
+        while(  strncmp(first.c_str(), "fini",4) != 0  )    // Continue until we reach finish
         {
-      
+        	//std::cout<<first;
+        	//printf(first.c_str());
 			if ( strncmp(first.c_str(), "runmode", 7) == 0){    // Read in runmode information
-	            std::getline(IN,line2);
-				std::istringstream read2(line2);
-				read2 >> second >> third >> fourth;    // Read in 4 words
-	    		while (strncmp(second.c_str(), "end", 3))    // Read until we reach end
-	    		{
-					if ( !strcmp(second.c_str(), "nbgridcells") )
-	        		{
-						sscanf(line2.c_str(), " %*s %d ", &runmode->nbgridcells);
-	            		//std::cout<< runmode->nbgridcells;
-	            		
-	        		}
-					
-	        		if ( !strcmp(second.c_str(), "source") )
-	        		{
-						char filename[FILENAME_SIZE];
-						//std::cout<< line2 << std::endl;
-	            		sscanf(line2.c_str(), " %*s %d %s ", &runmode->source, &filename);
-	            		runmode->sourfile = filename;
-	        		}
-				
-					if ( !strcmp(second.c_str(), "image") )
-	        		{
-						char filename[FILENAME_SIZE];
-						//std::cout<< line2 << std::endl;
-	            		sscanf(line2.c_str(), " %*s %d %s ", &runmode->image, &filename);
-	            		runmode->imagefile = filename;
-	            		//std::cout<< runmode->imagefile << std::endl;
-
-	        		}
-	        		if ( !strcmp(second.c_str(), "inverse") )
-	        		{
-						sscanf(line2.c_str(), " %*s %d ", &runmode->inverse);
-	        		}
-	        		if ( !strcmp(second.c_str(), "mass") )
-	        		{
-						sscanf(line2.c_str(), " %*s %d %d %lf %lf", &runmode->mass, &runmode->mass_gridcells, &runmode->z_mass, &runmode->z_mass_s);
-	        		}
-	        		if ( !strcmp(second.c_str(), "poten") )
-	        		{
-						sscanf(line2.c_str(), " %*s %d %d %lf", &runmode->potential, &runmode->pot_gridcells, &runmode->z_pot);
-						//printf("grid %d, number %d, redshift %f",runmode->potential, runmode->pot_gridcells, runmode->z_pot);
-	        		}
-	        		if ( !strcmp(second.c_str(), "dpl") )
-	        		{
-						sscanf(line2.c_str(), " %*s %d %d %lf", &runmode->dpl, &runmode->dpl_gridcells, &runmode->z_dpl);
-	        		}
-	        		if ( !strcmp(second.c_str(), "grid") )
-	        		{
-						sscanf(line2.c_str(), " %*s %d %d %lf", &runmode->grid, &runmode->gridcells, &runmode->zgrid);
-	        		}
-	        		if ( !strcmp(second.c_str(), "amplif") )
-	        		{
-						sscanf(line2.c_str(), " %*s %d %d %lf", &runmode->amplif, &runmode->amplif_gridcells, &runmode->z_amplif);
-	        		}	        				
-					if ( !strcmp(second.c_str(), "arclets") )
-	        		{
-	            		runmode->arclet = 1;  // Not supported yet
-	        		}
-					if ( !strcmp(second.c_str(), "time") )
-	        		{
-						sscanf(line2.c_str(), " %*s %d ", &runmode->time);
-
-	        		}
-					if( !strncmp(second.c_str(), "Debug",5) )    // Read in if we are in debug mode
-					{
-					runmode->debug = 1;
-					}
-	        
-					// Read the next line
-					std::getline(IN,line2);
-					std::istringstream read2(line2);
-					read2 >> second >> third;
-	    		}
+				read_runmode(IN,runmode);
 		    }
-			
-	    
+
+
 			else if (!strncmp(first.c_str(), "potent", 6)) // each time we find a "potential" string in the configuration file, we add an halo
             {
                 numberPotentials++;
@@ -318,6 +320,27 @@ std::ifstream IN(infile.c_str(), std::ios::in);
                     z=atof(third.c_str());
                 }
             }
+            else if (!strncmp(first.c_str(), "image", 5)) // same for the limit of the potential
+            {
+                std::getline(IN,line2);
+            	std::istringstream read2(line2);
+            	double z(0);
+            	read2 >> second >> third;
+            	while (strncmp(second.c_str(), "end", 3))    // Read until we reach end
+				{
+					if ( !strcmp(second.c_str(), "multfile") )
+					{
+						char filename[FILENAME_SIZE];
+	            		sscanf(line2.c_str(), " %*s %d %s ", &runmode->multi, &filename);
+	            		runmode->imagefile = filename;
+					}
+					//std::cout << runmode->multi << runmode->imagefile << std::endl;
+					// Read the next line
+					std::getline(IN,line2);
+					std::istringstream read2(line2);
+					read2 >> second >> third;
+				}
+            }
             else if (!strncmp(first.c_str(), "limit", 5)) // same for the limit of the potential
             {
                 numberLimits++;
@@ -326,9 +349,10 @@ std::ifstream IN(infile.c_str(), std::ios::in);
             {
                 runmode->cline = 1;
             }
+			/*
             else if (!strncmp(first.c_str(), "potfile", 7))
             {
-                runmode->potfile = 1;
+                runmode->potfile = 0;
                 std::getline(IN,line2);
 				std::istringstream read2(line2);
 				read2 >> second >> third >> fourth;    // Read in 4 words
@@ -337,7 +361,7 @@ std::ifstream IN(infile.c_str(), std::ios::in);
 				if ( !strcmp(second.c_str(), "filein") )
 				{
 					runmode->potfilename = fourth;
-					//std::cout<< line2 << runmode->potfilename;
+					std::cerr<< line2 << runmode->potfilename;
 					break;
 
 				}
@@ -346,26 +370,20 @@ std::ifstream IN(infile.c_str(), std::ios::in);
 				std::istringstream read2(line2);
 				read2 >> second >> third;
 				}
-            }
-	    
+            }*/
+
 
 	    // read the next line
 	    std::getline(IN,line1);
 	    std::istringstream read1(line1);
 	    read1 >> first;
-	    
+	    //std::cout<<first;
         }
 
         IN.close();
 	
         //if(numberLimits!=numberPotentials) printf("Warning : Number of clumps different than number of limits in %s\n", infile.c_str()); // must be limits for each halo
 	runmode->nhalos=numberPotentials;
-	runmode->Nlens[0]=Nsis;
-	runmode->Nlens[1]=Npiemd;
-	if(Nsis+Npiemd != numberPotentials){
-		printf( "Problem NSIS %d NPIEMD %d nhalos %d", runmode->Nlens[0],runmode->Nlens[1],numberPotentials);
-	}
-	
     }
     else
     {
@@ -389,25 +407,30 @@ std::ifstream IN(infile.c_str(), std::ios::in);
 */
 
 	/*TODO ImageFile_name is a crude method of getting the image information. Rethink it.*/
-	
-	if (runmode->image == 1 or runmode->inverse == 1 or runmode->time >= 1){
+	int old_j = 0;
+
+	if (runmode->image == 1 or runmode->inverse == 1 or runmode->time >= 1 or runmode->multi >= 1){
+
 		imageFile_name = runmode->imagefile;
-		//printf("Image to source mode activated\n");
-	
-	
-	std::ifstream IM(imageFile_name.c_str(), std::ios::in);
-	//printf(" Booo says hello again \n");
-    		if ( IM )
-    		{
-        		while( std::getline(IM,line2) )  // Read every line
-        		{
+		std::ifstream IM(imageFile_name.c_str(), std::ios::in);
+
+		if ( IM )
+		{
+			while( std::getline(IM,line2) )  // Read every line
+			{
+			if ( strncmp(line2.c_str(), "#", 1) == 0){	//Skipping commented lines
+				continue;
+			}
+			else{
 				j=atoi(line2.c_str());
-				if(j> runmode->nsets){                      // If we move on to a new set images, we pick the new index as reference
-					runmode->nsets=j;
+				if(j != old_j){				//If a new set has been reached, increase the nset iterator and update old j
+					runmode->nsets +=1;
+					old_j = j;
 				}
 				imageIndex++;
+				}
 			}
-    		}
+		}
 		else{
 			
 			fprintf(stderr, "ERROR: file %s not found\n", imageFile_name.c_str());
@@ -468,58 +491,8 @@ std::ifstream IN(infile.c_str(), std::ios::in);
 		}
 
 
-printf(" nsets %d , nhalos %d , nimagestot %d npotfile %d \n",  runmode->nsets, runmode->nhalos, runmode->nimagestot,runmode->npotfile);
-/*********** read narclets from arclets_filename ***************/
-/*  the arclets file must contain
-			id	x_center y_center   a   b   theta   redshift
-line :	1          	 .	   .        .       .   .     .        .        
-	2
-	3
-	.
-	.
-	narclets
-*/
-/*
-	std::ifstream IM_arclets(arclets_filename.c_str(), std::ios::in);  // Open file
-    		if ( IM_arclets )
-    		{
-        		while(  std::getline(IM_arclets,line2) )  // Read every line
-        		{
-				arcletIndex++;
-			}
-			narclets=arcletIndex;
-    		}
-		else{
-			printf("Error : file %s not found\n",arclets_filename.c_str());
-			exit(-1);
-		}
-	IM_arclets.close();
+std::cerr <<"nsets: " <<runmode->nsets <<" nhalos: " << runmode->nhalos << " nimagestot: " << runmode->nimagestot << " npotfile: " << runmode->npotfile<< std::endl;
 
-
-// Read the number of sources in the cleanlens file
-
-        if (cleanlensMode != 0)
-            {
-	    std::ifstream IM_cleanlens(cleanlensFile.c_str(), std::ios::in);  // Open file
-    		    if ( IM_cleanlens )
-    		    {
-        		    while(  std::getline(IM_cleanlens,line2) )  // Read every line
-        		    {
-				    cleanlensIndex++;
-			    }
-			    numbercleanlens=cleanlensIndex;
-    		    }
-		    else{
-			    printf("Error : file %s not found\n",cleanlensFile.c_str());
-			    exit(-1);
-		    }
-	    IM_cleanlens.close();
-            }
-        else
-            {
-            numbercleanlens = 0;
-            }
-            * */
 }
 
 
@@ -1691,7 +1664,7 @@ void module_readParameters_readCosmology(std::string infile, cosmo_param &Cosmol
 	std::getline(IN,line1);
 	std::istringstream read1(line1); // create a stream for the line
 	read1 >> first;
-	while(strncmp(first.c_str(), "finish",6) != 0) // read line by line until finish is reached
+	while(strncmp(first.c_str(), "finish",6) != 0 || strncmp(first.c_str(), "fini",4) != 0  ) // read line by line until finish is reached
         {
             if ( strncmp(first.c_str(), "cosmolog", 8) == 0){ // if the line contains information about cosmology
 
@@ -1822,7 +1795,7 @@ std::ifstream IN(infile.c_str(), std::ios::in);
 	std::istringstream read1(line1); // create a stream for the line
 	read1 >> first;  // Read the first word
 	//std::cout<<first;
-        while( strcmp(first.c_str(),"finish") != 0  )    // Continue until we reach finish
+        while( strcmp(first.c_str(),"finish") != 0  || strncmp(first.c_str(), "fini",4) != 0 )    // Continue until we reach finish
         {
 
 			if ( strncmp(first.c_str(), "runmode", 7) == 0){    // Read in runmode information
@@ -3386,7 +3359,7 @@ void module_readParameters_debug_runmode(int DEBUG, runmode_param runmode)
 if (DEBUG == 1)  // If we are in debug mode
 {
 
-    printf("Runmode: nhalos = %d, nsets = %d, nimagestot = %d, source = %d, image = %d, arclet  = %d, cline = %d, inverse= %d, DEBUG = %d\n", runmode.nhalos, runmode.nsets, runmode.nimagestot, runmode.source, runmode.image, runmode.arclet, runmode.cline, runmode.inverse, runmode.debug);
+    printf("Runmode: nhalos = %d, nsets = %d, nimagestot = %d, source = %d, image = %d, arclet  = %d, cline = %d, inverse= %d, multi= %d DEBUG = %d\n", runmode.nhalos, runmode.nsets, runmode.nimagestot, runmode.source, runmode.image, runmode.arclet, runmode.cline, runmode.inverse, runmode.multi, runmode.debug);
 
 }
 
