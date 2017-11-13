@@ -10,7 +10,7 @@
 
 //#include "cudafunctions.cuh"
 #include <fstream>
-#include <structure_hpc.h>
+#include <structure_hpc.hpp>
 
 __device__ struct point module_potentialDerivatives_totalGradient_SOA_GPU(const struct point *pImage, const struct Potential_SOA *lens, int nhalos);
 

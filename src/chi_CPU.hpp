@@ -2,7 +2,7 @@
 #ifndef __CHI_CPU_HPP__
 #define __CHI_CPU_HPP__
 
-#include <structure_hpc.h>
+#include <structure_hpc.hpp>
 //#include <gradient_avx.hpp>
 //#include <grid_srcplane_conversion.hpp>
 #include <grid_gradient_CPU.hpp>

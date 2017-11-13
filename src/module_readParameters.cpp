@@ -15,6 +15,7 @@
 //===========================================================================================================
 #include <iostream>
 #include <cstring>
+#include <string.h>
 #include <sstream>
 #include <stdlib.h>
 #include <stdio.h>
@@ -407,18 +408,23 @@ void module_readParameters_readRunmode(std::string infile, struct runmode_param 
 	runmode->nbgridcells = 1000;
 	runmode->source = 0;
 	runmode->image = 0;
-	runmode->imagefile = "Empty";
+	runmode->nsets = 0;
+	runmode->nhalos = 0;
+	//runmode->imagefile = "Empty";
 	//std::cerr << runmode->imagefile <<std::endl;
 	runmode->multi = 0;
 	runmode->mass = 0;
 	runmode->mass_gridcells = 1000;
 	runmode->z_mass = 0.4;
 	runmode->z_mass_s = 0.8;
+
 	runmode->potential = 0;
+
 	runmode->pot_gridcells = 1000;
 	runmode->potfile = 0; //weird seg fault due to this line, haven't figured out why
+
 	runmode->npotfile = 0;
-	runmode->potfilename = "Empty";
+	//runmode->potfilename = "Empty";
 	//std::cerr << runmode->potfilename <<std::endl;
 	runmode->z_pot = 0.8;
 	runmode->dpl = 0;
@@ -427,11 +433,16 @@ void module_readParameters_readRunmode(std::string infile, struct runmode_param 
 	runmode->inverse = 0;
 	runmode->arclet = 0;
 	runmode->debug = 0;
+
 	runmode->nimagestot = 0;
 	runmode->nsets = 0;
 	runmode->gridcells = 1000;
+	std::cerr << sizeof(*runmode) << std::endl;
+#if 1
 	runmode->cline = 0;
 	runmode->time = 0;
+
+
 	//std::cerr << "1" <<std::endl;
 	int j=0;
 	std::string imageFile_name;
@@ -443,12 +454,14 @@ void module_readParameters_readRunmode(std::string infile, struct runmode_param 
 std::ifstream IN(infile.c_str(), std::ios::in);
     if ( IN )
     {
+
 	std::getline(IN,line1);
 	std::istringstream read1(line1); // create a stream for the line
 	read1 >> first;  // Read the first word
 	//std::cout<<first;
         while(  strncmp(first.c_str(), "fini",4) != 0  )    // Continue until we reach finish
         {
+#if 1
 			if ( strncmp(first.c_str(), "runmode", 7) == 0){    // Read in runmode information
 				read_runmode(IN,runmode);
 		    }
@@ -475,7 +488,7 @@ std::ifstream IN(infile.c_str(), std::ios::in);
             	read_runmode_potfile(IN,runmode);
             }
 
-
+#endif
 	    // read the next line
 	    std::getline(IN,line1);
 	    std::istringstream read1(line1);
@@ -487,13 +500,14 @@ std::ifstream IN(infile.c_str(), std::ios::in);
 	
         //if(numberLimits!=numberPotentials) printf("Warning : Number of clumps different than number of limits in %s\n", infile.c_str()); // must be limits for each halo
 	runmode->nhalos=numberPotentials;
+
     }
     else
     {
         fprintf(stderr, "ERROR: file %s not found\n", infile.c_str());
         exit(-1);
     }
-
+#if 1
     //
     //getting nimage value (number of images), nset value (number of sources) and npotfile
     //if image or multi mode is activated get nimage and nset
@@ -502,7 +516,8 @@ std::ifstream IN(infile.c_str(), std::ios::in);
     read_runmode_countsources(runmode);
     //if potfile mode, count number of potential in potfile
     read_runmode_countpotfile(runmode);
-
+#endif
+#endif
 
 std::cerr <<"nsets: " <<runmode->nsets <<" nhalos: " << runmode->nhalos << " nimagestot: " << runmode->nimagestot << " npotfile: " << runmode->npotfile << " multi: " << runmode->multi<< std::endl;
 
@@ -614,7 +629,7 @@ void module_readParameters_readSources(struct runmode_param *runmode, struct gal
 	int j=0;
 	
 	//Calculating nset
-	std::ifstream IM(runmode->sourfile.c_str(),std::ios::in);  
+	std::ifstream IM(runmode->sourfile.c_str(),std::ios::in);
 	if ( IM ){
 		int i = 0;
         while( std::getline(IM,line1) ){    // Read until we reach the end
@@ -640,7 +655,7 @@ for(int i=0; i<runmode->nsets; i++){
 
     }
 
-	std::ifstream IM2(runmode->sourfile.c_str(),std::ios::in);  
+	std::ifstream IM2(runmode->sourfile.c_str(),std::ios::in);
 // Read in images
 	if ( IM2 )
     	{
@@ -1163,7 +1178,7 @@ IN.close();
 void module_readParameters_Potential(std::string infile, Potential lens[], int nhalos)
 {
 
-double DTR=acos(-1.)/180.;	/* 1 deg in rad  = pi/180 */
+	double DTR=acos(-1.)/180.;	/* 1 deg in rad  = pi/180 */
     Potential  *ilens;
     std::string first, second, third, line1, line2;
     int i=0;
@@ -1359,80 +1374,112 @@ IN.close();
 
 }
 
+void module_readParameters_PotentialSOA_new(std::string infile, Potential_SOA *lens_SOA, int nhalos){
+
+
+	double DTR=acos(-1.)/180.;	/* 1 deg in rad  = pi/180 */
+
+	int N_type[100];
+	int Indice_type[100];
+	int ind;
+#if 0
+	//Init of lens_SOA
+	lens_SOA->type = 	new int[nhalos];
+	lens_SOA->position_x  = 	new double[nhalos];
+	lens_SOA->position_y = 		new double[nhalos];
+	lens_SOA->b0 = 	new double[nhalos];
+	lens_SOA->ellipticity_angle = new double[nhalos];
+	lens_SOA->ellipticity = new double[nhalos];
+	lens_SOA->ellipticity_potential = new double[nhalos];
+	lens_SOA->rcore = 	new double[nhalos];
+	lens_SOA->rcut = 	new double[nhalos];
+	lens_SOA->z = 		new double[nhalos];
+	lens_SOA->anglecos = 	new double[nhalos];
+	lens_SOA->anglesin = 		new double[nhalos];
+
+
+	//Init of N_types and Indice_type (Number of lenses of a certain type)
+	for(int i=0;i < 100; ++i){
+		N_type[i] = 0;
+		Indice_type[i] = 0;
+	}
+
+    std::string first, second, third, line1, line2;
+    std::ifstream IN(infile.c_str(), std::ios::in);
+    //First sweep throught the runmode file to find N_type (number of types)
+    if ( IN )
+    {
+	while(std::getline(IN,line1))
+        {
+	    std::istringstream read1(line1); // create a stream for the line
+	    read1 >> first;
+            if (!strncmp(first.c_str(), "potent", 6))  // Read in potential
+			{
+            	if (strcmp(second.c_str(), "end") == 0)  // Move to next potential and initialize it
+					{
+						break; // Break while loop and move to next potential
+					}
+
+            	if ( !strcmp(second.c_str(), "profil") ||  // Get profile
+						 !strcmp(second.c_str(), "profile") )
+					{
+					if(!strcmp(third.c_str(), "PIEMD") ||
+					   !strcmp(third.c_str(), "1") )
+					{
+						ind=atoi(line2.c_str());
+						N_type[ind] += 1;
+					}
+
+					if(!strcmp(third.c_str(), "NFW") ||
+					   !strcmp(third.c_str(), "2") )
+					{
+						ind=atoi(line2.c_str());
+						N_type[ind] += 1;
+					}
+					if(!strcmp(third.c_str(), "SIES") ||
+					   !strcmp(third.c_str(), "3") )
+					{
+						ind=atoi(line2.c_str());
+						N_type[ind] += 1;
+					}
+					if(!strncmp(third.c_str(), "point", 5) ||
+					   !strcmp(third.c_str(), "4") )
+					{
+						ind=atoi(line2.c_str());
+						N_type[ind] += 1;
+					}
+					if(!strcmp(third.c_str(), "SIE") ||
+					   !strcmp(third.c_str(), "5") )
+					{
+						ind=atoi(line2.c_str());
+						N_type[ind] += 1;
+					}
+					if(!strcmp(third.c_str(), "8") )	//PIEMD
+					{
+						ind=atoi(line2.c_str());
+						N_type[ind] += 1;
+					}
+					if(!strcmp(third.c_str(), "81") )	//PIEMD81
+					{
+						ind=atoi(line2.c_str());
+						N_type[ind] += 1;
+					}
+				}
+
+			}
+		}
+    }
+
+	for(int i=1;i < 100; ++i){
+		Indice_type[i] = N_type[i]+Indice_type[i-1];
+		printf("%d %d \n ",N_type[i], Indice_type[i]);
+	}
+#endif
+}
+
 /** @brief This module function converts potentials to potentieal_SOA (AOS to SOA conversion)
 *
 */
-
-
-void module_readParameters_PotentialSOA_2(std::string infile, Potential *lens, Potential_SOA *lens_SOA, int Nset[]){
-
-	double DTR=acos(-1.)/180.;	/* 1 deg in rad  = pi/180 */
-	std::string first, second, third, line1, line2;
-	int nhalos(0);
-	int iterator[NTYPES];
-
-	Potential_SOA lensespiemd;
-	Potential_SOA lensessis;
-	Potential_SOA  *ilenses;
-
-	for(int i(0); i < NTYPES;++i){
-		iterator[i] = 0;
-		nhalos+= Nset[i];
-		ilenses = &lens_SOA[i];
-		ilenses->type = 	new int[Nset[i]];
-		ilenses->position_x  = 	new double[Nset[i]];
-		ilenses->position_y = 		new double[Nset[i]];
-		ilenses->b0 = 	new double[Nset[i]];
-		ilenses->ellipticity_angle = new double[Nset[i]];
-		ilenses->ellipticity = new double[Nset[i]];
-		ilenses->ellipticity_potential = new double[Nset[i]];
-		ilenses->rcore = 	new double[Nset[i]];
-		ilenses->rcut = 	new double[Nset[i]];
-		ilenses->z = 		new double[Nset[i]];
-	}
-
-	int i_sis(0), i_piemd(0);
-	int *i_point;
-	i_point = &i_sis;
-
-	for (int i = 0; i <nhalos; ++i){
-		//std::cerr << i_sis << " " << i_piemd << " " << *i_point << " " << nhalos << " " << lens[i].type << std::endl;
-		if (lens[i].type == 5){
-			ilenses = &lens_SOA[0];
-			i_point = &i_sis;
-		}
-		else if (lens[i].type == 8){
-			ilenses = &lens_SOA[1];
-			i_point = &i_piemd;
-		}
-		ilenses->type[*i_point]  = 		lens[i].type;
-		ilenses->position_x[*i_point]  = 		lens[i].position.x;
-		//std::cerr << lens_SOA[1].position_x[*i_point] << " " << lens[i].position.x  << std::endl;
-		ilenses->position_y[*i_point] = 		lens[i].position.y;
-		ilenses->b0[*i_point] = 		lens[i].b0;
-		ilenses->ellipticity_angle[*i_point] = lens[i].ellipticity_angle;
-		ilenses->ellipticity[*i_point] = lens[i].ellipticity;
-		ilenses->ellipticity_potential[*i_point] = lens[i].ellipticity_potential;
-		ilenses->rcore[*i_point] = 	lens[i].rcore;
-		ilenses->rcut[*i_point] = 	lens[i].rcut;
-		ilenses->z[*i_point] = 		lens[i].z;
-		if (lens[i].type == 5){
-			i_sis +=1;
-		}
-		else{
-			i_piemd +=1;
-		}
-
-	}
-	if (i_sis != Nset[0] or i_piemd != Nset[1]){
-		printf("Problem converting Potentials to SOA");
-		exit(-1);
-	}
-
-
-}
-
-
 
 void module_readParameters_PotentialSOA(std::string infile, Potential *lens, Potential_SOA *lens_SOA, int nhalos){
 

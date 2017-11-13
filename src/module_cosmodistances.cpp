@@ -18,7 +18,7 @@
 #include <math.h>
 #include <cstring>
 #include <stdlib.h>
-#include "module_cosmodistances.h"
+#include "module_cosmodistances.hpp"
 
 
 

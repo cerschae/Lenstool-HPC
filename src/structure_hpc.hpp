@@ -341,13 +341,12 @@ struct runmode_param
 {
 	int 	nbgridcells;
 	//Source Mode
-	int     source;     
-	std::string    sourfile;
+	int     source;
+
 	int 	nsets;
 	//Image Mode
 	int     image;
-	std::string    imagefile;
-	std::string		potfilename;
+
 	int		nimagestot;
 	//Mult Mode
 	int     multi;
@@ -362,6 +361,7 @@ struct runmode_param
 	type_t	z_pot;
 	int 	nhalos;
 	//Potfile Mode
+
 	int		potfile;
 	int		npotfile;
 	//displacement Mode
@@ -388,6 +388,9 @@ struct runmode_param
 	int		time;
 	  //SOA variables
 	 int Nlens[NTYPES];
+	 std::string    imagefile;
+	 std::string		potfilename;
+	 std::string    sourfile;
 };
 
 /** @brief Not used yet

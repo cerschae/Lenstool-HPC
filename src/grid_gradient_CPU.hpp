@@ -9,7 +9,7 @@
 #define GRID_GRADIENT_CPU_HPP_
 
 
-#include "structure_hpc.h"
+#include "structure_hpc.hpp"
 #include <iostream>
 #include <string.h>
 //#include <cuda_runtime.h>

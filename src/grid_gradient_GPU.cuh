@@ -10,7 +10,7 @@
 
 //#include "cudafunctions.cuh"
 //#include "gradient_GPU.cuh"
-#include <structure_hpc.h>
+#include <structure_hpc.hpp>
 
 //gradient_grid_GPU_sorted(double*, double*, grid_param const*, Potential_SOA const*, int, int)
 

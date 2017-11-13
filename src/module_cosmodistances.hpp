@@ -20,7 +20,7 @@
 
 
 // Include
-#include <structure_hpc.h>
+#include <structure_hpc.hpp>
 #include <string>
 
 

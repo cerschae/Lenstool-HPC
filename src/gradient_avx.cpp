@@ -6,7 +6,7 @@
 #include <fstream>
 #include <immintrin.h>
 //
-#include "structure_hpc.h"
+#include "structure_hpc.hpp"
 #include "simd_math_avx.h"
 #include "gradient.hpp"
 //

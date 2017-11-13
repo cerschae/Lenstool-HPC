@@ -12,7 +12,7 @@
 
 #ifdef __WITH_LENSTOOL
 #include "structure.h"
-#include "structure_hpc.h"
+#include "structure_hpc.hpp"
 
 extern struct pot lens[NLMAX];
 void

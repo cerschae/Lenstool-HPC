@@ -15,7 +15,7 @@
 #include "simd_math_avx512f.h"
 #endif
 */
-#include "structure_hpc.h"
+#include "structure_hpc.hpp"
 #include "gradient.hpp"
 #include "utils.hpp"
 //#include "iacaMarks.h"

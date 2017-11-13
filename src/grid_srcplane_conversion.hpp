@@ -9,7 +9,7 @@
 #define GRID_SRCPLANE_CONVERSION_HPP_
 
 #include <math.h>
-#include <structure_hpc.h>
+#include <structure_hpc.hpp>
 
 
 void grid_srcplane_conversion_CPU(double *grid_srcplane_x, double *grid_srcplane_y, const struct grid_param *frame, const struct Potential_SOA *lens,const double dlsds, int *Nlens, int nbgridcells);
