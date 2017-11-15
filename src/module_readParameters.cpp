@@ -53,12 +53,14 @@
 * @param infile path to file	 
 */
 
-#ifdef _double
+
 
 void module_readParameters_readCosmology(std::string infile, cosmo_param &Cosmology)
 {
 
     std::string first, second, third, line1, line2;
+
+    Cosmology.model =1;
 
 
     std::ifstream IN(infile.c_str(),std::ios::in); // open file
@@ -155,6 +157,8 @@ void module_readParameters_readCosmology(std::string infile, cosmo_param &Cosmol
 
 void read_runmode(std::istream &IN, struct runmode_param *runmode){
 	std::string  first, second, third, fourth, fifth, line1, line2;
+	//sscanf variables
+	double in1, in2;	//%lf in1, then (type_t)in1 ;
 	std::getline(IN,line2);
 					std::istringstream read2(line2);
 					read2 >> second >> third >> fourth;    // Read in 4 words
@@ -184,24 +188,30 @@ void read_runmode(std::istream &IN, struct runmode_param *runmode){
 		        		}
 		        		if ( !strcmp(second.c_str(), "mass") )
 		        		{
-							sscanf(line2.c_str(), " %*s %d %d %lf %lf", &runmode->mass, &runmode->mass_gridcells, &runmode->z_mass, &runmode->z_mass_s);
+							sscanf(line2.c_str(), " %*s %d %d %lf %lf", &runmode->mass, &runmode->mass_gridcells, &in1, &in2);
+							runmode->z_mass = (type_t)in1;
+							runmode->z_mass_s =(type_t)in2;
 		        		}
 		        		if ( !strcmp(second.c_str(), "poten") )
 		        		{
-							sscanf(line2.c_str(), " %*s %d %d %lf", &runmode->potential, &runmode->pot_gridcells, &runmode->z_pot);
+							sscanf(line2.c_str(), " %*s %d %d %lf", &runmode->potential, &runmode->pot_gridcells, &in1);
+							runmode->z_pot = (type_t)in1;
 		        		}
 		        		if ( !strcmp(second.c_str(), "dpl") )
 		        		{
-							sscanf(line2.c_str(), " %*s %d %d %lf", &runmode->dpl, &runmode->dpl_gridcells, &runmode->z_dpl);
+							sscanf(line2.c_str(), " %*s %d %d %lf", &runmode->dpl, &runmode->dpl_gridcells, &in1);
+							runmode->z_dpl = (type_t)in1;
 		        		}
 		        		if ( !strcmp(second.c_str(), "grid") )
 		        		{
-							sscanf(line2.c_str(), " %*s %d %d %lf", &runmode->grid, &runmode->gridcells, &runmode->zgrid);
+							sscanf(line2.c_str(), " %*s %d %d %lf", &runmode->grid, &runmode->gridcells, &in1);
+							runmode->zgrid = (type_t)in1;
 		        		}
 		        		if ( !strcmp(second.c_str(), "amplif") )
 		        		{
-							sscanf(line2.c_str(), " %*s %d %d %lf", &runmode->amplif, &runmode->amplif_gridcells, &runmode->z_amplif);
-		        		}
+							sscanf(line2.c_str(), " %*s %d %d %lf", &runmode->amplif, &runmode->amplif_gridcells, &in1);
+							runmode->z_amplif = (type_t)in1;
+									        		}
 						if ( !strcmp(second.c_str(), "arclets") )
 		        		{
 		            		runmode->arclet = 1;  // Not supported yet
@@ -410,22 +420,15 @@ void module_readParameters_readRunmode(std::string infile, struct runmode_param 
 	runmode->image = 0;
 	runmode->nsets = 0;
 	runmode->nhalos = 0;
-	//runmode->imagefile = "Empty";
-	//std::cerr << runmode->imagefile <<std::endl;
 	runmode->multi = 0;
 	runmode->mass = 0;
 	runmode->mass_gridcells = 1000;
 	runmode->z_mass = 0.4;
 	runmode->z_mass_s = 0.8;
-
 	runmode->potential = 0;
-
 	runmode->pot_gridcells = 1000;
 	runmode->potfile = 0; //weird seg fault due to this line, haven't figured out why
-
 	runmode->npotfile = 0;
-	//runmode->potfilename = "Empty";
-	//std::cerr << runmode->potfilename <<std::endl;
 	runmode->z_pot = 0.8;
 	runmode->dpl = 0;
 	runmode->dpl_gridcells = 1000;
@@ -433,17 +436,14 @@ void module_readParameters_readRunmode(std::string infile, struct runmode_param 
 	runmode->inverse = 0;
 	runmode->arclet = 0;
 	runmode->debug = 0;
-
 	runmode->nimagestot = 0;
 	runmode->nsets = 0;
 	runmode->gridcells = 1000;
 	std::cerr << sizeof(*runmode) << std::endl;
-#if 1
 	runmode->cline = 0;
 	runmode->time = 0;
 
 
-	//std::cerr << "1" <<std::endl;
 	int j=0;
 	std::string imageFile_name;
 	int imageIndex=0;
@@ -461,7 +461,6 @@ std::ifstream IN(infile.c_str(), std::ios::in);
 	//std::cout<<first;
         while(  strncmp(first.c_str(), "fini",4) != 0  )    // Continue until we reach finish
         {
-#if 1
 			if ( strncmp(first.c_str(), "runmode", 7) == 0){    // Read in runmode information
 				read_runmode(IN,runmode);
 		    }
@@ -487,8 +486,6 @@ std::ifstream IN(infile.c_str(), std::ios::in);
             {
             	read_runmode_potfile(IN,runmode);
             }
-
-#endif
 	    // read the next line
 	    std::getline(IN,line1);
 	    std::istringstream read1(line1);
@@ -507,7 +504,6 @@ std::ifstream IN(infile.c_str(), std::ios::in);
         fprintf(stderr, "ERROR: file %s not found\n", infile.c_str());
         exit(-1);
     }
-#if 1
     //
     //getting nimage value (number of images), nset value (number of sources) and npotfile
     //if image or multi mode is activated get nimage and nset
@@ -516,12 +512,13 @@ std::ifstream IN(infile.c_str(), std::ios::in);
     read_runmode_countsources(runmode);
     //if potfile mode, count number of potential in potfile
     read_runmode_countpotfile(runmode);
-#endif
-#endif
+
 
 std::cerr <<"nsets: " <<runmode->nsets <<" nhalos: " << runmode->nhalos << " nimagestot: " << runmode->nimagestot << " npotfile: " << runmode->npotfile << " multi: " << runmode->multi<< std::endl;
 
 }
+
+
 
 
 /** @brief read the positions, redshifts and numbers of multiple images from the images file
@@ -620,7 +617,7 @@ for(int i=0; i<runmode->nimagestot; i++){
 * @param source	array where sources will be stored
 */
 
-
+#ifdef _double
 /// read the positions, redshifts and numbers of multiple images from the images file
 void module_readParameters_readSources(struct runmode_param *runmode, struct galaxy source[])
 {
@@ -1374,20 +1371,24 @@ IN.close();
 
 }
 
-void module_readParameters_PotentialSOA_new(std::string infile, Potential_SOA *lens_SOA, int nhalos){
+void module_readParameters_PotentialSOA_new(std::string infile, Potential_SOA *lens_SOA, int nhalos, cosmo_param cosmology){
 
 
 	double DTR=acos(-1.)/180.;	/* 1 deg in rad  = pi/180 */
 
+	double core_radius_kpc = 0.;
+	double cut_radius_kpc = 0.;
+
 	int N_type[100];
 	int Indice_type[100];
 	int ind;
-#if 0
+	Potential lens_temp;
 	//Init of lens_SOA
 	lens_SOA->type = 	new int[nhalos];
 	lens_SOA->position_x  = 	new double[nhalos];
 	lens_SOA->position_y = 		new double[nhalos];
 	lens_SOA->b0 = 	new double[nhalos];
+	lens_SOA->vdisp = 	new double[nhalos];
 	lens_SOA->ellipticity_angle = new double[nhalos];
 	lens_SOA->ellipticity = new double[nhalos];
 	lens_SOA->ellipticity_potential = new double[nhalos];
@@ -1415,6 +1416,10 @@ void module_readParameters_PotentialSOA_new(std::string infile, Potential_SOA *l
 	    read1 >> first;
             if (!strncmp(first.c_str(), "potent", 6))  // Read in potential
 			{
+                while(std::getline(IN,line2))
+                {
+                	std::istringstream read2(line2);
+                	read2 >> second >> third;
             	if (strcmp(second.c_str(), "end") == 0)  // Move to next potential and initialize it
 					{
 						break; // Break while loop and move to next potential
@@ -1426,62 +1431,240 @@ void module_readParameters_PotentialSOA_new(std::string infile, Potential_SOA *l
 					if(!strcmp(third.c_str(), "PIEMD") ||
 					   !strcmp(third.c_str(), "1") )
 					{
-						ind=atoi(line2.c_str());
+						ind=atoi(third.c_str());
 						N_type[ind] += 1;
 					}
 
 					if(!strcmp(third.c_str(), "NFW") ||
 					   !strcmp(third.c_str(), "2") )
 					{
-						ind=atoi(line2.c_str());
+						ind=atoi(third.c_str());
 						N_type[ind] += 1;
 					}
 					if(!strcmp(third.c_str(), "SIES") ||
 					   !strcmp(third.c_str(), "3") )
 					{
-						ind=atoi(line2.c_str());
+						ind=atoi(third.c_str());
 						N_type[ind] += 1;
 					}
 					if(!strncmp(third.c_str(), "point", 5) ||
 					   !strcmp(third.c_str(), "4") )
 					{
-						ind=atoi(line2.c_str());
+						ind=atoi(third.c_str());
 						N_type[ind] += 1;
 					}
 					if(!strcmp(third.c_str(), "SIE") ||
 					   !strcmp(third.c_str(), "5") )
 					{
-						ind=atoi(line2.c_str());
+						ind=atoi(third.c_str());
 						N_type[ind] += 1;
 					}
 					if(!strcmp(third.c_str(), "8") )	//PIEMD
 					{
-						ind=atoi(line2.c_str());
+						ind=atoi(third.c_str());
 						N_type[ind] += 1;
 					}
 					if(!strcmp(third.c_str(), "81") )	//PIEMD81
 					{
-						ind=atoi(line2.c_str());
+						ind=atoi(third.c_str());
 						N_type[ind] += 1;
+						//std::cerr << "Type First: " << ind << std::endl;
 					}
 				}
-
+                }
 			}
 		}
     }
 
 	for(int i=1;i < 100; ++i){
 		Indice_type[i] = N_type[i]+Indice_type[i-1];
-		printf("%d %d \n ",N_type[i], Indice_type[i]);
+		//printf("%d %d \n ",N_type[i], Indice_type[i]);
 	}
-#endif
+	IN.close();
+	IN.clear();
+	IN.open(infile.c_str(), std::ios::in);
+
+	if(IN){
+	while(std::getline(IN,line1))
+        {
+	    std::istringstream read1(line1); // create a stream for the line
+	    read1 >> first;
+            if (!strncmp(first.c_str(), "potent", 6))  // Read in potential
+		{
+			lens_temp.position.x = lens_temp.position.y = 0.;
+			lens_temp.ellipticity = 0;
+			lens_temp.ellipticity_potential = 0.;
+			lens_temp.ellipticity_angle = 0.;
+			lens_temp.vdisp = 0.;
+			lens_temp.rcut = 0.;
+			lens_temp.rcore = 0;
+			lens_temp.weight = 0;
+			lens_temp.rscale = 0;
+			lens_temp.exponent = 0;
+			lens_temp.alpha = 0.;
+			lens_temp.einasto_kappacritic = 0;
+			lens_temp.z = 0;
+			while(std::getline(IN,line2))
+			{
+				//Init temp potential
+
+
+
+				std::istringstream read2(line2);
+				read2 >> second >> third;
+				//std::cerr << line2 << std::endl;
+				if (strcmp(second.c_str(), "end") == 0)  // Move to next potential and initialize it
+				{
+					if ( lens_temp.z == 0. )  // Check if redshift from current halo was initialized
+						{
+							fprintf(stderr, "ERROR: No redshift defined for potential at position x: %f and y: %f \n", lens_temp.position.x , lens_temp.position.y);
+							exit(-1);
+						}
+					break; // Break while loop and move to next potential
+				}
+
+				//Find profile
+				if ( !strcmp(second.c_str(), "profil") ||  // Get profile
+					 !strcmp(second.c_str(), "profile") )
+				{
+					lens_temp.type=atoi(third.c_str());
+					//std::cerr << lens_temp.type << std::endl;
+				}
+
+				else if (!strcmp(second.c_str(), "name"))    // Get name of lens
+				{
+					sscanf(third.c_str(),"%s",lens_temp.name);
+				}
+
+				else if (!strcmp(second.c_str(), "x_centre") ||  // Get x center
+				 !strcmp(second.c_str(), "x_center") )
+				{
+					lens_temp.position.x=atof(third.c_str());
+					//std::cout << "PositionX : " << std::setprecision(15) << lens_temp.position.x << std::endl;
+				}
+				else if (!strcmp(second.c_str(), "y_centre") ||  // Get y center
+				 !strcmp(second.c_str(), "y_center") )
+				{
+					lens_temp.position.y=atof(third.c_str());
+				}
+				else if ( !strcmp(second.c_str(), "ellipticitymass") || !strcmp(second.c_str(), "ellipticity") || !strcmp(second.c_str(), "ellipticite") )  // Get ellipticity
+				{
+					lens_temp.ellipticity=atof(third.c_str());
+					//lens_temp.ellipticity=lens_temp.ellipticity/3.;
+				}
+				else if (!strcmp(second.c_str(), "ellipticity_angle") || !strcmp(second.c_str(), "angle_pos"))  // Get ellipticity angle
+				{
+					lens_temp.ellipticity_angle=atof(third.c_str());
+					lens_temp.ellipticity_angle *= DTR;
+				}
+				else if ( !strcmp(second.c_str(), "rcore") || !strcmp(second.c_str(), "core_radius"))  // Get core radius
+				{
+					lens_temp.rcore=atof(third.c_str());
+				}
+				else if (!strcmp(second.c_str(), "rcut") || !strcmp(second.c_str(), "cut_radius"))  // Get cut radius
+				{
+					lens_temp.rcut=atof(third.c_str());
+				}
+				else if ( !strcmp(second.c_str(), "core_radius_kpc"))  // Get core radius
+				{
+					core_radius_kpc=atof(third.c_str());
+				}
+				else if (!strcmp(second.c_str(), "cut_radius_kpc"))  // Get cut radius
+				{
+					cut_radius_kpc=atof(third.c_str());
+				}
+				else if (!strcmp(second.c_str(), "NFW_rs") ||  // Get scale radius of NFW
+					 !strcmp(second.c_str(), "rscale"))
+					{
+						lens_temp.rscale=atof(third.c_str());
+					}
+				else if (!strcmp(second.c_str(), "exponent") )  // Get exponent
+					{
+						lens_temp.exponent=atof(third.c_str());
+					}
+				else if (!strcmp(second.c_str(), "alpha") )  // Get alpha
+					{
+						lens_temp.alpha=atof(third.c_str());
+					}
+				else if (!strcmp(second.c_str(), "einasto_kappacritic") ||  // Get critical kappa
+					 !strcmp(second.c_str(), "kappacritic"))
+				{
+					lens_temp.einasto_kappacritic=atof(third.c_str());
+				}
+				else if (!strcmp(second.c_str(), "z_lens"))  // Get redshift
+				{
+					lens_temp.z=atof(third.c_str());
+					//std::cerr << lens_temp.z << std::endl;
+				}
+				else if (!strcmp(second.c_str(), "v_disp"))  // Get Dispersion velocity
+				{
+					lens_temp.vdisp=atof(third.c_str());
+					//std::cerr << "vdisp : "<< third << " " << lens_temp.vdisp << std::endl;
+				}
+				else if ( !strncmp(second.c_str(), "virial_mass", 6) ||  // Get virial mass
+						  !strcmp(second.c_str(), "masse") ||
+						  !strcmp(second.c_str(), "m200") ||
+						  !strcmp(second.c_str(), "mass") )
+				{
+					lens_temp.weight=atof(third.c_str());
+				}
+
+
+
+			} // closes inner while loop
+
+	// Converting distance in kpc to arcsec.
+	double d1 = d0 / cosmology.h * module_cosmodistances_observerObject(lens_temp.z,cosmology);
+
+	// Set rcore value in kpc or in arcsec.
+	if ( core_radius_kpc != 0. )
+		lens_temp.rcore = core_radius_kpc / d1;
+	else
+		core_radius_kpc = lens_temp.rcore * d1;
+
+	// Set rcut value in kpc or in arcsec.
+	if ( cut_radius_kpc != 0. )
+		lens_temp.rcut = cut_radius_kpc / d1;
+	else if ( lens_temp.rcut != 0. )
+		cut_radius_kpc = lens_temp.rcut * d1;
+
+    //Calculate parameters like b0, potential ellipticity and anyother parameter depending on the profile
+    module_readParameters_calculatePotentialparameter(&lens_temp);
+
+    //assign value to SOA
+    //std::cerr << "Type + indice :" << lens_temp.type << Indice_type[lens_temp.type-1] << std::endl;
+	if(Indice_type[lens_temp.type-1] <nhalos){
+
+		ind = Indice_type[lens_temp.type-1];
+		//std::cerr<< ind << std::endl;
+		lens_SOA->type[ind] 		     = lens_temp.type;
+		lens_SOA->position_x[ind]  	     = lens_temp.position.x;
+		lens_SOA->position_y[ind] 	     = lens_temp.position.y;
+		lens_SOA->b0[ind] 		     = 		lens_temp.b0;
+		lens_SOA->vdisp[ind] 		     = 		lens_temp.vdisp;
+		lens_SOA->ellipticity_angle[ind]     = lens_temp.ellipticity_angle;
+		lens_SOA->ellipticity[ind]           = lens_temp.ellipticity;
+		lens_SOA->ellipticity_potential[ind] = lens_temp.ellipticity_potential;
+		lens_SOA->rcore[ind] 		     = lens_temp.rcore;
+		lens_SOA->rcut[ind] 		     = lens_temp.rcut;
+		lens_SOA->z[ind] 		     = lens_temp.z;
+		lens_SOA->anglecos[ind] 	     = cos(lens_temp.ellipticity_angle);
+		lens_SOA->anglesin[ind] 	     = sin(lens_temp.ellipticity_angle);
+
+		Indice_type[lens_temp.type-1] += 1;
+	}
+}  // closes if loop
+
+}  // closes while loop
+	}
+
 }
 
 /** @brief This module function converts potentials to potentieal_SOA (AOS to SOA conversion)
 *
 */
 
-void module_readParameters_PotentialSOA(std::string infile, Potential *lens, Potential_SOA *lens_SOA, int nhalos){
+void module_readParameters_PotentialSOA(std::string infile, Potential *lens, Potential_SOA *lens_SOA, int nhalos, cosmo_param cosmology){
 
 	lens_SOA->type = 	new int[nhalos];
 	lens_SOA->position_x  = 	new double[nhalos];
@@ -1543,54 +1726,16 @@ void module_readParameters_PotentialSOA(std::string infile, Potential *lens, Pot
 
 }
 
-#if 0
-void module_readParameters_PotentialSOA_nonsorted(std::string infile, Potential *lens, Potential_SOA *lens_SOA, int nhalos){
-
-	double DTR=acos(-1.)/180.;	/* 1 deg in rad  = pi/180 */
-	std::string first, second, third, line1, line2;
-
-	int iterator[NTYPES];
-
-	Potential_SOA  *ilenses;
-
-	ilenses = lens_SOA;
-	ilenses->type = 	new int[nhalos];
-	ilenses->position_x  = 	new double[nhalos];
-	ilenses->position_y = 		new double[nhalos];
-	ilenses->b0 = 	new double[nhalos];
-	ilenses->ellipticity_angle = new double[nhalos];
-	ilenses->ellipticity = new double[nhalos];
-	ilenses->ellipticity_potential = new double[nhalos];
-	ilenses->rcore = 	new double[nhalos];
-	ilenses->rcut = 	new double[nhalos];
-	ilenses->z = 		new double[nhalos];
-
-	for (int i = 0; i <nhalos; ++i){
-
-		ilenses->type[i]  = 		lens[i].type;
-		ilenses->position_x[i]  = 		lens[i].position.x;
-		ilenses->position_y[i] = 		lens[i].position.y;
-		ilenses->b0[i] = 		lens[i].b0;
-		ilenses->ellipticity_angle[i] = lens[i].ellipticity_angle;
-		ilenses->ellipticity[i] = lens[i].ellipticity;
-		ilenses->ellipticity_potential[i] = lens[i].ellipticity_potential;
-		ilenses->rcore[i] = 	lens[i].rcore;
-		ilenses->rcut[i] = 	lens[i].rcut;
-		ilenses->z[i] = 		lens[i].z;
-
-	}
-
-
-}
-#endif
-
 /** @brief This module function calculates profile depended information like the impactparameter b0 and the potential ellipticity epot
  * 
  * @param lens: mass distribution for which to calculate parameters
 */
 
 void module_readParameters_calculatePotentialparameter(Potential *lens){
+
 	
+
+
 	switch (lens->type)
     {
 	
@@ -1602,6 +1747,26 @@ void module_readParameters_calculatePotentialparameter(Potential *lens){
 	    break;
 	    
 	case(8): /* PIEMD */
+		//impact parameter b0
+		lens->b0 = 6.*pi_c2 * lens->vdisp * lens->vdisp;
+		//ellipticity_parameter
+	    if ( lens->ellipticity == 0. && lens->ellipticity_potential != 0. ){
+			// emass is (a2-b2)/(a2+b2)
+			lens->ellipticity = 2.*lens->ellipticity_potential / (1. + lens->ellipticity_potential * lens->ellipticity_potential);
+			printf("1 : %f %f \n",lens->ellipticity,lens->ellipticity_potential);
+		}
+		else if ( lens->ellipticity == 0. && lens->ellipticity_potential == 0. ){
+			lens->ellipticity_potential = 0.00001;
+			printf("2 : %f %f \n",lens->ellipticity,lens->ellipticity_potential);
+		}
+		else{
+			// epot is (a-b)/(a+b)
+			lens->ellipticity_potential = (1. - sqrt(1 - lens->ellipticity * lens->ellipticity)) / lens->ellipticity;
+			printf("3 : %f %f \n",lens->ellipticity,lens->ellipticity_potential);
+		}
+        break;
+
+	case(81): /* PIEMD */
 		//impact parameter b0
 		lens->b0 = 6.*pi_c2 * lens->vdisp * lens->vdisp;
 		//ellipticity_parameter
@@ -1711,93 +1876,6 @@ IN.close();
 #else
 
 
-
-void module_readParameters_readCosmology(std::string infile, cosmo_param &Cosmology)
-{
-
-    std::string first, second, third, line1, line2;
-
-
-    std::ifstream IN(infile.c_str(),std::ios::in); // open file
-    if ( IN )
-    {
-	std::getline(IN,line1);
-	std::istringstream read1(line1); // create a stream for the line
-	read1 >> first;
-	while(strncmp(first.c_str(), "finish",6) != 0 || strncmp(first.c_str(), "fini",4) != 0  ) // read line by line until finish is reached
-        {
-            if ( strncmp(first.c_str(), "cosmolog", 8) == 0){ // if the line contains information about cosmology
-
-		    std::getline(IN,line2);    // read the line word by word
-		    std::istringstream read2(line2);
-		    read2 >> second >> third;
-
-		    while(strncmp(second.c_str(), "end",3) != 0)    // Go ahead until "end" is reached
-        	    {
-
-        		if ( !strcmp(second.c_str(), "model") )  // set model of universe
-        		{
-            		Cosmology.model=atoi(third.c_str());
-        		}
-       			else if ( !strcmp(second.c_str(), "H0") ) // set Hubble constant
-        		{
-            		Cosmology.H0=atof(third.c_str());
-            		Cosmology.h = Cosmology.H0 / 50.;
-        		}
-        		else if ( !strcmp(second.c_str(), "omegaM") || !strcmp(second.c_str(), "omega") ) // set density of matter
-        		{
-           		Cosmology.omegaM=atof(third.c_str());
-        		}
-        		else if ( !strcmp(second.c_str(), "omegaX") || !strcmp(second.c_str(), "lambda") ) // set cosmological constant
-        		{
-            		Cosmology.omegaX=atof(third.c_str());
-        		}
-        		else if ( !strcmp(second.c_str(), "wX") || !strcmp(second.c_str(), "q") || !strcmp(second.c_str(), "w0") )     // set  "q" for Model 2, "wX" for Model 3, "w0" for Model 4
-        		{
-            		Cosmology.wX=atof(third.c_str());
-        		}
-        		else if ( !strcmp(second.c_str(), "wa") || !strcmp(second.c_str(), "n") || !strcmp(second.c_str(), "delta") || !strcmp(second.c_str(), "w1") )     // set  "n" for Model 2, "delta" for model 3, "w1" for model 4
-        		{
-            		Cosmology.wa=atof(third.c_str());
-        		}
-        		else if ( !strcmp(second.c_str(), "omegaK") ) // set universe curvature
-        		{
-            		Cosmology.curvature=atof(third.c_str());
-        		}
-			// read next line
-			std::getline(IN,line2);
-		        std::istringstream read2(line2);
-		        read2 >> second >> third;
-
-    		   }
-
-    		// if a flat Universe
-    		if ( Cosmology.curvature == 0. )
-    		{
-        	Cosmology.omegaX = 1 - Cosmology.omegaM;
-    		}
-    		else
-        	Cosmology.curvature = Cosmology.omegaM + Cosmology.omegaX - 1;
-
-	    }
-	    // read next line
-	    std::getline(IN,line1);
-	    std::istringstream read1(line1);
-	    read1 >> first;
-
-        }
-
-        IN.close();
-
-    }
-    else
-    {
-        fprintf(stderr, "ERROR: file %s not found\n", infile.c_str());  // Exit if file was not found
-        exit(-1);
-    }
-
-}
-
 /** @brief This module function reads the number of sources, arclets, etc. in the parameter file. We need to know this to allocate the memory
 *
 * Function to read the number of multiple images and clumps
@@ -1809,405 +1887,6 @@ void module_readParameters_readCosmology(std::string infile, cosmo_param &Cosmol
 * @param infile path to file
 * @param runmode runmode parameter
 */
-
-
-void module_readParameters_readRunmode(std::string infile, struct runmode_param *runmode)
-{
-	std::string  first, second, third, fourth, fifth, line1, line2;
-	int Nsis(0), Npiemd(0);
-	/// Set default values
-	runmode->nbgridcells = 1000;
-	runmode->source = 0;
-	runmode->image = 0;
-	runmode->imagefile = "Empty";
-	runmode->mass = 0;
-	runmode->mass_gridcells = 1000;
-	runmode->z_mass = 0.4;
-	runmode->z_mass_s = 0.8;
-	runmode->potential = 0;
-	runmode->pot_gridcells = 1000;
-	runmode->z_pot = 0.8;
-	runmode->potfile = 0;
-	runmode->npotfile = 0;
-	runmode->dpl = 0;
-	runmode->dpl_gridcells = 1000;
-	runmode->z_dpl = 0.8;
-	runmode->inverse = 0;
-	runmode->arclet = 0;
-	runmode->debug = 0;
-	runmode->nimagestot = 0;
-	runmode->nsets = 0;
-	runmode->gridcells = 1000;
-	runmode->cline = 0;
-	runmode->time = 0;
-
-	int j=0;
-	std::string imageFile_name;
-	int imageIndex=0;
-	int numberPotentials=0, numberLimits=0;
-
-/*************************** read nhalos, imfile_name, pixel_size, multipleimagesarea_size and runmode from configuration file *********************/
-
-std::ifstream IN(infile.c_str(), std::ios::in);
-    if ( IN )
-    {
-	std::getline(IN,line1);
-	std::istringstream read1(line1); // create a stream for the line
-	read1 >> first;  // Read the first word
-	//std::cout<<first;
-        while( strcmp(first.c_str(),"finish") != 0  || strncmp(first.c_str(), "fini",4) != 0 )    // Continue until we reach finish
-        {
-
-			if ( strncmp(first.c_str(), "runmode", 7) == 0){    // Read in runmode information
-	            std::getline(IN,line2);
-				std::istringstream read2(line2);
-				read2 >> second >> third >> fourth;    // Read in 4 words
-	    		while (strncmp(second.c_str(), "end", 3))    // Read until we reach end
-	    		{
-					if ( !strcmp(second.c_str(), "nbgridcells") )
-	        		{
-						sscanf(line2.c_str(), " %*s %d ", &runmode->nbgridcells);
-	            		//std::cout<< runmode->nbgridcells;
-
-	        		}
-
-	        		if ( !strcmp(second.c_str(), "source") )
-	        		{
-						char filename[FILENAME_SIZE];
-						//std::cout<< line2 << std::endl;
-	            		sscanf(line2.c_str(), " %*s %d %s ", &runmode->source, &filename);
-	            		runmode->sourfile = filename;
-	        		}
-
-					if ( !strcmp(second.c_str(), "image") )
-	        		{
-						char filename[FILENAME_SIZE];
-						//std::cout<< line2 << std::endl;
-	            		sscanf(line2.c_str(), " %*s %d %s ", &runmode->image, &filename);
-	            		runmode->imagefile = filename;
-	            		//std::cout<< runmode->imagefile << std::endl;
-
-	        		}
-	        		if ( !strcmp(second.c_str(), "inverse") )
-	        		{
-						sscanf(line2.c_str(), " %*s %d ", &runmode->inverse);
-	        		}
-	        		if ( !strcmp(second.c_str(), "mass") )
-	        		{
-						sscanf(line2.c_str(), " %*s %d %d %f %f", &runmode->mass, &runmode->mass_gridcells, &runmode->z_mass, &runmode->z_mass_s);
-	        		}
-	        		if ( !strcmp(second.c_str(), "poten") )
-	        		{
-						sscanf(line2.c_str(), " %*s %d %d %f", &runmode->potential, &runmode->pot_gridcells, &runmode->z_pot);
-						//printf("grid %d, number %d, redshift %f",runmode->potential, runmode->pot_gridcells, runmode->z_pot);
-	        		}
-	        		if ( !strcmp(second.c_str(), "dpl") )
-	        		{
-						sscanf(line2.c_str(), " %*s %d %d %f", &runmode->dpl, &runmode->dpl_gridcells, &runmode->z_dpl);
-	        		}
-	        		if ( !strcmp(second.c_str(), "grid") )
-	        		{
-						sscanf(line2.c_str(), " %*s %d %d %f", &runmode->grid, &runmode->gridcells, &runmode->zgrid);
-	        		}
-	        		if ( !strcmp(second.c_str(), "amplif") )
-	        		{
-						sscanf(line2.c_str(), " %*s %d %d %f", &runmode->amplif, &runmode->amplif_gridcells, &runmode->z_amplif);
-	        		}
-					if ( !strcmp(second.c_str(), "arclets") )
-	        		{
-	            		runmode->arclet = 1;  // Not supported yet
-	        		}
-					if ( !strcmp(second.c_str(), "time") )
-	        		{
-						sscanf(line2.c_str(), " %*s %d ", &runmode->time);
-
-	        		}
-					if( !strncmp(second.c_str(), "Debug",5) )    // Read in if we are in debug mode
-					{
-					runmode->debug = 1;
-					}
-
-					// Read the next line
-					std::getline(IN,line2);
-					std::istringstream read2(line2);
-					read2 >> second >> third;
-	    		}
-		    }
-
-
-			else if (!strncmp(first.c_str(), "potent", 6)) // each time we find a "potential" string in the configuration file, we add an halo
-            {
-                numberPotentials++;
-                std::getline(IN,line2);
-            	std::istringstream read2(line2);
-            	type_t z(0);
-            	read2 >> second >> third;
-            	//std::cout << second  << third << std::endl;
-            	if (strcmp(second.c_str(), "end") == 0)  // Move to next potential and initialize it
-                {
-           	    if ( z == 0. )  // Check if redshift from current halo was initialized
-                    {
-                        fprintf(stderr, "ERROR: A redshift is not defined for a potential \n");
-                        exit(-1);
-                    }
-
-                    break; // Break while loop and move to next potential
-
-                }
-
-         	// Read in values
-
-                if ( !strcmp(second.c_str(), "profil") ||  // Get profile
-                     !strcmp(second.c_str(), "profile") )
-                {
-        		if(!strcmp(third.c_str(), "SIE") ||
-        		   !strcmp(third.c_str(), "5") )
-        		{
-        			Nsis += 1;
-        		}
-        		if(!strcmp(third.c_str(), "8") )
-        		{
-        			Npiemd += 1;
-        		}
-                }
-                else if (!strcmp(second.c_str(), "z_lens"))  // Get redshift
-                {
-
-                    z=atof(third.c_str());
-                }
-            }
-            else if (!strncmp(first.c_str(), "limit", 5)) // same for the limit of the potential
-            {
-                numberLimits++;
-            }
-            else if (!strncmp(first.c_str(), "cline", 5))
-            {
-                runmode->cline = 1;
-            }
-            else if (!strncmp(first.c_str(), "potfile", 7))
-            {
-                runmode->potfile = 1;
-                std::getline(IN,line2);
-				std::istringstream read2(line2);
-				read2 >> second >> third >> fourth;    // Read in 4 words
-				while (strncmp(second.c_str(), "end", 3))    // Read until we reach end
-				{
-				if ( !strcmp(second.c_str(), "filein") )
-				{
-					runmode->potfilename = fourth;
-					//std::cout<< line2 << runmode->potfilename;
-					break;
-
-				}
-				// Read the next line
-				std::getline(IN,line2);
-				std::istringstream read2(line2);
-				read2 >> second >> third;
-				}
-            }
-
-
-	    // read the next line
-	    std::getline(IN,line1);
-	    std::istringstream read1(line1);
-	    read1 >> first;
-
-        }
-
-        IN.close();
-
-        //if(numberLimits!=numberPotentials) printf("Warning : Number of clumps different than number of limits in %s\n", infile.c_str()); // must be limits for each halo
-	runmode->nhalos=numberPotentials;
-	runmode->Nlens[0]=Nsis;
-	runmode->Nlens[1]=Npiemd;
-	if(Nsis+Npiemd != numberPotentials){
-		printf( "Problem NSIS %d NPIEMD %d nhalos %d", runmode->Nlens[0],runmode->Nlens[1],numberPotentials);
-	}
-
-    }
-    else
-    {
-        fprintf(stderr, "ERROR: file %s not found\n", infile.c_str());
-        exit(-1);
-    }
-
-
-
-/******************************** read nset and nimagestot from imfile_name **********************/
-/* the images file must contain
-	1 x_center y_center a b theta redshift
-	1    .        .     . .   .       .
-	1
-	2
-	2
-	2
-	2
-	2
-   So here we have 3 images in the first set of images, 5 in the second, and 8 images in total
-*/
-
-	/*TODO ImageFile_name is a crude method of getting the image information. Rethink it.*/
-
-	if (runmode->image == 1 or runmode->inverse == 1 or runmode->time >= 1){
-		imageFile_name = runmode->imagefile;
-		//printf("Image to source mode activated\n");
-
-
-	std::ifstream IM(imageFile_name.c_str(), std::ios::in);
-	//printf(" Booo says hello again \n");
-    		if ( IM )
-    		{
-        		while( std::getline(IM,line2) )  // Read every line
-        		{
-				j=atoi(line2.c_str());
-				if(j> runmode->nsets){                      // If we move on to a new set images, we pick the new index as reference
-					runmode->nsets=j;
-				}
-				imageIndex++;
-			}
-    		}
-		else{
-
-			fprintf(stderr, "ERROR: file %s not found\n", imageFile_name.c_str());
-			exit(-1);
-		}
-
-	runmode->nimagestot=imageIndex;
-	IM.close();
-	}
-
-	if (runmode->source == 1){
-		imageFile_name = runmode->sourfile;
-		//printf("Source to image mode activated\n");
-
-	std::ifstream IM(imageFile_name.c_str(), std::ios::in);
-	//printf(" Booo says hello again \n");
-    	if ( IM ){
-			int i = 0;
-	        while( std::getline(IM,line1) ){    // Read until we reach the end
-	            i++;
-			}
-			runmode->nsets = i ;
-	    	}
-		else{
-
-			fprintf(stderr, "ERROR: file %s not found\n", imageFile_name.c_str());
-			exit(-1);
-		}
-
-	runmode->nimagestot=imageIndex;	// Important
-	IM.close();
-
-	}
-
-	if (runmode->potfile == 1){
-			imageFile_name = runmode->potfilename;
-
-			std::ifstream IM(imageFile_name.c_str(), std::ios::in);
-
-	    	if ( IM ){
-				int i = 0;
-		        while( std::getline(IM,line1) ){    // Read until we reach the end
-	                if ( line1[0] == '#' ){
-	                    continue;
-	                }
-		            i++;
-				}
-				runmode->npotfile = i ;
-		    	}
-			else{
-
-				fprintf(stderr, "ERROR: file %s not found\n", imageFile_name.c_str());
-				exit(-1);
-			}
-
-		IM.close();
-
-		}
-
-
-printf(" nsets %d , nhalos %d , nimagestot %d npotfile %d \n",  runmode->nsets, runmode->nhalos, runmode->nimagestot,runmode->npotfile);
-/*********** read narclets from arclets_filename ***************/
-/*  the arclets file must contain
-			id	x_center y_center   a   b   theta   redshift
-line :	1          	 .	   .        .       .   .     .        .
-	2
-	3
-	.
-	.
-	narclets
-*/
-/*
-	std::ifstream IM_arclets(arclets_filename.c_str(), std::ios::in);  // Open file
-    		if ( IM_arclets )
-    		{
-        		while(  std::getline(IM_arclets,line2) )  // Read every line
-        		{
-				arcletIndex++;
-			}
-			narclets=arcletIndex;
-    		}
-		else{
-			printf("Error : file %s not found\n",arclets_filename.c_str());
-			exit(-1);
-		}
-	IM_arclets.close();
-
-
-// Read the number of sources in the cleanlens file
-
-        if (cleanlensMode != 0)
-            {
-	    std::ifstream IM_cleanlens(cleanlensFile.c_str(), std::ios::in);  // Open file
-    		    if ( IM_cleanlens )
-    		    {
-        		    while(  std::getline(IM_cleanlens,line2) )  // Read every line
-        		    {
-				    cleanlensIndex++;
-			    }
-			    numbercleanlens=cleanlensIndex;
-    		    }
-		    else{
-			    printf("Error : file %s not found\n",cleanlensFile.c_str());
-			    exit(-1);
-		    }
-	    IM_cleanlens.close();
-            }
-        else
-            {
-            numbercleanlens = 0;
-            }
-            * */
-}
-
-
-/** @brief read the positions, redshifts and numbers of multiple images from the images file
-*
-* This module function reads in the strong lensing images
-* Output: image coordinates, image shapes (semi-minor, semi-major of ellipse and orientation angle), source redshifts, number of images per set
-*
-** the images file must contain
-	1 	x_center	y_center	major axis	minor axis	ellipticity angle	redshift
-	1	   .		   .		   .		    .			.		    .
-	1	   .		   .		   .		    .			.		    .
-	2	   .		   .		   .		    .			.		    .
-	2	   .		   .		   .		    .			.		    .
-	2	   .		   .		   .		    .			.		    .
-	2	   .		   .		   .		    .			.		    .
-	2	   .		   .		   .		    .			.		    .
-	.	   .		   .		   .		    .			.		    .
-	.	   .		   .		   .		    .			.		    .
-	.	   .		   .		   .		    .			.		    .
-   nsetofimages	   .		   .		   .		    .			.		    .
-
-   At each line we store in j the index of the set of images to store the redshifts and the number of images of each set
-   At each line we add an images in the position of images' array
-*
-* @param runmode runmode parameter
-* @param image	array where images will be stored
-* @param nImagesSet array where the number of images per Set will be stored
-*/
-
 
 /// read the positions, redshifts and numbers of multiple images from the images file
 void module_readParameters_readImages(const struct runmode_param *runmode, struct galaxy image[], int nImagesSet[])
@@ -3164,46 +2843,6 @@ void module_readParameters_PotentialSOA(std::string infile, Potential *lens, Pot
 
 }
 
-#if 0
-void module_readParameters_PotentialSOA_nonsorted(std::string infile, Potential *lens, Potential_SOA *lens_SOA, int nhalos){
-
-	double DTR=acos(-1.)/180.;	/* 1 deg in rad  = pi/180 */
-	std::string first, second, third, line1, line2;
-
-	int iterator[NTYPES];
-
-	Potential_SOA  *ilenses;
-
-	ilenses = lens_SOA;
-	ilenses->type = 	new int[nhalos];
-	ilenses->position_x  = 	new double[nhalos];
-	ilenses->position_y = 		new double[nhalos];
-	ilenses->b0 = 	new double[nhalos];
-	ilenses->ellipticity_angle = new double[nhalos];
-	ilenses->ellipticity = new double[nhalos];
-	ilenses->ellipticity_potential = new double[nhalos];
-	ilenses->rcore = 	new double[nhalos];
-	ilenses->rcut = 	new double[nhalos];
-	ilenses->z = 		new double[nhalos];
-
-	for (int i = 0; i <nhalos; ++i){
-
-		ilenses->type[i]  = 		lens[i].type;
-		ilenses->position_x[i]  = 		lens[i].position.x;
-		ilenses->position_y[i] = 		lens[i].position.y;
-		ilenses->b0[i] = 		lens[i].b0;
-		ilenses->ellipticity_angle[i] = lens[i].ellipticity_angle;
-		ilenses->ellipticity[i] = lens[i].ellipticity;
-		ilenses->ellipticity_potential[i] = lens[i].ellipticity_potential;
-		ilenses->rcore[i] = 	lens[i].rcore;
-		ilenses->rcut[i] = 	lens[i].rcut;
-		ilenses->z[i] = 		lens[i].z;
-
-	}
-
-
-}
-#endif
 
 /** @brief This module function calculates profile depended information like the impactparameter b0 and the potential ellipticity epot
  *
@@ -3465,6 +3104,18 @@ if (DEBUG == 1)  // If we are in debug mode
 }
 
 }
+
+void module_readParameters_debug_potential_SOA(int DEBUG, Potential_SOA lenses, int nhalos)
+{
+if (DEBUG == 1)  // If we are in debug mode
+{
+	for ( int i = 0; i < nhalos; ++i){
+		printf("Potential[%d]: x = %f, y = %f, vdisp = %f, type = %d, \n \t ellipticity = %f, ellipticity_pot = %f, ellipticity angle (radians) = %f, rcore = %f, rcut = %f,\n \t z = %f\n, angle cos %f, sin %f", i,lenses.position_x[i], lenses.position_y[i], lenses.vdisp[i], lenses.type[i], lenses.ellipticity[i], lenses.ellipticity_potential[i], lenses.ellipticity_angle[i], lenses.rcore[i], lenses.rcut[i], lenses.z[i], lenses.anglecos[i], lenses.anglesin[i]);
+	}
+}
+
+}
+
 /** @brief Prints out potfile_param
 */
 void module_readParameters_debug_potfileparam(int DEBUG, potfile_param *potfile)

@@ -19,6 +19,7 @@
 // Include
 #include <iostream>
 //#include "module_readParameters.hpp"
+#include "module_cosmodistances.hpp"
 #include <cstring>
 #include <sstream>
 #include <stdlib.h>
@@ -39,7 +40,7 @@ void module_readParameters_limit(std::string infile, struct potentialoptimizatio
 void module_readParameters_Potential(std::string infile, Potential lens[], int nhalos);
 void module_readParameters_PotentialSOA_2(std::string infile, Potential *lens, Potential_SOA *lens_SOA, int Nset[]);
 void module_readParameters_PotentialSOA(std::string infile, Potential *lens, Potential_SOA *lens_SOA, int nhalos);
-void module_readParameters_PotentialSOA_new(std::string infile, Potential_SOA *lens_SOA, int nhalos);
+void module_readParameters_PotentialSOA_new(std::string infile, Potential_SOA *lens_SOA, int nhalos, cosmo_param cosmology);
 //void module_readParameters_PotentialSOA_nonsorted(std::string infile, Potential *lens, Potential_SOA *lens_SOA, int nhalos);
 void module_readParameters_calculatePotentialparameter(Potential *ilens);
 void module_readParameters_SingleLensingSourcesNumberSets(std::string infile, int &nsetofimages_cleanlens );
@@ -65,6 +66,7 @@ void module_readParameters_debug_runmode(int DEBUG, runmode_param runmode);
 void module_readParameters_debug_image(int DEBUG, galaxy image[],int nImagesSet[],int nsets);
 void module_readParameters_debug_source(int DEBUG, galaxy source[], int nsets);
 void module_readParameters_debug_potential(int DEBUG, Potential potential[], int nhalos);
+void module_readParameters_debug_potential_SOA(int DEBUG, Potential_SOA lenses, int nhalos);
 void module_readParameters_debug_potfileparam(int DEBUG, potfile_param *potfile);
 void module_readParameters_debug_criticcaustic(int DEBUG, cline_param cline);
 void module_readParameters_debug_limit(int DEBUG, struct potentialoptimization host_potentialoptimization);
