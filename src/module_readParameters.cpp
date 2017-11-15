@@ -1489,41 +1489,16 @@ IN.close();
 
 }
 
-void module_readParameters_PotentialSOA_new(std::string infile, Potential_SOA *lens_SOA, int nhalos, cosmo_param cosmology){
+/** @brief Finds the amount of potential of same types. Has to be updated when introducing a new type of potential.
+*
+*/
 
 
-	double DTR=acos(-1.)/180.;	/* 1 deg in rad  = pi/180 */
+void read_potentialSOA_ntypes(std::string infile, int N_type[]){
 
-	double core_radius_kpc = 0.;
-	double cut_radius_kpc = 0.;
+	int ind = 0;
+	std::string first, second, third, line1, line2;
 
-	int N_type[100];
-	int Indice_type[100];
-	int ind;
-	Potential lens_temp;
-	//Init of lens_SOA
-	lens_SOA->type = 	new int[nhalos];
-	lens_SOA->position_x  = 	new type_t[nhalos];
-	lens_SOA->position_y = 		new type_t[nhalos];
-	lens_SOA->b0 = 	new type_t[nhalos];
-	lens_SOA->vdisp = 	new type_t[nhalos];
-	lens_SOA->ellipticity_angle = new type_t[nhalos];
-	lens_SOA->ellipticity = new type_t[nhalos];
-	lens_SOA->ellipticity_potential = new type_t[nhalos];
-	lens_SOA->rcore = 	new type_t[nhalos];
-	lens_SOA->rcut = 	new type_t[nhalos];
-	lens_SOA->z = 		new type_t[nhalos];
-	lens_SOA->anglecos = 	new type_t[nhalos];
-	lens_SOA->anglesin = 		new type_t[nhalos];
-
-
-	//Init of N_types and Indice_type (Number of lenses of a certain type)
-	for(int i=0;i < 100; ++i){
-		N_type[i] = 0;
-		Indice_type[i] = 0;
-	}
-
-    std::string first, second, third, line1, line2;
     std::ifstream IN(infile.c_str(), std::ios::in);
     //First sweep throught the runmode file to find N_type (number of types)
     if ( IN )
@@ -1594,14 +1569,59 @@ void module_readParameters_PotentialSOA_new(std::string infile, Potential_SOA *l
 		}
     }
 
-	for(int i=1;i < 100; ++i){
-		Indice_type[i] = N_type[i]+Indice_type[i-1];
-		//printf("%d %d \n ",N_type[i], Indice_type[i]);
-	}
 	IN.close();
 	IN.clear();
 	IN.open(infile.c_str(), std::ios::in);
 
+}
+
+void module_readParameters_PotentialSOA_direct(std::string infile, Potential_SOA *lens_SOA, int nhalos, cosmo_param cosmology){
+
+
+	double DTR=acos(-1.)/180.;	/* 1 deg in rad  = pi/180 */
+
+	double core_radius_kpc = 0.;
+	double cut_radius_kpc = 0.;
+
+	int N_type[100];
+	int Indice_type[100];
+	int ind;
+	Potential lens_temp;
+	//Init of lens_SOA
+	lens_SOA->type = 	new int[nhalos];
+	lens_SOA->position_x  = 	new type_t[nhalos];
+	lens_SOA->position_y = 		new type_t[nhalos];
+	lens_SOA->b0 = 	new type_t[nhalos];
+	lens_SOA->vdisp = 	new type_t[nhalos];
+	lens_SOA->ellipticity_angle = new type_t[nhalos];
+	lens_SOA->ellipticity = new type_t[nhalos];
+	lens_SOA->ellipticity_potential = new type_t[nhalos];
+	lens_SOA->rcore = 	new type_t[nhalos];
+	lens_SOA->rcut = 	new type_t[nhalos];
+	lens_SOA->z = 		new type_t[nhalos];
+	lens_SOA->anglecos = 	new type_t[nhalos];
+	lens_SOA->anglesin = 		new type_t[nhalos];
+
+
+	//Init of N_types and Indice_type (Number of lenses of a certain type)
+	for(int i=0;i < 100; ++i){
+		N_type[i] = 0;
+		Indice_type[i] = 0;
+	}
+
+
+
+    //First sweep through the runmode file to find N_type (number of types)
+    read_potentialSOA_ntypes(infile,N_type);
+
+    //Calcuting starting points for each type in lens array
+	for(int i=1;i < 100; ++i){
+		Indice_type[i] = N_type[i]+Indice_type[i-1];
+		//printf("%d %d \n ",N_type[i], Indice_type[i]);
+	}
+
+    std::string first, second, third, line1, line2;
+    std::ifstream IN(infile.c_str(), std::ios::in);
 	if(IN){
 	while(std::getline(IN,line1))
         {
@@ -1775,6 +1795,7 @@ void module_readParameters_PotentialSOA_new(std::string infile, Potential_SOA *l
 
 }  // closes while loop
 	}
+	IN.close();
 
 }
 

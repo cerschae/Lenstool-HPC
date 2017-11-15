@@ -40,7 +40,7 @@ void module_readParameters_limit(std::string infile, struct potentialoptimizatio
 void module_readParameters_Potential(std::string infile, Potential lens[], int nhalos);
 void module_readParameters_PotentialSOA_2(std::string infile, Potential *lens, Potential_SOA *lens_SOA, int Nset[]);
 void module_readParameters_PotentialSOA(std::string infile, Potential *lens, Potential_SOA *lens_SOA, int nhalos);
-void module_readParameters_PotentialSOA_new(std::string infile, Potential_SOA *lens_SOA, int nhalos, cosmo_param cosmology);
+void module_readParameters_PotentialSOA_direct(std::string infile, Potential_SOA *lens_SOA, int nhalos, cosmo_param cosmology);
 //void module_readParameters_PotentialSOA_nonsorted(std::string infile, Potential *lens, Potential_SOA *lens_SOA, int nhalos);
 void module_readParameters_calculatePotentialparameter(Potential *ilens);
 void module_readParameters_SingleLensingSourcesNumberSets(std::string infile, int &nsetofimages_cleanlens );
