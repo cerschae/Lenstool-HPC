@@ -791,9 +791,12 @@ IN.close();
 * @param potfile_param potfile parameter variable
 */
 
+void setpotfiles_param(potfile_param *potfile, cosmo_param cosmology){
 
 
-void module_readParameters_readpotfiles_param(std::string infile, potfile_param *potfile){
+}
+
+void module_readParameters_readpotfiles_param(std::string infile, potfile_param *potfile, cosmo_param cosmology){
 
     std::string first, second, third, line1, line2;
     //cast variables
@@ -806,8 +809,8 @@ void module_readParameters_readpotfiles_param(std::string infile, potfile_param 
     potfile->zlens = 0;
     potfile->mag0 = 0;
     potfile->sigma = 0;
-    potfile->core = 0;
-    potfile->corekpc = 0;
+    potfile->core = -1.0;
+    potfile->corekpc = -1;
     potfile->ircut = 0;
     potfile->cut1 = 0;
     potfile->cut2 = 0;
@@ -928,9 +931,36 @@ void module_readParameters_readpotfiles_param(std::string infile, potfile_param 
 
 }  // closes if(IN)
 
-
-
 IN.close();
+
+//Calculate vdisp, rcut and rcore
+
+//*********************************************************************
+// Set the Potfile current and limiting values
+//*********************************************************************
+if ( potfile->ftype <= 4 )
+{
+    // Scale potfile SIGMA
+	potfile->sigma = potfile->sigma1;
+
+    // ... and potfile RCUT
+    if ( potfile->cut1 == 0 && potfile->cutkpc1 != 0 )
+    {
+    	potfile->cut1 = potfile->cutkpc1 / (d0 / cosmology.h * module_cosmodistances_observerObject(potfile->zlens,cosmology));
+    	potfile->cut2 = potfile->cutkpc2 / (d0 / cosmology.h * module_cosmodistances_observerObject(potfile->zlens,cosmology));
+    }
+    potfile->cut = potfile->cut1;
+
+    // ... and potfile RCORE
+    if ( potfile->core == -1.0 && potfile->corekpc != -1 )
+    	potfile->core = potfile->corekpc / (d0 / cosmology.h * module_cosmodistances_observerObject(potfile->zlens,cosmology));
+
+    // ... and potfile RCUT SLOPE
+    potfile->slope = potfile->slope1;
+
+    // ... and potfile VDSLOPE
+    potfile->vdslope = potfile->vdslope1;
+}
 
 }
 
@@ -945,6 +975,7 @@ void module_readParameters_readpotfiles(const runmode_param *runmode, potfile_pa
 
 	std::string second, line1;
 	double aa,bb;
+	double DTR=acos(-1.)/180.;	/* 1 deg in rad  = pi/180 */
 	//cast variables
 	double cast_x,cast_y,cast_theta,cast_lum,cast_mag;
 
@@ -980,7 +1011,7 @@ void module_readParameters_readpotfiles(const runmode_param *runmode, potfile_pa
 
 
 				// Read a line of the catalog
-				if ( potfile->ftype == 1 )
+				if ( potfile->ftype == 1 || potfile->ftype == 3 )
 				{
 						sscanf( line1.c_str(), "%s%lf%lf%lf%lf%lf%lf%lf",
 							&lens[i].name, &cast_x, &cast_y,
@@ -988,12 +1019,13 @@ void module_readParameters_readpotfiles(const runmode_param *runmode, potfile_pa
 						lens[i].ellipticity = (type_t) (aa*aa-bb*bb)/(aa*aa+bb*bb);
 						if ( lens[i].ellipticity < 0 )
 						{
-							fprintf( stderr, "ERROR: The potfile clump %s has a negative ellipticity.\n", lens[i].name );
+							fprintf( stderr, "ERROR: The potfile clump %f has a negative ellipticity.\n", lens[i].name );
 							exit(-1);
 						}
 						//goto NEXT;
 
 				}
+
 
 				//Casting
 				lens[i].position.x =(type_t)cast_x;
@@ -1001,12 +1033,120 @@ void module_readParameters_readpotfiles(const runmode_param *runmode, potfile_pa
 				lens[i].theta =(type_t)cast_theta;
 				lens[i].lum =(type_t)cast_lum;
 				lens[i].mag =(type_t)cast_mag;
+				//general parameters
+				lens[i].vdisp = potfile->sigma;
+				lens[i].rcore = potfile->core;
+				lens[i].rcut = potfile->cut;
+				lens[i].ellipticity_angle = lens[i].theta* DTR;
 
+			    //Calculate parameters like b0, potential ellipticity and anyother parameter depending on the profile
+			    module_readParameters_calculatePotentialparameter(&lens[i]);
 
 				//Variables
 				potfile->npotfile++;
 				i++;
 		}
+	}
+	else{
+			std::cout << "Error : file "  << potfile->potfile <<  " not found" << std::endl;
+			exit(-1);
+		}
+
+	IM.close();
+
+}
+
+void module_readParameters_readpotfiles_SOA(const runmode_param *runmode, potfile_param *potfile, Potential_SOA *lens){
+
+	std::string second, line1;
+	double aa,bb;
+	double DTR=acos(-1.)/180.;	/* 1 deg in rad  = pi/180 */
+	//cast variables
+	double cast_x,cast_y,cast_theta,cast_lum,cast_mag, cast_name;
+
+
+// Read in potentials
+    std::ifstream IM(potfile->potfile,std::ios::in);
+	if ( IM )
+    	{
+			int i = runmode->nhalos;
+        	while( std::getline(IM,line1) )    // Read until we reach the end
+        	{
+
+                // Skip commented lines with #
+                if ( line1[0] == '#' )
+                    continue;
+
+                std::cerr << "Turn " << i << std::endl;
+
+                // Default initialisation of clump
+                lens->type[i] = potfile->type;
+                lens->z[i] = potfile->zlens;
+                lens->ellipticity_potential[i] = lens->ellipticity[i] = 0.;
+                lens->alpha[i]  = 0.;
+                lens->rcut[i] = 0.;
+                lens->rcore[i] = 0.;
+                lens->rscale[i] = 0.;
+                lens->mag[i] = 0.;
+                lens->lum[i] = 0.;
+                lens->vdisp[i] = 0.;
+                lens->position_x[i] = lens->position_y[i] = 0.;
+                lens->ellipticity_angle[i] = 0.;
+                lens->weight[i] = 0;
+                lens->exponent[i] = 0;
+                lens->einasto_kappacritic[i] = 0;
+
+                std::cerr << "Init finished "<< std::endl;
+
+
+				// Read a line of the catalog
+				if ( potfile->ftype == 1 || potfile->ftype == 3 )
+				{
+						sscanf( line1.c_str(), "%lf%lf%lf%lf%lf%lf%lf%lf",
+							&cast_name, &cast_x, &cast_y,
+								 &aa, &bb, &cast_theta, &cast_mag, &cast_lum);
+						lens->ellipticity[i] = (type_t) (aa*aa-bb*bb)/(aa*aa+bb*bb);
+						if ( lens->ellipticity[i] < 0 )
+						{
+							fprintf( stderr, "ERROR: The potfile clump %d has a negative ellipticity.\n", i );
+							exit(-1);
+						}
+						//goto NEXT;
+
+				}
+
+
+				//Casting
+				lens->name[i] =(type_t)cast_name;
+				lens->position_x[i] =(type_t)cast_x;
+				lens->position_y[i] =(type_t)cast_y;
+				lens->theta[i] =(type_t)cast_theta;
+				lens->lum[i] =(type_t)cast_lum;
+				lens->mag[i] =(type_t)cast_mag;
+				//general parameters
+				lens->vdisp[i] = potfile->sigma;
+				lens->rcore[i] = potfile->core;
+				lens->rcut[i] = potfile->cut;
+				lens->ellipticity_angle[i] = lens->theta[i]* DTR;
+				lens->anglecos[i]	     = cos(lens->ellipticity_angle[i]);
+				lens->anglesin[i] 	     = sin(lens->ellipticity_angle[i]);
+
+			    //Calculate parameters like b0, potential ellipticity and anyother parameter depending on the profile
+			    module_readParameters_calculatePotentialparameter_SOA(lens,i);
+
+				//Variables
+				potfile->npotfile++;
+				i++;
+		}
+
+
+
+
+
+
+
+
+
 	}
 	else{
 			std::cout << "Error : file "  << potfile->potfile <<  " not found" << std::endl;
@@ -1575,7 +1715,7 @@ void read_potentialSOA_ntypes(std::string infile, int N_type[]){
 
 }
 
-void module_readParameters_PotentialSOA_direct(std::string infile, Potential_SOA *lens_SOA, int nhalos, cosmo_param cosmology){
+void module_readParameters_PotentialSOA_direct(std::string infile, Potential_SOA *lens_SOA, int nhalos, int npotfiles, cosmo_param cosmology){
 
 
 	double DTR=acos(-1.)/180.;	/* 1 deg in rad  = pi/180 */
@@ -1588,19 +1728,31 @@ void module_readParameters_PotentialSOA_direct(std::string infile, Potential_SOA
 	int ind;
 	Potential lens_temp;
 	//Init of lens_SOA
-	lens_SOA->type = 	new int[nhalos];
-	lens_SOA->position_x  = 	new type_t[nhalos];
-	lens_SOA->position_y = 		new type_t[nhalos];
-	lens_SOA->b0 = 	new type_t[nhalos];
-	lens_SOA->vdisp = 	new type_t[nhalos];
-	lens_SOA->ellipticity_angle = new type_t[nhalos];
-	lens_SOA->ellipticity = new type_t[nhalos];
-	lens_SOA->ellipticity_potential = new type_t[nhalos];
-	lens_SOA->rcore = 	new type_t[nhalos];
-	lens_SOA->rcut = 	new type_t[nhalos];
-	lens_SOA->z = 		new type_t[nhalos];
-	lens_SOA->anglecos = 	new type_t[nhalos];
-	lens_SOA->anglesin = 		new type_t[nhalos];
+	lens_SOA->name = 	new type_t[nhalos+npotfiles];
+	lens_SOA->type = 	new int[nhalos+npotfiles];
+	lens_SOA->position_x  = 	new type_t[nhalos+npotfiles];
+	lens_SOA->position_y = 		new type_t[nhalos+npotfiles];
+	lens_SOA->b0 = 	new type_t[nhalos+npotfiles];
+	lens_SOA->vdisp = 	new type_t[nhalos+npotfiles];
+	lens_SOA->ellipticity_angle = new type_t[nhalos+npotfiles];
+	lens_SOA->ellipticity = new type_t[nhalos+npotfiles];
+	lens_SOA->ellipticity_potential = new type_t[nhalos+npotfiles];
+	lens_SOA->rcore = 	new type_t[nhalos+npotfiles];
+	lens_SOA->rcut = 	new type_t[nhalos+npotfiles];
+	lens_SOA->z = 		new type_t[nhalos+npotfiles];
+	lens_SOA->anglecos = 	new type_t[nhalos+npotfiles];
+	lens_SOA->anglesin = 		new type_t[nhalos+npotfiles];
+
+	lens_SOA->mag = 	new type_t[nhalos+npotfiles];
+	lens_SOA->lum = 		new type_t[nhalos+npotfiles];
+	lens_SOA->weight = 	new type_t[nhalos+npotfiles];
+	lens_SOA->exponent = 		new type_t[nhalos+npotfiles];
+	lens_SOA->einasto_kappacritic = 		new type_t[nhalos+npotfiles];
+	lens_SOA->rscale = 		new type_t[nhalos+npotfiles];
+	lens_SOA->alpha = 		new type_t[nhalos+npotfiles];
+	lens_SOA->theta = 		new type_t[nhalos+npotfiles];
+
+
 
 
 	//Init of N_types and Indice_type (Number of lenses of a certain type)
@@ -1932,6 +2084,68 @@ void module_readParameters_calculatePotentialparameter(Potential *lens){
 	
 }
 
+void module_readParameters_calculatePotentialparameter_SOA(Potential_SOA *lens, int ind){
+
+
+
+
+	switch (lens->type[ind])
+    {
+
+	case(5): /*Elliptical Isothermal Sphere*/
+		//impact parameter b0
+		lens->b0[ind] = 4* pi_c2 * lens->vdisp[ind] * lens->vdisp[ind] ;
+		//ellipticity_potential
+		lens->ellipticity_potential[ind] = lens->ellipticity[ind]/3 ;
+	    break;
+
+	case(8): /* PIEMD */
+		//impact parameter b0
+		lens->b0[ind] = 6.*pi_c2 * lens->vdisp[ind] * lens->vdisp[ind];
+		//ellipticity_parameter
+	    if ( lens->ellipticity[ind] == 0. && lens->ellipticity_potential[ind] != 0. ){
+			// emass is (a2-b2)/(a2+b2)
+			lens->ellipticity[ind] = 2.*lens->ellipticity_potential[ind] / (1. + lens->ellipticity_potential[ind] * lens->ellipticity_potential[ind]);
+			printf("1 : %f %f \n",lens->ellipticity[ind],lens->ellipticity_potential[ind]);
+		}
+		else if ( lens->ellipticity[ind] == 0. && lens->ellipticity_potential[ind] == 0. ){
+			lens->ellipticity_potential[ind] = 0.00001;
+			printf("2 : %f %f \n",lens->ellipticity[ind],lens->ellipticity_potential[ind]);
+		}
+		else{
+			// epot is (a-b)/(a+b)
+			lens->ellipticity_potential[ind] = (1. - sqrt(1 - lens->ellipticity[ind] * lens->ellipticity[ind])) / lens->ellipticity[ind];
+			printf("3 : %f %f \n",lens->ellipticity[ind],lens->ellipticity_potential[ind]);
+		}
+        break;
+
+	case(81): /* PIEMD */
+		//impact parameter b0
+		lens->b0[ind] = 6.*pi_c2 * lens->vdisp[ind] * lens->vdisp[ind];
+		//ellipticity_parameter
+	    if ( lens->ellipticity[ind] == 0. && lens->ellipticity_potential[ind] != 0. ){
+			// emass is (a2-b2)/(a2+b2)
+			lens->ellipticity[ind] = 2.*lens->ellipticity_potential[ind] / (1. + lens->ellipticity_potential[ind] * lens->ellipticity_potential[ind]);
+			printf("1 : %f %f \n",lens->ellipticity[ind],lens->ellipticity_potential[ind]);
+		}
+		else if ( lens->ellipticity[ind] == 0. && lens->ellipticity_potential[ind] == 0. ){
+			lens->ellipticity_potential[ind] = 0.00001;
+			printf("2 : %f %f \n",lens->ellipticity[ind],lens->ellipticity_potential[ind]);
+		}
+		else{
+			// epot is (a-b)/(a+b)
+			lens->ellipticity_potential[ind] = (1. - sqrt(1 - lens->ellipticity[ind] * lens->ellipticity[ind])) / lens->ellipticity[ind];
+			printf("3 : %f %f \n",lens->ellipticity[ind],lens->ellipticity_potential[ind]);
+		}
+        break;
+
+	default:
+            printf( "ERROR: LENSPARA profil type of clump %f unknown : %d N %d \n",lens->name[ind], lens->type[ind], ind);
+		break;
+    };
+
+}
+
 
 
 /** @brief This module function reads the grid information
@@ -2128,7 +2342,7 @@ void module_readParameters_debug_potential_SOA(int DEBUG, Potential_SOA lenses, 
 if (DEBUG == 1)  // If we are in debug mode
 {
 	for ( int i = 0; i < nhalos; ++i){
-		printf("Potential[%d]: x = %f, y = %f, vdisp = %f, type = %d, \n \t ellipticity = %f, ellipticity_pot = %f, ellipticity angle (radians) = %f, rcore = %f, rcut = %f,\n \t z = %f\n, angle cos %f, sin %f", i,lenses.position_x[i], lenses.position_y[i], lenses.vdisp[i], lenses.type[i], lenses.ellipticity[i], lenses.ellipticity_potential[i], lenses.ellipticity_angle[i], lenses.rcore[i], lenses.rcut[i], lenses.z[i], lenses.anglecos[i], lenses.anglesin[i]);
+		printf("Potential[%d]: x = %f, y = %f, vdisp = %f, type = %d, \n \t ellipticity = %f, ellipticity_pot = %f, ellipticity angle (radians) = %f, rcore = %f, rcut = %f,\n \t z = %f\n, angle cos %f, sin %f \n", i,lenses.position_x[i], lenses.position_y[i], lenses.vdisp[i], lenses.type[i], lenses.ellipticity[i], lenses.ellipticity_potential[i], lenses.ellipticity_angle[i], lenses.rcore[i], lenses.rcut[i], lenses.z[i], lenses.anglecos[i], lenses.anglesin[i]);
 	}
 }
 
