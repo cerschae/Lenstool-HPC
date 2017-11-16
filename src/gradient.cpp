@@ -269,8 +269,8 @@ struct point module_potentialDerivatives_totalGradient_5_SOA_v2(const struct poi
 			grad.x += result.x*cose - result.y*sine;
 			grad.y += result.y*cose + result.x*sine;
 
-			grad.x = x/R;
-			grad.y = y/R;
+			//grad.x = x/R;
+			//grad.y = y/R;
         }
         return grad;
 }

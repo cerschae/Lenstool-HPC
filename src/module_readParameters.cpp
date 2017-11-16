@@ -1019,7 +1019,7 @@ void module_readParameters_readpotfiles(const runmode_param *runmode, potfile_pa
 						lens[i].ellipticity = (type_t) (aa*aa-bb*bb)/(aa*aa+bb*bb);
 						if ( lens[i].ellipticity < 0 )
 						{
-							fprintf( stderr, "ERROR: The potfile clump %f has a negative ellipticity.\n", lens[i].name );
+							fprintf( stderr, "ERROR: The potfile clump %s has a negative ellipticity.\n", lens[i].name );
 							exit(-1);
 						}
 						//goto NEXT;
@@ -1955,7 +1955,7 @@ void module_readParameters_PotentialSOA_direct(std::string infile, Potential_SOA
 *
 */
 
-void module_readParameters_PotentialSOA(std::string infile, Potential *lens, Potential_SOA *lens_SOA, int nhalos, cosmo_param cosmology){
+void module_readParameters_PotentialSOA(std::string infile, Potential *lens, Potential_SOA *lens_SOA, int nhalos){
 
 	lens_SOA->type = 	new int[nhalos];
 	lens_SOA->position_x  = 	new type_t[nhalos];

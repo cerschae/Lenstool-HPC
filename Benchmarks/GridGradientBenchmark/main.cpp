@@ -18,11 +18,11 @@
 #include <omp.h>
 //
 //#include <cuda_runtime.h>
-#include <structure_hpc.h>
+#include <structure_hpc.hpp>
 #include "timer.h"
 #include "gradient.hpp"
 #include "chi_CPU.hpp"
-#include "module_cosmodistances.h"
+#include "module_cosmodistances.hpp"
 #include "module_readParameters.hpp"
 #ifdef __WITH_GPU
 #include "grid_gradient_GPU.cuh"
@@ -209,23 +209,23 @@ int main(int argc, char *argv[])
 	// Output: Potentials and its parameters
 
 
-	module_readParameters_Potential(inputFile, lenses, runmode.nhalos);
+	module_readParameters_PotentialSOA_direct(inputFile, &lenses_SOA, runmode.nhalos, runmode.npotfile, cosmology);
+	module_readParameters_debug_potential_SOA(1, lenses_SOA, runmode.nhalos);
+
+	//module_readParameters_Potential(inputFile, lenses, runmode.nhalos);
 	//Converts to SOA
-	//module_readParameters_PotentialSOA(inputFile, lenses, lenses_SOA, runmode.Nlens);
-	module_readParameters_PotentialSOA(inputFile, lenses, &lenses_SOA, runmode.nhalos);
-	//module_readParameters_PotentialSOA_nonsorted(inputFile, lenses, &lenses_SOA_nonsorted, runmode.nhalos);
-	module_readParameters_debug_potential(runmode.debug, lenses, runmode.nhalos);
-	//std::cerr << lenses_SOA[1].b0[0] << " " << lenses[0].b0  << std::endl;
+	//module_readParameters_PotentialSOA(inputFile, lenses, &lenses_SOA, runmode.nhalos);
+	//module_readParameters_debug_potential(runmode.debug, lenses, runmode.nhalos);
 	// This module function reads in the potfiles parameters
 	// Input: input file
 	// Output: Potentials from potfiles and its parameters
 
 	if (runmode.potfile == 1 )
 	{
-		module_readParameters_readpotfiles_param(inputFile, &potfile);
-		module_readParameters_debug_potfileparam(runmode.debug, &potfile);
-		module_readParameters_readpotfiles(&runmode,&potfile,lenses);
-		module_readParameters_debug_potential(runmode.debug, lenses, runmode.nhalos + runmode.npotfile);
+		module_readParameters_readpotfiles_param(inputFile, &potfile, cosmology);
+		module_readParameters_debug_potfileparam(1, &potfile);
+		module_readParameters_readpotfiles_SOA(&runmode,&potfile,&lenses_SOA);
+		module_readParameters_debug_potential_SOA(1, lenses_SOA, runmode.nhalos + runmode.npotfile);
 
 	}
 	//
@@ -245,7 +245,6 @@ int main(int argc, char *argv[])
 		//runmode.nsets = runmode.nimagestot;
 		for(int i = 0; i < runmode.nimagestot; ++i)
 		{
-			//std::cout << "images[i].redshift " << images[i].redshift <<std::endl;
 			images[i].dls = module_cosmodistances_objectObject(lenses[0].z, images[i].redshift, cosmology);
 			images[i].dos = module_cosmodistances_observerObject(images[i].redshift, cosmology);
 			images[i].dr  = module_cosmodistances_lensSourceToObserverSource(lenses[0].z, images[i].redshift, cosmology);
@@ -456,8 +455,8 @@ int main(int argc, char *argv[])
 		}
 		//
 		std::cout << "  l2 difference norm cpu = " << std::setprecision(15) << norm_x << " " << std::setprecision(15) << norm_y << std::endl;
-		std::cout << sum_x << " " << std::setprecision(15) << sum_y << std::setprecision(15) << std::endl;
-#if 1
+		//std::cout << sum_x << " " << std::setprecision(15) << sum_y << std::setprecision(15) << std::endl;
+#if 0
 
 		myfile.open ("lenstool_grid_x.txt");
 
@@ -534,7 +533,7 @@ int main(int argc, char *argv[])
 		std::cout << "  sum x cpu = " << std::setprecision(15) << sum_x_cpu << " sum_y_cpu  " << std::setprecision(15) << sum_y_cpu << std::endl;
 		std::cout << "  sum x gpu = " << std::setprecision(15) << sum_x_gpu << " sum_y_gpu  " << std::setprecision(15) << sum_y_gpu << std::endl;
 
-#if 1
+#if 0
 		std::cout << " CPUTEST " << std::endl;
 		myfile.open ("Float_x_R_XMIN0.txt");
 		for (int ii = 0; ii < grid_dim*grid_dim; ++ii)

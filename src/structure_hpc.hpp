@@ -45,7 +45,7 @@
 #define gNFW_ARRAY_SIZE 1800 // Set the dimension of the gnfw table gNFW_ARRAY_SIZE, must be 1800 for the current table file
 
 // Filename definition
-#define FILENAME_SIZE 60  // size of a filename in .par file
+#define FILENAME_SIZE 50  // size of a filename in .par file
 
 //constants definition
 
