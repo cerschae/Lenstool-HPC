@@ -1538,7 +1538,7 @@ std::ifstream IN(infile.c_str(), std::ios::in);
 		 !strcmp(second.c_str(), "x_center") )
         {
             ilens->position.x=atof(third.c_str());
-            std::cout << "PositionX : " << std::setprecision(15) << ilens->position.x << std::endl;
+            //std::cout << "PositionX : " << std::setprecision(15) << ilens->position.x << std::endl;
         }
         else if (!strcmp(second.c_str(), "y_centre") ||  // Get y center
 		 !strcmp(second.c_str(), "y_center") )

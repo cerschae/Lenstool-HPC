@@ -40,6 +40,7 @@ program_INCLUDE_LIBS += $(WCSTOOL_ROOT)
 # Compiler flags
 CPPFLAGS += $(foreach includedir,$(program_INCLUDE_DIRS),-I$(includedir))
 CPPFLAGS += $(foreach includelib,$(program_INCLUDE_LIBS),-L$(includelib))
+CPPFLAGS += -D_double
 CPPFLAGS += -D__WITH_LENSTOOL
 CPPFLAGS += -qopenmp -xHost -g -O3 -std=c++0x -Wall -pedantic
 #CPPFLAGS += -qopenmp -march=core-avx2 -g -O3 -std=c++0x -Wall -pedantic
@@ -49,7 +50,7 @@ CPPFLAGS += -qopenmp -xHost -g -O3 -std=c++0x -Wall -pedantic
 LDFLAGS := -llenstoolhpc -llenstool -llt -lgsl -lgslcblas -lm -lwcs -lcfitsio
 
 NVFLAGS := -O3 -g -G -arch=sm_35 -rdc=true -ccbin icpc -Xcompiler -qopenmp #rdc=true needed for separable compilation
-NVFLAGS += -D__WITH_LENSTOOL 
+NVFLAGS += -D__WITH_LENSTOOL -D_double
 NVFLAGS += $(foreach includedir,$(program_INCLUDE_DIRS),-I$(includedir))
 NVFLAGS += $(foreach includelib,$(program_INCLUDE_LIBS),-L$(includelib)) 
 

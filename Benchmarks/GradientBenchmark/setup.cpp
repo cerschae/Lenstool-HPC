@@ -10,7 +10,7 @@
 
 //#define __WITH_LENSTOOL
 //#include "structure.h"
-#include "structure_hpc.h"
+#include "structure_hpc.hpp"
 #include <type.h>
 //#ifdef __WITH_LENSTOOL
 //#endif

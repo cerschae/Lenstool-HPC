@@ -28,7 +28,7 @@
 #endif
 //#include "../../../Projects/lenstool-6.8.1/include/structure.h"
 //#include "structure.h"
-#include "structure_hpc.h"
+#include "structure_hpc.hpp"
 #include "timer.h"
 #include "gradient.hpp"
 #include "gradient_avx.hpp"

@@ -16,11 +16,11 @@
 //
 #include <mm_malloc.h>
 //
-#include <structure_hpc.h>
+#include <structure_hpc.hpp>
 #include "timer.h"
 #include "gradient.hpp"
 #include "chi_CPU.hpp"
-#include "module_cosmodistances.h"
+#include "module_cosmodistances.hpp"
 #include "module_readParameters.hpp"
 
 
@@ -199,7 +199,7 @@ int main(int argc, char *argv[])
 	struct potfile_param potfile;
 	struct Potential potfilepotentials[runmode.npotfile];
 	struct potentialoptimization host_potentialoptimization[runmode.nhalos];
-	int nImagesSet[runmode.nsets]; // Contains the number of images in each set of images
+	int nImagesSet[runmode.nsets]; // Contains the number of images in each set of imagesnano
 
 	// This module function reads in the potential form and its parameters (e.g. NFW)
 	// Input: input file
@@ -218,7 +218,7 @@ int main(int argc, char *argv[])
 	// Output: Potentials from potfiles and its parameters
 
 	if (runmode.potfile == 1 ){
-		module_readParameters_readpotfiles_param(inputFile, &potfile);
+		module_readParameters_readpotfiles_param(inputFile, &potfile,cosmology);
 		module_readParameters_debug_potfileparam(runmode.debug, &potfile);
 		module_readParameters_readpotfiles(&runmode,&potfile,lenses);
 		module_readParameters_debug_potential(runmode.debug, lenses, runmode.nhalos+runmode.npotfile);
@@ -231,7 +231,7 @@ int main(int argc, char *argv[])
 	// Input: input file
 	// Output: grid and its parameters
 
-
+#if 1
 	module_readParameters_Grid(inputFile, &frame);
 
 	if (runmode.image == 1 or runmode.inverse == 1 or runmode.time > 0){
@@ -278,6 +278,7 @@ int main(int argc, char *argv[])
 	}
 	//
 	std::cout << "--------------------------" << std::endl << std::endl;
+#endif
 	//
 	// Lenstool Bruteforce
 	//===========================================================================================================
@@ -331,7 +332,7 @@ int main(int argc, char *argv[])
 
 
 
-#if 1
+#if 0
 	{
 		//std::cout << "MylenstoolHPC chi Benchmark:\n "; 
 		printf("Calling lenstoolhpc at time %f s\n", myseconds() - wallclock);

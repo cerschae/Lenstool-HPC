@@ -4,7 +4,7 @@
 #define SETUP_HPP_
 
 #include <math.h>
-#include <structure_hpc.h>
+#include <structure_hpc.hpp>
 #include <string.h>
 #include <omp.h>
 
