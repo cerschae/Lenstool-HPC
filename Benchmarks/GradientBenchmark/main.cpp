@@ -37,6 +37,7 @@
 #include <type.h>
 //
 #define NN 100000
+
 //
 //
 //

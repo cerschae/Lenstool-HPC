@@ -246,7 +246,6 @@ struct point module_potentialDerivatives_totalGradient_5_SOA_v2(const struct poi
         grad.y = 0;
         for(int i = shalos; i < shalos + nhalos; i++)
         {
-		//
 			struct point true_coord, true_coord_rotation;
 			//
 			true_coord.x = pImage->x - lens->position_x[i];
@@ -379,8 +378,6 @@ struct point module_potentialDerivatives_totalGradient_5_SOA_print(const struct 
         }
         return grad;
 }
-
-
 //
 //
 //
@@ -408,6 +405,7 @@ struct point module_potentialDerivatives_totalGradient_5_SOA_v2_novec(const stru
                 type_t y = true_coord.y*cose - true_coord.x*sine;
                 //:
                 type_t R = sqrt(x*x*(1 - lens->ellipticity[i]/3.) + y*y*(1 + lens->ellipticity[i]/3.));
+
                 result.x = (1 - lens->ellipticity[i]/3.)*lens->b0[i]*x/R;
                 result.y = (1 + lens->ellipticity[i]/3.)*lens->b0[i]*y/R;
                 //

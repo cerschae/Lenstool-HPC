@@ -279,7 +279,7 @@ int main(int argc, char *argv[])
 	//
 	std::cout << "--------------------------" << std::endl << std::endl;
 #endif
-	//
+
 	// Lenstool Bruteforce
 	//===========================================================================================================
 #ifdef __WITH_LENSTOOLL

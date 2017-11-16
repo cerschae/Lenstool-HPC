@@ -764,6 +764,7 @@ __device__ point module_potentialDerivatives_totalGradient_8_SOA_GPU(const struc
         // positioning at the potential center
         // Change the origin of the coordinate system to the center of the clump
         //@@if ((row == Ny) && (col == Nx)) printf("image_x = %f, %f image_y = %f, %f\n",  image_point.x, frame->xmin, image_point.y,frame->ymin);
+
         type_t true_coord_x = image_point->x - __ldg(&lens->position_x[i]);
         type_t true_coord_y = image_point->y - __ldg(&lens->position_y[i]);
         //if ((row == Ny) && (col == Nx)) printf("x = %f y = %f\n",  true_coord_x, true_coord_y);
@@ -792,6 +793,7 @@ __device__ point module_potentialDerivatives_totalGradient_8_SOA_GPU(const struc
         //
         type_t rc  = __ldg(&lens->rcore[i]);
         type_t cx1  = (1. - eps)/(1. + eps);
+
         znum.re = cx1*x;
         znum.im = 2.*sqe*sqrt(rc*rc + rem2) - y/cx1;
         //
@@ -818,6 +820,7 @@ __device__ point module_potentialDerivatives_totalGradient_8_SOA_GPU(const struc
         //@@if ((col == Nx) && (row == Ny)) printf("%d %d, zres: %f %f\n", row, col, zres.re, zres.im);
         //
         type_t b0  = __ldg(&lens->b0[i]);
+
         grad.x += b0*(zres.re*cosi - zres.im*sinu);
         grad.y += b0*(zres.im*cosi + zres.re*sinu);
         //@@if ((col == Nx) && (row == Ny)) printf("grad: %f %f\n", grad.x, grad.y);
