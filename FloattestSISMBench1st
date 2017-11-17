@@ -10,7 +10,7 @@ cd ../Benchmarks/GridGradientBenchmark
 make -f Makefile.GPU clean
 make -f MakefileFloat.GPU
 #./ChiBenchmark_GPU ../ConfigFiles/90PotSIS.par T
-./ChiBenchmark_GPU ../ConfigFiles/MarkusBenchmark.par T
+./GridGradient_GPU ../ConfigFiles/MarkusBenchmark.par T
 #./ChiBenchmark_GPU ../ConfigFiles/MarkusBenchmark1SIS.par T
 
 echo "Finish Float test"

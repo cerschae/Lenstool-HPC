@@ -24,8 +24,14 @@
 #include "module_readParameters.hpp"
 
 
+#ifdef __WITH_MPI
+#include<mpi.h>
+#endif
 
+#ifdef _OPENMP
 #include<omp.h>
+#endif
+
 
 //#define __WITH_LENSTOOL 0
 #ifdef __WITH_LENSTOOL
@@ -112,22 +118,21 @@ int module_readCheckInput_readInput(int argc, char *argv[])
 {
 /// check if there is a correct number of arguments, and store the name of the input file in infile
 
-    char* infile;
-    struct stat  file_stat;
-
-    // If we do not have 3 arguments, stop
-    if ( argc != 3 )
-    {
-        fprintf(stderr, "\nUnexpected number of arguments\n");
-        fprintf(stderr, "\nUSAGE:\n");
-        fprintf(stderr, "lenstool  input_file  output_directorypath  [-n]\n\n");
-        exit(-1);
-    }
-    else if ( argc == 3 )
-        infile=argv[1];
+	char* infile;
+	struct stat  file_stat;
+	// If we do not have 3 arguments, stop
+	if ( argc != 3 )
+	{
+		fprintf(stderr, "\nUnexpected number of arguments\n");
+		fprintf(stderr, "\nUSAGE:\n");
+		fprintf(stderr, "lenstool  input_file  output_directorypath  [-n]\n\n");
+		exit(-1);
+	}
+	else if ( argc == 3 )
+		infile=argv[1];
 	std::ifstream ifile(infile,std::ifstream::in); // Open the file
 
-		
+
 	int ts = (int) time (NULL);
 	char buffer[10];
 	std::stringstream ss;
@@ -137,7 +142,7 @@ int module_readCheckInput_readInput(int argc, char *argv[])
 	std::string outdir = argv[2];
 	outdir += "-";
 	outdir += trimstamp;
-	std::cout << outdir << std::endl;
+	std::cout << "output directory: " << outdir << std::endl;
 
 	// check whether the output directory already exists
 	if (stat(outdir.c_str(), &file_stat) < 0){
@@ -148,29 +153,55 @@ int module_readCheckInput_readInput(int argc, char *argv[])
 		exit(-1);
 	}
 
-    // check whether the input file exists. If it could not be opened (ifile = 0), it does not exist
-    if(ifile){
-	ifile.close();
-    }
-    else{
-	printf("The file %s does not exist, please specify a valid file name\n",infile);
-	exit(-1);
-        }
-
-    return 0;
+	// check whether the input file exists. If it could not be opened (ifile = 0), it does not exist
+	if(ifile){
+		ifile.close();
+	}
+	else{
+		printf("The file %s does not exist, please specify a valid file name\n",infile);
+		exit(-1);
+	}
+	return 0;
 }
 
 int main(int argc, char *argv[])
 {
+	int world_size = 1;
+	int world_rank = 0;
+#ifdef __WITH_MPI	
+	MPI_Init(NULL, NULL);
+	MPI_Comm_size(MPI_COMM_WORLD, &world_size);
+	MPI_Comm_rank(MPI_COMM_WORLD, &world_rank);
+	char processor_name[MPI_MAX_PROCESSOR_NAME];
+	int name_len;
+	MPI_Get_processor_name(processor_name, &name_len);
+	MPI_Barrier(MPI_COMM_WORLD);
 
+	// Print off a hello world message
+#endif
+	int numthreads = 1;
+#ifdef _OPENMP
+#warning "using openmp"
+#pragma omp parallel
+	numthreads = omp_get_num_threads();
+#endif
+	//
+	printf("Hello world from processor %s, rank %d out of %d processors and %d threads per rank\n", processor_name, world_rank, world_size, numthreads); fflush(stdout);
+#ifdef __WITH_MPI
+	MPI_Barrier(MPI_COMM_WORLD);
+#endif
+	int verbose = (world_rank == 0);
+	//
+	if (verbose) printf("Lenstool-HPC\n\n");
+	//
 	double wallclock = myseconds();
-	printf("Reading parameter file at time %f s...\n", myseconds() - wallclock);
+	if (world_rank == 0) printf("Reading parameter file at time %f s...\n", myseconds() - wallclock);
 	// Setting Up the problem
 	//===========================================================================================================
 
 	// This module function reads the terminal input when calling LENSTOOL and checks that it is correct
 	// Otherwise it exits LENSTOOL
-	module_readCheckInput_readInput(argc, argv);
+	if (world_rank == 0) module_readCheckInput_readInput(argc, argv);
 
 	// This module function reads the cosmology parameters from the parameter file
 	// Input: struct cosmologicalparameters cosmology, parameter file
@@ -184,9 +215,11 @@ int main(int argc, char *argv[])
 	struct runmode_param runmode;
 	module_readParameters_readRunmode(inputFile, &runmode);
 
-	module_readParameters_debug_cosmology(runmode.debug, cosmology);
-	module_readParameters_debug_runmode(runmode.debug, runmode);
-
+	if (world_rank == 0)
+	{
+		module_readParameters_debug_cosmology(runmode.debug, cosmology);
+		module_readParameters_debug_runmode(runmode.debug, runmode);
+	}
 
 	//=== Declaring variables
 	struct grid_param frame;
@@ -211,7 +244,7 @@ int main(int argc, char *argv[])
 	//module_readParameters_PotentialSOA(inputFile, lenses, lenses_SOA, runmode.Nlens);
 	module_readParameters_PotentialSOA(inputFile, lenses, &lenses_SOA, runmode.nhalos);
 	//module_readParameters_PotentialSOA_nonsorted(inputFile, lenses, &lenses_SOA_nonsorted, runmode.nhalos);
-	module_readParameters_debug_potential(runmode.debug, lenses, runmode.nhalos);
+	//@@module_readParameters_debug_potential(runmode.debug, lenses, runmode.nhalos);
 	//std::cerr << lenses_SOA[1].b0[0] << " " << lenses[0].b0  << std::endl;
 	// This module function reads in the potfiles parameters
 	// Input: input file
@@ -246,7 +279,7 @@ int main(int argc, char *argv[])
 			images[i].dr = module_cosmodistances_lensSourceToObserverSource(lenses[0].z, images[i].redshift, cosmology);
 
 		}
-		module_readParameters_debug_image(runmode.debug, images, nImagesSet,runmode.nsets);
+		//module_readParameters_debug_image(runmode.debug, images, nImagesSet,runmode.nsets);
 
 	}
 
@@ -276,41 +309,52 @@ int main(int argc, char *argv[])
 		}
 		module_readParameters_debug_source(runmode.debug, sources, runmode.nsets);
 	}
+#ifdef __WITH_MPI
+	MPI_Barrier(MPI_COMM_WORLD);
+#endif
 	//
+<<<<<<< HEAD
 	std::cout << "--------------------------" << std::endl << std::endl;
 #endif
 
+=======
+	if (verbose) std::cout << "--------------------------" << std::endl << std::endl;
+	//
+>>>>>>> lenstool_mpi
 	// Lenstool Bruteforce
 	//===========================================================================================================
-#ifdef __WITH_LENSTOOLL
+	if (verbose)
 	{
-		printf("Calling lenstool at time %f s\n", myseconds() - wallclock);
-		setup_lenstool();
-		//
-		double chi2;
-		double lhood0(0);
-		int error(0);
-		double time;
-
-		if ( M.ichi2 != 0 )
+#ifdef __WITH_LENSTOOL
 		{
-			int error;
-		//NPRINTF(stdout, "INFO: compute chires.dat\n");
-		readConstraints();
-		o_chires("chires.dat");
-		time = -myseconds();
-		error = o_chi_lhood0(&chi2, &lhood0, NULL);
-		time += myseconds();
-		printf("INFO: chi2 %lf  Lhood %lf\n", chi2, -0.5 * ( chi2 + lhood0 )  );
-		o_global_free();
-	}
+			printf("Calling lenstool at time %f s\n", myseconds() - wallclock);
+			setup_lenstool();
+			//
+			double chi2;
+			double lhood0(0);
+			int error(0);
+			double time;
 
-	std::cout << "Lenstool 6.8.1 chi Benchmark: ";
-	std::cout << " Chi : " << std::setprecision(15) << chi2 ;
-	std::cout << " Time  " << std::setprecision(15) << time << std::endl;
-	o_global_free();
-	}
+			if ( M.ichi2 != 0 )
+			{
+				int error;
+				//NPRINTF(stdout, "INFO: compute chires.dat\n");
+				readConstraints();
+				o_chires("chires.dat");
+				time = -myseconds();
+				error = o_chi_lhood0(&chi2, &lhood0, NULL);
+				time += myseconds();
+				printf("INFO: chi2 %lf  Lhood %lf\n", chi2, -0.5 * ( chi2 + lhood0 )  );
+				o_global_free();
+			}
+
+			std::cout << "Lenstool 6.8.1 chi Benchmark: ";
+			std::cout << " Chi : " << std::setprecision(15) << chi2 ;
+			std::cout << " Time  " << std::setprecision(15) << time << std::endl;
+			o_global_free();
+		}
 #endif
+	}
 
 	// Lenstool-GPU Bruteforce
 	//===========================================================================================================
@@ -335,20 +379,24 @@ int main(int argc, char *argv[])
 #if 0
 	{
 		//std::cout << "MylenstoolHPC chi Benchmark:\n "; 
-		printf("Calling lenstoolhpc at time %f s\n", myseconds() - wallclock);
+		if (verbose) printf("Calling lenstoolhpc at time %f s\n", myseconds() - wallclock);
 		double chi2;
 		double time;
 		int error;
 		time = -myseconds();
 		mychi_bruteforce_SOA_CPU_grid_gradient(&chi2, &error, &runmode, &lenses_SOA, &frame, nImagesSet, images);
 		time += myseconds();
-
-		std::cout << " Chi : " << std::setprecision(15) << chi2;
-		std::cout << " Time  " << std::setprecision(15) << time << std::endl;
+		if (verbose)
+		{
+			std::cout << " Chi : " << std::setprecision(15) << chi2;
+			std::cout << " Time  " << std::setprecision(15) << time << std::endl;
+		}
 	}
 #endif
 
-		printf("Ending execution at time %f s\n", myseconds() - wallclock);
-
+	if (verbose) printf("Ending execution at time %f s\n", myseconds() - wallclock);
+#ifdef __WITH_MPI
+	MPI_Finalize();
+#endif
 
 }

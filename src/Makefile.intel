@@ -1,6 +1,6 @@
 PROGRAM_NAME := liblenstoolhpc.so
 #CXX=g++ -lm -ffast-math -ftree-loop-vectorize 
-CXX=icpc
+CXX=mpiicpc
 #
 program_CXX_SRCS := $(wildcard *.cpp)
 $(info $$program_CXX_SRCS is [${program_CXX_SRCS}])
@@ -38,7 +38,7 @@ CPPFLAGS += -fma -ftz
 #CPPFLAGS += -no-vec
 #CPPFLAGS += -qopt-prefetch-distance=64,8 -qopt-streaming-cache-evict=0 -fPIC -qopenmp -xMIC-AVX512 -fma -g -O3 -std=c++0x -Wall -pedantic
 #CPPFLAGS += -qopt-report=5 -S
-CXXFLAGS += -g -O3 -std=c++0x -Wall
+CXXFLAGS += -g -O3 -std=c++0x -Wall -D__WITH_MPI 
 CXXFLAGS += -D_double
 #
 #GEN_SM35 := -gencode=arch=compute_35,code=\"sm_35,compute_35\" #Target CC 3.5, for example

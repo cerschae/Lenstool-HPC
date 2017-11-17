@@ -1451,18 +1451,18 @@ std::ifstream IN(infile.c_str(), std::ios::in);
 
     ilens = &lens[i];
 
-    ilens->position.x = ilens->position.y = 0.;
-    ilens->ellipticity = 0;
+    ilens->position.x  		 = ilens->position.y = 0.;
+    ilens->ellipticity 		 = 0;
     ilens->ellipticity_potential = 0.;
-    ilens->ellipticity_angle = 0.;
-    ilens->rcut = 0.;
-    ilens->rcore = 0;
-    ilens->weight = 0;
-    ilens->rscale = 0;
-    ilens->exponent = 0;
-    ilens->alpha = 0.;
-    ilens->einasto_kappacritic = 0;
-    ilens->z = 0;
+    ilens->ellipticity_angle 	 = 0.;
+    ilens->rcut 		 = 0.;
+    ilens->rcore 		 = 0;
+    ilens->weight 		 = 0;
+    ilens->rscale 		 = 0;
+    ilens->exponent 		 = 0;
+    ilens->alpha 		 = 0.;
+    ilens->einasto_kappacritic   = 0;
+    ilens->z 			 = 0;
 
 
     while(std::getline(IN,line2))
@@ -1970,7 +1970,6 @@ void module_readParameters_PotentialSOA(std::string infile, Potential *lens, Pot
 	lens_SOA->anglecos = 	new type_t[nhalos];
 	lens_SOA->anglesin = 		new type_t[nhalos];
 
-
 	int N_type[100];
 	int Indice_type[100];
 	int ind;
@@ -2044,16 +2043,16 @@ void module_readParameters_calculatePotentialparameter(Potential *lens){
 	    if ( lens->ellipticity == 0. && lens->ellipticity_potential != 0. ){
 			// emass is (a2-b2)/(a2+b2)
 			lens->ellipticity = 2.*lens->ellipticity_potential / (1. + lens->ellipticity_potential * lens->ellipticity_potential);
-			printf("1 : %f %f \n",lens->ellipticity,lens->ellipticity_potential);
+			//printf("1 : %f %f \n",lens->ellipticity,lens->ellipticity_potential);
 		}
 		else if ( lens->ellipticity == 0. && lens->ellipticity_potential == 0. ){
 			lens->ellipticity_potential = 0.00001;
-			printf("2 : %f %f \n",lens->ellipticity,lens->ellipticity_potential);
+			//printf("2 : %f %f \n",lens->ellipticity,lens->ellipticity_potential);
 		}
 		else{
 			// epot is (a-b)/(a+b)
 			lens->ellipticity_potential = (1. - sqrt(1 - lens->ellipticity * lens->ellipticity)) / lens->ellipticity;
-			printf("3 : %f %f \n",lens->ellipticity,lens->ellipticity_potential);
+			//printf("3 : %f %f \n",lens->ellipticity,lens->ellipticity_potential);
 		}
         break;
 

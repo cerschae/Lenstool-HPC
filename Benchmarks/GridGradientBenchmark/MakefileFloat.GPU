@@ -1,7 +1,7 @@
 
 #
 #
-PROGRAM_NAME := ChiBenchmark_GPU
+PROGRAM_NAME := GridGradient_GPU
 #all: $(PROGRAM_NAME_GPU) $(PROGRAM_NAME)
 all: $(PROGRAM_NAME) $(PROGRAM_NAME_GPU)
 #CXX=g++ -lm -ffast-math -ftree-loop-vectorize 

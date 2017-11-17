@@ -1,5 +1,6 @@
 #include <fstream>
 #include "grid_gradient_GPU.cuh"
+#include "gradient.hpp"
 #include "gradient_GPU.cuh"
 #include "gradient.hpp"
 
@@ -24,6 +25,7 @@ extern __shared__ type_t shared[];
 extern "C" {
 double myseconds();
 }
+/*
 void
 module_potentialDerivatives_totalGradient_SOA_CPU_GPU(type_t *grid_grad_x, type_t *grid_grad_y, const struct grid_param *frame, const struct Potential_SOA *lens_cpu, const struct Potential_SOA *lens_gpu, int nbgridcells, int nhalos);
 
@@ -37,7 +39,7 @@ void calculate_cossin_values(type_t *theta_cos, type_t *theta_sin, type_t *angle
 		theta_sin[i] = sin(angles[i]);
 	}
 }
-
+*/
 
 
 
@@ -422,8 +424,9 @@ module_potentialDerivatives_totalGradient_8_SOA_GPU_SM4(type_t *grid_grad_x, typ
 	int col        = (blockIdx.y*blockDim.y + threadIdx.y)/**grid_size*/;
 	//
 	//
-#if 1
-	//SHARED type_t sgrad_x [
+
+#if 0
+	//SHARED double sgrad_x [
 	if (/*(threadIdx.x == 0) &&*/ (blockIdx.x == 0))
 	{
 		if (threadIdx.x == 0) printf("blockDim.x = %d, blockIdx.x = %d grimdDim.x = %d threadIdx.x = %d\n", blockDim.x, blockIdx.x, gridDim.x, threadIdx.x);
@@ -700,23 +703,7 @@ module_potentialDerivatives_totalGradient_8_SOA_GPU_v2(type_t *grid_grad_x, type
 	}
 }
 
-#if 1
-typedef struct point (*halo_func_GPU_t) (const struct point *pImage, const struct Potential_SOA *lens, int shalos, int nhalos);
 
-__constant__ halo_func_GPU_t halo_func_GPU[100] =
-{
-	0, 0, 0, 0, 0, module_potentialDerivatives_totalGradient_5_SOA_GPU, 0, 0, module_potentialDerivatives_totalGradient_8_SOA_GPU,  0,
-	0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-	0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-	0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-	   0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-	   0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-	   0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-	   0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-	   0,  module_potentialDerivatives_totalGradient_81_SOA_GPU, 0, 0, 0, 0, 0, 0, 0, 0,
-	   0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	   };
-#endif
 
 __device__ point module_potentialDerivatives_totalGradient_5_SOA_GPU(const struct point *pImage, const struct Potential_SOA *lens, int shalos, int nhalos){
     //asm volatile("# module_potentialDerivatives_totalGradient_SIS_SOA_v2 begins");
@@ -897,6 +884,71 @@ __device__ point module_potentialDerivatives_totalGradient_81_SOA_GPU(const stru
 
 }
 
+#if 1
+typedef struct point (*halo_func_GPU_t) (const struct point *pImage, const struct Potential_SOA *lens, int shalos, int nhalos);
+
+__constant__ halo_func_GPU_t halo_func_GPU[100] =
+{
+	0, 0, 0, 0, 0, module_potentialDerivatives_totalGradient_5_SOA_GPU, 0, 0, module_potentialDerivatives_totalGradient_8_SOA_GPU,  0,
+	0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+	0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+	0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+	   0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+	   0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+	   0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+	   0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+	   0,  module_potentialDerivatives_totalGradient_81_SOA_GPU, 0, 0, 0, 0, 0, 0, 0, 0,
+	   0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	   };
+#endif
+
+__global__
+void
+module_potentialDerivatives_totalGradient_SOA_GPU(type_t *grid_grad_x, type_t *grid_grad_y, const struct Potential_SOA *lens, const struct grid_param *frame, int nhalos, type_t dx, type_t dy, int nbgridcells_x, int nbgridcells_y, int istart, int jstart)
+{
+        struct point grad, clumpgrad, image_point;
+        //
+        int col = blockIdx.x*blockDim.x + threadIdx.x;
+        int row = blockIdx.y*blockDim.y + threadIdx.y;
+
+        //
+        if ((row + jstart < nbgridcells_y) && (col + istart < nbgridcells_x))
+        {
+                //
+                //double dx = (frame->xmax - frame->xmin)/(nbgridcells-1);
+                //double dy = (frame->ymax - frame->ymin)/(nbgridcells-1);
+                //
+                int index = row*nbgridcells_x + col;
+                // Create temp grad variable to minimise writing to global memory grid_grad
+                grad.x = 0.;
+                grad.y = 0.;
+                //
+                image_point.x = frame->xmin + (col + istart)*dx;
+                image_point.y = frame->ymin + (row + jstart)*dy;
+                //
+                int shalos = 0;
+                while (shalos < nhalos)
+                {
+                        int lens_type = lens->type[shalos];
+                        int count     = 1;
+                        while (lens->type[shalos + count] == lens_type) count++;
+                        //
+                        //if(row == 0 && col == 0) printf("type = %d, count %d , shalos %d \n", lens_type,count,shalos );
+                        //
+                        clumpgrad = (*halo_func_GPU[lens_type])(&image_point, lens, shalos, count);
+                        //
+                        grad.x += clumpgrad.x;
+                        grad.y += clumpgrad.y;
+                        shalos += count;
+                }
+                // Write to global memory
+                grid_grad_x[index] = grad.x;
+                grid_grad_y[index] = grad.y;
+                //if ((row == 0) && (col == 9))
+                //printf("%f %f: %f %f\n",  image_point.x, image_point.y, grid_grad_x[index], grid_grad_y[index]);
+        }
+}
+
 __global__
 void
 module_potentialDerivatives_totalGradient_SOA_GPU(type_t *grid_grad_x, type_t *grid_grad_y, const struct Potential_SOA *lens, const struct grid_param *frame, int nbgridcells, int nhalos)
@@ -939,11 +991,10 @@ module_potentialDerivatives_totalGradient_SOA_GPU(type_t *grid_grad_x, type_t *g
 		// Write to global memory
 		grid_grad_x[index] = grad.x;
 		grid_grad_y[index] = grad.y;
+
 	//if ((row == 0) && (col == 9))
 	//printf("%f %f: %f %f\n",  image_point.x, image_point.y, grid_grad_x[index], grid_grad_y[index]);
     }
 
-
-
-
 }
+

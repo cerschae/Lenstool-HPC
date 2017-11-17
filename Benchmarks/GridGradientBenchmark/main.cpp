@@ -411,7 +411,7 @@ int main(int argc, char *argv[])
 	//test();
 	//test2();
 	for(int ii = 0; ii < Nstat; ++ii) {
-		gradient_grid_GPU_sorted(grid_gradient_x_gpu, grid_gradient_y_gpu, &frame, &lenses_SOA, runmode.nhalos, grid_dim);
+		gradient_grid_GPU(grid_gradient_x_gpu, grid_gradient_y_gpu, &frame, &lenses_SOA, runmode.nhalos, grid_dim);
 	}
 	//module_potentialDerivatives_totalGradient_SOA_CPU_GPU(grid_gradient_x_gpu, grid_gradient_y_gpu, &frame, &lenses_SOA, runmode.nhalos, grid_dim);
 	//gradient_gid_CPU(grid_gradient_x, grid_gradient_y, &frame, &lenses_SOA, runmode.nhalos, grid_dim);
