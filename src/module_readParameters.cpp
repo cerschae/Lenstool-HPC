@@ -207,7 +207,7 @@ void read_runmode(std::istream &IN, struct runmode_param *runmode){
 							sscanf(line2.c_str(), " %*s %d %d %lf", &runmode->grid, &runmode->gridcells, &in1);
 							runmode->zgrid = (type_t)in1;
 		        		}
-		        		if ( !strcmp(second.c_str(), "amplif") )
+		        		if ( !strcmp(second.c_str(), "ampli") )
 		        		{
 							sscanf(line2.c_str(), " %*s %d %d %lf", &runmode->amplif, &runmode->amplif_gridcells, &in1);
 							runmode->z_amplif = (type_t)in1;
@@ -1077,7 +1077,7 @@ void module_readParameters_readpotfiles_SOA(const runmode_param *runmode, potfil
                 if ( line1[0] == '#' )
                     continue;
 
-                std::cerr << "Turn " << i << std::endl;
+                //std::cerr << "Turn " << i << std::endl;
 
                 // Default initialisation of clump
                 lens->type[i] = potfile->type;
@@ -1096,7 +1096,7 @@ void module_readParameters_readpotfiles_SOA(const runmode_param *runmode, potfil
                 lens->exponent[i] = 0;
                 lens->einasto_kappacritic[i] = 0;
 
-                std::cerr << "Init finished "<< std::endl;
+                //std::cerr << "Init finished "<< std::endl;
 
 
 				// Read a line of the catalog
@@ -2105,16 +2105,16 @@ void module_readParameters_calculatePotentialparameter_SOA(Potential_SOA *lens, 
 	    if ( lens->ellipticity[ind] == 0. && lens->ellipticity_potential[ind] != 0. ){
 			// emass is (a2-b2)/(a2+b2)
 			lens->ellipticity[ind] = 2.*lens->ellipticity_potential[ind] / (1. + lens->ellipticity_potential[ind] * lens->ellipticity_potential[ind]);
-			printf("1 : %f %f \n",lens->ellipticity[ind],lens->ellipticity_potential[ind]);
+			//printf("1 : %f %f \n",lens->ellipticity[ind],lens->ellipticity_potential[ind]);
 		}
 		else if ( lens->ellipticity[ind] == 0. && lens->ellipticity_potential[ind] == 0. ){
 			lens->ellipticity_potential[ind] = 0.00001;
-			printf("2 : %f %f \n",lens->ellipticity[ind],lens->ellipticity_potential[ind]);
+			//printf("2 : %f %f \n",lens->ellipticity[ind],lens->ellipticity_potential[ind]);
 		}
 		else{
 			// epot is (a-b)/(a+b)
 			lens->ellipticity_potential[ind] = (1. - sqrt(1 - lens->ellipticity[ind] * lens->ellipticity[ind])) / lens->ellipticity[ind];
-			printf("3 : %f %f \n",lens->ellipticity[ind],lens->ellipticity_potential[ind]);
+			//printf("3 : %f %f \n",lens->ellipticity[ind],lens->ellipticity_potential[ind]);
 		}
         break;
 
@@ -2125,16 +2125,16 @@ void module_readParameters_calculatePotentialparameter_SOA(Potential_SOA *lens, 
 	    if ( lens->ellipticity[ind] == 0. && lens->ellipticity_potential[ind] != 0. ){
 			// emass is (a2-b2)/(a2+b2)
 			lens->ellipticity[ind] = 2.*lens->ellipticity_potential[ind] / (1. + lens->ellipticity_potential[ind] * lens->ellipticity_potential[ind]);
-			printf("1 : %f %f \n",lens->ellipticity[ind],lens->ellipticity_potential[ind]);
+			//printf("1 : %f %f \n",lens->ellipticity[ind],lens->ellipticity_potential[ind]);
 		}
 		else if ( lens->ellipticity[ind] == 0. && lens->ellipticity_potential[ind] == 0. ){
 			lens->ellipticity_potential[ind] = 0.00001;
-			printf("2 : %f %f \n",lens->ellipticity[ind],lens->ellipticity_potential[ind]);
+			//printf("2 : %f %f \n",lens->ellipticity[ind],lens->ellipticity_potential[ind]);
 		}
 		else{
 			// epot is (a-b)/(a+b)
 			lens->ellipticity_potential[ind] = (1. - sqrt(1 - lens->ellipticity[ind] * lens->ellipticity[ind])) / lens->ellipticity[ind];
-			printf("3 : %f %f \n",lens->ellipticity[ind],lens->ellipticity_potential[ind]);
+			//printf("3 : %f %f \n",lens->ellipticity[ind],lens->ellipticity_potential[ind]);
 		}
         break;
 
