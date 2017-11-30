@@ -13,3 +13,7 @@ Lenstool-hpc hierarchy
 		- grad (results for grad)
 		-
 
+VTUNE
+module load intel/2017
+
+export PATH=/cm/shared/apps/intel-2017/vtune_amplifier_xe/bin64/:$PATH
