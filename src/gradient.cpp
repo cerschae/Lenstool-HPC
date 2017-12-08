@@ -44,9 +44,9 @@ piemd_1derivatives_ci05(type_t x, type_t y, type_t eps, type_t rc)
         //
         //std::cout << "piemd_lderivatives" << std::endl;
         sqe  = sqrt(eps);
-        cx1  = (1. - eps) / (1. + eps);
-        cxro = (1. + eps) * (1. + eps);
-        cyro = (1. - eps) * (1. - eps);
+        cx1  = ((type_t) 1. - eps) / ((type_t) 1. + eps);
+        cxro = ((type_t) 1. + eps) * ((type_t) 1. + eps);
+        cyro = ((type_t) 1. - eps) * ((type_t) 1. - eps);
         //
         rem2 = x * x / cxro + y * y / cyro;
         /*zci=cpx(0.,-0.5*(1.-eps*eps)/sqe);
@@ -56,12 +56,12 @@ piemd_1derivatives_ci05(type_t x, type_t y, type_t eps, type_t rc)
           zres=pcpxflt(zis,b0);*/
 
         // --> optimized code
-        zci.re  = 0;
-        zci.im  = -0.5*(1. - eps*eps)/sqe;
+        zci.re  = (type_t)  0.;
+        zci.im  = (type_t) -0.5*((type_t) 1. - eps*eps)/sqe;
         znum.re = cx1 * x;
-        znum.im = 2.*sqe*sqrt(rc*rc + rem2) - y/cx1;
+        znum.im = (type_t) 2.*sqe*sqrt(rc*rc + rem2) - y/cx1;
         zden.re = x;
-        zden.im = 2.*rc * sqe - y;
+        zden.im = (type_t) 2.*rc * sqe - y;
         norm = zden.re * zden.re + zden.im * zden.im;     // zis = znum/zden
         zis.re = (znum.re * zden.re + znum.im * zden.im) / norm;
         zis.im = (znum.im * zden.re - znum.re * zden.im) / norm;
@@ -105,7 +105,7 @@ grad_halo(const struct point *pImage, const struct Potential *lens)
 	type_t X, Y, R, angular_deviation, u;
 	complex zis;
 	//
-	result.x = result.y = 0.;
+	result.x = result.y = (type_t) 0.;
 	//
 	/*positionning at the potential center*/
 	// Change the origin of the coordinate system to the center of the clump
@@ -121,9 +121,9 @@ grad_halo(const struct point *pImage, const struct Potential *lens)
 			/*rotation of the coordiante axes to match the potential axes*/
 			//true_coord_rotation = rotateCoordinateSystem(true_coord, lens->ellipticity_angle);
 			//
-			R=sqrt(true_coord_rot.x*true_coord_rot.x*(1 - lens->ellipticity_potential) + true_coord_rot.y*true_coord_rot.y*(1 + lens->ellipticity_potential));	//ellippot = ellipmass/3
-			result.x = (1 - lens->ellipticity_potential)*lens->b0*true_coord_rot.x/(R);
-			result.y = (1 + lens->ellipticity_potential)*lens->b0*true_coord_rot.y/(R);
+			R=sqrt(true_coord_rot.x*true_coord_rot.x*((type_t) 1. - lens->ellipticity_potential) + true_coord_rot.y*true_coord_rot.y*((type_t) 1. + lens->ellipticity_potential));	//ellippot = ellipmass/3
+			result.x = ((type_t) 1. - lens->ellipticity_potential)*lens->b0*true_coord_rot.x/(R);
+			result.y = ((type_t) 1. + lens->ellipticity_potential)*lens->b0*true_coord_rot.y/(R);
 			break;
 		case(8): /* PIEMD */
 			/*rotation of the coordiante axes to match the potential axes*/
@@ -135,7 +135,7 @@ grad_halo(const struct point *pImage, const struct Potential *lens)
 			break;
 		case(81): //PIEMD Kassiola & Kovner,1993 I0.5c-I0.5cut
 			type_t t05;
-			if ( lens->ellipticity_potential > 2E-4 )
+			if ( lens->ellipticity_potential > (type_t) 2E-4 )
 			{
 				//printf("1 ");
 				t05 = lens->b0*lens->rcut/(lens->rcut - lens->rcore);
@@ -145,7 +145,7 @@ grad_halo(const struct point *pImage, const struct Potential *lens)
 				result.y = t05 * (zis.im - zis_cut.im);
 				//printf("	g   = %f %f\n", result.x, result.y);
 			}
-			else if (( u = true_coord_rot.x*true_coord_rot.x + true_coord_rot.y*true_coord_rot.y) > 0. )
+			else if (( u = true_coord_rot.x*true_coord_rot.x + true_coord_rot.y*true_coord_rot.y) > (type_t) 0. )
 			{
 				//printf("2 ");
 				// Circular dPIE Elliasdottir 2007 Eq A23 slighly modified for t05
@@ -159,8 +159,8 @@ grad_halo(const struct point *pImage, const struct Potential *lens)
 			else
 			{
 				//printf("3 ");
-				result.x = 0.;
-				result.y = 0.;
+				result.x = (type_t) 0.;
+				result.y = (type_t) 0.;
 			}
 			break;
 
@@ -170,7 +170,7 @@ grad_halo(const struct point *pImage, const struct Potential *lens)
 			break;
 	};
 	result = rotateCoordinateSystem(result, -lens->ellipticity_angle); 
-	//printf("	rot grad = %f %f\n", result.x, result.y); 
+	printf("	rot grad = %.15f %.15f\n", result.x, result.y); 
 	return result;
 }
 //
@@ -180,8 +180,8 @@ struct point module_potentialDerivatives_totalGradient(const int nhalos, const s
 {
 	struct point grad, clumpgrad;
 	//
-	grad.x = 0;
-	grad.y = 0;
+	grad.x = (type_t) 0.;
+	grad.y = (type_t) 0.;
 	//
 	for(int i = 0; i < nhalos; i++)
 	{
@@ -207,8 +207,8 @@ struct point module_potentialDerivatives_totalGradient_5_SOA(const struct point 
         //printf("# module_potentialDerivatives_totalGradient_SIS_SOA begins\n");
 	//
 	struct point grad, result;
-        grad.x = 0;
-        grad.y = 0;
+        grad.x = (type_t) 0.;
+        grad.y = (type_t) 0.;
 	for(int i = shalos; i < shalos + nhalos; i++)
 	{
 		//
@@ -220,10 +220,10 @@ struct point module_potentialDerivatives_totalGradient_5_SOA(const struct point 
 		true_coord_rotation = rotateCoordinateSystem(true_coord, lens->ellipticity_angle[i]);
 		type_t ell_pot = lens->ellipticity_potential[i];
                 //
-		type_t R = sqrt(true_coord_rotation.x*true_coord_rotation.x*(1 - ell_pot) + true_coord_rotation.y*true_coord_rotation.y*(1 + ell_pot));
+		type_t R = sqrt(true_coord_rotation.x*true_coord_rotation.x*((type_t) 1. - ell_pot) + true_coord_rotation.y*true_coord_rotation.y*((type_t) 1. + ell_pot));
 		//
-		result.x = (1 - ell_pot)*lens->b0[i]*true_coord_rotation.x*R;
-		result.y = (1 + ell_pot)*lens->b0[i]*true_coord_rotation.y*R;
+		result.x = ((type_t) 1. - ell_pot)*lens->b0[i]*true_coord_rotation.x/R;
+		result.y = ((type_t) 1. + ell_pot)*lens->b0[i]*true_coord_rotation.y/R;
 		//
 		result = rotateCoordinateSystem(result, -lens->ellipticity_angle[i]);
 		//
@@ -242,8 +242,8 @@ struct point module_potentialDerivatives_totalGradient_5_SOA_v2(const struct poi
         //printf("# module_potentialDerivatives_totalGradient_SIS_SOA_v2 begins\n");
         //
         struct point grad, result;
-        grad.x = 0;
-        grad.y = 0;
+        grad.x = (type_t) 0.;
+        grad.y = (type_t) 0.;
         for(int i = shalos; i < shalos + nhalos; i++)
         {
 			struct point true_coord, true_coord_rotation;
@@ -252,6 +252,8 @@ struct point module_potentialDerivatives_totalGradient_5_SOA_v2(const struct poi
 			true_coord.y = pImage->y - lens->position_y[i];
 			//
 			//true_coord_rotation = rotateCoordinateSystem(true_coord, lens->ellipticity_angle[i]);
+			type_t b0 = lens->b0[i];
+			//
 			type_t cose = lens->anglecos[i];
 			type_t sine = lens->anglesin[i];
 			//
@@ -260,10 +262,10 @@ struct point module_potentialDerivatives_totalGradient_5_SOA_v2(const struct poi
 			//
 			type_t ell_pot = lens->ellipticity_potential[i];
 			//
-			type_t R = sqrt(x*x*(1 - ell_pot) + y*y*(1 + ell_pot));
-			//
-			result.x = (1 - ell_pot)*lens->b0[i]*x/R;
-			result.y = (1 + ell_pot)*lens->b0[i]*y/R;
+			type_t R = sqrt(x*x*((type_t) 1. - ell_pot) + y*y*((type_t) 1. + ell_pot));
+			R = 1./R;
+			result.x = ((type_t) 1. - ell_pot)*b0*x*R;
+			result.y = ((type_t) 1. + ell_pot)*b0*y*R;
 			//
 			grad.x += result.x*cose - result.y*sine;
 			grad.y += result.y*cose + result.x*sine;
@@ -281,8 +283,8 @@ struct point module_potentialDerivatives_totalGradient_5_SOA_print(const struct 
         //
         struct point grad, result;
     	std::ofstream myfile;
-        grad.x = 0;
-        grad.y = 0;
+        grad.x = (type_t) 0.;
+        grad.y = (type_t) 0.;
 
 #ifdef _double
         std::string name = "Double_";
@@ -302,16 +304,16 @@ struct point module_potentialDerivatives_totalGradient_5_SOA_print(const struct 
         	myfile.open (name + "pImage->x_1.txt", std::ios_base::app);
         	myfile << index << " " << pImage->x << std::setprecision(7)  << " " << std::endl;
         	myfile.close();
-        	/**
+        	//*
         	myfile.open (name + "pImage->y_1.txt", std::ios_base::app);
         	myfile << index << " " << pImage->y << std::setprecision(7)  << " " << std::endl;
         	myfile.close();
-        	*/
+        	//
 			/*
         	myfile.open (name + "true_coord.x_2.txt", std::ios_base::app);
         	myfile << index << " " << true_coord.x << std::setprecision(7)  << " " << std::endl;
         	myfile.close();
-        	/*
+        	//
         	myfile.open (name + "true_coord.y_2.txt", std::ios_base::app);
         	myfile << index << " " << true_coord.y << std::setprecision(7)  << " " << std::endl;
         	myfile.close();
@@ -386,8 +388,8 @@ struct point module_potentialDerivatives_totalGradient_5_SOA_v2_novec(const stru
         asm volatile("# module_potentialDerivatives_totalGradient_SIS_SOA begins");
         //
         struct point grad, result;
-        grad.x = 0;
-        grad.y = 0;
+        grad.x = (type_t) 0.;
+        grad.y = (type_t) 0.;
 #pragma novec
 	for(int i = shalos; i < shalos + nhalos; i++)
         {
@@ -404,10 +406,10 @@ struct point module_potentialDerivatives_totalGradient_5_SOA_v2_novec(const stru
                 type_t x = true_coord.x*cose + true_coord.y*sine;
                 type_t y = true_coord.y*cose - true_coord.x*sine;
                 //:
-                type_t R = sqrt(x*x*(1 - lens->ellipticity[i]/3.) + y*y*(1 + lens->ellipticity[i]/3.));
+                type_t R = sqrt(x*x*((type_t) 1. - lens->ellipticity[i]/(type_t) 3.) + y*y*((type_t) 1. + lens->ellipticity[i]/(type_t) 3.));
 
-                result.x = (1 - lens->ellipticity[i]/3.)*lens->b0[i]*x/R;
-                result.y = (1 + lens->ellipticity[i]/3.)*lens->b0[i]*y/R;
+                result.x = ((type_t) 1. - lens->ellipticity[i]/(type_t) 3.)*lens->b0[i]*x/R;
+                result.y = ((type_t) 1. + lens->ellipticity[i]/(type_t) 3.)*lens->b0[i]*y/R;
                 //
                 grad.x += result.x*cose - result.y*sine;
                 grad.y += result.y*cose + result.x*sine;
@@ -423,8 +425,8 @@ struct point module_potentialDerivatives_totalGradient_8_SOA(const struct point 
 	// 6 DP loads, i.e. 48 Bytes: position_x, position_y, ellipticity_angle, ellipticity_potential, rcore, b0
 	// 
 	struct point grad, clumpgrad;
-	grad.x = 0;
-	grad.y = 0;
+	grad.x = (type_t) 0.;
+	grad.y = (type_t) 0.;
 	//
 	for(int i = shalos; i < shalos + nhalos; i++)
 	{
@@ -454,24 +456,24 @@ struct point module_potentialDerivatives_totalGradient_8_SOA(const struct point 
 		//
 		type_t sqe  = sqrt(eps);
 		//
-		type_t cx1  = (1. - eps)/(1. + eps);
-		type_t cxro = (1. + eps)*(1. + eps);
-		type_t cyro = (1. - eps)*(1. - eps);
+		type_t cx1  = ((type_t) 1. - eps)/((type_t) 1. + eps);
+		type_t cxro = ((type_t) 1. + eps)*((type_t) 1. + eps);
+		type_t cyro = ((type_t) 1. - eps)*((type_t) 1. - eps);
 		//
 		type_t rem2 = x*x/cxro + y*y/cyro;
 		//
 		complex zci, znum, zden, zres;
 		type_t norm;
 		//	
-		zci.re  = 0;
-		zci.im  = -0.5*(1. - eps*eps)/sqe;
+		zci.re  = (type_t) 0.;
+		zci.im  = (type_t) -0.5*((type_t) 1. - eps*eps)/sqe;
 		//@@printf("zci = %f %f\n", zci.re, zci.im);	
 		//
 		znum.re = cx1*x;
-		znum.im = 2.*sqe*sqrt(rc*rc + rem2) - y/cx1;
+		znum.im = (type_t) 2.*sqe*sqrt(rc*rc + rem2) - y/cx1;
 		//
 		zden.re = x;
-		zden.im = 2.*rc*sqe - y;
+		zden.im = (type_t) 2.*rc*sqe - y;
 		norm    = (zden.re*zden.re + zden.im*zden.im);     // zis = znum/zden
 		//@@printf("norm = %f\n", norm);
 		//
@@ -556,17 +558,17 @@ struct point module_potentialDerivatives_totalGradient_8_SOA_v2(const struct poi
                 //
                 type_t sqe  = sqrt(eps);
                 //
-                type_t cx1  = (1. - eps)/(1. + eps);
-                type_t cxro = (1. + eps)*(1. + eps);
-                type_t cyro = (1. - eps)*(1. - eps);
+                type_t cx1  = ((type_t) 1. - eps)/((type_t) 1. + eps);
+                type_t cxro = ((type_t) 1. + eps)*((type_t) 1. + eps);
+                type_t cyro = ((type_t) 1. - eps)*((type_t) 1. - eps);
                 //
                 type_t rem2 = x*x/cxro + y*y/cyro;
                 //
                 complex zci, znum, zden, zres;
                 type_t norm;
                 //
-                zci.re  = 0;
-                zci.im  = -0.5*(1. - eps*eps)/sqe;
+                zci.re  = (type_t) 0.;
+                zci.im  = (type_t) -0.5*((type_t) 1. - eps*eps)/sqe;
                 //
 		KERNEL(rc, zres)
 		//
@@ -590,8 +592,8 @@ struct point module_potentialDerivatives_totalGradient_8_SOA_v2_novec(const stru
         // 6 DP loads, i.e. 48 Bytes: position_x, position_y, ellipticity_angle, ellipticity_potential, rcore, b0
         //
         struct point grad, clumpgrad;
-        grad.x = 0;
-        grad.y = 0;
+        grad.x = (type_t) 0.;
+        grad.y = (type_t) 0.;
         //printf("%d %d\n", shalos, nhalos);
         //
 #pragma novector
@@ -619,17 +621,17 @@ struct point module_potentialDerivatives_totalGradient_8_SOA_v2_novec(const stru
                 //
                 type_t sqe  = sqrt(eps);
                 //
-                type_t cx1  = (1. - eps)/(1. + eps);
-                type_t cxro = (1. + eps)*(1. + eps);
-                type_t cyro = (1. - eps)*(1. - eps);
+                type_t cx1  = ((type_t) 1. - eps)/((type_t) 1. + eps);
+                type_t cxro = ((type_t) 1. + eps)*((type_t) 1. + eps);
+                type_t cyro = ((type_t) 1. - eps)*((type_t) 1. - eps);
                 //
                 type_t rem2 = x*x/cxro + y*y/cyro;
                 //
                 complex zci, znum, zden, zres;
                 type_t norm;
                 //
-                zci.re  = 0;
-                zci.im  = -0.5*(1. - eps*eps)/sqe;
+                zci.re  = (type_t) 0.;
+                zci.im  = (type_t) -0.5*((type_t) 1. - eps*eps)/sqe;
                 //
                 KERNEL(rc, zres)
                 //
@@ -651,8 +653,8 @@ struct point module_potentialDerivatives_totalGradient_81_SOA(const struct point
         // 6 DP loads, i.e. 48 Bytes: position_x, position_y, ellipticity_angle, ellipticity_potential, rcore, b0
         // 
         struct point grad, clumpgrad;
-        grad.x = 0;
-        grad.y = 0;
+        grad.x = (type_t) 0.;
+        grad.y = (type_t) 0.;
         for(int i = shalos; i < shalos + nhalos; i++)
         {
                 //IACA_START;
@@ -679,17 +681,17 @@ struct point module_potentialDerivatives_totalGradient_81_SOA(const struct point
                 //
                 type_t sqe  = sqrt(eps);
                 //
-                type_t cx1  = (1. - eps)/(1. + eps);
-                type_t cxro = (1. + eps)*(1. + eps);
-                type_t cyro = (1. - eps)*(1. - eps);
+                type_t cx1  = ((type_t) 1. - eps)/((type_t) 1. + eps);
+                type_t cxro = ((type_t) 1. + eps)*((type_t) 1. + eps);
+                type_t cyro = ((type_t) 1. - eps)*((type_t) 1. - eps);
                 //
                 type_t rem2 = x*x/cxro + y*y/cyro;
                 //
                 complex zci, znum, zden, zres_rc, zres_rcut;
                 type_t norm;
                 //      
-                zci.re  = 0;
-                zci.im  = -0.5*(1. - eps*eps)/sqe;
+                zci.re  = (type_t) 0.;
+                zci.im  = (type_t) -0.5*((type_t) 1. - eps*eps)/sqe;
 		// step 1
 		{
 			KERNEL(rc, zres_rc)
@@ -723,8 +725,8 @@ struct point module_potentialDerivatives_totalGradient_81_SOA_v2(const struct po
         // 6 DP loads, i.e. 48 Bytes: position_x, position_y, ellipticity_angle, ellipticity_potential, rcore, b0
         //
         struct point grad, clumpgrad;
-        grad.x = 0;
-        grad.y = 0;
+        grad.x = (type_t) 0.;
+        grad.y = (type_t) 0.;
         for(int i = shalos; i < shalos + nhalos; i++)
         {
                 //IACA_START;
@@ -752,17 +754,17 @@ struct point module_potentialDerivatives_totalGradient_81_SOA_v2(const struct po
                 //
                 type_t sqe  = sqrt(eps);
                 //
-                type_t cx1  = (1. - eps)/(1. + eps);
-                type_t cxro = (1. + eps)*(1. + eps);
-                type_t cyro = (1. - eps)*(1. - eps);
+                type_t cx1  = ((type_t) 1. - eps)/((type_t) 1. + eps);
+                type_t cxro = ((type_t) 1. + eps)*((type_t) 1. + eps);
+                type_t cyro = ((type_t) 1. - eps)*((type_t) 1. - eps);
                 //
                 type_t rem2 = x*x/cxro + y*y/cyro;
                 //
                 complex zci, znum, zden, zres_rc, zres_rcut;
                 type_t norm;
                 //
-                zci.re  = 0;
-                zci.im  = -0.5*(1. - eps*eps)/sqe;
+                zci.re  = (type_t) 0.;
+                zci.im  = (type_t) -0.5*((type_t) 1. - eps*eps)/sqe;
 		//
                 // step 1
                 {
@@ -791,8 +793,8 @@ struct point module_potentialDerivatives_totalGradient_81_SOA_v2_novec(const str
         //std::cout << "# module_potentialDerivatives_totalGradient_81_SOA begins" << std::endl;
         // 6 DP loads, i.e. 48 Bytes: position_x, position_y, ellipticity_angle, ellipticity_potential, rcore, b0
         struct point grad, clumpgrad;
-        grad.x = 0;
-        grad.y = 0;
+        grad.x = 0.;
+        grad.y = 0.;
 #pragma novector
         for(int i = shalos; i < shalos + nhalos; i++)
         {
@@ -821,17 +823,17 @@ struct point module_potentialDerivatives_totalGradient_81_SOA_v2_novec(const str
                 //
                 type_t sqe  = sqrt(eps);
                 //
-                type_t cx1  = (1. - eps)/(1. + eps);
-                type_t cxro = (1. + eps)*(1. + eps);
-                type_t cyro = (1. - eps)*(1. - eps);
+                type_t cx1  = ((type_t) 1. - eps)/((type_t) 1. + eps);
+                type_t cxro = ((type_t) 1. + eps)*((type_t) 1. + eps);
+                type_t cyro = ((type_t) 1. - eps)*((type_t) 1. - eps);
                 //
                 type_t rem2 = x*x/cxro + y*y/cyro;
                 //
                 complex zci, znum, zden, zres_rc, zres_rcut;
                 type_t norm;
                 //
-                zci.re  = 0;
-                zci.im  = -0.5*(1. - eps*eps)/sqe;
+                zci.re  = (type_t) 0.;
+                zci.im  = (type_t) -0.5*((type_t) 1. - eps*eps)/sqe;
                 //
                 // step 1
                 {
@@ -875,8 +877,8 @@ struct point module_potentialDerivatives_totalGradient_SOA(const struct point *p
 {
         struct point grad, clumpgrad;
         //
-        grad.x = clumpgrad.x = 0;
-        grad.y = clumpgrad.y = 0;
+        grad.x = clumpgrad.x = (type_t) 0.;
+        grad.y = clumpgrad.y = (type_t) 0.;
 	//
 	int shalos = 0;
 	//
