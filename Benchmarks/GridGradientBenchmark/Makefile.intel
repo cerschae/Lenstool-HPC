@@ -36,20 +36,23 @@ program_INCLUDE_LIBS += $(WCSTOOL_ROOT)
 #
 #
 # Compiler flags
-CPPFLAGS += $(foreach includedir,$(program_INCLUDE_DIRS),-I$(includedir))
-CPPFLAGS += $(foreach includelib,$(program_INCLUDE_LIBS),-L$(includelib))
-CPPFLAGS += -D__WITH_LENSTOOL 
-CPPFLAGS += -D_double
-CPPFLAGS += -qopenmp -xHost -g -O3 -std=c++0x -Wall -pedantic
-CPPFLAGS += -fma -qopenmp -ftz
-CPPFLAGS += -xHost -pedantic  
-CPPFLAGS += -fPIC
-#CPPFLAGS += -no-vec
-#CPPFLAGS += -qopenmp -march=core-avx2 -g -O3 -std=c++0x -Wall -pedantic
-#CPPFLAGS += -llenstoolhpc -qopenmp -xHost -g -O3 -std=c++0x -Wall -pedantic
-#CPPFLAGS += -llenstoolhpc -qopenmp -axMIC-AVX512,CORE-AVX2 -g -O3 -std=c++0x -Wall -pedantic
-#CPPFLAGS += -qopt-prefetch-distance=64,8 -qopt-streaming-cache-evict=0 -llenstoolhpc -qopenmp -xMIC-AVX512 -g -O3 -std=c++0x -Wall -pedantic
-LDFLAGS := -llenstool -llenstoolhpc -llenstoolhpc_GPU -llt -lcfitsio -lwcs -lgsl -lgslcblas
+CXXFLAGS += $(foreach includedir,$(program_INCLUDE_DIRS),-I$(includedir))
+CXXFLAGS += $(foreach includelib,$(program_INCLUDE_LIBS),-L$(includelib))
+#CXXFLAGS += -D__WITH_LENSTOOL 
+CXXFLAGS += -qopenmp -xHost -g -O3 -std=c++0x -Wall -pedantic
+CXXFLAGS += -fma -qopenmp -ftz
+CXXFLAGS += -xHost -pedantic  
+CXXFLAGS += -fPIC
+include $(LENSTOOLHPC_ROOT)/src/precision.inc
+CXXFLAGS += $(PRECISION)
+
+#CXXFLAGS += -no-vec
+#CXXFLAGS += -qopenmp -march=core-avx2 -g -O3 -std=c++0x -Wall -pedantic
+#CXXFLAGS += -llenstoolhpc -qopenmp -xHost -g -O3 -std=c++0x -Wall -pedantic
+#CXXFLAGS += -llenstoolhpc -qopenmp -axMIC-AVX512,CORE-AVX2 -g -O3 -std=c++0x -Wall -pedantic
+#CXXFLAGS += -qopt-prefetch-distance=64,8 -qopt-streaming-cache-evict=0 -llenstoolhpc -qopenmp -xMIC-AVX512 -g -O3 -std=c++0x -Wall -pedantic
+LDFLAGS := -llenstool -llenstoolhpc -llt -lcfitsio -lwcs -lgsl -lgslcblas
+#LDFLAGS += -llenstoolhpc_GPU
 #
 #NVFLAGS := -O3 -g -G -rdc=true -ccbin icpc -Xcompiler '-Wall -fPIC -qopenmp' -D__WITH_LENSTOOL 
 NVFLAGS := -O3 -g -ccbin icpc -Xcompiler '-Wall -fPIC' -D__WITH_LENSTOOL 
@@ -69,7 +72,7 @@ NVLDFLAGS += $(LDFLAGS)
 LDFLAGS   += -O3 -g -liomp5
 #
 #
-GPU_OBJECTS = $(program_CU_OBJS)
+#GPU_OBJECTS = $(program_CU_OBJS)
 CPU_OBJECTS = $(program_CXX_OBJS) $(program_C_OBJS)
 #
 %.cu.o: %.cu 
@@ -77,7 +80,7 @@ CPU_OBJECTS = $(program_CXX_OBJS) $(program_C_OBJS)
 	#nvcc $(NVFLAGS) -Xptxas -dlcm=cg --ptxas-options=-v -o $@ -dc $<
 #
 %.cpp: %.cpp %.h
-	$(CXX) $(CXXFLAGS) -o $@ $< $(CPPFLAGS)
+	$(CXX) $(CXXFLAGS) -o $@ $< $(CXXFLAGS)
 #
 $(PROGRAM_NAME): $(CPU_OBJECTS) 
 	icpc -o $@ $^ $(LDFLAGS) 

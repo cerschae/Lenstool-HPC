@@ -25,12 +25,13 @@
 #include "module_cosmodistances.hpp"
 #include "module_readParameters.hpp"
 #ifdef __WITH_GPU
+#warning "GPU support enabled"
 #include "grid_gradient_GPU.cuh"
 #endif
 
 #ifdef __WITH_LENSTOOL
 #include "setup.hpp"
-#warning "linking with libtool..."
+#warning "linking with lenstool..."
 #include<fonction.h>
 #include<constant.h>
 #include<dimension.h>
@@ -389,6 +390,7 @@ int main(int argc, char *argv[])
 	type_t *grid_gradient_x, *grid_gradient_y;
 
 #ifdef __WITH_GPU
+#warning "using GPUs..."
 	// GPU test
 
 	std::cout << " GPU Test... "; 
@@ -475,8 +477,6 @@ int main(int argc, char *argv[])
 #endif
 
 	}
-
-
 	//
 #ifdef __WITH_GPU
 	{
