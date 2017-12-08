@@ -37,6 +37,12 @@
 #include <type.h>
 //
 #define NN 100000
+//
+#ifdef _double
+#warning "double precision"
+#else
+#warning "single precision"
+#endif
 
 //
 //
@@ -116,38 +122,38 @@ int main()
 	//
 	//Variable creation
 	//
-	point image;
+	struct point image;
+	struct point grad_aos; // store the result
 	//
 	//Initialisation
 	//
         int nlenses;
         type_t x, y;
-        type_t sol_grad_x, sol_grad_y;
-	point grad; // store the result
-	//pot* lens;
-#ifdef __WITH_LENSTOOL
-	setup_jauzac_LT(&nlenses, &image.x, &image.y, &sol_grad_x, &sol_grad_y);
-	//
+#if defined(__WITH_LENSTOOL) && !defined(_single)
 	struct point grad_lt, Grad;
-	//printf("Number lenses = %d, b0 = %f\n", nlenses, lens[0].b0);
-	//
-	t0 = -myseconds();	
-	for (int ii = 0; ii < NN; ++ii)
 	{
-		grad_lt.x = grad_lt.y = 0.;
-		for (long int jj = 0; jj < nlenses; ++jj)
+		double sol_grad_x, sol_grad_y;
+		setup_jauzac_LT(&nlenses, &image.x, &image.y, &sol_grad_x, &sol_grad_y);
+		printf("Number lenses = %d, b0 = %f\n", nlenses, lens[0].b0); fflush(stdout);
+		//
+		t0 = -myseconds();	
+		for (int ii = 0; ii < NN; ++ii)
 		{
-
-			//printf("%f\n", lens[ii].b0);
-			Grad = e_grad_pot(&image, jj);
-			//
-			grad_lt.x += Grad.x;
-			grad_lt.y += Grad.y;
-			//printf("%f %f\n", grad_lt.x, grad_lt.y);
+			grad_lt.x = grad_lt.y = 0.;
+			for (long int jj = 0; jj < nlenses; ++jj)
+			{
+				//printf("%f\n", lens[ii].b0);
+				Grad = e_grad_pot(&image, jj);
+				//
+				grad_lt.x += Grad.x;
+				grad_lt.y += Grad.y;
+				//printf("%f %f\n", grad_lt.x, grad_lt.y);
+			}
 		}
+		t0 += myseconds();
 	}
-	t0 += myseconds();
 #endif
+	type_t sol_grad_x, sol_grad_y;
 	//
 	//
 	//setup_jauzac(Potential** lens, int* nlenses, double* x, double* y, double* sol_grad_x, double* sol_grad_y)
@@ -157,13 +163,13 @@ int main()
 	setup_jauzac(&lens_aos, &nlenses, &image.x, &image.y, &sol_grad_x, &sol_grad_y);
 	t1 = -myseconds();
 	for (int ii = 0; ii < NN; ++ii)
-		grad = module_potentialDerivatives_totalGradient(nlenses, &image, lens_aos);
+		grad_aos = module_potentialDerivatives_totalGradient(nlenses, &image, lens_aos);
 	t1 += myseconds();
 	//printf("---> grad = %f %f\n", grad.x, grad.y);
 	//
 	// Setting up the AOS potential 
 	//
-	point image_soa;
+	struct point image_soa;
 	int nlenses_soa;
 	double x_soa, y_soa;
 	type_t sol_grad_x_soa, sol_grad_y_soa;
@@ -227,18 +233,18 @@ int main()
 	t3 += myseconds();
 	//
 #ifdef _double
-	std::cout << " Double calculation   = "  << std::endl;
+	std::cout << "Double precision"  << std::endl;
 #else
-	std::cout << " Float  calculation   = "  << std::endl;
+	std::cout << "Single precision "  << std::endl;
 #endif
 
 	std::cout << " ref sol   = " << std::setprecision(15) << sol_grad_x << " " << std::setprecision(15) << sol_grad_y << std::endl;
 	//
-#ifdef __WITH_LENSTOOL
+#if defined(__WITH_LENSTOOL) && !defined(_single)
 	std::cout << " Lenstool sol   = " << std::setprecision(15) << grad_lt.x << " " << std::setprecision(15) << grad_lt.y << ", time = " << t0 << " s." << std::endl;
 #endif
 	//
-	std::cout << " grad           = " << std::setprecision(15) << grad.x << " " << std::setprecision(15) << grad.y << ", time = " << t1 << " s., speedup = " << (double) t0/t1 << std::endl;
+	std::cout << " grad           = " << std::setprecision(15) << grad_aos.x << " " << std::setprecision(15) << grad_aos.y << ", time = " << t1 << " s., speedup = " << (double) t0/t1 << std::endl;
 	//
 	//std::cout << " grad novec     = " << std::setprecision(15) << grad.x << " " << std::setprecision(15) << grad.y << ", time = " << t21 << " s., speedup = " << (double) t0/t21 << std::endl;
 	//

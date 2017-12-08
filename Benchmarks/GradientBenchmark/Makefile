@@ -35,16 +35,18 @@ program_INCLUDE_LIBS += $(WCSTOOL_ROOT)
 #
 # Compiler flags
 # 
-CPPFLAGS += $(foreach includedir,$(program_INCLUDE_DIRS),-I$(includedir))
-CPPFLAGS += $(foreach includelib,$(program_INCLUDE_LIBS),-L$(includelib))
-#CPPFLAGS += -qopt-prefetch-distance=64,8 -qopt-streaming-cache-evict=0 -qopenmp -xMIC-AVX512 -pedantic -llenstoolhpc
-#CPPFLAGS += -qopt-streaming-stores=always -qopenmp -xMIC-AVX512 -pedantic -llenstoolhpc
-#CPPFLAGS += -ftz -qopenmp -xHost -llenstool -fma -pedantic -llenstoolhpc  -llt -lcfitsio -lwcs -lgsl -lgslcblas 
-CPPFLAGS += -ftz -qopenmp -xHost -fma -pedantic -llenstoolhpc  -llt -lcfitsio -lwcs -lgsl -lgslcblas 
-CPPFLAGS += -g -O3 -std=c++0x -Wall 
-#CPPFLAGS += -D_double
-#CPPFLAGS += -D__WITH_LENSTOOL
-#CPPFLAGS += -D__USE_GPU
+CXXFLAGS += $(foreach includedir,$(program_INCLUDE_DIRS),-I$(includedir))
+CXXFLAGS += $(foreach includelib,$(program_INCLUDE_LIBS),-L$(includelib))
+#CXXFLAGS += -qopt-prefetch-distance=64,8 -qopt-streaming-cache-evict=0 -qopenmp -xMIC-AVX512 -pedantic -llenstoolhpc
+#CXXFLAGS += -qopt-streaming-stores=always -qopenmp -xMIC-AVX512 -pedantic -llenstoolhpc
+#CXXFLAGS += -ftz -qopenmp -xHost -llenstool -fma -pedantic -llenstoolhpc  -llt -lcfitsio -lwcs -lgsl -lgslcblas 
+CXXFLAGS += -llenstool
+CXXFLAGS += -ftz -qopenmp -xHost -fma -pedantic -llenstoolhpc  -llt -lcfitsio -lwcs -lgsl -lgslcblas 
+CXXFLAGS += -g -O3 -std=c++0x -Wall 
+#CXXFLAGS += -D__WITH_LENSTOOL
+include $(LENSTOOLHPC_ROOT)/src/precision.inc
+CXXFLAGS += $(PRECISION)
+#CXXFLAGS += -D__USE_GPU
 #
 GEN_SM35 := -gencode=arch=compute_35,code=\"sm_35,compute_35\" #Target CC 3.5, for example
 NVFLAGS := -O3 -g -G -rdc=true #rdc=true needed for separable compilation
@@ -66,10 +68,10 @@ debug: $(PROGRAM_NAME)
 
 # Rule for compilation of CUDA source (C++ source can be handled automatically)
 %.cuo: %.cu %.cuh
-	nvcc $(NVFLAGS) $(CPPFLAGS) -o $@ -dc $<
+	nvcc $(NVFLAGS) $(CXXFLAGS) -o $@ -dc $<
 
 %.cpp: %.cpp %.h
-	$(CXX) $(CXXFLAGS)  -o $@ $< $(CPPFLAGS) 
+	$(CXX) $(CXXFLAGS)  -o $@ $< $(CXXFLAGS) 
 
 # This is pretty ugly...details below
 # The program depends on both C++ and CUDA Objects, but storing CUDA objects as .o files results in circular dependency
@@ -83,7 +85,7 @@ debug: $(PROGRAM_NAME)
 # required by nvcc, calling nvcc, and then converting back to the non .o suffix for future, dependency-based 
 # compilation.
 $(PROGRAM_NAME): $(OBJECTS) 
-	$(CXX) -o $@ $(program_CXX_OBJS) $(CUO_O_OBJECTS) $(program_C_OBJS) $(CPPFLAGS) 
+	$(CXX) -o $@ $(program_CXX_OBJS) $(CUO_O_OBJECTS) $(program_C_OBJS) $(CXXFLAGS) 
 
 
 
@@ -94,7 +96,7 @@ $(PROGRAM_NAME): $(OBJECTS)
 #	do				\
 #		mv $$cu_obj $$cu_obj.o; \
 #	done				#append a .o suffix for nvcc
-#	nvcc $(NVFLAGS) $(CPPFLAGS) -o $@ $(program_CXX_OBJS) $(program_C_OBJS) $(CUO_O_OBJECTS)
+#	nvcc $(NVFLAGS) $(CXXFLAGS) -o $@ $(program_CXX_OBJS) $(program_C_OBJS) $(CUO_O_OBJECTS)
 #	@ for cu_obj in $(CUO_O_OBJECTS); 	\
 #	do					\
 #		mv $$cu_obj $${cu_obj%.*};	\

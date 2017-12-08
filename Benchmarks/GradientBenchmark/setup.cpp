@@ -21,8 +21,8 @@ extern int num_lenses = 95;
 extern type_t x_c = -44.094528948812552;
 extern type_t y_c = -36.928385887965803;
 //
-//extern int lense_type[]  = {81,81,81,81,81,81,81,81,81,81,81,81,81,81,81,81,81,81,81,81,81,81,81,81,81,81,81,81,81, 81, 81, 81, 81, 81, 81, 81, 81, 81, 81, 81, 81, 81, 81, 81, 81, 81, 81, 81, 81, 81, 81, 81, 81, 81, 81, 81, 81, 81, 81, 81, 81, 81, 81, 81, 81, 81, 81, 81, 81, 81, 81, 81, 81, 81, 81, 81, 81, 81, 81, 81, 81, 81, 81, 81, 81, 81, 81, 81, 81, 81, 81, 81, 81, 81, 81};
-extern int lense_type[]  = {8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8};
+extern int lense_type[]  = {81,81,81,81,81,81,81,81,81,81,81,81,81,81,81,81,81,81,81,81,81,81,81,81,81,81,81,81,81, 81, 81, 81, 81, 81, 81, 81, 81, 81, 81, 81, 81, 81, 81, 81, 81, 81, 81, 81, 81, 81, 81, 81, 81, 81, 81, 81, 81, 81, 81, 81, 81, 81, 81, 81, 81, 81, 81, 81, 81, 81, 81, 81, 81, 81, 81, 81, 81, 81, 81, 81, 81, 81, 81, 81, 81, 81, 81, 81, 81, 81, 81, 81, 81, 81, 81};
+//extern int lense_type[]  = {8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8};
 //extern int lense_type[]  = {5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5};
 
 //
@@ -211,6 +211,7 @@ setup_jauzac_SOA(Potential_SOA *lens_soa, int* nlenses, type_t* x, type_t* y, ty
 void
 setup_jauzac(Potential** lens, int* nlenses, type_t* x, type_t* y, type_t* sol_grad_x, type_t* sol_grad_y)
 {
+        std::cout << "Setup Jauzac... ";
         *nlenses    = num_lenses;
         *sol_grad_x = grad_x;
         *sol_grad_y = grad_y;
@@ -241,15 +242,16 @@ setup_jauzac(Potential** lens, int* nlenses, type_t* x, type_t* y, type_t* sol_g
                 (*lens)[i].einasto_kappacritic   = 0;
                 (*lens)[i].z                     = 0.4;
         }
-	std::cout << "Setup done..." << std::endl;
+	std::cout << "done" << std::endl;
 }
 
-#ifdef __WITH_LENSTOOL
+#if defined(__WITH_LENSTOOL) && !defined(_single)
 extern struct pot lens[NLMAX];
 void
 //setup_jauzac_LT(struct pot** lens, int* nlenses, type_t* x, type_t* y, type_t* sol_grad_x, type_t* sol_grad_y)
-setup_jauzac_LT( int* nlenses, type_t* x, type_t* y, type_t* sol_grad_x, type_t* sol_grad_y)
+setup_jauzac_LT( int* nlenses, double* x, double* y, double* sol_grad_x, double* sol_grad_y)
 {
+        std::cout << "Setup Jauzac LT... ";
         *nlenses    = num_lenses;
         *sol_grad_x = grad_x;
         *sol_grad_y = grad_y;
@@ -282,7 +284,7 @@ setup_jauzac_LT( int* nlenses, type_t* x, type_t* y, type_t* sol_grad_x, type_t*
 //                (&lens)[i].einasto_kappacritic   = 0;
                 lens[i].z                     = 0.4;
         }
-        std::cout << "Setup done..." << std::endl;
+        std::cout << "done" << std::endl;
 }
 #endif
 
