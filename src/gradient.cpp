@@ -170,7 +170,7 @@ grad_halo(const struct point *pImage, const struct Potential *lens)
 			break;
 	};
 	result = rotateCoordinateSystem(result, -lens->ellipticity_angle); 
-	printf("	rot grad = %.15f %.15f\n", result.x, result.y); 
+	//printf("	rot grad = %.15f %.15f\n", result.x, result.y); 
 	return result;
 }
 //
@@ -262,8 +262,9 @@ struct point module_potentialDerivatives_totalGradient_5_SOA_v2(const struct poi
 			//
 			type_t ell_pot = lens->ellipticity_potential[i];
 			//
-			type_t R = sqrt(x*x*((type_t) 1. - ell_pot) + y*y*((type_t) 1. + ell_pot));
-			R = 1./R;
+			type_t val = x*x*((type_t) 1. - ell_pot) + y*y*((type_t) 1. + ell_pot);
+			type_t R   = 1./sqrtf(val);
+			R = R*(1.5 - 0.5*val*R*R); 
 			result.x = ((type_t) 1. - ell_pot)*b0*x*R;
 			result.y = ((type_t) 1. + ell_pot)*b0*y*R;
 			//
