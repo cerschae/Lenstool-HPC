@@ -40,7 +40,7 @@ CPPFLAGS += -fma -ftz
 #CPPFLAGS += -qopt-report=5 -S
 CXXFLAGS += -g -O3 -std=c++0x -Wall -D__WITH_MPI 
 #CXXFLAGS += -fast-transcendentals
-CXXFLAGS += -fast -fp-model fast=2
+CXXFLAGS += -Ofast #-fp-model fast=2
 include ./precision.inc
 CXXFLAGS += $(PRECISION)
 #
