@@ -566,7 +566,7 @@ int main(int argc, char *argv[])
 #endif
 	}
 #endif
-
+	std::cout << "Exiting..." << std::endl;
 #endif
 
 }
