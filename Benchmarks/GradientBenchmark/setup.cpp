@@ -226,9 +226,10 @@ setup_jauzac(Potential** lens, int* nlenses, type_t* x, type_t* y, type_t* sol_g
                 //
 		(*lens)[i].position.x            = pos_x[i];
                 (*lens)[i].position.y            = pos_y[i];
-		//
+
                 (*lens)[i].vdisp                 = 1.;
                 (*lens)[i].type                  = lense_type[i];
+                //std::cerr << (*lens)[i].type  << " "<< lense_type[i] <<std::endl;
                 (*lens)[i].ellipticity           = 0.11;
                 (*lens)[i].ellipticity_potential = epot[i];
                 (*lens)[i].ellipticity_angle     = theta[i];
