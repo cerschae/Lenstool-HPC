@@ -15,10 +15,19 @@
 #include "structure_hpc.hpp"
 
 extern struct pot lens[NLMAX];
+extern struct g_grille G;
 void
 //setup_jauzac_LT(struct pot** lens, int* nlenses, double* x, double* y, double* sol_grad_x, double* sol_grad_y)
 convert_to_LT(Potential_SOA* lenses, int nlenses)
 {
+
+	G.xmax =  50.0;
+	G.xmin = -50.0;
+	G.ymax =  50.0;
+	G.ymin = -50.0;
+	G.dx = 100./1000.;
+	G.dy = 100./1000.;
+	G.nlens = 6;
         //
         //*lens = (struct pot*) malloc(sizeof(struct pot)*(*nlenses));
         //
