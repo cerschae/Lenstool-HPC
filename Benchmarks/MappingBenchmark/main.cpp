@@ -27,6 +27,7 @@
 #include "module_readParameters.hpp"
 #include "grid_gradient2_CPU.hpp"
 #include "grid_amplif_CPU.hpp"
+#include "module_writeFits.hpp"
 #ifdef __WITH_GPU
 #include "grid_gradient_GPU.cuh"
 #include "grid_map_GPU.cuh"
@@ -186,7 +187,7 @@ void
 gradient_grid_GPU_sorted(type_t *grid_grad_x, type_t *grid_grad_y, const struct grid_param *frame, const struct Potential_SOA *lens, int Nlens, int nbgridcells);
 //
 //
-int module_readCheckInput_readInput(int argc, char *argv[])
+int module_readCheckInput_readInput(int argc, char *argv[], std::string *outdir)
 {
 	/// check if there is a correct number of arguments, and store the name of the input file in infile
 
@@ -212,14 +213,15 @@ int module_readCheckInput_readInput(int argc, char *argv[])
 	ss << ts;
 	std::string trimstamp = ss.str();
 	//
-	std::string outdir = argv[2];
-	outdir += "-";
-	outdir += trimstamp;
-	std::cout << outdir << std::endl;
+	//std::string outdir = argv[2];
+	*outdir = argv[2];
+	*outdir += "-";
+	*outdir += trimstamp;
+	std::cout << *outdir << std::endl;
 
 	// check whether the output directory already exists
-	if (stat(outdir.c_str(), &file_stat) < 0){
-		mkdir(outdir.c_str(), S_IRUSR | S_IWUSR | S_IXUSR | S_IRGRP | S_IWGRP | S_IXGRP | S_IROTH );
+	if (stat(outdir->c_str(), &file_stat) < 0){
+		mkdir(outdir->c_str(), S_IRUSR | S_IWUSR | S_IXUSR | S_IRGRP | S_IWGRP | S_IXGRP | S_IROTH );
 	}
 	else {
 		printf("Error : Directory %s already exists. Specify a non existing directory.\n",argv[2]);
@@ -253,7 +255,8 @@ int main(int argc, char *argv[])
 	if (getcwd(cwd, sizeof(cwd)) != NULL)
 		fprintf(stdout, "Current working dir: %s\n", cwd);
 	//
-	module_readCheckInput_readInput(argc, argv);
+	std::string path;
+	module_readCheckInput_readInput(argc, argv, &path);
 	//
 
 	// This module function reads the cosmology parameters from the parameter file
@@ -425,12 +428,13 @@ int main(int argc, char *argv[])
 	//
 	//
 	//
+	type_t iamp = 5;
 
 #ifdef __WITH_LENSTOOL
         std::cout << " CPU Test Lenstool    ... ";
         //type_t *ampli;
         //ampli = (type_t *) malloc((int) (runmode.nbgridcells) * (runmode.nbgridcells) * sizeof(type_t));
-        type_t iamp = 5;
+
         F.xmin =  F.ymin = frame.xmin;
         F.xmax = F.ymax = frame.xmax;
         G.nlens = runmode.nhalos;
@@ -558,6 +562,18 @@ int main(int argc, char *argv[])
 		map_gpu_function_t map_gpu_func = &amplif5_grid_CPU_GPU;
 		map_grid_GPU(map_gpu_func,ampli_GPU,&cosmology, &frame, &lenses_SOA, runmode.nhalos, grid_dim,runmode.amplif, runmode.z_amplif);
 	}
+	std::string file;
+	file = path;
+	file.append("/amplif");
+	file.append(".fits");
+
+	char file_char[file.length()+1];
+	strcpy(file_char,file.c_str());
+
+	module_writeFits_Image(file_char,ampli_GPU,grid_dim,grid_dim,frame.xmin,frame.xmax,frame.ymin,frame.ymax);
+
+	//free(amplif);
+
 	t_2 += myseconds();
 	std::cerr << "**" << ampli_GPU[0] << std::endl;
 	std::cout << " Time  " << std::setprecision(15) << t_2 << std::endl;
