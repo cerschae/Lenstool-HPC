@@ -22,6 +22,7 @@ program_CU_OBJS := ${program_CU_SRCS:.cu=.cu.o}
 program_INCLUDE_DIRS := . /usr/local/cuda/include/ #C++ Include directories
 program_INCLUDE_DIRS += $(CFITSIO_ROOT)/include
 program_INCLUDE_DIRS += $(LENSTOOL_ROOT)/include
+program_INCLUDE_DIRS += $(LENSTOOL_ROOT)/liblt/include
 program_INCLUDE_DIRS += $(GSL_ROOT)/include
 program_INCLUDE_DIRS += $(LENSTOOLHPC_ROOT)/src
 #

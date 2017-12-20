@@ -29,6 +29,7 @@
 #include "grid_amplif_CPU.hpp"
 #ifdef __WITH_GPU
 #include "grid_gradient_GPU.cuh"
+#include "grid_map_GPU.cuh"
 #include "grid_gradient2_GPU.cuh"
 //#include "gradient2_GPU.cuh"
 #endif
@@ -40,6 +41,9 @@
 #include<constant.h>
 #include<dimension.h>
 #include<structure.h>
+#include<lt.h>
+#include <stdlib.h>
+
 //
 //
 struct g_mode   M;
@@ -109,6 +113,74 @@ double **map_ayy;
 
 
 #endif
+
+double  **alloc_square_double_test(int nbr_lin,int nbr_col)
+{
+        auto     double   **square;
+        register int      i, j;
+
+        square = (double **) malloc((unsigned) nbr_lin*sizeof(double *));
+        if (square != 0)
+        {
+                for (i=0; i<nbr_lin; i++)
+            {
+                square[i] = (double *)malloc((unsigned) nbr_col*sizeof(double));
+                if (square[i] == 0) square = 0;
+            }
+        }
+
+        for (i=0; i<nbr_lin; i++)
+                for (j=0; j<nbr_col; j++)
+                        square[i][j]=0.0;
+
+        return(square);
+}
+
+int     **alloc_square_int_test(int nbr_lin,int nbr_col)
+{
+auto     int   **square;
+register int      i, j;
+
+square = (int **) malloc((unsigned) nbr_lin*sizeof(int *));
+if (square != 0)
+  {
+  for (i=0; i<nbr_lin; i++)
+    {
+    square[i] = (int *)malloc((unsigned) nbr_col*sizeof(int));
+    if (square[i] == 0) square = 0;
+    }
+  }
+
+for (i=0; i<nbr_lin; i++)
+for (j=0; j<nbr_col; j++)
+square[i][j]=0;
+
+return(square);
+}
+
+void    free_square_double_test(double **square,int nbr_lin)
+{
+        register  int    i;
+        if(square!=NULL)
+        {
+            for (i=0; i<nbr_lin; i++)
+                free(square[i]);
+
+                free((double *) square);
+        }
+}
+
+void    free_square_int_test(int **square,int nbr_lin)
+{
+        register  int    i;
+
+        for (i=0; i<nbr_lin; i++)
+                free((int *) square[i]);
+
+        free((int *) square);
+}
+
+
 
 void
 gradient_grid_GPU_sorted(type_t *grid_grad_x, type_t *grid_grad_y, const struct grid_param *frame, const struct Potential_SOA *lens, int Nlens, int nbgridcells);
@@ -316,8 +388,6 @@ int main(int argc, char *argv[])
 	dy = (frame.ymax - frame.ymin)/(runmode.nbgridcells-1);
 #if 0
 	//
-	//mdci05(Q.x, Q.y, ilens->epot, ilens->rc, ilens->b0, &g05c);
-	//
 	point test_point1_1, test_point2_2, test_result1_1, test_result2_2, test_pointN_N, test_resultN_N;
 	type_t dlsds = images[0].dr;
 	//
@@ -358,98 +428,138 @@ int main(int argc, char *argv[])
 
 #ifdef __WITH_LENSTOOL
         std::cout << " CPU Test Lenstool    ... ";
-        type_t *ampli;
-        ampli = (type_t *) malloc((int) (runmode.nbgridcells) * (runmode.nbgridcells) * sizeof(type_t));
-        double t_lt = -myseconds();
+        //type_t *ampli;
+        //ampli = (type_t *) malloc((int) (runmode.nbgridcells) * (runmode.nbgridcells) * sizeof(type_t));
         type_t iamp = 5;
+        F.xmin =  F.ymin = frame.xmin;
+        F.xmax = F.ymax = frame.xmax;
+        G.nlens = runmode.nhalos;
+        double **ampli;
+        int **namp;
+        double z = runmode.z_amplif;
+        int np = runmode.nbgridcells;
+        double dl0s = module_cosmodistances_objectObject(lens[0].z, z, cosmology);
+        double dos = module_cosmodistances_observerObject(z, cosmology);
+        double dlsds = dl0s / dos;
+        point pi;
+        int i,j;
+
+        double t_lt = -myseconds();
 //#pragma omp parallel for if (omp_get_num_threads() > 1) schedule(guided, 100)
 //#pragma omp parallel for
-        for (int jj = 0; jj < runmode.nbgridcells; ++jj){
-                for (int ii = 0; ii < runmode.nbgridcells; ++ii)
+#if 1
+        ampli = (double **) alloc_square_double_test(np, np);
+        namp = (int **) alloc_square_int_test(np, np);
+
+        /* Make sure we have empty arrays */
+        for (j = 0; j < np; j++)
+            for (i = 0; i < np; i++)
+            {
+                ampli[i][j] = 0.;
+                namp[i][j] = 0;
+            }
+
+        if (iamp > 0)
+        {
+//#pragma omp parallel for
+            for (j = 0; j < np; j++)
+            {
+                struct matrix MA;
+                struct ellipse amp;
+                double kappa, ga1,ga2,gam,gp;
+                pi.y = j * (F.ymax - F.ymin) / (np - 1) + F.ymin;
+                for (i = 0; i < np; i++)
                 {
-                        //  (index < grid_dim*grid_dim)
-                    struct matrix Grad2, Grad2_temp; type_t kappa, ga1, ga2, gam;
+                    pi.x = i * (F.xmax - F.xmin) / (np - 1) + F.xmin;
+                    amp = e_unmag(&pi, dl0s, dos, z);
+                    /*amplification*/
+                    if (iamp == 1)
+                        ampli[j][i] = 1. / (amp.a * amp.b);
+                    /*absolute value of amplification*/
+                    else if (iamp == 2)
+                        ampli[j][i] = 1. / fabs(amp.a * amp.b);
+                    /*amplification in magnitudes*/
+                    else if (iamp == 3)
+                        ampli[j][i] = -2.5 * log10(fabs(amp.a * amp.b));
+                    /**/
+                    else if (iamp == 4)
+                    {
+                        MA = e_grad2(&pi, dl0s, z);
+                        MA.a /= dos;
+                        MA.b /= dos;
+                        MA.c /= dos;
 
-                        int index = jj*runmode.nbgridcells + ii;
+                        kappa = (MA.a + MA.c) / 2.;
+                        ga1 = (MA.a - MA.c) / 2.;
+                        ga2 = MA.b;
+                        gam = sqrt(ga1 * ga1 + ga2 * ga2); /*gamma*/
+                        gp = gam / (1 - kappa);
+                        ampli[j][i] = (1 - kappa) * (1 + gp * gp) / (1 - gp * gp);
+                    }
+                    else if (iamp == 5 || iamp == 6)
+                    {
+                        MA = e_grad2(&pi, dl0s, z);
+                        MA.a /= dl0s;
+                        MA.b /= dl0s;
+                        MA.c /= dl0s;
 
-                        ampli[index] = 0.;
-                        Grad2.a = Grad2.b = Grad2.c = Grad2.d = 0 ;
-                        struct point image_point;
-                        image_point.x = frame.xmin + ii*dx;
-                        image_point.y = frame.ymin + jj*dy;
-                        //std::cerr << "*" <<  image_point.x <<  " "<<image_point.y << std::endl;
-
-                        for (int lens = 0; lens < runmode.nhalos; ++lens)
-                        {
-
-                        		Grad2_temp = e_grad2_pot(&image_point, lens);
-                        		Grad2.a += Grad2_temp.a;
-                        		Grad2.b += Grad2_temp.b;
-                        		Grad2.c += Grad2_temp.c;
-                        		Grad2.d += Grad2_temp.d;
-                        }
-                		//
-                		Grad2.a /= 1.0001;
-                		Grad2.b /= 1.0001;
-                		Grad2.c /= 1.0001;
-
-                        kappa = (Grad2.a + Grad2.c) / 2.;
-                        ga1 = (Grad2.a - Grad2.c) / 2.;
-                        ga2 = Grad2.b;
+                        kappa = (MA.a + MA.c) / 2.;
+                        ga1 = (MA.a - MA.c) / 2.;
+                        ga2 = MA.b;
                         gam = sqrt(ga1 * ga1 + ga2 * ga2);
                         if (iamp == 5)
-                            ampli[index] = kappa;
-                }
-		}
+                            ampli[j][i] = kappa;
+                        else if (iamp == 6)
+                            ampli[j][i] = gam;
+                    }
+                    /*amplification^-1*/
+                    else
+                        ampli[j][i] = (amp.a * amp.b);
+                };
+            };
+        }
+#endif
 	t_lt += myseconds();
 	std::cout << " Time = " << t_lt << " s." << std::endl;
 #endif
 
 	//
 
-	matrix* grid_gradient2_cpu = (matrix *) malloc((int) (runmode.nbgridcells) * (runmode.nbgridcells) * sizeof(matrix));
+	//matrix* grid_gradient2_cpu = (matrix *) malloc((int) (runmode.nbgridcells) * (runmode.nbgridcells) * sizeof(matrix));
 
-	memset(grid_gradient2_cpu, 0, (runmode.nbgridcells) * (runmode.nbgridcells) * sizeof(matrix));
+	//memset(grid_gradient2_cpu, 0, (runmode.nbgridcells) * (runmode.nbgridcells) * sizeof(matrix));
 	
 	std::cout << " CPU Test lenstool_hpc... "; 
 	//
-	t_1 = -myseconds();
-    type_t *ampli_CPU;
-    ampli_CPU = (type_t *) malloc((int) (runmode.nbgridcells) * (runmode.nbgridcells) * sizeof(type_t));
+	 type_t *ampli_CPU;
+	ampli_CPU = (type_t *) malloc((int) (runmode.nbgridcells) * (runmode.nbgridcells) * sizeof(type_t));
+	memset(ampli_CPU, 0, (runmode.nbgridcells) * (runmode.nbgridcells) * sizeof(type_t));
 	int Nstat = 1;
+	t_1 = -myseconds();
 	for(int ii = 0; ii < Nstat; ++ii) {
-		amplif_grid_CPU(ampli_CPU, &frame, &lenses_SOA, runmode.nhalos, grid_dim, 5);
+		amplif_grid_CPU(ampli_CPU, &cosmology, &frame, &lenses_SOA, runmode.nhalos, grid_dim, runmode.amplif, runmode.z_amplif);
 		}
 	t_1 += myseconds();
 	//
 	std::cout << " Time = " << std::setprecision(15) << t_1 << std::endl;
-#if 0
+#if 1
 #ifdef __WITH_GPU
 	// GPU test
-
 	std::cout << " GPU Test... "; 
-
-	type_t* grid_gradient_a_gpu = (type_t *) malloc((int) (runmode.nbgridcells) * (runmode.nbgridcells) * sizeof(type_t));
-    type_t* grid_gradient_b_gpu = (type_t *) malloc((int) (runmode.nbgridcells) * (runmode.nbgridcells) * sizeof(type_t));
-	type_t* grid_gradient_c_gpu = (type_t *) malloc((int) (runmode.nbgridcells) * (runmode.nbgridcells) * sizeof(type_t));
-    type_t* grid_gradient_d_gpu = (type_t *) malloc((int) (runmode.nbgridcells) * (runmode.nbgridcells) * sizeof(type_t));
 	//
-	memset(grid_gradient_a_gpu, 0, (runmode.nbgridcells) * (runmode.nbgridcells) * sizeof(type_t));
-	memset(grid_gradient_b_gpu, 0, (runmode.nbgridcells) * (runmode.nbgridcells) * sizeof(type_t));
-	memset(grid_gradient_c_gpu, 0, (runmode.nbgridcells) * (runmode.nbgridcells) * sizeof(type_t));
-	memset(grid_gradient_d_gpu, 0, (runmode.nbgridcells) * (runmode.nbgridcells) * sizeof(type_t));
+	type_t* ampli_GPU = (type_t *) malloc((int) (runmode.nbgridcells) * (runmode.nbgridcells) * sizeof(type_t));
 	//
-	grid_gradient_a_gpu = (type_t *) malloc((int) (runmode.nbgridcells) * (runmode.nbgridcells) * sizeof(type_t));
-	grid_gradient_b_gpu = (type_t *) malloc((int) (runmode.nbgridcells) * (runmode.nbgridcells) * sizeof(type_t));
-	grid_gradient_c_gpu = (type_t *) malloc((int) (runmode.nbgridcells) * (runmode.nbgridcells) * sizeof(type_t));
-	grid_gradient_d_gpu = (type_t *) malloc((int) (runmode.nbgridcells) * (runmode.nbgridcells) * sizeof(type_t));
-
+	memset(ampli_GPU, 0, (runmode.nbgridcells) * (runmode.nbgridcells) * sizeof(type_t));
+	//
+	ampli_GPU = (type_t *) malloc((int) (runmode.nbgridcells) * (runmode.nbgridcells) * sizeof(type_t));
+	//
 	t_2 = -myseconds();
 	for(int ii = 0; ii < Nstat; ++ii) {
-		gradient2_grid_GPU(grid_gradient_a_gpu, grid_gradient_b_gpu,grid_gradient_c_gpu, grid_gradient_d_gpu, &frame, &lenses_SOA, runmode.nhalos, grid_dim);
+		map_gpu_function_t map_gpu_func = &amplif5_grid_CPU_GPU;
+		map_grid_GPU(map_gpu_func,ampli_GPU,&cosmology, &frame, &lenses_SOA, runmode.nhalos, grid_dim,runmode.amplif, runmode.z_amplif);
 	}
 	t_2 += myseconds();
-	std::cerr << "**" << grid_gradient_a_gpu[0] << grid_gradient_b_gpu[0] << grid_gradient_c_gpu[0] << grid_gradient_d_gpu[0] << std::endl;
+	std::cerr << "**" << ampli_GPU[0] << std::endl;
 	std::cout << " Time  " << std::setprecision(15) << t_2 << std::endl;
 
 #endif
@@ -459,10 +569,15 @@ int main(int argc, char *argv[])
 	{
 		type_t norm_a = 0.;
 		//
-		for (int ii = 0; ii < grid_dim*grid_dim; ++ii)
+		for (int ii = 0; ii < grid_dim; ++ii)
 		{
-			//
-			norm_a += (ampli[ii] - ampli_CPU[ii])*(ampli[ii] - ampli_CPU[ii]);
+			for (int jj = 0; jj < grid_dim; ++jj)
+			{
+				//std::cerr<< ii << " "<<  jj << " "  << ii*grid_dim +jj << std::endl;
+				//std::cerr << ampli[ii][jj] << " ";
+				norm_a += (ampli[ii][jj] - ampli_CPU[ii*grid_dim+jj])*(ampli[ii][jj] - ampli_CPU[ii*grid_dim+jj]);
+			}
+			//std::cerr << std::endl;
 		}
 		//
 		std::cout << "  l2 difference norm cpu = " << std::setprecision(15) << norm_a << std::endl;
@@ -490,25 +605,26 @@ int main(int argc, char *argv[])
 
 
 	//
-#if 0
+#if 1
 #ifdef __WITH_GPU
 	{
 		type_t norm_a = 0.;
-		type_t norm_b = 0.;
-		type_t norm_c = 0.;
-		type_t norm_d = 0.;
 		//
-		for (int ii = 0; ii < grid_dim*grid_dim; ++ii)
+		for (int ii = 0; ii < grid_dim; ++ii)
 		{
-			//
-			norm_a += (grid_grad2[ii].a - grid_gradient_a_gpu[ii])*(grid_grad2[ii].a - grid_gradient_a_gpu[ii]);
-			norm_b += (grid_grad2[ii].b - grid_gradient_b_gpu[ii])*(grid_grad2[ii].b - grid_gradient_b_gpu[ii]);
-			norm_c += (grid_grad2[ii].c - grid_gradient_c_gpu[ii])*(grid_grad2[ii].c - grid_gradient_c_gpu[ii]);
-			norm_d += (grid_grad2[ii].d - grid_gradient_d_gpu[ii])*(grid_grad2[ii].d - grid_gradient_d_gpu[ii]);
+			for (int jj = 0; jj < grid_dim; ++jj)
+			{
+				//std::cerr<< ii << " "<<  jj << " "  << ii*grid_dim +jj << std::endl;
+				//std::cerr << ampli_GPU[ii*grid_dim+jj] << " ";
+			norm_a += (ampli[ii][jj]  - ampli_GPU[ii*grid_dim+jj])*(ampli[ii][jj] - ampli_GPU[ii*grid_dim+jj]);
+			}
+			//std::cerr << std::endl;
 		}
 		//
-		std::cout << "  l2 difference norm cpu = " << std::setprecision(15) << norm_a << " " << std::setprecision(15) << norm_b << " " << std::setprecision(15) << norm_c << " " << std::setprecision(15) << norm_d << std::endl;
+		std::cout << "  l2 difference norm gpu = " << std::setprecision(15) << norm_a << std::endl;
 	}
+    free_square_double_test(ampli, np);
+    free_square_int_test(namp, np);
 #endif
 #endif
 

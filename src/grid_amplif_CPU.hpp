@@ -22,8 +22,8 @@
 
 
 
-void amplif_grid_CPU(type_t *amplif, const struct grid_param *frame, const struct Potential_SOA *lens, int nhalos, int nbgridcells,int mode_amp, int istart = 0, int jstart = 0);
+void amplif_grid_CPU(type_t *amplif,const struct cosmo_param *cosmo, const struct grid_param *frame, const struct Potential_SOA *lens, int nhalos, int nbgridcells,int mode_amp,type_t z, int istart = 0, int jstart = 0);
 //
-void amplif_5_grid_general_CPU(type_t *amplif, const struct grid_param *frame, const struct Potential_SOA *lens, int Nlens, type_t dx, type_t dy, int nbgridcells_x, int nbgridcells_y, int istart, int jstart);
+void amplif_5_grid_general_CPU(type_t *amplif,const struct cosmo_param *cosmo, const struct grid_param *frame, const struct Potential_SOA *lens, int Nlens, type_t dx, type_t dy, int nbgridcells_x, int nbgridcells_y,type_t z, int istart, int jstart);
 
 #endif /* GRID_GRADIENT_CPU_HPP_ */
