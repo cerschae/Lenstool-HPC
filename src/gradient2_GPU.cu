@@ -180,16 +180,16 @@ __device__ matrix module_potentialDerivatives_totalGradient2_81_SOA_GPU(const st
 		//if(blockIdx.x*blockDim.x + threadIdx.x == 0 && blockIdx.y*blockDim.y + threadIdx.y == 0) printmat_gpu(clumpcore);
 
 		//rotation matrix  1
-		clumpcut.a = clumpcore.a * cose + clumpcore.b * sine;
-		clumpcut.b = clumpcore.a * -sine + clumpcore.b * cose;
-		clumpcut.c = clumpcore.d * -sine + clumpcore.c * cose;
-		clumpcut.d = clumpcore.d * cose + clumpcore.c * sine;
+		clumpcut.a = clumpcore.a * cose + clumpcore.b * -sine;
+		clumpcut.b = clumpcore.a * sine + clumpcore.b * cose;
+		clumpcut.c = clumpcore.d * sine + clumpcore.c * cose;
+		clumpcut.d = clumpcore.d * cose + clumpcore.c * -sine;
 		//if(blockIdx.x*blockDim.x + threadIdx.x == 0 && blockIdx.y*blockDim.y + threadIdx.y == 0) printmat_gpu(clumpcut);
 		//rotation matrix  2
-		clump.a = cose * clumpcut.a + sine * clumpcut.d;
-		clump.b = cose * clumpcut.b + sine * clumpcut.c;
-		clump.c = -sine * clumpcut.b + cose * clumpcut.c;
-		clump.d = -sine * clumpcut.a + cose * clumpcut.d;
+		clump.a = cose * clumpcut.a + -sine * clumpcut.d;
+		clump.b = cose * clumpcut.b + -sine * clumpcut.c;
+		clump.c = sine * clumpcut.b + cose * clumpcut.c;
+		clump.d = sine * clumpcut.a + cose * clumpcut.d;
 #endif
 		//if(blockIdx.x*blockDim.x + threadIdx.x == 0 && blockIdx.y*blockDim.y + threadIdx.y == 0) printmat_gpu(clump);
 		//vala += clump.a;

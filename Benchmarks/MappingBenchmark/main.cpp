@@ -559,7 +559,7 @@ int main(int argc, char *argv[])
 	//
 	t_2 = -myseconds();
 	for(int ii = 0; ii < Nstat; ++ii) {
-		map_gpu_function_t map_gpu_func = &amplif5_grid_CPU_GPU;
+		map_gpu_function_t map_gpu_func = &amplif_grid_CPU_GPU;
 		map_grid_GPU(map_gpu_func,ampli_GPU,&cosmology, &frame, &lenses_SOA, runmode.nhalos, grid_dim,runmode.amplif, runmode.z_amplif);
 	}
 	std::string file;

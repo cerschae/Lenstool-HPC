@@ -39,7 +39,7 @@
 #define DMIN	1e-4	// distance minimale de convergence dans le plan image (in arcsec)	
 #define NITMAX 	100
 #define NTYPES 	2
-
+#define DBL_MAX 1.7976931348623157e+308
 
 // gNFW definitions
 #define gNFW_ARRAY_SIZE 1800 // Set the dimension of the gnfw table gNFW_ARRAY_SIZE, must be 1800 for the current table file
@@ -346,10 +346,13 @@ struct runmode_param
 	int 	nsets;
 	//Image Mode
 	int     image;
-
+	int 	N_z_param;
 	int		nimagestot;
 	//Mult Mode
 	int     multi;
+	//reference
+	type_t ref_ra ;
+	type_t ref_dec;
 	//Mass Mode
 	int		mass;
 	int		mass_gridcells;
@@ -483,6 +486,10 @@ struct  potfile_param
     int     potid;   // 1: pot P, 2: pot Q
 	int     ftype;
 	char    potfile[FILENAME_SIZE];
+	int 	reference_mode;
+	type_t  reference_ra;
+	type_t  reference_dec;
+
 	int     type;
 	type_t  zlens;
 	type_t  core;

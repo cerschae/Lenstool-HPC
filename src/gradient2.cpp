@@ -100,23 +100,37 @@ struct matrix module_potentialDerivatives_totalGradient2_81_SOA_v2(const struct 
             t05 = lens->rcut[i] / (lens->rcut[i] - lens->rcore[i]);
             mdci05_hpc(x, y, lens->ellipticity_potential[i], lens->rcore[i], lens->b0[i], &clumpcore);
             mdci05_hpc(x, y, lens->ellipticity_potential[i], lens->rcut[i], lens->b0[i], &clumpcut);
+
+            //printf("X %f Y %f Ga:  %f %f\n",true_coord.x  ,true_coord.y , clumpcore.a, clumpcut.a);
+            //printf("X %f Y %f Gb:  %f %f\n",true_coord.x  ,true_coord.y,  clumpcore.b, clumpcut.b);
+            //printf("X %f Y %f Gc:  %f %f\n", true_coord.x  ,true_coord.y,clumpcore.c, clumpcut.c);
+            //printf("X %f Y %f Gd:  %f %f\n",true_coord.x  ,true_coord.y,  clumpcore.d, clumpcut.d);
             //
             clumpcore.a = t05 * (clumpcore.a - clumpcut.a);
             clumpcore.b = t05 * (clumpcore.b - clumpcut.b);
             clumpcore.c = t05 * (clumpcore.c - clumpcut.c);
             clumpcore.d = t05 * (clumpcore.d - clumpcut.d);
             //printmat(clumpcore);
+            //printf("X %f Y %f Ga:  %f %f\n",pImage->x  ,pImage->y , clumpcore.a, t05);
+            //printf("X %f Y %f Gb:  %f %f\n",pImage->x  ,pImage->y,  clumpcore.b, clumpcut.b);
+            //printf("X %f Y %f Gc:  %f %f\n",pImage->x  ,pImage->y, clumpcore.c, clumpcut.c);
+            //printf("X %f Y %f Gd:  %f %f\n",pImage->x  ,pImage->y,  clumpcore.d, clumpcut.d);
             //rotation matrix  1
-            clumpcut.a = clumpcore.a * cose + clumpcore.b * sine;
-            clumpcut.b = clumpcore.a * -sine + clumpcore.b * cose;
-            clumpcut.c = clumpcore.d * -sine + clumpcore.c * cose;
-            clumpcut.d = clumpcore.d * cose + clumpcore.c * sine;
+            clumpcut.a = clumpcore.a * cose + clumpcore.b * -sine;
+            clumpcut.b = clumpcore.a * sine + clumpcore.b * cose;
+            clumpcut.c = clumpcore.d * sine + clumpcore.c * cose;
+            clumpcut.d = clumpcore.d * cose + clumpcore.c * -sine;
+            //printf("X %f Y %f theta: %f %f %f\n",pImage->x ,pImage->y,lens->ellipticity_angle[i], cose, sine);
             //printmat(clumpcut);
             //rotation matrix  2
-            clump.a = cose * clumpcut.a + sine * clumpcut.d;
-            clump.b = cose * clumpcut.b + sine * clumpcut.c;
-            clump.c = -sine * clumpcut.b + cose * clumpcut.c;
-            clump.d = -sine * clumpcut.a + cose * clumpcut.d;
+            clump.a = cose * clumpcut.a + -sine * clumpcut.d;
+            clump.b = cose * clumpcut.b + -sine * clumpcut.c;
+            clump.c = sine * clumpcut.b + cose * clumpcut.c;
+            clump.d = sine * clumpcut.a + cose * clumpcut.d;
+            //printf("X %f Y %f Ga:  %f \n",pImage->x  ,pImage->y , clump.a );
+            //printf("X %f Y %f Gb:  %f \n",pImage->x  ,pImage->y,  clump.b );
+            //printf("X %f Y %f Gc:  %f \n",pImage->x  ,pImage->y, clump.c);
+            //printf("X %f Y %f Gd:  %f \n",pImage->x  ,pImage->y,  clump.d );
             //printmat(clump);
 
             grad2.a += clump.a;

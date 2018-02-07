@@ -48,9 +48,14 @@ void module_readParameters_SingleLensingSourcesNumberSets(std::string infile, in
 void module_readParameters_SingleLensingSources(std::string infile, point sources[], ellipse sources_shape[], double redshift[], int nimages_cleanlens[], int nsetofimages_cleanlens );
 void module_readParameters_readpotfiles_param(std::string infile, potfile_param *potfile, cosmo_param cosmology);
 void module_readParameters_readpotfiles(const runmode_param *runmode, potfile_param *potfile, Potential *lens);
-void module_readParameters_readpotfiles_SOA(const runmode_param *runmode, potfile_param *potfile, Potential_SOA *lens);
-
-
+void module_readParameters_readpotfiles_SOA(const runmode_param *runmode, const cosmo_param *cosmology, potfile_param *potfile, Potential_SOA *lens);
+//bayesmap specific functions
+void module_readParameters_preparebayes(int &nparam, int &nvalues);
+void module_readParameters_bayesmodels(double * bayespot, int nparam, int nvalues);
+void setScalingRelations(const runmode_param *runmode, const cosmo_param *cosmology, potfile_param *pot, Potential_SOA* lenses);
+//void module_readParameters_setbayesmapmodels( Potential_SOA* lenses, const potentialoptimization* limit, double * bayespot, int nparam, int index, int nhalos);
+//void module_readParameters_setbayesmapmodels( Potential_SOA* lenses, const runmode_param* runmode, const potentialoptimization* limit, const potfile_param* potfile, double * bayespot, int nparam, int index);
+void module_readParameters_setbayesmapmodels(const runmode_param* runmode, const cosmo_param* cosmology, const potentialoptimization* limit, potfile_param* potfile, Potential_SOA* lenses, double * bayespot, int nparam, int index);
 ////Function (Slave) declarations
 //for read_Runmode
 void read_runmode(std::istream &IN, struct runmode_param *runmode);

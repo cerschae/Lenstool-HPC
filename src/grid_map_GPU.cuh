@@ -16,7 +16,7 @@
 typedef void (*map_gpu_function_t) (type_t *map,type_t *grid_grad2_a,type_t *grid_grad2_b,type_t *grid_grad2_c,type_t *grid_grad2_d, type_t dl0s, type_t z,int mode_amp,int nhalos,int nbgridcells_x, int nbgridcells_y);
 // Amplification
 //map_gpu_function_t amplif_grid_CPU_GPU(type_t *map,type_t *grid_grad2_a,type_t *grid_grad2_b,type_t *grid_grad2_c,type_t *grid_grad2_d, type_t dl0s, type_t z,int mode_amp,int nhalos,int nbgridcells_x, int nbgridcells_y);
-void amplif5_grid_CPU_GPU(type_t *,type_t *,type_t *,type_t *,type_t *, type_t , type_t ,int ,int ,int , int );
+void amplif_grid_CPU_GPU(type_t *,type_t *,type_t *,type_t *,type_t *, type_t , type_t ,int ,int ,int , int );
 
 //General mapping function
 void map_grid_GPU(map_gpu_function_t mapfunction, type_t *amplif,const struct cosmo_param *cosmo, const struct grid_param *frame, const struct Potential_SOA *lens, int Nlens,int nbgridcells, int mode_amp, type_t z  );

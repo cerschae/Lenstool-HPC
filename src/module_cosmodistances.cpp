@@ -19,7 +19,7 @@
 #include <cstring>
 #include <stdlib.h>
 #include "module_cosmodistances.hpp"
-
+#include "gsl/gsl_integration.h"
 
 
 
@@ -33,7 +33,23 @@ static type_t module_cosmodistances_chi2(type_t z1, type_t z2,cosmo_param C);
 static type_t module_cosmodistances_chiz(type_t z,cosmo_param C);
 static type_t module_cosmodistances_integral_chiz_ab(type_t a, type_t b,cosmo_param C);
 
-
+void module_cosmodistances_relativecoordinates_XY( type_t *x, type_t *y, int iref, type_t ref_ra, type_t ref_dec )
+{
+	type_t DTR=acos(-1.)/180.;
+    // Convert the input values to absolute WCS coordinates
+    if ( iref == 1 || iref == 3 )
+    {
+        *x /= -3600.*cos(ref_dec * DTR);
+        *x += ref_ra;
+        *y /= 3600.;
+        *y += ref_dec;
+    }
+    else if ( iref == 2 ) // image coordinates
+    {
+        *x += ref_ra;
+        *y += ref_dec;
+    }
+}
 
 // Function defintions
 //==========================================================================================================
@@ -75,6 +91,7 @@ type_t module_cosmodistances_observerObject(type_t z, cosmo_param cosmopar)
 
     if (cosmopar.omegaX == 0.)
     {
+    	printf("Omega M HPC %f \n",cosmopar.omegaM );
         g = module_cosmodistances_cosmo_root(z,cosmopar);
         // Reformulation of the Mattig relation of OL = OK = 0 (De Sitter)
         return(2.*((1. - cosmopar.omegaM - g)*(1. - g)) / cosmopar.omegaM / cosmopar.omegaM / (1. + z) / (1. + z));
@@ -267,6 +284,7 @@ static type_t module_cosmodistances_chi2(type_t z1, type_t z2,cosmo_param C)
 {
    type_t rez;
    rez = module_cosmodistances_integral_chiz_ab(z1, z2,C);
+
    return rez;
 }
 
@@ -279,10 +297,17 @@ static type_t module_cosmodistances_chi2(type_t z1, type_t z2,cosmo_param C)
 * @param b
 * @param C    cosmological parameter
 */
+static double chiz_gsl(double z, void* param)
+{
+	struct cosmo_param * cosmo  = (struct cosmo_param *)param;
+   return module_cosmodistances_chiz(z,*cosmo);
+}
+
 static type_t module_cosmodistances_integral_chiz_ab(type_t a, type_t b,cosmo_param C)
 {
+/*
    int i,nit;
-   type_t res, epsilon=1.e-5; /// accuracy of the integration
+   type_t res, epsilon=1.e-5; /// accuracy of the integration, slows down cosmo calculation hugely, investigate lenstool gsl (need e-6)?
 
    nit=(b-a)/epsilon;
    res=epsilon*(module_cosmodistances_chiz(a,C)+module_cosmodistances_chiz(b,C))/2.;
@@ -292,7 +317,17 @@ static type_t module_cosmodistances_integral_chiz_ab(type_t a, type_t b,cosmo_pa
        res=res+epsilon*module_cosmodistances_chiz(a+i*epsilon,C);
    }
 
-   return res;
+   return res;*/
+
+   gsl_function f;
+   f.function = &chiz_gsl;
+   f.params = &C;
+   const int limit = 10;
+   gsl_integration_workspace * w1 = gsl_integration_workspace_alloc(limit);
+   double rez, err;
+   gsl_integration_qag(&f, a, b, 0, 1e-6, limit, GSL_INTEG_GAUSS15, w1 , &rez ,&err);
+   gsl_integration_workspace_free(w1);
+   return rez;
 }
 
 

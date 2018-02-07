@@ -73,7 +73,7 @@ void map_grid_GPU(map_gpu_function_t mapfunction, type_t *map,const struct cosmo
 	type_t *grid_grad2_a_gpu, *grid_grad2_b_gpu , *grid_grad2_c_gpu, *grid_grad2_d_gpu, *map_gpu;
 
 	type_t dl0s = module_cosmodistances_objectObject(lens->z[0], z, *cosmo);
-	type_t dos = module_cosmodistances_observerObject(z, *cosmo);
+	//type_t dos = module_cosmodistances_observerObject(z, *cosmo);
 
 	lens_gpu = (Potential_SOA *) malloc(sizeof(Potential_SOA));
 	lens_gpu->type = (int *) malloc(sizeof(int));
@@ -131,8 +131,7 @@ void map_grid_GPU(map_gpu_function_t mapfunction, type_t *map,const struct cosmo
 	//amplif_grid_CPU_GPU(map_gpu,grid_grad2_a_gpu, grid_grad2_b_gpu, grid_grad2_c_gpu, grid_grad2_d_gpu,dl0s,z,mode_amp,nhalos,nbgridcells_x,nbgridcells_y);
 	//cudasafe(cudaGetLastError(), "module_potentialDerivative_totalGradient_SOA_CPU_GPU");
 	cudaDeviceSynchronize();
-	time += myseconds();
-	//std::cout << "	kernel time = " << time << " s." << std::endl;
+
 	//
 
 
@@ -141,6 +140,8 @@ void map_grid_GPU(map_gpu_function_t mapfunction, type_t *map,const struct cosmo
 	//cudasafe(cudaMemcpy( grid_grad2_c, grid_grad2_c_gpu, (nbgridcells_x)*(nbgridcells_y)*sizeof(type_t), cudaMemcpyDeviceToHost )," --- Gradient2gpu.cu : Copy source_c_gpu: " );
 	//cudasafe(cudaMemcpy( grid_grad2_d, grid_grad2_d_gpu, (nbgridcells_x)*(nbgridcells_y)*sizeof(type_t), cudaMemcpyDeviceToHost)," --- Gradient2gpu.cu : Copy source_d_gpu: " );
 	//
+	time += myseconds();
+	std::cout << "	kernel time = " << time << " s." << std::endl;
 	//printf("-----> %f %f \n",grid_grad_x[Nx], grid_grad_y[Ny]);
 	// Free GPU memory
 	cudaFree(lens_gpu);
@@ -161,7 +162,7 @@ void map_grid_GPU(map_gpu_function_t mapfunction, type_t *map,const struct cosmo
 	cudaFree(map_gpu);
 }
 
-void amplif5_grid_CPU_GPU(type_t *map,type_t *grid_grad2_a,type_t *grid_grad2_b,type_t *grid_grad2_c,type_t *grid_grad2_d, type_t dl0s, type_t z,int mode_amp, int nhalos,int nbgridcells_x, int nbgridcells_y)
+void amplif_grid_CPU_GPU(type_t *map,type_t *grid_grad2_a,type_t *grid_grad2_b,type_t *grid_grad2_c,type_t *grid_grad2_d, type_t dl0s, type_t z,int mode_amp, int nhalos,int nbgridcells_x, int nbgridcells_y)
 {
         int GRID_SIZE_X = (nbgridcells_x + BLOCK_SIZE_X - 1)/BLOCK_SIZE_X; // number of blocks
         int GRID_SIZE_Y = (nbgridcells_y + BLOCK_SIZE_Y - 1)/BLOCK_SIZE_Y;

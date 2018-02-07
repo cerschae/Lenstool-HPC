@@ -44,8 +44,8 @@ void gradient2_grid_general_CPU(matrix *grid_grad2, const struct grid_param *fra
 	//
 	grid_dim = nbgridcells_x*nbgridcells_y;
 	//
-#pragma omp parallel
-#pragma omp for private(Grad, image_point)
+//#pragma omp parallel
+//#pragma omp for private(Grad, image_point)
 	for (int jj = 0; jj < nbgridcells_y; ++jj) 
 		for (int ii = 0; ii < nbgridcells_x; ++ii)
 		{

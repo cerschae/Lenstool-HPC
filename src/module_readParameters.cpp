@@ -31,6 +31,170 @@
 //===========================================================================================================
 // Function definitions
 
+/**
+ *
+ * bayes.dat each # corresponds to one param available, it has to be in the same folder (can be changed)
+ *
+ * bayespot = array with bayes values
+ * nparam = number of param available
+ * nvalues = number of bayes potentials
+ *
+ */
+
+void module_readParameters_preparebayes(int &nparam, int &nvalues){
+
+	nparam = 0;
+	nvalues = 0;
+	//Counting lines
+    std::string line;
+    std::ifstream IM("bayes.dat",std::ios::in);
+	if ( IM )
+	{
+		while( std::getline(IM,line) )  // Read every line
+		{
+		if ( strncmp(line.c_str(), "#", 1) == 0){	//Skipping commented lines
+			nparam += 1;
+			continue;
+		}
+		nvalues +=1;
+		}
+	}
+	nvalues -= 1; //exclude last empty line
+	//nparam -=1; // Nparam is excluded
+	std::cerr << "nvalues :" << nvalues << "nparam :" << nparam << std::endl;
+	IM.close();
+
+}
+
+void module_readParameters_bayesmodels(double * bayespot, int nparam, int nvalues){
+
+    std::string line;
+    std::ifstream IM("bayes.dat",std::ios::in);
+    std::stringstream streamline;
+    int j = 0;
+	if ( IM )
+	{
+		while( std::getline(IM,line) )  // Read every line
+		{
+		if ( strncmp(line.c_str(), "#", 1) == 0){	//Skipping commented lines
+			continue;
+		}
+		streamline << line;
+		for(int i = 0; i < nparam; i++){
+			streamline >> bayespot[j * nparam + i];
+			//IM >> bayespot[j * nparam + i];
+			std::cerr << bayespot[j * nparam + i] << " " ;
+		}
+		streamline.clear();
+		std::cerr << std::endl;
+		j += 1;
+		}
+
+	}
+
+	IM.close();
+
+
+}
+
+/**setting potential using bayes[index] values. Does not support changing the bayes files config output defined by
+// Parameter constants in structure.h
+#define CX       0
+#define CY       1
+#define EPOT     2
+#define EMASS    3
+#define THETA    4
+#define PHI      5
+#define RC       6
+#define B0       7
+#define ALPHA    8
+#define BETA     9
+#define RCUT    10
+#define MASSE   11
+#define ZLENS   12
+#define RCSLOPE 13
+#define PMASS   14
+*/
+
+void module_readParameters_setbayesmapmodels(const runmode_param* runmode, const cosmo_param* cosmology, const potentialoptimization* limit, potfile_param* potfile, Potential_SOA* lenses, double * bayespot, int nparam, int index){
+
+	int param_index = 2;
+	double DTR=acos(-1.)/180.;	/* 1 deg in rad  = pi/180 */
+	for(int i = 0; i < runmode->nhalos; i++){
+		if(limit[i].position.x.block == 1){
+			lenses->position_x[i] = bayespot[index*nparam+param_index];
+			param_index++;
+		}
+		if(limit[i].position.y.block == 1){
+			lenses->position_y[i] = bayespot[index*nparam+param_index];
+			param_index++;
+		}
+		if(limit[i].ellipticity_potential.block == 1){
+			lenses->ellipticity_potential[i] = bayespot[index*nparam+param_index];
+			param_index++;
+		}
+		if(limit[i].ellipticity.block == 1){
+			lenses->ellipticity[i] = bayespot[index*nparam+param_index];
+			param_index++;
+		}
+		if(limit[i].ellipticity_angle.block == 1){
+			lenses->ellipticity_angle[i] = bayespot[index*nparam+param_index]* DTR;
+			lenses->anglecos[i] = cos(lenses->ellipticity_angle[i]);
+			lenses->anglesin[i] = sin(lenses->ellipticity_angle[i]);
+			param_index++;
+		}
+		if(limit[i].rcore.block == 1){
+			lenses->rcore[i] = bayespot[index*nparam+param_index];
+			param_index++;
+		}
+		if(limit[i].vdisp.block == 1){
+			lenses->vdisp[i] = bayespot[index*nparam+param_index];
+			param_index++;
+		}
+		if(limit[i].rcut.block == 1){
+			lenses->rcut[i] = bayespot[index*nparam+param_index];
+			param_index++;
+		}
+		if(limit[i].z.block == 1){
+			lenses->z[i] = bayespot[index*nparam+param_index];
+			param_index++;
+		}
+		module_readParameters_calculatePotentialparameter_SOA(lenses, i);
+	}
+	//Skip redshift image optimisation
+	if(runmode->potfile != 0){
+	param_index += runmode->N_z_param;
+	std::cerr << "N_z_param " << runmode->N_z_param << std::endl;
+	printf("DNDBSFB ircut %d\n",potfile->ircut);
+	//Start potfile updating
+	if(potfile->ircut > 0){
+		potfile->cut1 = bayespot[index*nparam+param_index];
+		//printf("cur %f ircut %d\n",potfile->cut,potfile->ircut);
+		//std::cerr << index*nparam+param_index_pot << " "<< bayespot[index*nparam+param_index_pot] << std::endl;
+		param_index++;
+	}
+	//std::cerr << "param " << param_index_pot << std::endl;
+	if(potfile->isigma > 0){
+		potfile->sigma1 = bayespot[index*nparam+param_index];
+		//std::cerr << index*nparam+param_index_pot << " "<< bayespot[index*nparam+param_index_pot] << std::endl;
+		param_index++;
+	}
+
+	setScalingRelations(runmode,cosmology,potfile,lenses);
+	}
+	/*
+	for(int i = runmode->nhalos; i < runmode->nhalos + runmode->npotfile; i++){
+		param_index_pot = param_index;
+		//std::cerr << "param " << param_index_pot << std::endl;
+
+		//std::cerr << "param " << param_index_pot << std::endl;
+		module_readParameters_calculatePotentialparameter_SOA(lenses, i);
+	}*/
+
+		//update potential parameters
+
+}
+
 /** @brief This module function reads the cosmology parameters from the parameter file
 * 
 * This module function reads the cosmology parameters from the parameter file. The given pointer is 
@@ -53,14 +217,19 @@
 * @param infile path to file	 
 */
 
-
-
 void module_readParameters_readCosmology(std::string infile, cosmo_param &Cosmology)
 {
 
     std::string first, second, third, line1, line2;
 
-    Cosmology.model =1;
+    Cosmology.model = 1;
+    Cosmology.H0 = 50;
+    Cosmology.h = 1.;
+    Cosmology.omegaM = 1.;
+    Cosmology.omegaX = 0;
+    Cosmology.wX = -1.;
+    Cosmology.wa = 0.;
+    Cosmology.curvature = 0.;
 
 
     std::ifstream IN(infile.c_str(),std::ios::in); // open file
@@ -216,6 +385,16 @@ void read_runmode(std::istream &IN, struct runmode_param *runmode){
 		        		{
 		            		runmode->arclet = 1;  // Not supported yet
 		        		}
+				        if (!strcmp(second.c_str(), "reference"))
+				        {
+				        	sscanf(line2.c_str(), "%*s %*d %lf %lf", &in1, &in2);
+				                runmode->ref_ra = (type_t)in1;
+				                runmode->ref_dec =(type_t)in2;
+
+				            //std::cerr << line2 << std::endl;
+				            std::cout << "Reference: Ra " << runmode->ref_ra << " Dec:" << runmode->ref_dec <<std::endl;
+				        }
+
 						if ( !strcmp(second.c_str(), "time") )
 		        		{
 							sscanf(line2.c_str(), " %*s %d ", &runmode->time);
@@ -276,6 +455,10 @@ void read_runmode_image(std::istream &IN, struct runmode_param *runmode){
 				char filename[FILENAME_SIZE];
 				sscanf(line2.c_str(), " %*s %d %s ", &runmode->multi, &filename);
 				runmode->imagefile = filename;
+			}
+			if ( !strcmp(second.c_str(), "z_m_limit") )
+			{
+				runmode->N_z_param += 1 ;
 			}
 			//std::cout << runmode->multi << runmode->imagefile << std::endl;
 			// Read the next line
@@ -418,6 +601,7 @@ void module_readParameters_readRunmode(std::string infile, struct runmode_param 
 	runmode->nbgridcells = 1000;
 	runmode->source = 0;
 	runmode->image = 0;
+	runmode->N_z_param = 0;
 	runmode->nsets = 0;
 	runmode->nhalos = 0;
 	runmode->multi = 0;
@@ -439,9 +623,13 @@ void module_readParameters_readRunmode(std::string infile, struct runmode_param 
 	runmode->nimagestot = 0;
 	runmode->nsets = 0;
 	runmode->gridcells = 1000;
-	std::cerr << sizeof(*runmode) << std::endl;
+	//std::cerr << sizeof(*runmode) << std::endl;
 	runmode->cline = 0;
 	runmode->time = 0;
+	runmode->inverse = 0;
+	runmode->arclet = 0;
+	runmode->ref_ra = 0;
+	runmode->ref_dec = 0;
 
 
 	int j=0;
@@ -791,10 +979,7 @@ IN.close();
 * @param potfile_param potfile parameter variable
 */
 
-void setpotfiles_param(potfile_param *potfile, cosmo_param cosmology){
 
-
-}
 
 void module_readParameters_readpotfiles_param(std::string infile, potfile_param *potfile, cosmo_param cosmology){
 
@@ -804,17 +989,18 @@ void module_readParameters_readpotfiles_param(std::string infile, potfile_param 
     //Default value potfile initialiasation
 
     potfile->potid = 0;
-    potfile->ftype = 1;
+    potfile->ftype = 0;
     potfile->type = 0;
     potfile->zlens = 0;
     potfile->mag0 = 0;
-    potfile->sigma = 0;
+    potfile->isigma = 0;
+    potfile->sigma = -1;
     potfile->core = -1.0;
     potfile->corekpc = -1;
     potfile->ircut = 0;
-    potfile->cut1 = 0;
+    potfile->cut1 = DBL_MAX;
     potfile->cut2 = 0;
-    potfile->cutkpc1 = 0;
+    potfile->cutkpc1 = DBL_MAX;
     potfile->cutkpc2 = 0;
     potfile->islope = 0;
     potfile->slope1 = 0;
@@ -962,6 +1148,9 @@ if ( potfile->ftype <= 4 )
     potfile->vdslope = potfile->vdslope1;
 }
 
+
+
+
 }
 
 /** @brief This module function loads the potential from the potfile into a lens
@@ -970,15 +1159,17 @@ if ( potfile->ftype <= 4 )
 */
 
 
-
+/*
 void module_readParameters_readpotfiles(const runmode_param *runmode, potfile_param *potfile, Potential *lens){
 
-	std::string second, line1;
+	std::string first, second, line1;
+	double cast_1, cast_2;
 	double aa,bb;
-	double DTR=acos(-1.)/180.;	/* 1 deg in rad  = pi/180 */
+	double DTR=acos(-1.)/180.;
 	//cast variables
 	double cast_x,cast_y,cast_theta,cast_lum,cast_mag;
-
+	potfile->reference_ra = potfile->reference_dec = 0;
+	std::cerr << "Ref pot: "<< potfile->reference_ra <<  " " << potfile->reference_dec << std::endl;
 
 // Read in potentials
     std::ifstream IM(potfile->potfile,std::ios::in);
@@ -987,10 +1178,22 @@ void module_readParameters_readpotfiles(const runmode_param *runmode, potfile_pa
 			int i = runmode->nhalos;
         	while( std::getline(IM,line1) )    // Read until we reach the end
         	{
-
+    			std::istringstream read1(line1); // create a stream for the line
+    			read1 >> first;
                 // Skip commented lines with #
-                if ( line1[0] == '#' )
+    			//std::cerr << first << std::endl;
+                if (!strncmp(first.c_str(), "#REFERENCE", 10) ){
+                	sscanf(line1.c_str(), " %*s %*d%lf%lf",  &cast_1, &cast_2);
+                	potfile->reference_ra = (type_t) cast_1;
+                	potfile->reference_dec = (type_t) cast_2;
+                	std::cerr << "Ref potfiles: "<< potfile->reference_ra <<  " " << potfile->reference_dec << std::endl;
                     continue;
+
+                }
+                else if ( line1[0] == '#' ){
+                	 continue;
+                }
+
 
                 // Default initialisation of clump
                 lens[i].type = potfile->type;
@@ -1055,10 +1258,11 @@ void module_readParameters_readpotfiles(const runmode_param *runmode, potfile_pa
 	IM.close();
 
 }
+*/
+void module_readParameters_readpotfiles_SOA(const runmode_param *runmode, const cosmo_param *cosmology, potfile_param *potfile, Potential_SOA *lens){
 
-void module_readParameters_readpotfiles_SOA(const runmode_param *runmode, potfile_param *potfile, Potential_SOA *lens){
-
-	std::string second, line1;
+	std::string first, second, line1;
+	double cast_1, cast_2;
 	double aa,bb;
 	double DTR=acos(-1.)/180.;	/* 1 deg in rad  = pi/180 */
 	//cast variables
@@ -1072,9 +1276,21 @@ void module_readParameters_readpotfiles_SOA(const runmode_param *runmode, potfil
 			int i = runmode->nhalos;
         	while( std::getline(IM,line1) )    // Read until we reach the end
         	{
-
+    			std::istringstream read1(line1); // create a stream for the line
+    			read1 >> first;
                 // Skip commented lines with #
-                if ( line1[0] == '#' )
+    			std::cerr << first << std::endl;
+                 if (!strncmp(first.c_str(), "#REFERENCE", 10)){
+                	sscanf(line1.c_str(), " %*s %d%lf%lf", &potfile->reference_mode,  &cast_1, &cast_2);
+                	potfile->reference_ra = (type_t) cast_1;
+                	potfile->reference_dec = (type_t) cast_2;
+                	std::cerr << "Ref pot: "<< potfile->reference_ra << " " << potfile->reference_dec << std::endl;
+                    continue;
+
+
+                }
+                // Skip commented lines with #
+                else if ( line1[0] == '#' )
                     continue;
 
                 //std::cerr << "Turn " << i << std::endl;
@@ -1120,26 +1336,26 @@ void module_readParameters_readpotfiles_SOA(const runmode_param *runmode, potfil
 				lens->name[i] =(type_t)cast_name;
 				lens->position_x[i] =(type_t)cast_x;
 				lens->position_y[i] =(type_t)cast_y;
+				//module_cosmodistances_relativecoordinates_XY( &lens->position_x[i], &lens->position_y[i], potfile->reference_mode, potfile->reference_ra, potfile->reference_dec );
 				lens->theta[i] =(type_t)cast_theta;
 				lens->lum[i] =(type_t)cast_lum;
 				lens->mag[i] =(type_t)cast_mag;
 				//general parameters
-				lens->vdisp[i] = potfile->sigma;
-				lens->rcore[i] = potfile->core;
-				lens->rcut[i] = potfile->cut;
+				//lens->vdisp[i] = potfile->sigma;
+				//lens->rcore[i] = potfile->core;
+				//lens->rcut[i] = potfile->cut;
 				lens->ellipticity_angle[i] = lens->theta[i]* DTR;
 				lens->anglecos[i]	     = cos(lens->ellipticity_angle[i]);
 				lens->anglesin[i] 	     = sin(lens->ellipticity_angle[i]);
 
-			    //Calculate parameters like b0, potential ellipticity and anyother parameter depending on the profile
-			    module_readParameters_calculatePotentialparameter_SOA(lens,i);
+
 
 				//Variables
 				potfile->npotfile++;
 				i++;
 		}
 
-
+        	setScalingRelations(runmode,cosmology,potfile,lens);
 
 
 
@@ -1154,6 +1370,112 @@ void module_readParameters_readpotfiles_SOA(const runmode_param *runmode, potfil
 		}
 
 	IM.close();
+
+}
+
+void setScalingRelations(const runmode_param *runmode, const cosmo_param *cosmology, potfile_param *pot, Potential_SOA* lenses){
+
+    //*********************************************************************
+    // Check if the scaling relations are defined
+    //*********************************************************************
+    if ( pot->ftype == 1 )
+    {
+        if ( pot->sigma1 == -1 )
+        {
+            fprintf(stderr, "ERROR: potfile: sigma not defined\n");
+            exit(-1);
+        }
+
+        if ( pot->cutkpc1 == DBL_MAX && pot->cut1 == DBL_MAX )
+        {
+            fprintf(stderr, "ERROR: potfile: cut length not defined\n");
+            exit(-1);
+        }
+
+        if ( pot->corekpc == -1 && pot->core == -1 )
+        {
+            fprintf(stderr, "ERROR: potfile: core length not defined\n");
+            exit(-1);
+        }
+    }
+    else{
+    	fprintf(stderr, "ERROR: potfile: potfile type %d not supported\n", pot->ftype);
+    	            exit(-1);
+    }
+
+    //*********************************************************************
+    // Set the Potfile current and limiting values
+    //*********************************************************************
+    if ( pot->ftype <= 4 )
+    {
+        // Scale potfile SIGMA
+        pot->sigma = pot->sigma1;
+
+        // ... and potfile RCUT
+        if ( pot->cut1 == DBL_MAX && pot->cutkpc1 != DBL_MAX )
+        {
+            pot->cut1 = pot->cutkpc1 / (d0 / cosmology->h * module_cosmodistances_observerObject(pot->zlens,*cosmology));
+            pot->cut2 = pot->cutkpc2 / (d0 / cosmology->h * module_cosmodistances_observerObject(pot->zlens,*cosmology));
+        }
+        pot->cut = pot->cut1;
+
+        // ... and potfile RCORE
+        if ( pot->core == -1.0 && pot->corekpc != -1 )
+            pot->core = pot->corekpc / (d0 / cosmology->h * module_cosmodistances_observerObject(pot->zlens,*cosmology));
+
+        // ... and potfile RCUT SLOPE
+        pot->slope = pot->slope1;
+
+        // ... and potfile VDSLOPE
+        pot->vdslope = pot->vdslope1;
+    }
+
+    // set potfile VDSCAT for all potfile scaling relations
+     pot->vdscat = pot->vdscat1;
+
+     // ... and potfile RCUTSCAT
+     pot->rcutscat = pot->rcutscat1;
+
+
+     for ( int i = runmode->nhalos ; i < runmode->npotfile+runmode->nhalos ; i++ ){
+         if ( lenses->mag[i] != 0 ){
+        	 lenses->rcore[i] = pot->core * pow(10., 0.4 * (pot->mag0 - lenses->mag[i]) / 2.);}
+		 /*
+		  * Scale the sigma and rcut of a potfile clump according to the potfile parameters
+		  */
+         // loop over the potfile clumps to scale
+         if ( pot->ftype <= 4 )
+         {
+
+
+                 if ( lenses->mag[i] != 0 )
+                 {
+                	 lenses->vdisp[i] = pot->sigma *
+                                    pow(10., 0.4 * (pot->mag0 - lenses->mag[i]) / pot->vdslope);
+                     /* The factor of 2 so that with slope1 = 4, we have
+                      * 2/slope1=1/2, then Brainerd, Blandford, Smail, 1996 */
+                	 lenses->rcut[i] = pot->cut *
+                                   pow(10., 0.4 * (pot->mag0 - lenses->mag[i]) * 2. / pot->slope);
+                 }
+
+                 if ( pot->ivdscat != 0 ){
+                	 fprintf(stderr, "ERROR: potfile: ivdscat not supported yet\n");
+                	 exit(-1);
+                 }
+
+                 // Convert sigma to b0
+                 //set_dynamics(i);
+
+                 if ( pot->ircutscat != 0 ){
+                	 fprintf(stderr, "ERROR: potfile: ircutscat not supported yet\n");
+                	 exit(-1);
+                 }
+             }
+         //Calculate parameters like b0, potential ellipticity and anyother parameter depending on the profile
+		 module_readParameters_calculatePotentialparameter_SOA(lenses,i);
+         }
+
+
 
 }
 
@@ -1249,6 +1571,7 @@ void module_readParameters_limit(std::string infile, struct potentialoptimizatio
     int i=0;
 	//cast variables
 	double cast_min,cast_max,cast_sigma;
+	//double d1 = d0 / cosmology.h * module_cosmodistances_observerObject(lens_temp.z,cosmology);
 
  type_t DTR=acos(-1.)/180.;	/* 1 deg in rad  = pi/180 */
 
@@ -1257,6 +1580,7 @@ for(int index=0; index<nhalos; index++)
 {
 	host_potentialoptimization[index].position.x.block=0;
 	host_potentialoptimization[index].position.y.block=0;
+	host_potentialoptimization[index].vdisp.block = 0;
 	host_potentialoptimization[index].weight.block=0;
 	host_potentialoptimization[index].ellipticity_angle.block=0;
 	host_potentialoptimization[index].ellipticity.block=0;
@@ -1352,6 +1676,11 @@ std::ifstream IN(infile.c_str(), std::ios::in);
                         host_potentialoptimization[i].rcut.min =(type_t)cast_min;
                         host_potentialoptimization[i].rcut.max =(type_t)cast_max;
                         host_potentialoptimization[i].rcut.sigma =(type_t)cast_sigma;
+                    }
+                    else if (  !strcmp(second.c_str(), "cut_radius_kpc"))    // Read in for r cut
+                    {
+                        sscanf(line2.c_str(), "%*s%d%lf%lf%lf", &host_potentialoptimization[i].rcut.block,
+                        		&cast_min, &cast_max, &cast_sigma);
                     }
                     else if ( !strcmp(second.c_str(), "rcore") || !strcmp(second.c_str(), "core_radius"))  // Read in for core radius
                     {
@@ -1905,7 +2234,7 @@ void module_readParameters_PotentialSOA_direct(std::string infile, Potential_SOA
 
 	// Converting distance in kpc to arcsec.
 	double d1 = d0 / cosmology.h * module_cosmodistances_observerObject(lens_temp.z,cosmology);
-
+	printf(" D1 HPC : %f %f %f %f\n",d1, d0,cosmology.h,lens_temp.z );
 	// Set rcore value in kpc or in arcsec.
 	if ( core_radius_kpc != 0. )
 		lens_temp.rcore = core_radius_kpc / d1;
@@ -1914,7 +2243,9 @@ void module_readParameters_PotentialSOA_direct(std::string infile, Potential_SOA
 
 	// Set rcut value in kpc or in arcsec.
 	if ( cut_radius_kpc != 0. )
-		lens_temp.rcut = cut_radius_kpc / d1;
+	{
+		//std::cerr << "d1 " << d1 << std::endl;
+		lens_temp.rcut = cut_radius_kpc / d1;}
 	else if ( lens_temp.rcut != 0. )
 		cut_radius_kpc = lens_temp.rcut * d1;
 
@@ -2167,7 +2498,7 @@ std::ifstream IN(infile.c_str(), std::ios::in);
         {
 	    std::istringstream read1(line1); // create a stream for the line
 	    read1 >> first;
-            if (!strncmp(first.c_str(), "grille", 7) || !strncmp(first.c_str(), "frame", 5) )  // Read in potential
+            if (!strncmp(first.c_str(), "grille", 7) || !strncmp(first.c_str(), "frame", 5) || !strncmp(first.c_str(), "champ", 5))  // Read in potential
 		{
 
     while(std::getline(IN,line2))
@@ -2341,7 +2672,7 @@ void module_readParameters_debug_potential_SOA(int DEBUG, Potential_SOA lenses, 
 if (DEBUG == 1)  // If we are in debug mode
 {
 	for ( int i = 0; i < nhalos; ++i){
-		printf("Potential[%d]: x = %f, y = %f, vdisp = %f, type = %d, \n \t ellipticity = %f, ellipticity_pot = %f, ellipticity angle (radians) = %f, rcore = %f, rcut = %f,\n \t z = %f\n, angle cos %f, sin %f \n", i,lenses.position_x[i], lenses.position_y[i], lenses.vdisp[i], lenses.type[i], lenses.ellipticity[i], lenses.ellipticity_potential[i], lenses.ellipticity_angle[i], lenses.rcore[i], lenses.rcut[i], lenses.z[i], lenses.anglecos[i], lenses.anglesin[i]);
+		printf("Potential[%d]: x = %f, y = %f, b0 = %f, vdisp = %f, type = %d, \n \t ellipticity = %f, ellipticity_pot = %f, ellipticity angle (radians) = %f, rcore = %f, rcut = %f,\n \t z = %f\n, angle cos %f, sin %f \n", i,lenses.position_x[i], lenses.position_y[i], lenses.b0[i],lenses.vdisp[i], lenses.type[i], lenses.ellipticity[i], lenses.ellipticity_potential[i], lenses.ellipticity_angle[i], lenses.rcore[i], lenses.rcut[i], lenses.z[i], lenses.anglecos[i], lenses.anglesin[i]);
 	}
 }
 
