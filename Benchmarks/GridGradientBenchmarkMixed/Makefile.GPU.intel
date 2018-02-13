@@ -34,27 +34,27 @@ program_INCLUDE_LIBS += $(LENSTOOLHPC_ROOT)/src
 program_INCLUDE_LIBS += $(GSL_ROOT)/lib
 program_INCLUDE_LIBS += $(WCSTOOL_ROOT)
 program_INCLUDE_LIBS += $(CUDAROOT)/lib64
-
-#
 #
 # Compiler flags
-CPPFLAGS += $(foreach includedir,$(program_INCLUDE_DIRS),-I$(includedir))
-CPPFLAGS += $(foreach includelib,$(program_INCLUDE_LIBS),-L$(includelib))
-CPPFLAGS += -D__WITH_LENSTOOL 
-CPPFLAGS += -D__WITH_GPU
-CPPFLAGS += -qopenmp -g -O3 -Wall -pedantic
-CPPFLAGS += -fPIC
-CPPFLAGS += -D_double
-#CPPFLAGS += -no-vec
-#CPPFLAGS += -qopenmp -march=core-avx2 -g -O3 -std=c++0x -Wall -pedantic
-#CPPFLAGS += -llenstoolhpc -qopenmp -xHost -g -O3 -std=c++0x -Wall -pedantic
-#CPPFLAGS += -llenstoolhpc -qopenmp -axMIC-AVX512,CORE-AVX2 -g -O3 -std=c++0x -Wall -pedantic
-#CPPFLAGS += -qopt-prefetch-distance=64,8 -qopt-streaming-cache-evict=0 -llenstoolhpc -qopenmp -xMIC-AVX512 -g -O3 -std=c++0x -Wall -pedantic
+#
+CXXFLAGS += $(foreach includedir,$(program_INCLUDE_DIRS),-I$(includedir))
+CXXFLAGS += $(foreach includelib,$(program_INCLUDE_LIBS),-L$(includelib))
+#CXXFLAGS += -D__WITH_LENSTOOL 
+CXXFLAGS += -D__WITH_GPU
+CXXFLAGS += -qopenmp -g -O3 -Wall -pedantic
+CXXFLAGS += -fPIC
+include $(LENSTOOLHPC_ROOT)/src/precision.inc
+CXXFLAGS += $(PRECISION)
+#CXXFLAGS += -no-vec
+#CXXFLAGS += -qopenmp -march=core-avx2 -g -O3 -std=c++0x -Wall -pedantic
+#CXXFLAGS += -llenstoolhpc -qopenmp -xHost -g -O3 -std=c++0x -Wall -pedantic
+#CXXFLAGS += -llenstoolhpc -qopenmp -axMIC-AVX512,CORE-AVX2 -g -O3 -std=c++0x -Wall -pedantic
+#CXXFLAGS += -qopt-prefetch-distance=64,8 -qopt-streaming-cache-evict=0 -llenstoolhpc -qopenmp -xMIC-AVX512 -g -O3 -std=c++0x -Wall -pedantic
 LDFLAGS := -llenstoolhpc  -llenstoolhpc -llenstoolhpc_GPU -llt -lcfitsio -lwcs -lgsl -lgslcblas -llenstool #Do not keep lenstool for the float calculation, it creates conflictinthe structure.h file
 #
 #NVFLAGS := -O3 -g -G -rdc=true -ccbin icpc -Xcompiler '-Wall -fPIC -qopenmp' -D__WITH_LENSTOOL 
-NVFLAGS := -O3 -ccbin icpc -Xcompiler '-Wall -fPIC' -D__WITH_LENSTOOL
-NVFLAGS += -D_double
+NVFLAGS := -O3 -ccbin icpc -Xcompiler '-Wall -fPIC' 
+#NVFLAGS += -D_double
 NVFLAGS += -gencode arch=compute_60,code=sm_60
 #NVFLAGS += -use_fast_math
 #NVFLAGS += -arch=sm_35
@@ -82,7 +82,7 @@ CPU_OBJECTS = $(program_CXX_OBJS) $(program_C_OBJS)
 	#nvcc $(NVFLAGS) -Xptxas -dlcm=cg --ptxas-options=-v -o $@ -dc $<
 #
 %.cpp: %.cpp %.h
-	$(CXX) $(CPPFLAGS) -o $@ $< $(CPPFLAGS)
+	$(CXX) $(CXXFLAGS) -o $@ $< $(CXXFLAGS)
 #
 $(PROGRAM_NAME):  $(CPU_OBJECTS)
 	icpc -o $@ $(program_CXX_OBJS) $(program_C_OBJS)  $(LDFLAGS) $(NVLDFLAGS)

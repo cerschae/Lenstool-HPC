@@ -264,7 +264,6 @@ int main(int argc, char *argv[])
 	// Input: input file
 	// Output: grid and its parameters
 
-#if 1
 	module_readParameters_Grid(inputFile, &frame);
 
 	if (runmode.image == 1 or runmode.inverse == 1 or runmode.time > 0){
@@ -313,14 +312,8 @@ int main(int argc, char *argv[])
 	MPI_Barrier(MPI_COMM_WORLD);
 #endif
 	//
-<<<<<<< HEAD
-	std::cout << "--------------------------" << std::endl << std::endl;
-#endif
-
-=======
 	if (verbose) std::cout << "--------------------------" << std::endl << std::endl;
 	//
->>>>>>> lenstool_mpi
 	// Lenstool Bruteforce
 	//===========================================================================================================
 	if (verbose)

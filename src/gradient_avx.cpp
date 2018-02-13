@@ -674,7 +674,7 @@ struct point module_potentialDerivatives_totalGradient_81_SOA_AVX(const struct p
 typedef struct point (*halo_func_avx_t) (const struct point *pImage, const struct Potential_SOA *lens, int shalos, int nhalos);
 halo_func_avx_t halo_func_avx[100] =
 {
-0, 0, 0, 0, 0, module_potentialDerivatives_totalGradient_5_SOA_AVX_v2, 0, 0, module_potentialDerivatives_totalGradient_8_SOA_AVX, 0,
+0, 0, 0, 0, 0, module_potentialDerivatives_totalGradient_5_SOA_AVX, 0, 0, module_potentialDerivatives_totalGradient_8_SOA_AVX, 0,
 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,

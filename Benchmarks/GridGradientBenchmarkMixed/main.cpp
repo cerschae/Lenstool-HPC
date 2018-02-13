@@ -21,6 +21,7 @@
 #include <structure_hpc.hpp>
 #include "timer.h"
 #include "gradient.hpp"
+#include "grid_gradient_mixed_CPU.hpp"
 #include "chi_CPU.hpp"
 #include "module_cosmodistances.hpp"
 #include "module_readParameters.hpp"
@@ -29,6 +30,18 @@
 #include "grid_gradient_GPU.cuh"
 #endif
 
+#define KRED  "\x1B[31m"
+#define KGRN  "\x1B[32m"
+#define KYEL  "\x1B[33m"
+#define KBLU  "\x1B[34m"
+#define KMAG  "\x1B[35m"
+#define KCYN  "\x1B[36m"
+#define KWHT  "\x1B[37m"
+#define KRST  "\x1B[0m"
+
+
+
+
 #ifdef __WITH_LENSTOOL
 #include "setup.hpp"
 #warning "linking with lenstool..."
@@ -36,6 +49,7 @@
 #include<constant.h>
 #include<dimension.h>
 #include<structure.h>
+//
 //
 //
 struct g_mode   M;
@@ -225,7 +239,7 @@ int main(int argc, char *argv[])
 	{
 		module_readParameters_readpotfiles_param(inputFile, &potfile, cosmology);
 		module_readParameters_debug_potfileparam(1, &potfile);
-		module_readParameters_readpotfiles_SOA(&runmode, &cosmology,&potfile,&lenses_SOA);
+		module_readParameters_readpotfiles_SOA(&runmode,&potfile,&lenses_SOA);
 		module_readParameters_debug_potential_SOA(1, lenses_SOA, runmode.nhalos + runmode.npotfile);
 
 	}
@@ -305,6 +319,18 @@ int main(int argc, char *argv[])
 	dx = (frame.xmax - frame.xmin)/(runmode.nbgridcells-1);
 	dy = (frame.ymax - frame.ymin)/(runmode.nbgridcells-1);
 	//
+	point test_point1_1, test_point2_2, test_result1_1, test_result2_2, test_pointN_N, test_resultN_N;
+	type_t dlsds = images[0].dr;
+	//
+	test_point1_1.x = frame.xmin;
+	test_point1_1.y = frame.ymin;
+	test_point2_2.x = frame.xmin + dx;
+	test_point2_2.y = frame.ymin + dy;
+	test_pointN_N.x = frame.xmin + ((runmode.nbgridcells*runmode.nbgridcells-1)/runmode.nbgridcells)*dx;
+	test_pointN_N.y = frame.ymin + ((runmode.nbgridcells*runmode.nbgridcells-1) % runmode.nbgridcells)*dy;
+
+	//
+	//
 	//
 
 #ifdef __WITH_LENSTOOL
@@ -315,12 +341,15 @@ int main(int argc, char *argv[])
         grid_grad_y = (double *) malloc((int) (runmode.nbgridcells) * (runmode.nbgridcells) * sizeof(type_t));
         double t_lt = -myseconds();
 #pragma omp parallel for
+//#pragma omp parallel for if (omp_get_num_threads() > 1) schedule(guided, 100)
         for (int jj = 0; jj < runmode.nbgridcells; ++jj)
                 for (int ii = 0; ii < runmode.nbgridcells; ++ii)
                 {
                         //  (index < grid_dim*grid_dim)
 
                         int index = jj*runmode.nbgridcells + ii;
+                        //grid_grad_x[index] = 0.;
+                        //grid_grad_y[index] = 0.;
 
                         struct point image_point;
                         image_point.x = frame.xmin + ii*dx;
@@ -348,29 +377,109 @@ int main(int argc, char *argv[])
 #endif
 
 	//
+	std::cout << " CPU Test lenstool_hpc MIXED precision... "; 
+	//
+	double* grid_gradient_x_cpu = (double *) malloc((int) (runmode.nbgridcells) * (runmode.nbgridcells) * sizeof(double));
+        double* grid_gradient_y_cpu = (double *) malloc((int) (runmode.nbgridcells) * (runmode.nbgridcells) * sizeof(double));
 
-	type_t* grid_gradient_x_cpu = (type_t *) malloc((int) (runmode.nbgridcells) * (runmode.nbgridcells) * sizeof(type_t));
-    type_t* grid_gradient_y_cpu = (type_t *) malloc((int) (runmode.nbgridcells) * (runmode.nbgridcells) * sizeof(type_t));
-
-	memset(grid_gradient_x_cpu, 0, (runmode.nbgridcells) * (runmode.nbgridcells) * sizeof(type_t));
-	memset(grid_gradient_y_cpu, 0, (runmode.nbgridcells) * (runmode.nbgridcells) * sizeof(type_t));
+	memset(grid_gradient_x_cpu, 0, (runmode.nbgridcells) * (runmode.nbgridcells) * sizeof(double));
+	memset(grid_gradient_y_cpu, 0, (runmode.nbgridcells) * (runmode.nbgridcells) * sizeof(double));
 	
-	std::cout << " CPU Test lenstool_hpc... "; 
 	//
 	t_1 = -myseconds();
+	//test_result1_1 = module_potentialDerivatives_totalGradient_SOA(&test_point1_1, &lenses_SOA, runmode.nhalos);
+	//test_result2_2 = module_potentialDerivatives_totalGradient_SOA(&test_point2_2, &lenses_SOA, runmode.nhalos);
+	//test_resultN_N = module_potentialDerivatives_totalGradient_SOA(&test_pointN_N, &lenses_SOA, runmode.nhalos);
 	int Nstat = 1;
-	for(int ii = 0; ii < Nstat; ++ii) {
-		gradient_grid_CPU(grid_gradient_x_cpu, grid_gradient_y_cpu, &frame, &lenses_SOA, runmode.nhalos, runmode.nbgridcells);
+	//
+	for(int ii = 0; ii < Nstat; ++ii) 
+	{
+		gradient_grid_general_mixed_CPU(grid_gradient_x_cpu, grid_gradient_y_cpu, &frame, runmode.nhalos, grid_dim, &lenses_SOA, 0, 0);
 		//gradient_grid_CPU_print(grid_gradient_x_cpu, grid_gradient_y_cpu, &frame, &lenses_SOA, runmode.nhalos, grid_dim);
-		}
+	}
 	t_1 += myseconds();
 	//
 	std::cout << " Time = " << std::setprecision(15) << t_1 << std::endl;
 	//
+	// non-mixed precision
 	//
+	std::cout << " CPU Test lenstool DOUBLE precision... "; 
+	double *grid_gradient_x = (double *) malloc((int) (runmode.nbgridcells) * (runmode.nbgridcells) * sizeof(double)); 
+	double *grid_gradient_y = (double *) malloc((int) (runmode.nbgridcells) * (runmode.nbgridcells) * sizeof(double));
 	//
-	type_t *grid_gradient_x, *grid_gradient_y;
+	memset(grid_gradient_x, 0, (runmode.nbgridcells) * (runmode.nbgridcells) * sizeof(double));
+        memset(grid_gradient_y, 0, (runmode.nbgridcells) * (runmode.nbgridcells) * sizeof(double));
+	//
+	//int Nstat = 1;
+	double t_11 = -myseconds();
+        for(int ii = 0; ii < Nstat; ++ii)
+        {
 
+		gradient_grid_general_double_CPU(grid_gradient_x, grid_gradient_y, &frame, runmode.nhalos, grid_dim, &lenses_SOA, 0, 0);
+                //gradient_grid_CPU(grid_gradient_x, grid_gradient_y, &frame, runmode.nhalos, grid_dim, &lenses_SOA, 0, 0);
+	}
+	t_11 += myseconds();
+	std::cout << " Time = " << std::setprecision(15) << t_11 << std::endl;
+	//
+        // type_t precision
+        //
+	std::cout << " CPU Test lenstool type_t precision... ";
+	//
+        type_t *grid_gradient_typet_x = (type_t *) malloc((int) (runmode.nbgridcells) * (runmode.nbgridcells) * sizeof(type_t));
+        type_t *grid_gradient_typet_y = (type_t *) malloc((int) (runmode.nbgridcells) * (runmode.nbgridcells) * sizeof(type_t));
+        //
+        memset(grid_gradient_typet_x, 0, (runmode.nbgridcells) * (runmode.nbgridcells) * sizeof(type_t));
+        memset(grid_gradient_typet_y, 0, (runmode.nbgridcells) * (runmode.nbgridcells) * sizeof(type_t));
+
+        //int Nstat = 1;
+        double t_111 = -myseconds();
+        for(int ii = 0; ii < Nstat; ++ii)
+        {
+                gradient_grid_CPU(grid_gradient_typet_x, grid_gradient_typet_y, &frame, &lenses_SOA, runmode.nhalos, grid_dim);
+                //gradient_grid_CPU(grid_gradient_x, grid_gradient_y, &frame, runmode.nhalos, grid_dim, &lenses_SOA, 0, 0);
+        }
+        t_111 += myseconds();
+        std::cout << " Time = " << std::setprecision(15) << t_111 << std::endl;
+        //
+        //
+        //
+#if 1
+        {
+                double norm_x_SPDP  = 0.;
+                double norm_y_SPDP  = 0.;
+		//
+                double norm_x_mixSP = 0.;
+                double norm_y_mixSP = 0.;
+		//
+		//
+		double norm_x_mixDP = 0.;
+                double norm_y_mixDP = 0.;
+                //
+                for (int ii = 0; ii < grid_dim*grid_dim; ++ii)
+                {
+                        norm_x_mixSP = (grid_gradient_typet_x[ii] - grid_gradient_x_cpu[ii])*(grid_gradient_typet_x[ii] - grid_gradient_x_cpu[ii]);
+                        norm_y_mixSP = (grid_gradient_typet_y[ii] - grid_gradient_y_cpu[ii])*(grid_gradient_typet_y[ii] - grid_gradient_y_cpu[ii]);
+			//
+			norm_x_mixDP = (grid_gradient_x[ii] - grid_gradient_x_cpu[ii])*(grid_gradient_x[ii] - grid_gradient_x_cpu[ii]);
+                        norm_y_mixDP = (grid_gradient_y[ii] - grid_gradient_y_cpu[ii])*(grid_gradient_y[ii] - grid_gradient_y_cpu[ii]);
+			//
+                        //if ((norm_x_mixSP != 0.) || (norm_y_mixSP != 0.) || (norm_x_mixDP != 0.) || (norm_y_mixDP != 0.)) printf("%d = SP/mix = %f %f, DP/mix = %f %f\n", ii, norm_x_mixSP, norm_y_mixSP, norm_x_mixDP, norm_y_mixDP );
+                        if ((norm_x_mixSP + norm_y_mixSP == 0.) && (norm_x_mixDP + norm_y_mixDP == 0.)) printf("%s BLU %d: mix = %f %f, SP = %f %f, DP = %f %f%s\n", KBLU, ii, grid_gradient_x_cpu[ii], grid_gradient_y_cpu[ii], grid_gradient_typet_x[ii], grid_gradient_typet_y[ii], grid_gradient_x[ii], grid_gradient_y[ii], KRST);
+                        else if (norm_x_mixSP*norm_y_mixSP == 0.) 
+				printf("%s GRN %d: mix = %f %f, SP = %f %f, DP = %f %f%s\n", KGRN, ii, grid_gradient_x_cpu[ii], grid_gradient_y_cpu[ii], grid_gradient_typet_x[ii], grid_gradient_typet_y[ii], grid_gradient_x[ii], grid_gradient_y[ii], KRST); 
+			else if (norm_x_mixDP*norm_y_mixDP == 0.)
+                                printf("%s RED %d: mix = %f %f, SP = %f %f, DP = %f %f%s\n", KRED, ii, grid_gradient_x_cpu[ii], grid_gradient_y_cpu[ii], grid_gradient_typet_x[ii], grid_gradient_typet_y[ii], grid_gradient_x[ii], grid_gradient_y[ii], KRST);
+			else printf(" RST %d: mix = %f %f, SP = %f %f, DP = %f %f\n", ii, grid_gradient_x_cpu[ii], grid_gradient_y_cpu[ii], grid_gradient_typet_x[ii], grid_gradient_typet_y[ii], grid_gradient_x[ii], grid_gradient_y[ii]);
+
+
+                }
+                //
+                //std::cout << "  l2 difference norm gpu = " << std::setprecision(15) << norm_x << " " << std::setprecision(15) << norm_y << std::endl;
+        }
+#endif
+	//
+	//
+	//
 #ifdef __WITH_GPU
 #warning "using GPUs..."
 	// GPU test
@@ -378,7 +487,7 @@ int main(int argc, char *argv[])
 	std::cout << " GPU Test... "; 
 
 	type_t* grid_gradient_x_gpu = (type_t *) malloc((int) (runmode.nbgridcells) * (runmode.nbgridcells) * sizeof(type_t));
-       type_t* grid_gradient_y_gpu = (type_t *) malloc((int) (runmode.nbgridcells) * (runmode.nbgridcells) * sizeof(type_t));
+        type_t* grid_gradient_y_gpu = (type_t *) malloc((int) (runmode.nbgridcells) * (runmode.nbgridcells) * sizeof(type_t));
 	//
 	memset(grid_gradient_x_gpu, 0, (runmode.nbgridcells) * (runmode.nbgridcells) * sizeof(type_t));
 	memset(grid_gradient_y_gpu, 0, (runmode.nbgridcells) * (runmode.nbgridcells) * sizeof(type_t));
@@ -395,7 +504,7 @@ int main(int argc, char *argv[])
 	//test();
 	//test2();
 	for(int ii = 0; ii < Nstat; ++ii) {
-		gradient_grid_GPU(grid_gradient_x_gpu, grid_gradient_y_gpu, &frame, &lenses_SOA, runmode.nhalos, runmode.nbgridcells);
+		gradient_grid_GPU(grid_gradient_x_gpu, grid_gradient_y_gpu, &frame, &lenses_SOA, runmode.nhalos, grid_dim);
 	}
 	//module_potentialDerivatives_totalGradient_SOA_CPU_GPU(grid_gradient_x_gpu, grid_gradient_y_gpu, &frame, &lenses_SOA, runmode.nhalos, grid_dim);
 	//gradient_gid_CPU(grid_gradient_x, grid_gradient_y, &frame, &lenses_SOA, runmode.nhalos, grid_dim);
@@ -419,21 +528,8 @@ int main(int argc, char *argv[])
 	{
 		type_t norm_x = 0.;
 		type_t norm_y = 0.;
-
-		type_t sum_x = 0.;
-		type_t sum_y = 0.;
-		//
 		for (int ii = 0; ii < grid_dim*grid_dim; ++ii)
 		{
-			type_t g_x = grid_grad_x[ii];
-			type_t g_y = grid_grad_y[ii];
-			sum_x += grid_grad_x[ii]*grid_grad_x[ii];
-			sum_y += grid_grad_y[ii]*grid_grad_y[ii];
-
-			//
-			type_t c_x = grid_gradient_x_cpu[ii];
-			type_t c_y = grid_gradient_y_cpu[ii];
-			//
 			norm_x += (grid_grad_x[ii] - grid_gradient_x_cpu[ii])*(grid_grad_x[ii] - grid_gradient_x_cpu[ii]);
 			norm_y += (grid_grad_y[ii] - grid_gradient_y_cpu[ii])*(grid_grad_y[ii] - grid_gradient_y_cpu[ii]);
 		}
@@ -468,12 +564,6 @@ int main(int argc, char *argv[])
 		//
 		for (int ii = 0; ii < grid_dim*grid_dim; ++ii)
 		{
-			type_t g_x = grid_grad_x[ii];
-			type_t g_y = grid_grad_y[ii];
-			//
-			type_t c_x = grid_gradient_x_gpu[ii];
-			type_t c_y = grid_gradient_y_gpu[ii];
-			//
 			norm_x += (grid_grad_x[ii] - grid_gradient_x_gpu[ii])*(grid_grad_x[ii] - grid_gradient_x_gpu[ii]);
 			norm_y += (grid_grad_y[ii] - grid_gradient_y_gpu[ii])*(grid_grad_y[ii] - grid_gradient_y_gpu[ii]);
 
@@ -488,33 +578,45 @@ int main(int argc, char *argv[])
 	{
 		type_t norm_x = 0.;
 		type_t norm_y = 0.;
-
-		type_t sum_x_cpu = 0.;
-		type_t sum_y_cpu = 0.;
-		type_t sum_x_gpu = 0.;
-		type_t sum_y_gpu = 0.;
 		//
 		for (int ii = 0; ii < grid_dim*grid_dim; ++ii)
 		{
-			//
-			sum_x_cpu += grid_gradient_x_cpu[ii]*grid_gradient_x_cpu[ii];
-			sum_y_cpu += grid_gradient_y_cpu[ii]*grid_gradient_y_cpu[ii];
-			sum_x_gpu += grid_gradient_x_gpu[ii]*grid_gradient_x_gpu[ii];
-			sum_y_gpu += grid_gradient_y_gpu[ii]*grid_gradient_y_gpu[ii];
-
 			norm_x += (grid_gradient_x_cpu[ii] - grid_gradient_x_gpu[ii])*(grid_gradient_x_cpu[ii] - grid_gradient_x_gpu[ii]);
 			norm_y += (grid_gradient_y_cpu[ii] - grid_gradient_y_gpu[ii])*(grid_gradient_y_cpu[ii] - grid_gradient_y_gpu[ii]);
 		}
-
-		sum_x_cpu -= 4761763143.24101;
-		sum_y_cpu -= 5412618205.81843;
-		sum_x_gpu -= 4761763143.24101;
-		sum_y_gpu -= 5412618205.81843;
-
 		std::cout << "  l2 difference norm cpu-gpu = " << std::setprecision(15) << norm_x << " " << std::setprecision(15) << norm_y << std::endl;
-		std::cout << "  sum x cpu = " << std::setprecision(15) << sum_x_cpu << " sum_y_cpu  " << std::setprecision(15) << sum_y_cpu << std::endl;
-		std::cout << "  sum x gpu = " << std::setprecision(15) << sum_x_gpu << " sum_y_gpu  " << std::setprecision(15) << sum_y_gpu << std::endl;
 
+#if 0
+		std::cout << " CPUTEST " << std::endl;
+		myfile.open ("Float_x_R_XMIN0.txt");
+		for (int ii = 0; ii < grid_dim*grid_dim; ++ii)
+		{
+			myfile << ii << " " << grid_gradient_x_cpu[ii]<< std::setprecision(15)  << " " << std::endl;
+		}
+		myfile.close();
+		myfile.open ("Float_y_R_XMIN0.txt");
+		for (int ii = 0; ii < grid_dim*grid_dim; ++ii)
+		{
+			myfile << ii << " " << grid_gradient_y_cpu[ii]<< std::setprecision(15)  << " " << std::endl;
+		}
+		myfile.close();
+#endif
+
+#if 0
+		std::cout << " GPUTEST " << std::endl;
+		myfile.open ("Float_true_coord.x_2.txt");
+		for (int ii = 0; ii < grid_dim*grid_dim; ++ii)
+		{
+			myfile << ii << " " << grid_gradient_x_gpu[ii]<< std::setprecision(15)  << " " << std::endl;
+		}
+		myfile.close();
+		myfile.open ("Float_x_4.txt");
+		for (int ii = 0; ii < grid_dim*grid_dim; ++ii)
+		{
+			myfile << ii << " " << grid_gradient_y_gpu[ii]<< std::setprecision(15)  << " " << std::endl;
+		}
+		myfile.close();
+#endif
 	}
 #endif
 	std::cout << "Exiting..." << std::endl;

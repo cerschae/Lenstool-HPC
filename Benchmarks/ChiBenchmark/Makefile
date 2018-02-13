@@ -43,6 +43,7 @@ CPPFLAGS += $(foreach includedir,$(program_INCLUDE_DIRS),-I$(includedir))
 CPPFLAGS += $(foreach includelib,$(program_INCLUDE_LIBS),-L$(includelib))
 CPPFLAGS += -D__WITH_LENSTOOL
 CPPFLAGS += -D__WITH_MPI
+CPPFLAGS += -D_double
 CPPFLAGS += -qopenmp -xHost -g -O3 -std=c++0x -Wall -pedantic
 #CPPFLAGS += -qopenmp -march=core-avx2 -g -O3 -std=c++0x -Wall -pedantic
 #CPPFLAGS += -llenstoolhpc -qopenmp -xHost -g -O3 -std=c++0x -Wall -pedantic

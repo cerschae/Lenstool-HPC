@@ -1,18 +1,18 @@
 #!/bin/bash
 echo "Starting Double test"
 
+set -x
 cd src/
-make -f Makefile.intel clean
-make -f Makefile.intel
-make -f Makefile.GPU.intel
+make prec=double clean
+make prec=double
 
 cd ../Benchmarks/GridGradientBenchmark
-make -f Makefile.GPU clean
-make -f Makefile.GPU
+make -f Makefile.intel clean
+make -f Makefile.intel
 #./ChiBenchmark_GPU ../ConfigFiles/90PotSIS.par T
 #./ChiBenchmark_GPU ../ConfigFiles/MarkusBenchmark.par T
 #./ChiBenchmark_GPU ../ConfigFiles/MarkusBenchmark1SIS.par T
-./GridGradient_GPU ../ConfigFiles/MarkusBenchmark.par T
+./GridGradient_CPU ../ConfigFiles/MarkusBenchmark.par T
 #cd ../Benchmarks/GradientBenchmark
 #make -f Makefile clean
 #make -f MakefileDouble

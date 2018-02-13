@@ -2,15 +2,16 @@
 echo "Starting Float test"
 
 cd src/
-make -f Makefile.intel clean
-make -f MakefileFloat.intel
-make -f MakefileFloat.GPU.intel
+make prec=single clean
+make prec=single
+cd -
 
-cd ../Benchmarks/GridGradientBenchmark
-make -f Makefile.GPU clean
-make -f MakefileFloat.GPU
+cd ./Benchmarks/GridGradientBenchmark
+make -f Makefile.intel clean
+make -f Makefile.intel
+#make -f MakefileFloat.GPU
 #./ChiBenchmark_GPU ../ConfigFiles/90PotSIS.par T
-./GridGradient_GPU ../ConfigFiles/MarkusBenchmark.par T
+./GridGradient_CPU ../ConfigFiles/MarkusBenchmark.par T
 #./ChiBenchmark_GPU ../ConfigFiles/MarkusBenchmark1SIS.par T
 
 echo "Finish Float test"
