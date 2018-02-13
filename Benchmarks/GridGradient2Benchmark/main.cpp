@@ -233,7 +233,7 @@ int main(int argc, char *argv[])
 	{
 		module_readParameters_readpotfiles_param(inputFile, &potfile, cosmology);
 		module_readParameters_debug_potfileparam(1, &potfile);
-		module_readParameters_readpotfiles_SOA(&runmode,&potfile,&lenses_SOA);
+		module_readParameters_readpotfiles_SOA(&runmode, &cosmology,&potfile,&lenses_SOA);
 		module_readParameters_debug_potential_SOA(1, lenses_SOA, runmode.nhalos + runmode.npotfile);
 
 	}
@@ -313,48 +313,9 @@ int main(int argc, char *argv[])
 	//
 	dx = (frame.xmax - frame.xmin)/(runmode.nbgridcells-1);
 	dy = (frame.ymax - frame.ymin)/(runmode.nbgridcells-1);
-#if 0
-	//
-	//mdci05(Q.x, Q.y, ilens->epot, ilens->rc, ilens->b0, &g05c);
-	//
-	point test_point1_1, test_point2_2, test_result1_1, test_result2_2, test_pointN_N, test_resultN_N;
-	type_t dlsds = images[0].dr;
-	//
-	test_point1_1.x = frame.xmin;
-	test_point1_1.y = frame.ymin;
-	test_point2_2.x = frame.xmin + runmode.nbgridcells/2*dx;
-	test_point2_2.y = frame.ymin + runmode.nbgridcells/2*dy;
-	test_pointN_N.x = frame.xmin + ((runmode.nbgridcells*runmode.nbgridcells-1)/runmode.nbgridcells)*dx;
-	test_pointN_N.y = frame.ymin + ((runmode.nbgridcells*runmode.nbgridcells-1) % runmode.nbgridcells)*dy;
-
-
-	matrix test1, test_int, test2;
-	test1.a  = 0;
-	test1.b  = 0;
-	test1.c  = 0;
-	test1.d  = 0;
-    for (int lens = 0; lens < runmode.nhalos; ++lens)
-    {
-    	//std::cerr <<"Point: " << test_point2_2.x << " " << test_point2_2.y << std::endl;
-    	test_int = e_grad2_pot(&test_point2_2,  lens);
-    	test1.a += test_int.a;
-    	test1.b += test_int.b;
-    	test1.c += test_int.c;
-    	test1.d += test_int.d;
-    	//std::cerr <<"**" << test1.a << " " << test_int.a << std::endl;
-    }
-	test2 = module_potentialDerivatives_totalGradient2_SOA(&test_point2_2, &lenses_SOA, runmode.nhalos);
-	std::cerr << test1.a << " " << test2.a << std::endl;
-	std::cerr << test1.b << " " << test2.b << std::endl;
-	std::cerr << test1.c << " " << test2.c << std::endl;
-	std::cerr << test1.d << " " << test2.d << std::endl;
-
-#endif
-
 	//
 	//
 	//
-
 #ifdef __WITH_LENSTOOL
         std::cout << " CPU Test Lenstool    ... ";
         matrix *grid_grad2;
@@ -402,9 +363,7 @@ int main(int argc, char *argv[])
 #endif
 
 	//
-
 	matrix* grid_gradient2_cpu = (matrix *) malloc((int) (runmode.nbgridcells) * (runmode.nbgridcells) * sizeof(matrix));
-
 	memset(grid_gradient2_cpu, 0, (runmode.nbgridcells) * (runmode.nbgridcells) * sizeof(matrix));
 	
 	std::cout << " CPU Test lenstool_hpc... "; 
@@ -466,28 +425,8 @@ int main(int argc, char *argv[])
 		}
 		//
 		std::cout << "  l2 difference norm cpu = " << std::setprecision(15) << norm_a << " " << std::setprecision(15) << norm_b << " " << std::setprecision(15) << norm_c << " " << std::setprecision(15) << norm_d << std::endl;
-		//std::cout << sum_x << " " << std::setprecision(15) << sum_y << std::setprecision(15) << std::endl;
-#if 0
-
-		myfile.open ("lenstool_grid_x.txt");
-
-		for (int ii = 0; ii < grid_dim*grid_dim; ++ii)
-		{
-			myfile << ii << " " << grid_grad_x[ii]<< std::setprecision(15)  << " " << std::endl;
-		}
-		myfile.close();
-
-		myfile.open ("lenstool_grid_y.txt");
-		for (int ii = 0; ii < grid_dim*grid_dim; ++ii)
-		{
-			myfile << ii << " " << grid_grad_y[ii]<< std::setprecision(15)  << " " << std::endl;
-		}
-		myfile.close();
-#endif
 
 	}
-
-
 	//
 #if 1
 #ifdef __WITH_GPU
@@ -506,78 +445,11 @@ int main(int argc, char *argv[])
 			norm_d += (grid_grad2[ii].d - grid_gradient_d_gpu[ii])*(grid_grad2[ii].d - grid_gradient_d_gpu[ii]);
 		}
 		//
-		std::cout << "  l2 difference norm cpu = " << std::setprecision(15) << norm_a << " " << std::setprecision(15) << norm_b << " " << std::setprecision(15) << norm_c << " " << std::setprecision(15) << norm_d << std::endl;
+		std::cout << "  l2 difference norm gpu = " << std::setprecision(15) << norm_a << " " << std::setprecision(15) << norm_b << " " << std::setprecision(15) << norm_c << " " << std::setprecision(15) << norm_d << std::endl;
 	}
 #endif
 #endif
 #endif
 
-#if 0
-#ifdef __WITH_GPU
-	{
-		type_t norm_x = 0.;
-		type_t norm_y = 0.;
-
-		type_t sum_x_cpu = 0.;
-		type_t sum_y_cpu = 0.;
-		type_t sum_x_gpu = 0.;
-		type_t sum_y_gpu = 0.;
-		//
-		for (int ii = 0; ii < grid_dim*grid_dim; ++ii)
-		{
-			//
-			sum_x_cpu += grid_gradient_x_cpu[ii]*grid_gradient_x_cpu[ii];
-			sum_y_cpu += grid_gradient_y_cpu[ii]*grid_gradient_y_cpu[ii];
-			sum_x_gpu += grid_gradient_x_gpu[ii]*grid_gradient_x_gpu[ii];
-			sum_y_gpu += grid_gradient_y_gpu[ii]*grid_gradient_y_gpu[ii];
-
-			norm_x += (grid_gradient_x_cpu[ii] - grid_gradient_x_gpu[ii])*(grid_gradient_x_cpu[ii] - grid_gradient_x_gpu[ii]);
-			norm_y += (grid_gradient_y_cpu[ii] - grid_gradient_y_gpu[ii])*(grid_gradient_y_cpu[ii] - grid_gradient_y_gpu[ii]);
-		}
-
-		sum_x_cpu -= 4761763143.24101;
-		sum_y_cpu -= 5412618205.81843;
-		sum_x_gpu -= 4761763143.24101;
-		sum_y_gpu -= 5412618205.81843;
-
-		std::cout << "  l2 difference norm cpu-gpu = " << std::setprecision(15) << norm_x << " " << std::setprecision(15) << norm_y << std::endl;
-		std::cout << "  sum x cpu = " << std::setprecision(15) << sum_x_cpu << " sum_y_cpu  " << std::setprecision(15) << sum_y_cpu << std::endl;
-		std::cout << "  sum x gpu = " << std::setprecision(15) << sum_x_gpu << " sum_y_gpu  " << std::setprecision(15) << sum_y_gpu << std::endl;
-
-#if 0
-		std::cout << " CPUTEST " << std::endl;
-		myfile.open ("Float_x_R_XMIN0.txt");
-		for (int ii = 0; ii < grid_dim*grid_dim; ++ii)
-		{
-			myfile << ii << " " << grid_gradient_x_cpu[ii]<< std::setprecision(15)  << " " << std::endl;
-		}
-		myfile.close();
-		myfile.open ("Float_y_R_XMIN0.txt");
-		for (int ii = 0; ii < grid_dim*grid_dim; ++ii)
-		{
-			myfile << ii << " " << grid_gradient_y_cpu[ii]<< std::setprecision(15)  << " " << std::endl;
-		}
-		myfile.close();
-#endif
-
-#if 0
-		std::cout << " GPUTEST " << std::endl;
-		myfile.open ("Float_true_coord.x_2.txt");
-		for (int ii = 0; ii < grid_dim*grid_dim; ++ii)
-		{
-			myfile << ii << " " << grid_gradient_x_gpu[ii]<< std::setprecision(15)  << " " << std::endl;
-		}
-		myfile.close();
-		myfile.open ("Float_x_4.txt");
-		for (int ii = 0; ii < grid_dim*grid_dim; ++ii)
-		{
-			myfile << ii << " " << grid_gradient_y_gpu[ii]<< std::setprecision(15)  << " " << std::endl;
-		}
-		myfile.close();
-#endif
-	}
-#endif
-
-#endif
 #endif
 }

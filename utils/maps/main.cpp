@@ -119,6 +119,9 @@ double **map_ayy;
 void
 gradient_grid_GPU_sorted(type_t *grid_grad_x, type_t *grid_grad_y, const struct grid_param *frame, const struct Potential_SOA *lens, int Nlens, int nbgridcells);
 //
+void write_map(std::string path, std::string filename, int ii,type_t * map, const struct runmode_param * runmode, const struct grid_param * frame );
+//
+map_gpu_function_t select_map_function(std::string mode,const struct runmode_param* runmode);
 //
 int module_readCheckInput_readInput(int argc, char *argv[], std::string *outdir)
 {
@@ -372,41 +375,34 @@ int main(int argc, char *argv[])
 		module_readParameters_debug_potential_SOA(0, lenses_SOA, runmode.nhalos+runmode.npotfile);
 
 		////calculate maps
-		std::cout << " GPU launching for map " << ii << std::endl; ;
-		//
-		type_t* ampli_GPU = (type_t *) malloc((int) (runmode.amplif_gridcells) * (runmode.amplif_gridcells) * sizeof(type_t));
-		//
-		memset(ampli_GPU, 0, (runmode.amplif_gridcells) * (runmode.amplif_gridcells) * sizeof(type_t));
-		//
+		std::cout << " GPU launching for map " << ii << std::endl;
+		//Chrono(opt)
 		t_2 = -myseconds();
-		//
-		map_gpu_function_t map_gpu_func = &amplif_grid_CPU_GPU;
-		map_grid_GPU(map_gpu_func,ampli_GPU,&cosmology, &frame, &lenses_SOA, runmode.nhalos+ runmode.npotfile, runmode.amplif_gridcells ,runmode.amplif, runmode.z_amplif);
+		if (runmode.amplif > 0){
+			//Allocation
+			type_t* ampli_GPU = (type_t *) malloc((int) (runmode.amplif_gridcells) * (runmode.amplif_gridcells) * sizeof(type_t));
 
-		if(false)
-		for(int ii = 0; ii < runmode.amplif_gridcells; ii++){
-			for(int jj = 0; jj < runmode.amplif_gridcells; jj++){
-				printf(" j: %d i:%d amplif: %f \n",jj,ii,ampli_GPU[ii *runmode.amplif_gridcells +jj]);
-			}
+			//Init
+			memset(ampli_GPU, 0, (runmode.amplif_gridcells) * (runmode.amplif_gridcells) * sizeof(type_t));
+
+			//Choosing Function definition
+			map_gpu_function_t map_gpu_func;
+			map_gpu_func = select_map_function("ampli",&runmode);
+
+			//calculating map using defined function
+			map_grid_GPU(map_gpu_func,ampli_GPU,&cosmology, &frame, &lenses_SOA, runmode.nhalos+ runmode.npotfile, runmode.amplif_gridcells ,runmode.amplif, runmode.z_amplif);
+
+			//writing
+			write_map(path,"ampli",ii,ampli_GPU,&runmode,&frame);
+			std::cerr << "**" << ampli_GPU[0] << std::endl;
+			free(ampli_GPU);
 		}
-		std::string file;
-		file = path;
-		file.append("/amplif_");
-	    std::ostringstream ss;
-	    ss << ii+1;
-		file.append(ss.str());
-		file.append(".fits");
-		ss.clear();
-		char file_char[file.length()+1];
-		strcpy(file_char,file.c_str());
-
-		module_writeFits_Image(file_char,ampli_GPU,runmode.amplif_gridcells,runmode.amplif_gridcells,frame.xmin,frame.xmax,frame.ymin,frame.ymax);
-
+		//
 		t_2 += myseconds();
-		std::cerr << "**" << ampli_GPU[0] << std::endl;
+
 		std::cout << " Time  " << std::setprecision(15) << t_2 << std::endl;
 
-		free(ampli_GPU);
+
 	}
 	t_1 += myseconds();
 	std::cout << " Total Time  " << std::setprecision(15) << t_1 << std::endl;
@@ -414,4 +410,41 @@ int main(int argc, char *argv[])
 
 }
 
+map_gpu_function_t select_map_function(std::string mode, const struct runmode_param* runmode){
+	if (mode == "ampli"){
+		if(runmode->amplif == 5)
+			return &amplif_grid_CPU_GPU;
+		else if(runmode->amplif == 6){
+			fprintf(stderr, "ERROR: Amplif mode %d not supported yet \n",runmode->amplif);
+			exit(-1);
+		}
+		else{
+			fprintf(stderr, "ERROR: Amplif mode %d not supported yet \n",runmode->amplif);
+			exit(-1);
+		}
+	}
+	else{
+		fprintf(stderr, "ERROR: No mode recognised \n",runmode->amplif);
+		exit(-1);
+	}
+	return 0;
+}
+
+void write_map(std::string path, std::string filename, int ii, type_t *map, const struct runmode_param* runmode, const struct grid_param* frame ){
+	std::string file;
+	file = path;
+	file.append("/");
+	file.append(filename);
+	file.append("_");
+    std::ostringstream ss;
+    ss << ii+1;
+	file.append(ss.str());
+	file.append(".fits");
+	ss.clear();
+	char file_char[file.length()+1];
+	strcpy(file_char,file.c_str());
+
+	module_writeFits_Image(file_char,map,runmode->amplif_gridcells,runmode->amplif_gridcells,frame->xmin,frame->xmax,frame->ymin,frame->ymax);
+
+}
 

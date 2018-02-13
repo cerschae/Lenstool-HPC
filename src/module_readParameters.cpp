@@ -1006,6 +1006,10 @@ void module_readParameters_readpotfiles_param(std::string infile, potfile_param 
     potfile->slope1 = 0;
     potfile->slope2 = 0;
     potfile->npotfile = 0;
+    potfile->ivdscat = 0;
+	potfile->vdscat1 =0;
+	potfile->vdscat2 = 0;
+    potfile->ircutscat = 0;
 
 	std::ifstream IN(infile.c_str(), std::ios::in);
     if ( IN ){
@@ -1130,7 +1134,7 @@ if ( potfile->ftype <= 4 )
 	potfile->sigma = potfile->sigma1;
 
     // ... and potfile RCUT
-    if ( potfile->cut1 == 0 && potfile->cutkpc1 != 0 )
+    if ( potfile->cut1 == DBL_MAX && potfile->cutkpc1 != DBL_MAX )
     {
     	potfile->cut1 = potfile->cutkpc1 / (d0 / cosmology.h * module_cosmodistances_observerObject(potfile->zlens,cosmology));
     	potfile->cut2 = potfile->cutkpc2 / (d0 / cosmology.h * module_cosmodistances_observerObject(potfile->zlens,cosmology));
@@ -2117,6 +2121,8 @@ void module_readParameters_PotentialSOA_direct(std::string infile, Potential_SOA
 			lens_temp.vdisp = 0.;
 			lens_temp.rcut = 0.;
 			lens_temp.rcore = 0;
+			core_radius_kpc = 0.;
+			cut_radius_kpc = 0;
 			lens_temp.weight = 0;
 			lens_temp.rscale = 0;
 			lens_temp.exponent = 0;
@@ -2246,7 +2252,7 @@ void module_readParameters_PotentialSOA_direct(std::string infile, Potential_SOA
 	{
 		//std::cerr << "d1 " << d1 << std::endl;
 		lens_temp.rcut = cut_radius_kpc / d1;}
-	else if ( lens_temp.rcut != 0. )
+	else
 		cut_radius_kpc = lens_temp.rcut * d1;
 
     //Calculate parameters like b0, potential ellipticity and anyother parameter depending on the profile

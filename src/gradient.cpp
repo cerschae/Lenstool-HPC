@@ -388,7 +388,7 @@ struct point module_potentialDerivatives_totalGradient_5_SOA_v2_novec(const stru
         struct point grad, result;
         grad.x = 0;
         grad.y = 0;
-#pragma novec
+#pragma novector
 	for(int i = shalos; i < shalos + nhalos; i++)
         {
                 //
@@ -722,63 +722,66 @@ struct point module_potentialDerivatives_totalGradient_81_SOA_v2(const struct po
         //std::cout << "# module_potentialDerivatives_totalGradient_81_SOA begins" << std::endl;
         // 6 DP loads, i.e. 48 Bytes: position_x, position_y, ellipticity_angle, ellipticity_potential, rcore, b0
         //
-        struct point grad, clumpgrad;
+        struct point grad;
         grad.x = 0;
         grad.y = 0;
+        //printf("%d %d\n",shalos, nhalos);
+        //printf("%f %f %f %f %f %f %f %f %f %f\n",pImage->x,pImage->y,lens->position_x[0],lens->position_y[0],lens->ellipticity_potential[0] ,  lens->rcore[0],lens->rcut[0],lens->b0[0],lens->anglecos[0],lens->anglesin[0]);
         for(int i = shalos; i < shalos + nhalos; i++)
-        {
-                //IACA_START;
-                //
-                struct point true_coord, true_coord_rot; //, result;
-                //type_t       R, angular_deviation;
-                complex      zis;
-                //
-                //result.x = result.y = 0.;
-                //
-                true_coord.x = pImage->x - lens->position_x[i];
-                true_coord.y = pImage->y - lens->position_y[i];
-                /*positionning at the potential center*/
-                // Change the origin of the coordinate system to the center of the clump
-                type_t cose = lens->anglecos[i];
-                type_t sine = lens->anglesin[i];
-                type_t x = true_coord.x*cose + true_coord.y*sine;
-                type_t y = true_coord.y*cose - true_coord.x*sine;
-		//
-                type_t eps  = lens->ellipticity_potential[i];
-                type_t rc   = lens->rcore[i];
-                type_t rcut = lens->rcut[i];
-                type_t b0   = lens->b0[i];
-                type_t t05  = b0*rcut/(rcut - rc);
-                //
-                type_t sqe  = sqrt(eps);
-                //
-                type_t cx1  = (1. - eps)/(1. + eps);
-                type_t cxro = (1. + eps)*(1. + eps);
-                type_t cyro = (1. - eps)*(1. - eps);
-                //
-                type_t rem2 = x*x/cxro + y*y/cyro;
-                //
-                complex zci, znum, zden, zres_rc, zres_rcut;
-                type_t norm;
-                //
-                zci.re  = 0;
-                zci.im  = -0.5*(1. - eps*eps)/sqe;
-		//
-                // step 1
-                {
-			KERNEL(rc, zres_rc)
-                }
-                // step 2
-                {
-			KERNEL(rcut, zres_rcut)
-                }
-                zis.re  = t05*(zres_rc.re - zres_rcut.re);
-                zis.im  = t05*(zres_rc.im - zres_rcut.im);
-                // rotation
-		grad.x += (zis.re*cose - zis.im*sine);
-                grad.y += (zis.im*cose + zis.re*sine);
-                //
-        }
+         {
+                 //IACA_START;
+                 //
+                 struct point true_coord, true_coord_rot; //, result;
+                 //type_t       R, angular_deviation;
+                 complex      zis;
+                 //
+                 //result.x = result.y = 0.;
+                 //
+                 true_coord.x = pImage->x - lens->position_x[i];
+                 true_coord.y = pImage->y - lens->position_y[i];
+                 /*positionning at the potential center*/
+                 // Change the origin of the coordinate system to the center of the clump
+                 type_t cose = lens->anglecos[i];
+                 type_t sine = lens->anglesin[i];
+                 type_t x = true_coord.x*cose + true_coord.y*sine;
+                 type_t y = true_coord.y*cose - true_coord.x*sine;
+                 //
+                 type_t eps  = lens->ellipticity_potential[i];
+                 type_t rc   = lens->rcore[i];
+                 type_t rcut = lens->rcut[i];
+                 type_t b0   = lens->b0[i];
+                 type_t t05  = b0*rcut/(rcut - rc);
+                 //
+                 type_t sqe  = sqrt(eps);
+                 //
+                 type_t cx1  = (1. - eps)/(1. + eps);
+                 type_t cxro = (1. + eps)*(1. + eps);
+                 type_t cyro = (1. - eps)*(1. - eps);
+                 //
+                 type_t rem2 = x*x/cxro + y*y/cyro;
+                 //
+                 complex zci, znum, zden, zres_rc, zres_rcut;
+                 type_t norm;
+                 //
+                 zci.re  = 0;
+                 zci.im  = -0.5*(1. - eps*eps)/sqe;
+                 //
+                 // step 1
+                 {
+                         KERNEL(rc, zres_rc)
+                 }
+                 // step 2
+                 {
+                         KERNEL(rcut, zres_rcut)
+                 }
+                 //printf("%f %f\n", zis.re,zis.im);
+                 zis.re  = t05*(zres_rc.re - zres_rcut.re);
+                 zis.im  = t05*(zres_rc.im - zres_rcut.im);
+                 // rotation
+                 grad.x += (zis.re*cose - zis.im*sine);
+                 grad.y += (zis.im*cose + zis.re*sine);
+                 //
+         }
         //
         return(grad);
 }
@@ -879,25 +882,23 @@ struct point module_potentialDerivatives_totalGradient_SOA(const struct point *p
         grad.y = clumpgrad.y = 0;
 	//
 	int shalos = 0;
-	//
-	//module_potentialDerivatives_totalGradient_81_SOA(pImage, lens, 0, nhalos);
-	//return;
-	/*
-	int* p_type = &(lens->type)[0];
-	int* lens_type = (int*) malloc(nhalos*sizeof(int));
-	memcpy(lens_type, &(lens->type)[0], nhalos*sizeof(int));
-	*/
-	//quicksort(lens_type, nhalos);
-	//
+
 	while (shalos < nhalos)
 	{
 		int lens_type = lens->type[shalos];
 		int count     = 1;
-		while (lens->type[shalos + count] == lens_type) count++;
-		//std::cerr << "type = " << lens_type << " " << count << " " << shalos << " " << " func = " << halo_func[lens_type] << std::endl;
+		while (lens->type[shalos + count] == lens_type and shalos + count < nhalos){
+			//int i = count;
+			//std::cerr << lens->position_x[i] << lens->position_y[i] << lens->anglecos[i]<< lens->anglesin[i]<< lens->ellipticity_potential[i] <<  lens->rcore[i] << lens->rcut[i] << lens->b0[i] << std::endl;
+			//std::cerr << "lens->type[shalos + count] = " << lens->type[shalos + count] << " " << lens_type << " " << lens_type << " " << " count = " << count << std::endl;
+			count++;
+		}
+
 		//	
 		clumpgrad = (*halo_func[lens_type])(pImage, lens, shalos, count);
 		//
+		//std::cerr << lens->position_x[i] << lens->position_y[i] << lens->anglecos[i]<< lens->anglesin[i]<< lens->ellipticity_potential[i] <<  lens->rcore[i] << lens->rcut[i] << lens->b0[i] << std::endl;
+		//std::cerr << "type = " << lens_type << " " << count << " " << nhalos << " " << " grad.x = " << clumpgrad.x << " grad.y = " << clumpgrad.y << std::endl;
 		grad.x += clumpgrad.x;
 		grad.y += clumpgrad.y;
 		shalos += count;

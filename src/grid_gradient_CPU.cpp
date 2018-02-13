@@ -49,27 +49,33 @@ void gradient_grid_general_CPU(type_t *grid_grad_x, type_t *grid_grad_y, const s
 	point  Grad, image_point, true_coord_rotation;
 	//
 	grid_dim = nbgridcells_x*nbgridcells_y;
-	//@@printf("-> dx = %f, dy = %f, istart = %d, jstart = %d, nbgridcells_x = %d, nbgridcells_y = %d\n", dx, dy, istart, jstart, nbgridcells_x, nbgridcells_y);
 	//
 #pragma omp parallel
-#pragma omp for private(Grad, image_point)
-	for (int jj = 0; jj < nbgridcells_y; ++jj) 
+//#pragma omp for private(Grad, image_point)
+	for (int jj = 0; jj < nbgridcells_y; ++jj)
 		for (int ii = 0; ii < nbgridcells_x; ++ii)
 		{
 			//  (index < grid_dim*grid_dim)
+
 			int index = jj*nbgridcells_x + ii;
 			//grid_grad_x[index] = 0.;
 			//grid_grad_y[index] = 0.;
 			//
 			image_point.x = frame->xmin + (ii + istart)*dx;
 			image_point.y = frame->ymin + (jj + jstart)*dy;
+
 			//
 			Grad = module_potentialDerivatives_totalGradient_SOA(&image_point, lens, Nlens);
 			//
+
 			grid_grad_x[index] = Grad.x;
 			grid_grad_y[index] = Grad.y;
+			//if(ii == 0 and jj == 0)
+				//std::cout << grid_grad_x[index] << image_point.x <<image_point.y << std::endl;
+
 			//
 		}
+	//std::cout << std::endl;
 }
 
 void gradient_grid_print_CPU(type_t *grid_grad_x, type_t *grid_grad_y, const struct grid_param *frame, int Nlens, int nbgridcells, const struct Potential_SOA *lens, int istart, int jstart)
