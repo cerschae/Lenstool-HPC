@@ -11,9 +11,9 @@ make clean
 make 
 
 cd ../Benchmarks/GridGradientBenchmark
-make -f Makefile.GPU clean
-make -f Makefile.GPU
-rm -r tmp
+make -f Makefile.intel clean
+make -f Makefile.intel
+//rm -r tmp
 
 #./Bayesmap_GPU m1931.par T
 #./GridGradient_GPU ../ConfigFiles/TestResultParameter.par T

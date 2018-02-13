@@ -43,7 +43,7 @@ void calculate_cossin_values(type_t *theta_cos, type_t *theta_sin, type_t *angle
 
 
 
-
+#if 0
 
 __global__
 void
@@ -52,7 +52,7 @@ module_potentialDerivatives_totalGradient_8_SOA_GPU_cur(type_t *grid_grad_x, typ
         //asm volatile("# module_potentialDerivatives_totalGradient_SOA begins");
         // 6 DP loads, i.e. 48 Bytes: position_x, position_y, ellipticity_angle, ellipticity_potential, rcore, b0
         //
-        struct point grad, clumpgrad, image_point;
+        struct point grad, image_point;
 	//
         grad.x = 0;
         grad.y = 0;
@@ -76,7 +76,6 @@ module_potentialDerivatives_totalGradient_8_SOA_GPU_cur(type_t *grid_grad_x, typ
 		//
                 for(int i = shalos; i < shalos + nhalos; i++)
                 {
-                        struct point true_coord, true_coord_rot; //, result;
                         //type_t       R, angular_deviation;
                         complex      zis;
                         //
@@ -399,19 +398,19 @@ module_potentialDerivatives_totalGradient_8_SOA_GPU_SM4(type_t *grid_grad_x, typ
 	//asm volatile("# module_potentialDerivatives_totalGradient_SOA begins");
 	// 6 DP loads, i.e. 48 Bytes: position_x, position_y, ellipticity_angle, ellipticity_potential, rcore, b0
 	//
-	type_t grad_x, grad_y;
-	type_t clumpgrad_x, clumpgrad_y;
-	type_t image_point_x, image_point_y;
+	//type_t grad_x, grad_y;
+	//type_t clumpgrad_x, clumpgrad_y;
+	//type_t image_point_x, image_point_y;
 	//
 	//
-	type_t* cosi       = &shared[0*nhalos];
-	type_t* sinu       = &shared[1*nhalos];
-	type_t* rc         = &shared[2*nhalos];
-	type_t* b0         = &shared[3*nhalos];
-	type_t* epsi       = &shared[4*nhalos];
-	type_t* position_x = &shared[5*nhalos];
-	type_t* position_y = &shared[6*nhalos];
-	type_t* rsqe       = &shared[7*nhalos];
+	//type_t* cosi       = &shared[0*nhalos];
+	//type_t* sinu       = &shared[1*nhalos];
+	//type_t* rc         = &shared[2*nhalos];
+	//type_t* b0         = &shared[3*nhalos];
+	//type_t* epsi       = &shared[4*nhalos];
+	//type_t* position_x = &shared[5*nhalos];
+	//type_t* position_y = &shared[6*nhalos];
+	//type_t* rsqe       = &shared[7*nhalos];
 
 	//SHARED type_t sonepeps  [200];
 	//SHARED type_t sonemeps  [200];
@@ -435,7 +434,7 @@ module_potentialDerivatives_totalGradient_8_SOA_GPU_SM4(type_t *grid_grad_x, typ
 	}
 	__syncthreads();
 #endif
-	type_t* sgrad_x    = &shared[8*nhalos];
+	//type_t* sgrad_x    = &shared[8*nhalos];
 	type_t* sgrad_y    = &shared[8*nhalos + (grid_size + 1)*blockDim.x];
 	//
 	//
@@ -451,7 +450,7 @@ module_potentialDerivatives_totalGradient_8_SOA_GPU_SM4(type_t *grid_grad_x, typ
 	image_point_y = frame->ymin + row*dy;
 	return;
 	//
-	int i = 0;
+	//int i = 0;
 #if 0
 	for (; i < nhalos; i = i + blockDim.x)	
 	{
@@ -614,7 +613,7 @@ module_potentialDerivatives_totalGradient_8_SOA_GPU_v2(type_t *grid_grad_x, type
 	//asm volatile("# module_potentialDerivatives_totalGradient_SOA begins");
 	// 6 DP loads, i.e. 48 Bytes: position_x, position_y, ellipticity_angle, ellipticity_potential, rcore, b0
 	//
-	struct point grad, clumpgrad, image_point;
+	struct point grad, image_point;
 	grad.x = 0;
 	grad.y = 0;
 	//
@@ -650,9 +649,9 @@ module_potentialDerivatives_totalGradient_8_SOA_GPU_v2(type_t *grid_grad_x, type
 		//{
 		//IACA_START;
 		//
-		struct point true_coord, true_coord_rot; //, result;
+		struct point true_coord; //, result;
 		//type_t       R, angular_deviation;
-		complex      zis;
+		//complex      zis;
 		//
 		//result.x = result.y = 0.;
 		//
@@ -676,7 +675,7 @@ module_potentialDerivatives_totalGradient_8_SOA_GPU_v2(type_t *grid_grad_x, type
 		//
 		type_t rem2 = x*x/((1. + eps)*(1. + eps)) + y*y/((1. - eps)*(1. - eps));
 		//
-		complex zci;
+		//complex zci;
 		complex znum, zden, zres;
 		type_t norm;
 		//
@@ -695,15 +694,15 @@ module_potentialDerivatives_totalGradient_8_SOA_GPU_v2(type_t *grid_grad_x, type
 		zis.im  = (znum.im*zden.re - znum.re*zden.im)/norm;
 		//
 		type_t b0  = __ldg(&lens->b0[i]);
-		grad.x += b0*(zres.re*cosi - zres.im*sinu);
-		grad.y += b0*(zres.im*cosi + zres.re*sinu);
+		//grad.x += b0*(zres.re*cosi - zres.im*sinu);
+		//grad.y += b0*(zres.im*cosi + zres.re*sinu);
 		//
 		grid_grad_x[index] += grad.x;
 		grid_grad_y[index] += grad.y;
 	}
 }
 
-
+#endif
 
 __device__ point module_potentialDerivatives_totalGradient_5_SOA_GPU(const struct point *pImage, const struct Potential_SOA *lens, int shalos, int nhalos){
     //asm volatile("# module_potentialDerivatives_totalGradient_SIS_SOA_v2 begins");
@@ -715,7 +714,7 @@ __device__ point module_potentialDerivatives_totalGradient_5_SOA_GPU(const struc
     for(int i = shalos; i < shalos + nhalos; i++)
     {
             //
-		struct point true_coord, true_coord_rotation;
+		struct point true_coord;
 		//
 		true_coord.x = pImage->x - lens->position_x[i];
 		true_coord.y = pImage->y - lens->position_y[i];
@@ -822,14 +821,14 @@ __device__ point module_potentialDerivatives_totalGradient_81_SOA_GPU(const stru
     //std::cout << "# module_potentialDerivatives_totalGradient_81_SOA begins" << std::endl;
     // 6 DP loads, i.e. 48 Bytes: position_x, position_y, ellipticity_angle, ellipticity_potential, rcore, b0
     //
-    struct point grad, clumpgrad;
+    struct point grad;
     grad.x = 0;
     grad.y = 0;
     for(int i = shalos; i < shalos + nhalos; i++)
     {
 		//IACA_START;
 		//
-		struct point true_coord, true_coord_rot; //, result;
+		struct point true_coord; //, result;
 		//type_t       R, angular_deviation;
 		complex      zis;
 		//

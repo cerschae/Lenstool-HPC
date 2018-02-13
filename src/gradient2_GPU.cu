@@ -71,7 +71,7 @@ __device__ matrix module_potentialDerivatives_totalGradient2_81_SOA_GPU(const st
     //std::cout << "# module_potentialDerivatives_totalGradient_81_SOA begins" << std::endl;
     // 6 DP loads, i.e. 48 Bytes: position_x, position_y, ellipticity_angle, ellipticity_potential, rcore, b0
     //
-    type_t t05, vala,valb,valc,vald;
+    type_t t05;
      struct matrix grad2, clump, clumpcore, clumpcut;
      grad2.a =  0;
      grad2.b =  0;
@@ -82,7 +82,7 @@ __device__ matrix module_potentialDerivatives_totalGradient2_81_SOA_GPU(const st
      for(int i = shalos; i < shalos + nhalos; i++)
      {
 
-		struct point true_coord, true_coord_rotation;
+		struct point true_coord;
 		//True coord
 		true_coord.x = pImage->x - lens->position_x[i];
 		true_coord.y = pImage->y - lens->position_y[i];

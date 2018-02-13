@@ -91,7 +91,7 @@ type_t module_cosmodistances_observerObject(type_t z, cosmo_param cosmopar)
 
     if (cosmopar.omegaX == 0.)
     {
-    	printf("Omega M HPC %f \n",cosmopar.omegaM );
+    	//printf("Omega M HPC %f \n",cosmopar.omegaM );
         g = module_cosmodistances_cosmo_root(z,cosmopar);
         // Reformulation of the Mattig relation of OL = OK = 0 (De Sitter)
         return(2.*((1. - cosmopar.omegaM - g)*(1. - g)) / cosmopar.omegaM / cosmopar.omegaM / (1. + z) / (1. + z));

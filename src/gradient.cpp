@@ -305,12 +305,12 @@ struct point module_potentialDerivatives_totalGradient_5_SOA_print(const struct 
         	myfile.open (name + "pImage->x_1.txt", std::ios_base::app);
         	myfile << index << " " << pImage->x << std::setprecision(7)  << " " << std::endl;
         	myfile.close();
-        	//*
+        	//
         	myfile.open (name + "pImage->y_1.txt", std::ios_base::app);
         	myfile << index << " " << pImage->y << std::setprecision(7)  << " " << std::endl;
         	myfile.close();
         	//
-			/*
+
         	myfile.open (name + "true_coord.x_2.txt", std::ios_base::app);
         	myfile << index << " " << true_coord.x << std::setprecision(7)  << " " << std::endl;
         	myfile.close();
@@ -338,7 +338,7 @@ struct point module_potentialDerivatives_totalGradient_5_SOA_print(const struct 
         	myfile.open (name + "x_4.txt", std::ios_base::app);
         	myfile << index << " " << x << std::setprecision(7)  << " " << std::endl;
         	myfile.close();
-        	/*
+        	/
         	myfile.open (name + "y_4.txt", std::ios_base::app);
         	myfile << index << " " << y << std::setprecision(7)  << " " << std::endl;
         	myfile.close();
@@ -361,7 +361,7 @@ struct point module_potentialDerivatives_totalGradient_5_SOA_print(const struct 
         	myfile.open (name + "x_6.txt", std::ios_base::app);
         	myfile << index << " " << x << std::setprecision(7)  << " " << std::endl;
         	myfile.close();
-        	/*
+
         	myfile.open (name + "y_6.txt", std::ios_base::app);
         	myfile << index << " " << y << std::setprecision(7)  << " " << std::endl;
         	myfile.close();
@@ -373,7 +373,7 @@ struct point module_potentialDerivatives_totalGradient_5_SOA_print(const struct 
         	myfile.open (name + "grad.x_7.txt", std::ios_base::app);
         	myfile << index << " " << grad.x << std::setprecision(7)  << " " << std::endl;
         	myfile.close();
-        	/*
+
         	myfile.open (name + "grad.y_7.txt", std::ios_base::app);
         	myfile << index << " " << grad.y << std::setprecision(7)  << " " << std::endl;
         	myfile.close();
@@ -391,7 +391,7 @@ struct point module_potentialDerivatives_totalGradient_5_SOA_v2_novec(const stru
         struct point grad, result;
         grad.x = (type_t) 0.;
         grad.y = (type_t) 0.;
-#pragma novec
+#pragma novector
 	for(int i = shalos; i < shalos + nhalos; i++)
         {
                 //

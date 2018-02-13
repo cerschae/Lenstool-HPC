@@ -172,8 +172,6 @@ module_potentialDerivatives_totalGradient2_SOA_CPU_GPU(type_t *grid_grad2_a, typ
         //
         dim3 threads(BLOCK_SIZE_X, BLOCK_SIZE_Y/1);
         dim3 grid   (GRID_SIZE_X , GRID_SIZE_Y);
-        //
-        int count = nhalos;
         //printf("nhalos = %d, size of shared memory = %lf\n", nhalos, (double) (8*nhalos + BLOCK_SIZE_X*nbgridcells/BLOCK_SIZE_Y)*sizeof(double));
         printf("nhalos = %d, size of shared memory = %lf (split)\n", nhalos, (type_t) (8*nhalos + BLOCK_SIZE_X*BLOCK_SIZE_Y)*sizeof(type_t));
         //
@@ -200,12 +198,10 @@ module_potentialDerivatives_totalGradient2_SOA_CPU_GPU(type_t *grid_grad2_a, typ
 	int GRID_SIZE_Y = (nbgridcells + BLOCK_SIZE_Y - 1)/BLOCK_SIZE_Y; 
 	//
 	type_t* timer = (type_t *) malloc((int) nbgridcells*nbgridcells*sizeof(type_t));
-	type_t* dtimer;
 	//
 	dim3 threads(BLOCK_SIZE_X, BLOCK_SIZE_Y/1);
 	dim3 grid   (GRID_SIZE_X , GRID_SIZE_Y);	
 	//
-	int count = nhalos;	
 	//printf("nhalos = %d, size of shared memory = %lf\n", nhalos, (type_t) (8*nhalos + BLOCK_SIZE_X*nbgridcells/BLOCK_SIZE_Y)*sizeof(type_t));
 	printf("nhalos = %d, size of shared memory = %lf\n", nhalos, (type_t) (8*nhalos + BLOCK_SIZE_X*BLOCK_SIZE_Y)*sizeof(type_t));
 	//

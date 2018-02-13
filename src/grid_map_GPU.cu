@@ -52,7 +52,6 @@ void map_grid_GPU(map_gpu_function_t mapfunction, type_t *map,const struct cosmo
 	int nBlocks_gpu = 0;
 	// Define the number of threads per block the GPU will use
 	cudaDeviceProp properties_gpu;
-
 	cudaGetDeviceProperties(&properties_gpu, 0); // Get properties of 0th GPU in use
 
 	if (properties_gpu.maxThreadsDim[0]<threadsPerBlock)
@@ -172,8 +171,6 @@ void amplif_grid_CPU_GPU(type_t *map,type_t *grid_grad2_a,type_t *grid_grad2_b,t
         dim3 threads(BLOCK_SIZE_X, BLOCK_SIZE_Y/1);
         dim3 grid   (GRID_SIZE_X , GRID_SIZE_Y);
         //
-        int count = nhalos;
-        //printf("nhalos = %d, size of shared memory = %lf\n", nhalos, (double) (8*nhalos + BLOCK_SIZE_X*nbgridcells/BLOCK_SIZE_Y)*sizeof(double));
         printf("nhalos = %d, size of shared memory = %lf (split)\n", nhalos, (type_t) (8*nhalos + BLOCK_SIZE_X*BLOCK_SIZE_Y)*sizeof(type_t));
         //
         cudaMemset(map, 0, nbgridcells_x*nbgridcells_y*sizeof(type_t));
@@ -190,8 +187,6 @@ __global__
 void
 amplif_grid_GPU(type_t *ampli,type_t *grid_grad2_a,type_t *grid_grad2_b,type_t *grid_grad2_c,type_t *grid_grad2_d, type_t dl0s, type_t z,int nbgridcells)
 {
-    struct point image_point;
-	struct matrix grad, clumpgrad;
 	//
     int col = blockIdx.x*blockDim.x + threadIdx.x;
     int row = blockIdx.y*blockDim.y + threadIdx.y;

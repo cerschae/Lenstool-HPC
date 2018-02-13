@@ -61,7 +61,7 @@ void module_readParameters_preparebayes(int &nparam, int &nvalues){
 	}
 	nvalues -= 1; //exclude last empty line
 	//nparam -=1; // Nparam is excluded
-	std::cerr << "nvalues :" << nvalues << "nparam :" << nparam << std::endl;
+	//std::cerr << "nvalues :" << nvalues << "nparam :" << nparam << std::endl;
 	IM.close();
 
 }
@@ -164,8 +164,8 @@ void module_readParameters_setbayesmapmodels(const runmode_param* runmode, const
 	//Skip redshift image optimisation
 	if(runmode->potfile != 0){
 	param_index += runmode->N_z_param;
-	std::cerr << "N_z_param " << runmode->N_z_param << std::endl;
-	printf("DNDBSFB ircut %d\n",potfile->ircut);
+	//std::cerr << "N_z_param " << runmode->N_z_param << std::endl;
+	//printf("DNDBSFB ircut %d\n",potfile->ircut);
 	//Start potfile updating
 	if(potfile->ircut > 0){
 		potfile->cut1 = bayespot[index*nparam+param_index];
@@ -1284,7 +1284,7 @@ void module_readParameters_readpotfiles_SOA(const runmode_param *runmode, const 
     			std::istringstream read1(line1); // create a stream for the line
     			read1 >> first;
                 // Skip commented lines with #
-    			std::cerr << first << std::endl;
+    			//std::cerr << first << std::endl;
                  if (!strncmp(first.c_str(), "#REFERENCE", 10)){
                 	sscanf(line1.c_str(), " %*s %d%lf%lf", &potfile->reference_mode,  &cast_1, &cast_2);
                 	potfile->reference_ra = (type_t) cast_1;
@@ -2241,7 +2241,7 @@ void module_readParameters_PotentialSOA_direct(std::string infile, Potential_SOA
 
 	// Converting distance in kpc to arcsec.
 	double d1 = d0 / cosmology.h * module_cosmodistances_observerObject(lens_temp.z,cosmology);
-	printf(" D1 HPC : %f %f %f %f\n",d1, d0,cosmology.h,lens_temp.z );
+	//printf(" D1 HPC : %f %f %f %f\n",d1, d0,cosmology.h,lens_temp.z );
 	// Set rcore value in kpc or in arcsec.
 	if ( core_radius_kpc != 0. )
 		lens_temp.rcore = core_radius_kpc / d1;
@@ -2401,16 +2401,16 @@ void module_readParameters_calculatePotentialparameter(Potential *lens){
 	    if ( lens->ellipticity == 0. && lens->ellipticity_potential != 0. ){
 			// emass is (a2-b2)/(a2+b2)
 			lens->ellipticity = 2.*lens->ellipticity_potential / (1. + lens->ellipticity_potential * lens->ellipticity_potential);
-			printf("1 : %f %f \n",lens->ellipticity,lens->ellipticity_potential);
+			//printf("1 : %f %f \n",lens->ellipticity,lens->ellipticity_potential);
 		}
 		else if ( lens->ellipticity == 0. && lens->ellipticity_potential == 0. ){
 			lens->ellipticity_potential = 0.00001;
-			printf("2 : %f %f \n",lens->ellipticity,lens->ellipticity_potential);
+			//printf("2 : %f %f \n",lens->ellipticity,lens->ellipticity_potential);
 		}
 		else{
 			// epot is (a-b)/(a+b)
 			lens->ellipticity_potential = (1. - sqrt(1 - lens->ellipticity * lens->ellipticity)) / lens->ellipticity;
-			printf("3 : %f %f \n",lens->ellipticity,lens->ellipticity_potential);
+			//printf("3 : %f %f \n",lens->ellipticity,lens->ellipticity_potential);
 		}
         break;
 

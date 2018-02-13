@@ -283,12 +283,6 @@ module_potentialDerivatives_totalGradient_8_SOA_GPU_loc(type_t *grid_grad_x, typ
 void 
 module_potentialDerivatives_totalGradient_SOA_CPU_GPU(type_t *grid_grad_x, type_t *grid_grad_y, const struct grid_param *frame, const struct Potential_SOA *lens_gpu, int nhalos, type_t dx, type_t dy, int nbgridcells_x, int nbgridcells_y, int istart, int jstart)
 {
-        struct point grad, clumpgrad;
-        //
-        grad.x = clumpgrad.x = 0.;
-        grad.y = clumpgrad.y = 0.;
-        //
-        int shalos = 0;
         //
         int GRID_SIZE_X = (nbgridcells_x + BLOCK_SIZE_X - 1)/BLOCK_SIZE_X; // number of blocks
         int GRID_SIZE_Y = (nbgridcells_y + BLOCK_SIZE_Y - 1)/BLOCK_SIZE_Y;
@@ -298,9 +292,6 @@ module_potentialDerivatives_totalGradient_SOA_CPU_GPU(type_t *grid_grad_x, type_
         dim3 threads(BLOCK_SIZE_X, BLOCK_SIZE_Y/1);
         dim3 grid   (GRID_SIZE_X , GRID_SIZE_Y);
         //
-        int count = nhalos;
-        //printf("nhalos = %d, size of shared memory = %lf\n", nhalos, (double) (8*nhalos + BLOCK_SIZE_X*nbgridcells/BLOCK_SIZE_Y)*sizeof(double))
-;
         printf("nhalos = %d, size of shared memory = %lf (split)\n", nhalos, (type_t) (8*nhalos + BLOCK_SIZE_X*BLOCK_SIZE_Y)*sizeof(type_t));
         //
         cudaMemset(grid_grad_x, 0, nbgridcells_x*nbgridcells_y*sizeof(type_t));
@@ -319,12 +310,6 @@ module_potentialDerivatives_totalGradient_SOA_CPU_GPU(type_t *grid_grad_x, type_
 void
 module_potentialDerivatives_totalGradient_SOA_CPU_GPU(type_t *grid_grad_x, type_t *grid_grad_y, const struct grid_param *frame, const struct Potential_SOA *lens_gpu, int nbgridcells, int nhalos)
 {
-	struct point grad, clumpgrad;
-	//
-	grad.x = clumpgrad.x = 0.;
-	grad.y = clumpgrad.y = 0.;
-	//
-	int shalos = 0;
 	//
 	int GRID_SIZE_X = (nbgridcells + BLOCK_SIZE_X - 1)/BLOCK_SIZE_X; // number of blocks
 	int GRID_SIZE_Y = (nbgridcells + BLOCK_SIZE_Y - 1)/BLOCK_SIZE_Y; 
@@ -340,7 +325,7 @@ module_potentialDerivatives_totalGradient_SOA_CPU_GPU(type_t *grid_grad_x, type_
 	dim3 threads(BLOCK_SIZE_X, BLOCK_SIZE_Y/1);
 	dim3 grid   (GRID_SIZE_X , GRID_SIZE_Y);	
 	//
-	int count = nhalos;	
+	//int count = nhalos;
 	//printf("nhalos = %d, size of shared memory = %lf\n", nhalos, (type_t) (8*nhalos + BLOCK_SIZE_X*nbgridcells/BLOCK_SIZE_Y)*sizeof(type_t));
 	printf("nhalos = %d, size of shared memory = %lf\n", nhalos, (type_t) (8*nhalos + BLOCK_SIZE_X*BLOCK_SIZE_Y)*sizeof(type_t));
 	//
