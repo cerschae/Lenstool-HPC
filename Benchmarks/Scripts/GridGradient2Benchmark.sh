@@ -7,9 +7,9 @@ echo "Starting Mapping Test"
 #cd ../../lenstool-hpc
 
 cd ../../src/
-make -f Makefile.intel clean
-make -f Makefile.intel
-make -f Makefile.GPU.intel
+make clean
+make
+
 
 cd ../Benchmarks/GridGradient2Benchmark
 make -f Makefile.GPU clean

@@ -7,13 +7,13 @@ echo "Starting Mapping Test"
 #cd ../../lenstool-hpc
 
 cd ../../src/
-make -f Makefile.intel clean
-make -f Makefile.intel
-make -f Makefile.GPU.intel
+make clean
+make
+
 
 cd ../Benchmarks/GradientBenchmark
-make -f Makefile clean
-make -f MakefileDouble
+make clean
+make 
 ./GradientBenchmark
 
 echo "Finish Double test"

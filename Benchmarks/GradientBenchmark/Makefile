@@ -43,7 +43,7 @@ CXXFLAGS += $(foreach includelib,$(program_INCLUDE_LIBS),-L$(includelib))
 CXXFLAGS += -llenstool
 CXXFLAGS += -ftz -qopenmp -xHost -fma -pedantic -llenstoolhpc  -llt -lcfitsio -lwcs -lgsl -lgslcblas 
 CXXFLAGS += -g -O3 -std=c++0x -Wall 
-#CXXFLAGS += -D__WITH_LENSTOOL
+CXXFLAGS += -D__WITH_LENSTOOL
 include $(LENSTOOLHPC_ROOT)/src/precision.inc
 CXXFLAGS += $(PRECISION)
 #CXXFLAGS += -D__USE_GPU
