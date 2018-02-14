@@ -21,18 +21,20 @@
 
 // Include
 //===========================================================================================================
-#include<stdio.h>
-
-
-
-
+#include <stdio.h>
+#include <structure_hpc.hpp>
+#include <string.h>
+#include <iostream>
+#include <iomanip>
+#include <fstream>
+#include <sstream>
 
 
 
 
 // Function declarations
 //===========================================================================================================
-
+void module_writeFits(std::string path, std::string filename, int ii, type_t *map, const struct runmode_param* runmode, const struct grid_param* frame );
 
 // We are calling C functions here, but we are calling them with a cuda/c++ compiler, thus we need to declare them as extern "C"
 #ifdef __cplusplus

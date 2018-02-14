@@ -33,7 +33,7 @@
 #include "grid_gradient_GPU.cuh"
 #include "grid_map_GPU.cuh"
 #include "grid_gradient2_GPU.cuh"
-//#include "gradient2_GPU.cuh"
+//#include "gradient_GPU.cuh"
 #endif
 
 #ifdef __WITH_LENSTOOL
@@ -119,9 +119,6 @@ double **map_ayy;
 void
 gradient_grid_GPU_sorted(type_t *grid_grad_x, type_t *grid_grad_y, const struct grid_param *frame, const struct Potential_SOA *lens, int Nlens, int nbgridcells);
 //
-void write_map(std::string path, std::string filename, int ii,type_t * map, const struct runmode_param * runmode, const struct grid_param * frame );
-//
-map_gpu_function_t select_map_function(std::string mode,const struct runmode_param* runmode);
 //
 int module_readCheckInput_readInput(int argc, char *argv[], std::string *outdir)
 {
@@ -207,7 +204,7 @@ int main(int argc, char *argv[])
 	struct runmode_param runmode;
 	module_readParameters_readRunmode(inputFile, &runmode);
 	module_readParameters_debug_cosmology(runmode.debug, cosmology);
-	module_readParameters_debug_runmode(runmode.debug, runmode);
+	module_readParameters_debug_runmode(1, runmode);
 	//
 	//=== Declaring variables
 	//
@@ -231,7 +228,7 @@ int main(int argc, char *argv[])
 	// Output: Potentials and its parameters
 
 	module_readParameters_PotentialSOA_direct(inputFile, &lenses_SOA, runmode.nhalos, runmode.npotfile, cosmology);
-	module_readParameters_debug_potential_SOA(1, lenses_SOA, runmode.nhalos);
+	module_readParameters_debug_potential_SOA(0, lenses_SOA, runmode.nhalos);
 	module_readParameters_limit(inputFile, host_potentialoptimization, runmode.nhalos );
 	module_readParameters_debug_limit(0, host_potentialoptimization[0]);
 
@@ -240,7 +237,7 @@ int main(int argc, char *argv[])
 		module_readParameters_readpotfiles_param(inputFile, &potfile, cosmology);
 		module_readParameters_debug_potfileparam(1, &potfile);
 		module_readParameters_readpotfiles_SOA(&runmode, &cosmology,&potfile,&lenses_SOA);
-		module_readParameters_debug_potential_SOA(1, lenses_SOA, runmode.nhalos + runmode.npotfile);
+		module_readParameters_debug_potential_SOA(0, lenses_SOA, runmode.nhalos + runmode.npotfile);
 
 	}
 
@@ -249,12 +246,13 @@ int main(int argc, char *argv[])
 	// Output: grid and its parameters
 	//
 	module_readParameters_Grid(inputFile, &frame);
-	std::cerr <<frame.xmin <<std::endl;
+	//std::cerr <<frame.xmin <<std::endl;
 	//
 	std::cout << "--------------------------" << std::endl << std::endl; fflush(stdout);
 	//
-
-#if 0
+	double t_lt, t_lt_total;
+	int turn = 0;
+#if 1
 //#ifdef __WITH_LENSTOOL
 	double **array; // contains the bayes.dat data
 	int nParam;
@@ -317,7 +315,7 @@ int main(int argc, char *argv[])
 
 	//Defining maps
 	int ampli = 1;
-
+	t_lt_total = -myseconds();
 	// Loop over each line
 	for( i = 0; i < nVal && i < 2000; i++ )
 	{
@@ -330,7 +328,7 @@ int main(int argc, char *argv[])
 		// Set the lens parameters from <array>
 		setBayesModel( iVal, nVal, array );
 
-		if( ampli != 0 )
+		if( M.iampli != 0 )
 		{
 			sprintf( fname, "tmp/%s%ld.fits","Amplif_", iVal );
 			printf("INFO: Compute file %d/%ld : %s [CTRL-C to interrupt]\n",i+1, nVal,fname);
@@ -342,18 +340,20 @@ int main(int argc, char *argv[])
 				fprintf( pFile, "busy\n" );
 				fclose(pFile);
 				std::cerr <<  runmode.amplif<< runmode.amplif_gridcells<< runmode.z_amplif << std::endl;
-				double t_lt = -myseconds();
+				t_lt = -myseconds();
 				g_ampli( M.iampli, M.nampli, M.zampli, fname );
 				//g_ampli( runmode.amplif, runmode.amplif_gridcells, runmode.z_amplif, fname );
 				t_lt += myseconds();
 				//
-				std::cout << " Time  = " << std::setprecision(15) << t_lt << std::endl;
+				turn += 1;
+				std::cout << " Time  = " << std::setprecision(15) << t_lt << " " << turn <<std::endl;
 			}
 			else
 				fclose(pFile);
 		}
 
 	}
+	t_lt_total += myseconds();
 
 #endif
 
@@ -364,9 +364,11 @@ int main(int argc, char *argv[])
 	// Bayes Map specific functions
 	////read bayes lines
 	module_readParameters_preparebayes(nparam, nvalues);
+	std::cerr << nparam << "BLA" << nvalues << std::endl;
 	bayespot = (type_t *) malloc((int) (nparam) * (nvalues) * sizeof(type_t));
 	module_readParameters_bayesmodels(bayespot, nparam, nvalues);
 	////read bayes lines
+	std::cerr <<  "BLA" << std::endl;
 	t_1 = -myseconds();
 	for(int ii = 0; ii < nvalues; ii++){
 
@@ -393,7 +395,7 @@ int main(int argc, char *argv[])
 			map_grid_GPU(map_gpu_func,ampli_GPU,&cosmology, &frame, &lenses_SOA, runmode.nhalos+ runmode.npotfile, runmode.amplif_gridcells ,runmode.amplif, runmode.z_amplif);
 
 			//writing
-			write_map(path,"ampli",ii,ampli_GPU,&runmode,&frame);
+			module_writeFits(path,"ampli",ii,ampli_GPU,&runmode,&frame);
 			std::cerr << "**" << ampli_GPU[0] << std::endl;
 			free(ampli_GPU);
 		}
@@ -405,46 +407,9 @@ int main(int argc, char *argv[])
 
 	}
 	t_1 += myseconds();
-	std::cout << " Total Time  " << std::setprecision(15) << t_1 << std::endl;
+	std::cout << "Lenstool Total Time " << std::setprecision(15) << t_lt_total << std::endl;
+	std::cout << "HPC Total Time  " << std::setprecision(15) << t_1 << std::endl;
 #endif
-
-}
-
-map_gpu_function_t select_map_function(std::string mode, const struct runmode_param* runmode){
-	if (mode == "ampli"){
-		if(runmode->amplif == 5)
-			return &amplif_grid_CPU_GPU;
-		else if(runmode->amplif == 6){
-			fprintf(stderr, "ERROR: Amplif mode %d not supported yet \n",runmode->amplif);
-			exit(-1);
-		}
-		else{
-			fprintf(stderr, "ERROR: Amplif mode %d not supported yet \n",runmode->amplif);
-			exit(-1);
-		}
-	}
-	else{
-		fprintf(stderr, "ERROR: No mode recognised \n",runmode->amplif);
-		exit(-1);
-	}
-	return 0;
-}
-
-void write_map(std::string path, std::string filename, int ii, type_t *map, const struct runmode_param* runmode, const struct grid_param* frame ){
-	std::string file;
-	file = path;
-	file.append("/");
-	file.append(filename);
-	file.append("_");
-    std::ostringstream ss;
-    ss << ii+1;
-	file.append(ss.str());
-	file.append(".fits");
-	ss.clear();
-	char file_char[file.length()+1];
-	strcpy(file_char,file.c_str());
-
-	module_writeFits_Image(file_char,map,runmode->amplif_gridcells,runmode->amplif_gridcells,frame->xmin,frame->xmax,frame->ymin,frame->ymax);
 
 }
 

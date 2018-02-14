@@ -47,6 +47,23 @@
 /// Functions
 ///==========================================================================================================
 
+void module_writeFits(std::string path, std::string filename, int ii, type_t *map, const struct runmode_param* runmode, const struct grid_param* frame ){
+
+	std::string file;
+	file = path;
+	file.append("/");
+	file.append(filename);
+	file.append("_");
+    std::ostringstream ss;
+    ss << ii+1;
+	file.append(ss.str());
+	file.append(".fits");
+	ss.clear();
+	char file_char[file.length()+1];
+	strcpy(file_char,file.c_str());
+
+	module_writeFits_Image(file_char,map,runmode->amplif_gridcells,runmode->amplif_gridcells,frame->xmin,frame->xmax,frame->ymin,frame->ymax);
+}
 
 
 /** @brief CPU Print error message

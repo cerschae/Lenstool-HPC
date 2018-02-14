@@ -59,7 +59,7 @@ void module_readParameters_preparebayes(int &nparam, int &nvalues){
 		nvalues +=1;
 		}
 	}
-	nvalues -= 1; //exclude last empty line
+	//nvalues -= 1; //exclude last empty line
 	//nparam -=1; // Nparam is excluded
 	//std::cerr << "nvalues :" << nvalues << "nparam :" << nparam << std::endl;
 	IM.close();
@@ -83,6 +83,10 @@ void module_readParameters_bayesmodels(double * bayespot, int nparam, int nvalue
 		for(int i = 0; i < nparam; i++){
 			streamline >> bayespot[j * nparam + i];
 			//IM >> bayespot[j * nparam + i];
+			if(j > nvalues){
+				fprintf(stderr, "ERROR: The bayes.dat file has an invalid line. please correct\nTypical problems: Whitespace on last bayes.dat line");
+				exit(-1);
+			}
 			std::cerr << bayespot[j * nparam + i] << " " ;
 		}
 		streamline.clear();
@@ -2627,7 +2631,7 @@ void module_readParameters_debug_runmode(int DEBUG, runmode_param runmode)
 if (DEBUG == 1)  // If we are in debug mode
 {
 
-    printf("Runmode: nhalos = %d, nsets = %d, nimagestot = %d, source = %d, image = %d, arclet  = %d, cline = %d, inverse= %d, multi= %d DEBUG = %d\n", runmode.nhalos, runmode.nsets, runmode.nimagestot, runmode.source, runmode.image, runmode.arclet, runmode.cline, runmode.inverse, runmode.multi, runmode.debug);
+    printf("Runmode: nhalos = %d, nsets = %d, nimagestot = %d, source = %d, image = %d, arclet  = %d, cline = %d, inverse= %d, multi= %d ampli= %d DEBUG = %d\n", runmode.nhalos, runmode.nsets, runmode.nimagestot, runmode.source, runmode.image, runmode.arclet, runmode.cline, runmode.inverse, runmode.multi, runmode.amplif, runmode.debug);
 
 }
 

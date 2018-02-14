@@ -31,16 +31,37 @@ extern "C"
 {
 	type_t myseconds();
 }
-//
 
-//
-__global__ void amplif_grid_GPU(type_t *ampli,type_t *grid_grad2_a,type_t *grid_grad2_b,type_t *grid_grad2_c,type_t *grid_grad2_d, type_t dl0s, type_t z,int nbgridcells);
-//
+//GPU mapping function declaration to change when figured out linkage problems
+__global__ void amplif_5_grid_GPU(type_t *ampli,type_t *grid_grad2_a,type_t *grid_grad2_b,type_t *grid_grad2_c,type_t *grid_grad2_d, type_t dl0s, type_t z,int nbgridcells);
+__global__ void amplif_6_grid_GPU(type_t *ampli,type_t *grid_grad2_a,type_t *grid_grad2_b,type_t *grid_grad2_c,type_t *grid_grad2_d, type_t dl0s, type_t z,int nbgridcells);
+
+////Map function selection
+map_gpu_function_t select_map_function(std::string mode, const struct runmode_param* runmode){
+	if (mode == "ampli"){
+		if(runmode->amplif == 5)
+			return &amplif_5_grid_CPU_GPU;
+		else if(runmode->amplif == 6){
+			return &amplif_6_grid_CPU_GPU;
+		}
+		else{
+			fprintf(stderr, "ERROR: Amplif mode %d not supported yet \n",runmode->amplif);
+			exit(-1);
+		}
+	}
+	else{
+		fprintf(stderr, "ERROR: No mode %d recognised \n",runmode->amplif);
+		exit(-1);
+	}
+	return 0;
+}
+
+////General Map calculation
 void map_grid_GPU(map_gpu_function_t mapfunction, type_t *map, const struct cosmo_param *cosmo, const struct grid_param *frame, const struct Potential_SOA *lens, int nhalos ,int nbgridcells,int mode_amp, type_t z )
 {
 	type_t dx = (frame->xmax - frame->xmin)/(nbgridcells - 1);
     type_t dy = (frame->ymax - frame->ymin)/(nbgridcells - 1);
-        //
+    //
     map_grid_GPU(mapfunction,map,cosmo, frame, lens, nhalos,mode_amp,z, dx, dy, nbgridcells, nbgridcells, 0, 0);
 }
 //
@@ -159,7 +180,9 @@ void map_grid_GPU(map_gpu_function_t mapfunction, type_t *map,const struct cosmo
 	cudaFree(map_gpu);
 }
 
-void amplif_grid_CPU_GPU(type_t *map,type_t *grid_grad2_a,type_t *grid_grad2_b,type_t *grid_grad2_c,type_t *grid_grad2_d, type_t dl0s, type_t z,int mode_amp, int nhalos,int nbgridcells_x, int nbgridcells_y)
+////Mapp functions
+//Amplification NR 5
+void amplif_5_grid_CPU_GPU(type_t *map,type_t *grid_grad2_a,type_t *grid_grad2_b,type_t *grid_grad2_c,type_t *grid_grad2_d, type_t dl0s, type_t z,int mode_amp, int nhalos,int nbgridcells_x, int nbgridcells_y)
 {
         int GRID_SIZE_X = (nbgridcells_x + BLOCK_SIZE_X - 1)/BLOCK_SIZE_X; // number of blocks
         int GRID_SIZE_Y = (nbgridcells_y + BLOCK_SIZE_Y - 1)/BLOCK_SIZE_Y;
@@ -173,19 +196,16 @@ void amplif_grid_CPU_GPU(type_t *map,type_t *grid_grad2_a,type_t *grid_grad2_b,t
         //
         cudaMemset(map, 0, nbgridcells_x*nbgridcells_y*sizeof(type_t));
         //
-        //module_potentialDerivatives_totalGradient_SOA_GPU<<<grid, threads>>> (grid_grad_x, grid_grad_y, lens, frame, nhalos, nbgridcells_x);
-        amplif_grid_GPU<<<grid, threads>>> (map,grid_grad2_a, grid_grad2_b,grid_grad2_c, grid_grad2_d,dl0s,z,nbgridcells_x);
+        amplif_5_grid_GPU<<<grid, threads>>> (map,grid_grad2_a, grid_grad2_b,grid_grad2_c, grid_grad2_d,dl0s,z,nbgridcells_x);
         cudasafe(cudaGetLastError(), "amplif_grid_CPU_GPU");
         //
         cudaDeviceSynchronize();
         printf("GPU kernel done...\n");
 }
-
-__global__
-void
-amplif_grid_GPU(type_t *ampli,type_t *grid_grad2_a,type_t *grid_grad2_b,type_t *grid_grad2_c,type_t *grid_grad2_d, type_t dl0s, type_t z,int nbgridcells)
+//
+__global__ void amplif_5_grid_GPU(type_t *ampli,type_t *grid_grad2_a,type_t *grid_grad2_b,type_t *grid_grad2_c,type_t *grid_grad2_d, type_t dl0s, type_t z,int nbgridcells)
 {
-	//
+	////
     int col = blockIdx.x*blockDim.x + threadIdx.x;
     int row = blockIdx.y*blockDim.y + threadIdx.y;
     //
@@ -195,7 +215,43 @@ amplif_grid_GPU(type_t *ampli,type_t *grid_grad2_a,type_t *grid_grad2_b,type_t *
         type_t kappa = (grid_grad2_a[index] + grid_grad2_c[index]) / 2.;
         ampli[index] = kappa;
     }
-
+}
+//Amplification NR 6
+void amplif_6_grid_CPU_GPU(type_t *map,type_t *grid_grad2_a,type_t *grid_grad2_b,type_t *grid_grad2_c,type_t *grid_grad2_d, type_t dl0s, type_t z,int mode_amp, int nhalos,int nbgridcells_x, int nbgridcells_y)
+{
+        int GRID_SIZE_X = (nbgridcells_x + BLOCK_SIZE_X - 1)/BLOCK_SIZE_X; // number of blocks
+        int GRID_SIZE_Y = (nbgridcells_y + BLOCK_SIZE_Y - 1)/BLOCK_SIZE_Y;
+        //
+        //printf("grid_size_x = %d, grid_size_y = %d, nbgridcells_x = %d, nbgridcells_y = %d, istart = %d, jstart = %d (split)\n", GRID_SIZE_X, GRID_SIZE_Y, nbgridcells_x, nbgridcells_y, istart, jstart);
+        //
+        dim3 threads(BLOCK_SIZE_X, BLOCK_SIZE_Y/1);
+        dim3 grid   (GRID_SIZE_X , GRID_SIZE_Y);
+        //
+        printf("nhalos = %d, size of shared memory = %lf (split)\n", nhalos, (type_t) (8*nhalos + BLOCK_SIZE_X*BLOCK_SIZE_Y)*sizeof(type_t));
+        //
+        cudaMemset(map, 0, nbgridcells_x*nbgridcells_y*sizeof(type_t));
+        //
+        amplif_6_grid_GPU<<<grid, threads>>> (map,grid_grad2_a, grid_grad2_b,grid_grad2_c, grid_grad2_d,dl0s,z,nbgridcells_x);
+        cudasafe(cudaGetLastError(), "amplif_grid_CPU_GPU");
+        //
+        cudaDeviceSynchronize();
+        printf("GPU kernel done...\n");
+}
+//
+__global__ void amplif_6_grid_GPU(type_t *ampli,type_t *grid_grad2_a,type_t *grid_grad2_b,type_t *grid_grad2_c,type_t *grid_grad2_d, type_t dl0s, type_t z,int nbgridcells)
+{
+	////
+    int col = blockIdx.x*blockDim.x + threadIdx.x;
+    int row = blockIdx.y*blockDim.y + threadIdx.y;
+    //
+    if ((row < nbgridcells) && (col < nbgridcells))
+    {
+    	int index = row*nbgridcells + col;
+        type_t ga1 = (grid_grad2_a[index] - grid_grad2_c[index]) / 2.;
+        type_t ga2 = grid_grad2_b[index];
+        type_t gam = sqrt(ga1 * ga1 + ga2 * ga2);
+        ampli[index] = gam;
+    }
 }
 
 
