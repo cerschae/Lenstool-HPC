@@ -1,10 +1,9 @@
-/*
- * gradient_GPU.cuh
- *
- *  Created on: Feb 1, 2017
- *      Author: cerschae
- */
-
+/**
+* @Author Christoph Schaefer, EPFL (christophernstrerne.schaefer@epfl.ch), Gilles Fourestey (gilles.fourestey@epfl.ch)
+* @date   July 2017
+* @version 0,1
+*
+*/
 #ifndef GRADIENT2_GPU_CUH_
 #define GRADIENT2_GPU_CUH_
 

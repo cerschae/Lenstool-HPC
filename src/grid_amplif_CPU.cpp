@@ -1,3 +1,9 @@
+/**
+* @Author Christoph Schaefer, EPFL (christophernstrerne.schaefer@epfl.ch), Gilles Fourestey (gilles.fourestey@epfl.ch)
+* @date   July 2017
+* @version 0,1
+*
+*/
 #include "grid_amplif_CPU.hpp"
 #include "module_cosmodistances.hpp"
 //

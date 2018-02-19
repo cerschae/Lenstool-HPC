@@ -1,3 +1,11 @@
+/**
+* @Author Christoph Schaefer, EPFL (christophernstrerne.schaefer@epfl.ch), Gilles Fourestey (gilles.fourestey@epfl.ch)
+* @date   July 2017
+* @version 0,1
+*
+*/
+
+
 #include <iostream>
 #include <iomanip>
 #include <string.h>

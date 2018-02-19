@@ -1,14 +1,9 @@
-
 /**
-* @file   module_cosmodistances.h
-* @date   July 2015
+* @Author Christoph Schaefer, EPFL (christophernstrerne.schaefer@epfl.ch), Gilles Fourestey (gilles.fourestey@epfl.ch)
+* @date   July 2017
 * @version 0,1
-* @brief  Header file for cosmoditace calculation module
-*
-* header file
 * 
 */
-
 
 
 

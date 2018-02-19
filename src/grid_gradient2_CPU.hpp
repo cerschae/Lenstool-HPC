@@ -1,10 +1,9 @@
-/*
- * grid_gradient_CPU.hpp
- *
- *  Created on: Jan 12, 2017
- *      Author: cerschae
- */
-
+/**
+* @Author Christoph Schaefer, EPFL (christophernstrerne.schaefer@epfl.ch), Gilles Fourestey (gilles.fourestey@epfl.ch)
+* @date   July 2017
+* @version 0,1
+*
+*/
 #ifndef GRID_GRADIENT2_CPU_HPP_
 #define GRID_GRADIENT2_CPU_HPP_
 

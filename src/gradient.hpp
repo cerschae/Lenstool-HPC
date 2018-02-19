@@ -1,3 +1,10 @@
+/**
+* @Author Christoph Schaefer, EPFL (christophernstrerne.schaefer@epfl.ch), Gilles Fourestey (gilles.fourestey@epfl.ch)
+* @date   July 2017
+* @version 0,1
+*
+*/
+
 #ifndef __GRAD_HPP__
 #define __GRAD_HPP__
 /** for both gradient and second derivatives **/

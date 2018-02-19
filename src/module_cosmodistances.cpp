@@ -1,14 +1,9 @@
 /**
-* @file   module_cosmodistances.cpp
-* @Author Thomas Jalabert, EPFL (me@example.com)
-* @date   July 2015
+* @Author Christoph Schaefer, EPFL (christophernstrerne.schaefer@epfl.ch), Gilles Fourestey (gilles.fourestey@epfl.ch)
+* @date   July 2017
 * @version 0,1
-* @brief  Library for the computation of cosmological ratios
-*
-* compute the cosmological ratio of the distances between the lens and the source and the lens and the observer
 *
 */
-
 
 
 

@@ -1,10 +1,9 @@
-/*
- * grid_srcplane_conversion.hpp
- *
- *  Created on: Dec 21, 2016
- *      Author: cerschae
- */
-
+/**
+* @Author Christoph Schaefer, EPFL (christophernstrerne.schaefer@epfl.ch), Gilles Fourestey (gilles.fourestey@epfl.ch)
+* @date   July 2017
+* @version 0,1
+*
+*/
 #ifndef GRID_SRCPLANE_CONVERSION_HPP_
 #define GRID_SRCPLANE_CONVERSION_HPP_
 
