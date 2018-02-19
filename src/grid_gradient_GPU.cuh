@@ -5,7 +5,7 @@
 * @version 0,1
 *
 */
- */
+
 
 #ifndef GRID_GRADIENT_GPU_CUH_
 #define GRID_GRADIENT_GPU_CUH_
