@@ -382,8 +382,10 @@ void read_runmode(std::istream &IN, struct runmode_param *runmode){
 		        		}
 		        		if ( !strcmp(second.c_str(), "ampli") )
 		        		{
-							sscanf(line2.c_str(), " %*s %d %d %lf", &runmode->amplif, &runmode->amplif_gridcells, &in1);
+		        			char filename[FILENAME_SIZE];
+							sscanf(line2.c_str(), " %*s %d %d %lf %s", &runmode->amplif, &runmode->amplif_gridcells, &in1, &filename);
 							runmode->z_amplif = (type_t)in1;
+							runmode->amplif_name = filename;
 							//std::cerr<<runmode_>ampli << << <<std::endl;
 									        		}
 						if ( !strcmp(second.c_str(), "arclets") )

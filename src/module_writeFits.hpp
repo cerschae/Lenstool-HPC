@@ -34,7 +34,7 @@
 
 // Function declarations
 //===========================================================================================================
-void module_writeFits(std::string path, std::string filename, int ii, type_t *map, const struct runmode_param* runmode, const struct grid_param* frame );
+void module_writeFits(std::string path, std::string filename, int ii, type_t *map, const struct runmode_param* runmode, const struct grid_param* frame, type_t ra, type_t dec );
 
 // We are calling C functions here, but we are calling them with a cuda/c++ compiler, thus we need to declare them as extern "C"
 #ifdef __cplusplus
@@ -45,7 +45,7 @@ int module_writeFits_Image(char *filename, double *ima, int nx,int ny, double xm
 }
 extern "C" {
 #endif
-int module_writeFits_ImageAbsoluteCoordinates(char *filename, double **ima, int nx,int ny, double xmin,double xmax,double ymin,double ymax, double ra,double dec);
+int module_writeFits_ImageAbsoluteCoordinates(char *filename, double *ima, int nx,int ny, double xmin,double xmax,double ymin,double ymax, double ra,double dec);
 #ifdef __cplusplus
 }
 extern "C" {

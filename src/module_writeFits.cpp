@@ -47,7 +47,7 @@
 /// Functions
 ///==========================================================================================================
 
-void module_writeFits(std::string path, std::string filename, int ii, type_t *map, const struct runmode_param* runmode, const struct grid_param* frame ){
+void module_writeFits(std::string path, std::string filename, int ii, type_t *map, const struct runmode_param* runmode, const struct grid_param* frame, type_t ra, type_t dec ){
 
 	std::string file;
 	file = path;
@@ -55,14 +55,17 @@ void module_writeFits(std::string path, std::string filename, int ii, type_t *ma
 	file.append(filename);
 	file.append("_");
     std::ostringstream ss;
-    ss << ii+1;
+    ss << ii;
 	file.append(ss.str());
 	file.append(".fits");
 	ss.clear();
 	char file_char[file.length()+1];
 	strcpy(file_char,file.c_str());
 
-	module_writeFits_Image(file_char,map,runmode->amplif_gridcells,runmode->amplif_gridcells,frame->xmin,frame->xmax,frame->ymin,frame->ymax);
+	if(ra == 0. and dec == 0.)
+		module_writeFits_Image(file_char,map,runmode->amplif_gridcells,runmode->amplif_gridcells,frame->xmin,frame->xmax,frame->ymin,frame->ymax);
+	else
+		module_writeFits_ImageAbsoluteCoordinates(file_char,map,runmode->amplif_gridcells,runmode->amplif_gridcells,frame->xmin,frame->xmax,frame->ymin,frame->ymax,ra,dec);
 }
 
 
@@ -213,7 +216,7 @@ int module_writeFits_Image(char *filename, double *ima, int nx,int ny, double xm
 * @param dec		dec
 */
 
-int module_writeFits_ImageAbsoluteCoordinates(char *filename, double **ima, int nx,int ny, double xmin,double xmax,double ymin,double ymax, double ra,double dec)
+int module_writeFits_ImageAbsoluteCoordinates(char *filename, double *ima, int nx,int ny, double xmin,double xmax,double ymin,double ymax, double ra,double dec)
 {
 	fitsfile *fptr;       /* pointer to the FITS file, defined in fitsio.h */
 	int status, ii, jj, k;
@@ -243,7 +246,7 @@ int module_writeFits_ImageAbsoluteCoordinates(char *filename, double **ima, int 
 	for (jj=0;jj<ny;jj++)
 		for (ii=0;ii<nx;ii++)
 	{
-		p_ima[k]=ima[jj][ii];
+		p_ima[k] =(float)ima[jj*nx+ii];
 		k++;
 	}
 

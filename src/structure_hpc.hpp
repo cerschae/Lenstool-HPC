@@ -387,6 +387,7 @@ struct runmode_param
 	int 	amplif;
 	int 	amplif_gridcells;
 	type_t 	z_amplif;
+	std::string amplif_name;
 	//Time/Benchmark mode
 	int		time;
 	  //SOA variables

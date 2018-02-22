@@ -395,7 +395,8 @@ int main(int argc, char *argv[])
 			map_grid_GPU(map_gpu_func,ampli_GPU,&cosmology, &frame, &lenses_SOA, runmode.nhalos+ runmode.npotfile, runmode.amplif_gridcells ,runmode.amplif, runmode.z_amplif);
 
 			//writing
-			module_writeFits(path,"ampli",ii,ampli_GPU,&runmode,&frame);
+			//std::cerr << runmode.amplif_name << std::endl;
+			module_writeFits(path,runmode.amplif_name,ii,ampli_GPU,&runmode,&frame, runmode.ref_ra, runmode.ref_dec );
 			std::cerr << "**" << ampli_GPU[0] << std::endl;
 			free(ampli_GPU);
 		}

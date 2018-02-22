@@ -2,7 +2,7 @@ runmode
 	inverse          0 0.2 350
 	reference        3 292.95682    -26.575718
 	verbose	0
-	ampli	6 200 1000 kappa.fits 
+	ampli	5 200 1000 kappa
 	end
 image
 	multfile         1 immul_ongoing.cat
