@@ -2,7 +2,8 @@ runmode
 	inverse	0 0
 	reference	3 292.95682 -26.575718 292.956820 -26.575718
 	verbose	0
-	ampli	5 200 1000.000000 kappa
+	mass	4 200 0.350000 mass_4
+	ampli	1 200 1000.000000 ampli_1
 	end
 image
 	multfile	1 immul_ongoing.cat
@@ -93,6 +94,19 @@ potfile
 	cutkpc	1 10.000000 100.000000
 	slope	0 4.000000 0.000000
 	vdslope	0 4.000000 0.000000
+	end
+potfile
+	filein	1 potfile_cl_N-NW-S3.txt
+	zlens	0.308000
+	type	81
+	corekpc	0.000000
+	mag0	27.000000
+	sigma	1 10.000000 300.000000
+	cutkpc	0 300.000000 0.000000
+	slope	0 4.000000 4.200000
+	vdslope	0 4.000000 0.000000
+	vdscatter	0 0.000000 0.000000
+	rcutscatter	0 0.000000 0.000000
 	end
 cline
 	nplan		0

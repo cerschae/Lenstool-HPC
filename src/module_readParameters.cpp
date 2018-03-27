@@ -361,9 +361,11 @@ void read_runmode(std::istream &IN, struct runmode_param *runmode){
 		        		}
 		        		if ( !strcmp(second.c_str(), "mass") )
 		        		{
-							sscanf(line2.c_str(), " %*s %d %d %lf %lf", &runmode->mass, &runmode->mass_gridcells, &in1, &in2);
+		        			char filename[FILENAME_SIZE];
+							sscanf(line2.c_str(), " %*s %d %d %lf %s", &runmode->mass, &runmode->mass_gridcells, &in1, &filename);
 							runmode->z_mass = (type_t)in1;
-							runmode->z_mass_s =(type_t)in2;
+							runmode->mass_name = filename;
+							//runmode->z_mass_s =(type_t)in2;
 		        		}
 		        		if ( !strcmp(second.c_str(), "poten") )
 		        		{
@@ -468,6 +470,26 @@ void read_runmode_image(std::istream &IN, struct runmode_param *runmode){
 				runmode->N_z_param += 1 ;
 			}
 			//std::cout << runmode->multi << runmode->imagefile << std::endl;
+			// Read the next line
+			std::getline(IN,line2);
+			std::istringstream read2(line2);
+			read2 >> second >> third;
+		}
+}
+
+void read_runmode_source(std::istream &IN, struct runmode_param *runmode){
+	std::string  first, second, third, fourth, fifth, line1, line2;
+
+    std::getline(IN,line2);
+ 	std::istringstream read2(line2);
+ 	double z(0);
+ 	read2 >> second >> third;
+ 	while (strncmp(second.c_str(), "end", 3))    // Read until we reach end
+		{
+			if ( !strcmp(second.c_str(), "z_source") )
+			{
+				sscanf(line2.c_str(), " %*s %lf ", &runmode->z_mass_s);
+			}
 			// Read the next line
 			std::getline(IN,line2);
 			std::istringstream read2(line2);
@@ -676,7 +698,10 @@ std::ifstream IN(infile.c_str(), std::ios::in);
             {
                 runmode->cline = 1;
             }
-
+            else if (!strncmp(first.c_str(), "source", 6))
+            {
+            	read_runmode_source(IN,runmode);
+            }
             else if (!strncmp(first.c_str(), "potfile", 7))
             {
             	read_runmode_potfile(IN,runmode);

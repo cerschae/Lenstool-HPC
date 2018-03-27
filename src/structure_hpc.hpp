@@ -358,6 +358,7 @@ struct runmode_param
 	int		mass_gridcells;
 	type_t	z_mass;
 	type_t	z_mass_s;
+	std::string mass_name;
 	//Potential Mode
 	int		potential;
 	int		pot_gridcells;
@@ -366,7 +367,8 @@ struct runmode_param
 	//Potfile Mode
 
 	int		potfile;
-	int		npotfile;
+	int		npotfile;	//number of halos inside 1 file
+	//int		Npotfile;   //number of potfiles
 	//displacement Mode
 	int		dpl;
 	int		dpl_gridcells;
@@ -393,7 +395,7 @@ struct runmode_param
 	  //SOA variables
 	 int Nlens[NTYPES];
 	 std::string    imagefile;
-	 std::string		potfilename;
+	 std::string 	potfilename;
 	 std::string    sourfile;
 };
 

@@ -268,7 +268,8 @@ int main(int argc, char *argv[])
 	printf("Setting up lenstool using %d lenses...", runmode.nhalos+runmode.npotfile); fflush(stdout);
 	//convert_to_LT(&lenses_SOA, runmode.nhalos+runmode.npotfile);
 	// Read the .par file
-	init_grille("m1931.par", 1);
+
+	init_grille(argv[1], 1);
 	// remove the .fits extension tcpo filename
 	if( M.imass ) M.massfile[strlen(M.massfile)-5]=0;
 	if( M.ishear ) M.shearfile[strlen(M.shearfile)-5]=0;
@@ -328,6 +329,27 @@ int main(int argc, char *argv[])
 		// Set the lens parameters from <array>
 		setBayesModel( iVal, nVal, array );
 
+		if( M.imass != 0 )
+		{
+			sprintf( fname, "tmp/%s%ld.fits",M.massfile, iVal );
+			printf("INFO: Compute file %d/%ld : %s [CTRL-C to interrupt]\n",i+1, nVal,fname);
+			fflush(stdout);
+			pFile = fopen( fname, "r" );
+			if( pFile == NULL )
+			{
+				pFile = fopen( fname, "w");
+				fprintf( pFile, "busy\n" );
+				fclose(pFile);
+				t_lt = -myseconds();
+				g_mass( M.imass, M.nmass, M.zmass, S.zs, fname );
+				t_lt += myseconds();
+				std::cout << " Time  = " << std::setprecision(15) << t_lt << " " << turn <<std::endl;
+				//std::cerr <<" para : " << M.zmass << " " << S.zs << " " <<  distcosmo2(M.zmass, S.zs) << distcosmo1(S.zs) << std::endl;
+			}
+			else
+				fclose(pFile);
+		}
+
 		if( M.iampli != 0 )
 		{
 			sprintf( fname, "tmp/%s%ld.fits","Amplif_", iVal );
@@ -339,7 +361,7 @@ int main(int argc, char *argv[])
 				pFile = fopen( fname, "w");
 				fprintf( pFile, "busy\n" );
 				fclose(pFile);
-				std::cerr <<  runmode.amplif<< runmode.amplif_gridcells<< runmode.z_amplif << std::endl;
+				//std::cerr <<  runmode.amplif<< runmode.amplif_gridcells<< runmode.z_amplif << std::endl;
 				t_lt = -myseconds();
 				g_ampli( M.iampli, M.nampli, M.zampli, fname );
 				//g_ampli( runmode.amplif, runmode.amplif_gridcells, runmode.z_amplif, fname );
@@ -368,45 +390,73 @@ int main(int argc, char *argv[])
 	bayespot = (type_t *) malloc((int) (nparam) * (nvalues) * sizeof(type_t));
 	module_readParameters_bayesmodels(bayespot, nparam, nvalues);
 	////read bayes lines
-	std::cerr <<  "BLA" << std::endl;
+	//std::cerr <<  "BLA" << std::endl;
 	t_1 = -myseconds();
-	for(int ii = 0; ii < nvalues; ii++){
 
-		////set bayes potential
-		module_readParameters_setbayesmapmodels(&runmode, &cosmology, host_potentialoptimization, &potfile, &lenses_SOA,bayespot,nparam, ii);
-		module_readParameters_debug_potential_SOA(0, lenses_SOA, runmode.nhalos+runmode.npotfile);
+		if (runmode.mass > 0){
+			//Allocation
+			type_t* mass_GPU = (type_t *) malloc((int) (runmode.mass_gridcells) * (runmode.mass_gridcells) * sizeof(type_t));
 
-		////calculate maps
-		std::cout << " GPU launching for map " << ii << std::endl;
-		//Chrono(opt)
-		t_2 = -myseconds();
+			for(int ii = 0; ii < nvalues; ii++){
+				////calculate maps
+				std::cout << " GPU launching for map mass " << ii << std::endl;
+				t_2 = -myseconds();
+				////set bayes potential
+				module_readParameters_setbayesmapmodels(&runmode, &cosmology, host_potentialoptimization, &potfile, &lenses_SOA,bayespot,nparam, ii);
+				module_readParameters_debug_potential_SOA(0, lenses_SOA, runmode.nhalos+runmode.npotfile);
+				//Init
+				memset(mass_GPU, 0, (runmode.mass_gridcells) * (runmode.mass_gridcells) * sizeof(type_t));
+
+				//Choosing Function definition
+				map_gpu_function_t map_gpu_func;
+				map_gpu_func = select_map_function("mass",&runmode);
+
+				//calculating map using defined function
+				map_mass_grid_GPU(map_gpu_func,mass_GPU,&cosmology, &frame, &lenses_SOA, runmode.nhalos+ runmode.npotfile, runmode.mass_gridcells ,runmode.mass, runmode.z_mass, runmode.z_mass_s);
+
+				std::cerr <<" para : " << runmode.z_mass << " " << runmode.z_mass_s << std::endl;
+				//writing
+				//std::cerr << runmode.amplif_name << std::endl;
+				module_writeFits(path,runmode.mass_name,ii,mass_GPU,&runmode,&frame, runmode.ref_ra, runmode.ref_dec );
+				t_2 += myseconds();
+				std::cout << " Time  " << std::setprecision(15) << t_2 << std::endl;
+				std::cerr << "**" << mass_GPU[0] << std::endl;
+			}
+			//std::cerr << "**" << ampli_GPU[0] << std::endl;
+			free(mass_GPU);
+		}
 		if (runmode.amplif > 0){
 			//Allocation
 			type_t* ampli_GPU = (type_t *) malloc((int) (runmode.amplif_gridcells) * (runmode.amplif_gridcells) * sizeof(type_t));
+			for(int ii = 0; ii < nvalues; ii++){
+				////calculate maps
+				std::cout << " GPU launching for map amplif " << ii << std::endl;
+				t_2 = -myseconds();
+				////set bayes potential
+				module_readParameters_setbayesmapmodels(&runmode, &cosmology, host_potentialoptimization, &potfile, &lenses_SOA,bayespot,nparam, ii);
+				module_readParameters_debug_potential_SOA(0, lenses_SOA, runmode.nhalos+runmode.npotfile);
+				//Init
+				memset(ampli_GPU, 0, (runmode.amplif_gridcells) * (runmode.amplif_gridcells) * sizeof(type_t));
 
-			//Init
-			memset(ampli_GPU, 0, (runmode.amplif_gridcells) * (runmode.amplif_gridcells) * sizeof(type_t));
+				//Choosing Function definition
+				map_gpu_function_t map_gpu_func;
+				map_gpu_func = select_map_function("ampli",&runmode);
 
-			//Choosing Function definition
-			map_gpu_function_t map_gpu_func;
-			map_gpu_func = select_map_function("ampli",&runmode);
+				//calculating map using defined function
+				map_grid_GPU(map_gpu_func,ampli_GPU,&cosmology, &frame, &lenses_SOA, runmode.nhalos+ runmode.npotfile, runmode.amplif_gridcells ,runmode.amplif, runmode.z_mass);
 
-			//calculating map using defined function
-			map_grid_GPU(map_gpu_func,ampli_GPU,&cosmology, &frame, &lenses_SOA, runmode.nhalos+ runmode.npotfile, runmode.amplif_gridcells ,runmode.amplif, runmode.z_amplif);
-
-			//writing
-			//std::cerr << runmode.amplif_name << std::endl;
-			module_writeFits(path,runmode.amplif_name,ii,ampli_GPU,&runmode,&frame, runmode.ref_ra, runmode.ref_dec );
-			std::cerr << "**" << ampli_GPU[0] << std::endl;
+				//writing
+				//std::cerr << runmode.amplif_name << std::endl;
+				module_writeFits(path,runmode.amplif_name,ii,ampli_GPU,&runmode,&frame, runmode.ref_ra, runmode.ref_dec );
+				t_2 += myseconds();
+				std::cout << " Time  " << std::setprecision(15) << t_2 << std::endl;
+				std::cerr << "**" << ampli_GPU[0] << std::endl;
+			}
+			//std::cerr << "**" << ampli_GPU[0] << std::endl;
 			free(ampli_GPU);
 		}
 		//
-		t_2 += myseconds();
 
-		std::cout << " Time  " << std::setprecision(15) << t_2 << std::endl;
-
-
-	}
 	t_1 += myseconds();
 	std::cout << "Lenstool Total Time " << std::setprecision(15) << t_lt_total << std::endl;
 	std::cout << "HPC Total Time  " << std::setprecision(15) << t_1 << std::endl;
