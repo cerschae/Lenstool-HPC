@@ -36,6 +36,7 @@
 #define NPZMAX	9	/* maximum number of critical lines in g_cline struct*/
 //#define CLINESIZE	500	/* maximum number of critical and caustic points for Cline mode. Adjust depending on RAM*/
 #define NPOTFILESIZE 2000 //maximum number of potential in potfiles
+#define N_MAX_POTFILE 10 //maximum number of potfiles
 #define DMIN	1e-4	// distance minimale de convergence dans le plan image (in arcsec)	
 #define NITMAX 	100
 #define NTYPES 	2
@@ -271,6 +272,7 @@ struct Potential_SOA
 	type_t* anglecos; //theta precomputation of cosinus and sinus values
 	type_t* anglesin; //theta
 	type_t* sigma; // sigma
+	type_t* dlsds; // dls/dos (for Kmapping purposes
 };
 
 
@@ -297,6 +299,7 @@ struct Potential
        type_t  lum; //luminosity
        type_t  theta; //theta
        type_t  sigma; // sigma
+       type_t  dlsds; // dls/dos (for Kmapping purposes
 };
 
 
@@ -364,11 +367,12 @@ struct runmode_param
 	int		pot_gridcells;
 	type_t	z_pot;
 	int 	nhalos;
+	int 	n_tot_halos;
 	//Potfile Mode
 
 	int		potfile;
-	int		npotfile;	//number of halos inside 1 file
-	//int		Npotfile;   //number of potfiles
+	int		npotfile[N_MAX_POTFILE];	//number of halos inside 1 file
+	int		Nb_potfile;   //number of potfiles
 	//displacement Mode
 	int		dpl;
 	int		dpl_gridcells;
@@ -395,7 +399,7 @@ struct runmode_param
 	  //SOA variables
 	 int Nlens[NTYPES];
 	 std::string    imagefile;
-	 std::string 	potfilename;
+	 std::string 	potfilename[N_MAX_POTFILE];
 	 std::string    sourfile;
 };
 

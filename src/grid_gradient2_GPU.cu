@@ -192,32 +192,31 @@ module_potentialDerivatives_totalGradient2_SOA_CPU_GPU(type_t *grid_grad2_a, typ
 }
 //
 //
-//
 void
-module_potentialDerivatives_totalGradient2_SOA_CPU_GPU(type_t *grid_grad2_a, type_t *grid_grad2_b, type_t *grid_grad2_c, type_t *grid_grad2_d, const struct grid_param *frame, const struct Potential_SOA *lens_gpu, int nbgridcells, int nhalos)
+module_potentialDerivatives_Kmap_SOA_CPU_GPU(type_t *grid_grad2_a, type_t *grid_grad2_b, type_t *grid_grad2_c, type_t *grid_grad2_d, const struct grid_param *frame, const struct Potential_SOA *lens_gpu, int nhalos, type_t dx, type_t dy, int nbgridcells_x, int nbgridcells_y, int istart, int jstart)
 {
-	//
-	int GRID_SIZE_X = (nbgridcells + BLOCK_SIZE_X - 1)/BLOCK_SIZE_X; // number of blocks
-	int GRID_SIZE_Y = (nbgridcells + BLOCK_SIZE_Y - 1)/BLOCK_SIZE_Y; 
-	//
-	type_t* timer = (type_t *) malloc((int) nbgridcells*nbgridcells*sizeof(type_t));
-	//
-	dim3 threads(BLOCK_SIZE_X, BLOCK_SIZE_Y/1);
-	dim3 grid   (GRID_SIZE_X , GRID_SIZE_Y);	
-	//
-	//printf("nhalos = %d, size of shared memory = %lf\n", nhalos, (type_t) (8*nhalos + BLOCK_SIZE_X*nbgridcells/BLOCK_SIZE_Y)*sizeof(type_t));
-	printf("nhalos = %d, size of shared memory = %lf\n", nhalos, (type_t) (8*nhalos + BLOCK_SIZE_X*BLOCK_SIZE_Y)*sizeof(type_t));
-	//
-	cudaMemset(grid_grad2_a, 0, nbgridcells*nbgridcells*sizeof(type_t));
-	cudaMemset(grid_grad2_b, 0, nbgridcells*nbgridcells*sizeof(type_t));
-	cudaMemset(grid_grad2_c, 0, nbgridcells*nbgridcells*sizeof(type_t));
-	cudaMemset(grid_grad2_d, 0, nbgridcells*nbgridcells*sizeof(type_t));
-	//
-	//module_potentialDerivatives_totalGradient2_SOA_GPU<<<grid, threads>>> (grid_grad2_a, grid_grad2_b,grid_grad2_c, grid_grad2_d, lens_gpu, frame, nbgridcells, nhalos);
-	cudasafe(cudaGetLastError(), "module_potentialDerivative_totalGradient_SOA_CPU_GPU_8_SOA_GPU");
-	//
-	cudaDeviceSynchronize();
-	printf("GPU kernel done...\n");
+        int GRID_SIZE_X = (nbgridcells_x + BLOCK_SIZE_X - 1)/BLOCK_SIZE_X; // number of blocks
+        int GRID_SIZE_Y = (nbgridcells_y + BLOCK_SIZE_Y - 1)/BLOCK_SIZE_Y;
+        //
+        printf("grid_size_x = %d, grid_size_y = %d, nbgridcells_x = %d, nbgridcells_y = %d, istart = %d, jstart = %d (split)\n", GRID_SIZE_X, GRID_SIZE_Y, nbgridcells_x, nbgridcells_y, istart, jstart);
+        //
+        dim3 threads(BLOCK_SIZE_X, BLOCK_SIZE_Y/1);
+        dim3 grid   (GRID_SIZE_X , GRID_SIZE_Y);
+        //printf("nhalos = %d, size of shared memory = %lf\n", nhalos, (double) (8*nhalos + BLOCK_SIZE_X*nbgridcells/BLOCK_SIZE_Y)*sizeof(double));
+        printf("nhalos = %d, size of shared memory = %lf (split)\n", nhalos, (type_t) (8*nhalos + BLOCK_SIZE_X*BLOCK_SIZE_Y)*sizeof(type_t));
+        //
+        cudaMemset(grid_grad2_a, 0, nbgridcells_x*nbgridcells_y*sizeof(type_t));
+        cudaMemset(grid_grad2_b, 0, nbgridcells_x*nbgridcells_y*sizeof(type_t));
+        cudaMemset(grid_grad2_c, 0, nbgridcells_x*nbgridcells_y*sizeof(type_t));
+        cudaMemset(grid_grad2_d, 0, nbgridcells_x*nbgridcells_y*sizeof(type_t));
+        //
+        //module_potentialDerivatives_totalGradient_SOA_GPU<<<grid, threads>>> (grid_grad_x, grid_grad_y, lens, frame, nhalos, nbgridcells_x);
+        module_potentialDerivatives_Kmap_SOA_GPU<<<grid, threads>>> (grid_grad2_a, grid_grad2_b,grid_grad2_c, grid_grad2_d,  lens_gpu, frame, nhalos, dx, dy, nbgridcells_x, nbgridcells_y, istart, jstart);
+        cudasafe(cudaGetLastError(), "module_potentialDerivative_totalGradient_SOA_CPU_GPU_8_SOA_GPU");
+        //
+        cudaDeviceSynchronize();
+        printf("GPU kernel done...\n");
 }
+//
 
 

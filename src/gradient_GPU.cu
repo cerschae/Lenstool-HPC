@@ -1002,4 +1002,3 @@ module_potentialDerivatives_totalGradient_SOA_GPU(type_t *grid_grad_x, type_t *g
     }
 
 }
-

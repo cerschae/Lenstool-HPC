@@ -40,22 +40,24 @@ void module_readParameters_limit(std::string infile, struct potentialoptimizatio
 void module_readParameters_Potential(std::string infile, Potential lens[], int nhalos);
 void module_readParameters_PotentialSOA_2(std::string infile, Potential *lens, Potential_SOA *lens_SOA, int Nset[]);
 void module_readParameters_PotentialSOA(std::string infile, Potential *lens, Potential_SOA *lens_SOA, int nhalos);
-void module_readParameters_PotentialSOA_direct(std::string infile, Potential_SOA *lens_SOA, int nhalos, int npotfiles, cosmo_param cosmology);
+void module_readParameters_PotentialSOA_direct(std::string infile, Potential_SOA *lens_SOA, int nhalos, int n_tot_halos, cosmo_param cosmology);
 //void module_readParameters_PotentialSOA_nonsorted(std::string infile, Potential *lens, Potential_SOA *lens_SOA, int nhalos);
 void module_readParameters_calculatePotentialparameter(Potential *ilens);
 void module_readParameters_calculatePotentialparameter_SOA(Potential_SOA *lens, int ind);
 void module_readParameters_SingleLensingSourcesNumberSets(std::string infile, int &nsetofimages_cleanlens );
 void module_readParameters_SingleLensingSources(std::string infile, point sources[], ellipse sources_shape[], double redshift[], int nimages_cleanlens[], int nsetofimages_cleanlens );
-void module_readParameters_readpotfiles_param(std::string infile, potfile_param *potfile, cosmo_param cosmology);
-void module_readParameters_readpotfiles(const runmode_param *runmode, potfile_param *potfile, Potential *lens);
-void module_readParameters_readpotfiles_SOA(const runmode_param *runmode, const cosmo_param *cosmology, potfile_param *potfile, Potential_SOA *lens);
+void module_readParameters_readpotfiles_param(std::string infile, potfile_param potfile[], cosmo_param cosmology);
+void module_readParameters_readpotfiles(const runmode_param *runmode, potfile_param potfile[], Potential *lens);
+void module_readParameters_readpotfiles_SOA(const runmode_param *runmode, const cosmo_param *cosmology, potfile_param potfile[], Potential_SOA *lens);
 //bayesmap specific functions
 void module_readParameters_preparebayes(int &nparam, int &nvalues);
 void module_readParameters_bayesmodels(double * bayespot, int nparam, int nvalues);
-void setScalingRelations(const runmode_param *runmode, const cosmo_param *cosmology, potfile_param *pot, Potential_SOA* lenses);
+void setScalingRelations(const runmode_param *runmode, const cosmo_param *cosmology, potfile_param *pot, Potential_SOA* lenses, int index);
 //void module_readParameters_setbayesmapmodels( Potential_SOA* lenses, const potentialoptimization* limit, double * bayespot, int nparam, int index, int nhalos);
 //void module_readParameters_setbayesmapmodels( Potential_SOA* lenses, const runmode_param* runmode, const potentialoptimization* limit, const potfile_param* potfile, double * bayespot, int nparam, int index);
 void module_readParameters_setbayesmapmodels(const runmode_param* runmode, const cosmo_param* cosmology, const potentialoptimization* limit, potfile_param* potfile, Potential_SOA* lenses, double * bayespot, int nparam, int index);
+void module_readParameters_lens_dslds_calculation(const runmode_param* runmode, const cosmo_param* cosmo, Potential_SOA* lens);
+
 ////Function (Slave) declarations
 //for read_Runmode
 void read_runmode(std::istream &IN, struct runmode_param *runmode);

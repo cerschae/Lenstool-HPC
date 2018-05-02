@@ -131,16 +131,18 @@ void map_mass_grid_GPU(map_gpu_function_t mapfunction, type_t *map,const struct 
 	grid_param *frame_gpu;
 	Potential_SOA *lens_gpu,*lens_kernel;
 	int *type_gpu;
-	type_t *lens_x_gpu, *lens_y_gpu, *b0_gpu, *angle_gpu, *epot_gpu, *rcore_gpu, *rcut_gpu, *anglecos_gpu, *anglesin_gpu;
+	type_t *lens_x_gpu, *lens_y_gpu, *b0_gpu, *angle_gpu, *epot_gpu, *rcore_gpu, *rcut_gpu, *anglecos_gpu, *anglesin_gpu, *dlsds_gpu;
 	type_t *grid_grad2_a_gpu, *grid_grad2_b_gpu , *grid_grad2_c_gpu, *grid_grad2_d_gpu, *map_gpu;
+
 
 	if(zl == 0) {
 		zl = lens->z[0];
 	}
+
 	type_t dl0s = module_cosmodistances_objectObject(zl, zs, *cosmo);
 	type_t dos = module_cosmodistances_observerObject(zs, *cosmo);
 	type_t dol = module_cosmodistances_observerObject(zl, *cosmo);
-	//select_ratio_function(std::string mode, const struct runmode_param* runmode, type_t dls, type_t ds)
+	//select_ratio_function(std::string mode, const struct runmode_param* runmode, type_t dls, type_t ds);
 
 	lens_gpu = (Potential_SOA *) malloc(sizeof(Potential_SOA));
 	lens_gpu->type = (int *) malloc(sizeof(int));
@@ -157,6 +159,7 @@ void map_mass_grid_GPU(map_gpu_function_t mapfunction, type_t *map,const struct 
 	cudasafe(cudaMalloc( (void**)&(rcut_gpu), nhalos*sizeof(type_t)),"Gradient2gpu.cu : Alloc rcut_gpu: " );
 	cudasafe(cudaMalloc( (void**)&(anglecos_gpu), nhalos*sizeof(type_t)),"Gradient2gpu.cu : Alloc anglecos_gpu: " );
 	cudasafe(cudaMalloc( (void**)&(anglesin_gpu), nhalos*sizeof(type_t)),"Gradient2gpu.cu : Alloc anglesin_gpu: " );
+	cudasafe(cudaMalloc( (void**)&(dlsds_gpu), nhalos*sizeof(type_t)),"Gradient2gpu.cu : Alloc dlsds_gpu: " );
 	cudasafe(cudaMalloc( (void**)&(frame_gpu), sizeof(grid_param)),"Gradient2gpu.cu : Alloc frame_gpu: " );
 	cudasafe(cudaMalloc( (void**)&(grid_grad2_a_gpu), (nbgridcells_x) * (nbgridcells_y) *sizeof(type_t)),"Gradient2gpu.cu : Alloc source_a_gpu: " );
 	cudasafe(cudaMalloc( (void**)&(grid_grad2_b_gpu), (nbgridcells_x) * (nbgridcells_y) *sizeof(type_t)),"Gradient2gpu.cu : Alloc source_b_gpu: " );
@@ -175,6 +178,7 @@ void map_mass_grid_GPU(map_gpu_function_t mapfunction, type_t *map,const struct 
 	cudasafe(cudaMemcpy(rcut_gpu, lens->rcut, nhalos*sizeof(type_t), cudaMemcpyHostToDevice),"Gradient2gpu.cu : Copy rcut_gpu: " );
 	cudasafe(cudaMemcpy(anglecos_gpu, lens->anglecos, nhalos*sizeof(type_t),cudaMemcpyHostToDevice ),"Gradient2gpu.cu : Copy anglecos: " );
 	cudasafe(cudaMemcpy(anglesin_gpu, lens->anglesin, nhalos*sizeof(type_t), cudaMemcpyHostToDevice),"Gradient2gpu.cu : Copy anglesin: " );
+	cudasafe(cudaMemcpy(dlsds_gpu, lens->dlsds, nhalos*sizeof(type_t), cudaMemcpyHostToDevice),"Gradient2gpu.cu : Copy dlsds: " );
 	cudasafe(cudaMemcpy(frame_gpu, frame, sizeof(grid_param), cudaMemcpyHostToDevice),"Gradient2gpu.cu : Copy fame_gpu: " );
 	//
 	lens_gpu->type 			= type_gpu;
@@ -187,16 +191,41 @@ void map_mass_grid_GPU(map_gpu_function_t mapfunction, type_t *map,const struct 
 	lens_gpu->rcut 			= rcut_gpu;
 	lens_gpu->anglecos 		= anglecos_gpu;
 	lens_gpu->anglesin 		= anglesin_gpu;
+	lens_gpu->dlsds 		= dlsds_gpu;
 	//
 	cudaMemcpy(lens_kernel, lens_gpu, sizeof(Potential_SOA), cudaMemcpyHostToDevice);
 	//
 	type_t time = -myseconds();
 	//
-	module_potentialDerivatives_totalGradient2_SOA_CPU_GPU(grid_grad2_a_gpu, grid_grad2_b_gpu, grid_grad2_c_gpu, grid_grad2_d_gpu, frame_gpu, lens_kernel, nhalos, dx, dy, nbgridcells_x, nbgridcells_y, istart, jstart);
+#if 0
+	int shalos = 0;
+    while (shalos < nhalos)
+    {
+            int lens_type = lens->type[shalos];
+            type_t z = lens->z[shalos];
+            int count     = 1;
+            if (shalos + count < nhalos){
+            	std::cerr << shalos  << " " <<  count << " " << lens->type[shalos + count] << " " << lens->z[shalos + count] << " " << std::endl;
+            	while (lens->type[shalos + count] == lens_type and lens->z[shalos + count] == z ){
+            		count++;
+            		if(shalos + count >= nhalos)
+            			break;
+            		//std::cerr << shalos  << " " <<  count << " " << lens->type[shalos + count] << " " << lens->z[shalos + count] << " " << std::endl;
+            	}
+            	std::cerr << shalos  << " " <<  count << " " << lens->type[shalos + count] << " " << lens->z[shalos + count] << " " << std::endl;
+            }
+            //if (shalos < nhalos) std::cerr << shalos  << " " <<  count << " " << lens->type[shalos + count] << " " << lens->z[shalos + count] << " " << std::endl;
+
+			shalos += count;
+		}
+#endif
+	//module_potentialDerivatives_totalGradient2_SOA_CPU_GPU(grid_grad2_a_gpu, grid_grad2_b_gpu, grid_grad2_c_gpu, grid_grad2_d_gpu, frame_gpu, lens_kernel, nhalos, dx, dy, nbgridcells_x, nbgridcells_y, istart, jstart);
+	module_potentialDerivatives_Kmap_SOA_CPU_GPU(grid_grad2_a_gpu, grid_grad2_b_gpu, grid_grad2_c_gpu, grid_grad2_d_gpu, frame_gpu, lens_kernel, nhalos, dx, dy, nbgridcells_x, nbgridcells_y, istart, jstart);
 	//
-	std::cerr << "ZS " << zs << " "<< dl0s << " "<< dos <<std::endl;
+	cudasafe(cudaGetLastError(), "module_potentialDerivative_totalGradient_SOA_CPU_GPU");
+	//std::cerr << "ZS " << zs << " "<< dl0s << " "<< dos <<std::endl;
 	mapfunction(map_gpu,grid_grad2_a_gpu, grid_grad2_b_gpu, grid_grad2_c_gpu, grid_grad2_d_gpu,dl0s,dos,dol,cosmo->h,zs,nbgridcells_x,nbgridcells_y,frame);
-	//cudasafe(cudaGetLastError(), "module_potentialDerivative_totalGradient_SOA_CPU_GPU");
+	cudasafe(cudaGetLastError(), "module_potentialDerivative_totalGradient_SOA_CPU_GPU");
 	cudaDeviceSynchronize();
 	//
 	cudasafe(cudaMemcpy( map, map_gpu, (nbgridcells_x)*(nbgridcells_y)*sizeof(type_t), cudaMemcpyDeviceToHost )," --- Gradient2gpu.cu : Copy source_a_gpu: " );
@@ -216,6 +245,7 @@ void map_mass_grid_GPU(map_gpu_function_t mapfunction, type_t *map,const struct 
 	cudaFree(rcut_gpu);
 	cudaFree(anglecos_gpu);
 	cudaFree(anglesin_gpu);
+	cudaFree(dlsds_gpu);
 	cudaFree(grid_grad2_a_gpu);
 	cudaFree(grid_grad2_b_gpu);
 	cudaFree(grid_grad2_c_gpu);
@@ -322,7 +352,6 @@ void map_grid_GPU(map_gpu_function_t mapfunction, type_t *map,const struct cosmo
 	//
 	time += myseconds();
 	std::cout << "	kernel time = " << time << " s." << std::endl;
-	//printf("-----> %f %f \n",grid_grad_x[Nx], grid_grad_y[Ny]);
 	// Free GPU memory
 	cudaFree(lens_gpu);
 	cudaFree(type_gpu);
@@ -798,12 +827,12 @@ __global__ void mass_grid_GPU(type_t *ampli,type_t *grid_grad2_a,type_t *grid_gr
 	////
     int col = blockIdx.x*blockDim.x + threadIdx.x;
     int row = blockIdx.y*blockDim.y + threadIdx.y;
-    type_t dlsds = dls / ds ;
+    //type_t dlsds = dls / ds ;
     //
     if ((row < nbgridcells) && (col < nbgridcells))
     {
     	int index = row*nbgridcells + col;
-        type_t ga1 = (grid_grad2_a[index] + grid_grad2_c[index]) * 0.5 * dlsds ;
+        type_t ga1 = (grid_grad2_a[index] + grid_grad2_c[index]) * 0.5 ;//* dlsds ;
         ampli[index] = ga1*mult;
     }
 }

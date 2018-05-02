@@ -47,7 +47,7 @@
 /// Functions
 ///==========================================================================================================
 
-void module_writeFits(std::string path, std::string filename, int ii, type_t *map, const struct runmode_param* runmode, const struct grid_param* frame, type_t ra, type_t dec ){
+void module_writeFits(std::string path, std::string filename, int ii, type_t *map, const struct runmode_param* runmode, int size, const struct grid_param* frame, type_t ra, type_t dec ){
 
 	std::string file;
 	file = path;
@@ -63,9 +63,9 @@ void module_writeFits(std::string path, std::string filename, int ii, type_t *ma
 	strcpy(file_char,file.c_str());
 
 	if(ra == 0. and dec == 0.)
-		module_writeFits_Image(file_char,map,runmode->amplif_gridcells,runmode->amplif_gridcells,frame->xmin,frame->xmax,frame->ymin,frame->ymax);
+		module_writeFits_Image(file_char,map,size,size,frame->xmin,frame->xmax,frame->ymin,frame->ymax);
 	else
-		module_writeFits_ImageAbsoluteCoordinates(file_char,map,runmode->amplif_gridcells,runmode->amplif_gridcells,frame->xmin,frame->xmax,frame->ymin,frame->ymax,ra,dec);
+		module_writeFits_ImageAbsoluteCoordinates(file_char,map,size,size,frame->xmin,frame->xmax,frame->ymin,frame->ymax,ra,dec);
 }
 
 

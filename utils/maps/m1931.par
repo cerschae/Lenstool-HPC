@@ -91,6 +91,19 @@ potfile galaxies
 	slope   0 4.
     vdslope 0 4.
     end
+potfile
+	filein	1 potfile_cl_N-NW-S3.txt 
+	zlens	0.35
+	type	81 
+	corekpc	0 150.0 
+	mag0	27.0 
+	sigma	1 100.0 300.0 
+	 cutkpc  0 10.0 100. 0.1
+	slope	0 4.000000 4.200000 
+	vdslope	0 4.000000 0.000000 
+	vdscatter	0 0.000000 0.000000 
+	rcutscatter	0 0.000000 0.000000 
+	end	
 cline
 	nplan            0 1.49 1.894 2.497
 	dmax             150.0
