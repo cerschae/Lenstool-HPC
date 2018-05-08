@@ -249,13 +249,32 @@ else
      return(grad2);
 
 }
+
+__device__ matrix module_potentialDerivatives_totalGradient2_14_SOA_GPU(const struct point *pImage, const struct Potential_SOA *lens, int shalos, int nhalos){
+
+	struct matrix grad2, clump, clumpcore, clumpcut;
+    grad2.a =  0;
+    grad2.b =  0;
+    grad2.c =  0;
+    grad2.d =  0;
+
+
+    for(int i = shalos; i < shalos + nhalos; i++)
+    {
+    	grad2.a += lens->ellipticity[i];
+    	grad2.c += -lens->ellipticity[i];
+    	//grad2.b = grad2.d = 0;
+    }
+	return(grad2);
+}
+
 #if 1
 typedef struct matrix (*halo_func2_GPU_t) (const struct point *pImage, const struct Potential_SOA *lens, int shalos, int nhalos);
 
 __constant__ halo_func2_GPU_t halo_func2_GPU[100] =
 {
 	0, 0, 0, 0, 0, 0, 0, 0, 0,  0,
-	0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+	0, 0, 0, 0, module_potentialDerivatives_totalGradient2_14_SOA_GPU, 0, 0, 0, 0, 0,
 	0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 	0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 	   0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -266,6 +285,8 @@ __constant__ halo_func2_GPU_t halo_func2_GPU[100] =
 	   0, 0, 0, 0, 0, 0, 0, 0, 0, 0
 	   };
 #endif
+
+
 __global__
 void
 module_potentialDerivatives_totalGradient2_SOA_GPU(type_t *grid_grad2_a, type_t *grid_grad2_b, type_t *grid_grad2_c, type_t *grid_grad2_d, const struct Potential_SOA *lens, const struct grid_param *frame, int nhalos, type_t dx, type_t dy, int nbgridcells_x, int nbgridcells_y, int istart, int jstart)
@@ -301,7 +322,8 @@ module_potentialDerivatives_totalGradient2_SOA_GPU(type_t *grid_grad2_a, type_t 
                         int count     = 1;
                         while (lens->type[shalos + count] == lens_type and shalos + count < nhalos) count++;
                         //
-                        //if(row == 0 && col == 0) printf("point = %p \n", halo_func2_GPU[lens_type] );
+                        if(row == 0 && col == 0) printf("point = %d \n", lens_type );
+                        //if(row == 0 && col == 0) printf("point = %p \n", halo_func2_GPU[81] );
                         //
                         //clumpgrad = (*halo_func2_GPU[lens_type])(&image_point, lens, shalos, count);
                         clumpgrad = module_potentialDerivatives_totalGradient2_81_SOA_GPU(&image_point, lens, shalos, count);

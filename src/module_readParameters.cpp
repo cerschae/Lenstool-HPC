@@ -129,12 +129,12 @@ void module_readParameters_setbayesmapmodels(const runmode_param* runmode, const
 	for(int i = 0; i < runmode->nhalos; i++){
 		if(limit[i].position.x.block >= 1){
 			lenses->position_x[i] = bayespot[index*nparam+param_index];
-			//std::cerr << " X : "<< index*nparam+param_index << " " << bayespot[index*nparam+param_index] << std::endl;
+			std::cerr << " X : "<< index*nparam+param_index << " " << bayespot[index*nparam+param_index] << std::endl;
 			param_index++;
 		}
 		if(limit[i].position.y.block >= 1){
 			lenses->position_y[i] = bayespot[index*nparam+param_index];
-			//std::cerr << " X : "<< index*nparam+param_index << " " << bayespot[index*nparam+param_index] << std::endl;
+			std::cerr << " Y : "<< index*nparam+param_index << " " << bayespot[index*nparam+param_index] << std::endl;
 			param_index++;
 		}
 		if(limit[i].ellipticity_potential.block >= 1){
@@ -1722,8 +1722,10 @@ std::ifstream IN(infile.c_str(), std::ios::in);
     {
 	while(std::getline(IN,line1))
 	{   
+			first = "";	//Reinit string var, avoids empty line bug where first was wrongly = limit
 	    	std::istringstream read1(line1);
 	    	read1 >> first;
+	    	//td::cerr <<  " 1: "<< first << std::endl;
 
 
 		if (!strncmp(first.c_str(), "limit", 5))  // Read the limits
@@ -1732,6 +1734,7 @@ std::ifstream IN(infile.c_str(), std::ios::in);
                 {
                     std::istringstream read2(line2);
                     read2 >> second;    // Read in 1 word
+                    //std::cerr <<  " 2: "<< second << std::endl;
                     if (strcmp(second.c_str(), "end") == 0) break;  // stop reading at "end" and move to next potential limit section
                 
 
@@ -1761,7 +1764,7 @@ std::ifstream IN(infile.c_str(), std::ios::in);
                         host_potentialoptimization[i].vdisp.max =(type_t)cast_max;
                         host_potentialoptimization[i].vdisp.sigma =(type_t)cast_sigma;
                     }
-                    else if ( !strcmp(second.c_str(), "ellip_pot") )  // Read in for ellipticity
+                    else if ( !strcmp(second.c_str(), "ellip_pot")|| !strcmp(second.c_str(), "gamma") )  // Read in for ellipticity
                     {
                         sscanf(line2.c_str(), "%*s%d%lf%lf%lf", &host_potentialoptimization[i].ellipticity_potential.block,
                         		&cast_min, &cast_max, &cast_sigma);
@@ -2124,40 +2127,50 @@ void read_potentialSOA_ntypes(std::string infile, int N_type[]){
 						N_type[ind] += 1;
 					}
 
-					if(!strcmp(third.c_str(), "NFW") ||
+					else if(!strcmp(third.c_str(), "NFW") ||
 					   !strcmp(third.c_str(), "2") )
 					{
 						ind=atoi(third.c_str());
 						N_type[ind] += 1;
 					}
-					if(!strcmp(third.c_str(), "SIES") ||
+					else if(!strcmp(third.c_str(), "SIES") ||
 					   !strcmp(third.c_str(), "3") )
 					{
 						ind=atoi(third.c_str());
 						N_type[ind] += 1;
 					}
-					if(!strncmp(third.c_str(), "point", 5) ||
+					else if(!strncmp(third.c_str(), "point", 5) ||
 					   !strcmp(third.c_str(), "4") )
 					{
 						ind=atoi(third.c_str());
 						N_type[ind] += 1;
 					}
-					if(!strcmp(third.c_str(), "SIE") ||
+					else if(!strcmp(third.c_str(), "SIE") ||
 					   !strcmp(third.c_str(), "5") )
 					{
 						ind=atoi(third.c_str());
 						N_type[ind] += 1;
 					}
-					if(!strcmp(third.c_str(), "8") )	//PIEMD
+					else if(!strcmp(third.c_str(), "8") )	//PIEMD
 					{
 						ind=atoi(third.c_str());
 						N_type[ind] += 1;
 					}
-					if(!strcmp(third.c_str(), "81") )	//PIEMD81
+					else if(!strcmp(third.c_str(), "81") )	//PIEMD81
 					{
 						ind=atoi(third.c_str());
 						N_type[ind] += 1;
 						//std::cerr << "Type First: " << ind << std::endl;
+					}
+					else if(!strcmp(third.c_str(), "14") )	//PIEMD81
+					{
+						ind=atoi(third.c_str());
+						N_type[ind] += 1;
+						//std::cerr << "Type First: " << ind << std::endl;
+					}
+					else{
+				        printf( "ERROR: Unknown Lensprofile, Emergency stop\n");
+				        exit (EXIT_FAILURE);
 					}
 				}
                 }
@@ -2234,8 +2247,10 @@ void module_readParameters_PotentialSOA_direct(std::string infile, Potential_SOA
 	if(IN){
 	while(std::getline(IN,line1))
         {
+		first = "";
 	    std::istringstream read1(line1); // create a stream for the line
 	    read1 >> first;
+	    std::cerr << " 1: " << first << std::endl;
             if (!strncmp(first.c_str(), "potent", 6))  // Read in potential
 		{
 			lens_temp.position.x = lens_temp.position.y = 0.;
@@ -2262,6 +2277,7 @@ void module_readParameters_PotentialSOA_direct(std::string infile, Potential_SOA
 				std::istringstream read2(line2);
 				read2 >> second >> third;
 				//std::cerr << line2 << std::endl;
+				std::cerr << " 2: " << second << std::endl;
 				if (strcmp(second.c_str(), "end") == 0)  // Move to next potential and initialize it
 				{
 					if ( lens_temp.z == 0. )  // Check if redshift from current halo was initialized
@@ -2536,9 +2552,12 @@ void module_readParameters_calculatePotentialparameter(Potential *lens){
 			//printf("3 : %f %f \n",lens->ellipticity,lens->ellipticity_potential);
 		}
         break;
-
+	case(14):
+		lens->ellipticity_potential = lens->ellipticity / 3;
+		break;
 	default:
-            printf( "ERROR: LENSPARA profil type of clump %s unknown : %d\n",lens->name, lens->type);
+        printf( "ERROR: LENSPARA profil type of clump %s unknown : %d\n",lens->name, lens->type);
+        exit (EXIT_FAILURE);
 		break;
     };
 	
@@ -2556,7 +2575,12 @@ void module_readParameters_calculatePotentialparameter_SOA(Potential_SOA *lens, 
 		//impact parameter b0
 		lens->b0[ind] = 4* pi_c2 * lens->vdisp[ind] * lens->vdisp[ind] ;
 		//ellipticity_potential
-		lens->ellipticity_potential[ind] = lens->ellipticity[ind]/3 ;
+		if ( lens->ellipticity[ind] == 0. && lens->ellipticity_potential[ind] != 0. ){
+			lens->ellipticity_potential[ind] = lens->ellipticity[ind]/3 ;
+		}
+		else{
+			lens->ellipticity[ind] = lens->ellipticity_potential[ind]*3;
+		}
 	    break;
 
 	case(8): /* PIEMD */
@@ -2600,7 +2624,12 @@ void module_readParameters_calculatePotentialparameter_SOA(Potential_SOA *lens, 
         break;
 
 	default:
-            printf( "ERROR: LENSPARA profil type of clump %f unknown : %d N %d \n",lens->name[ind], lens->type[ind], ind);
+		if ( lens->ellipticity[ind] != 0. && lens->ellipticity_potential[ind] == 0. ){
+			lens->ellipticity_potential[ind] = lens->ellipticity[ind]/3 ;
+		}
+		else{
+			lens->ellipticity[ind] = lens->ellipticity_potential[ind]*3;
+		}
 		break;
     };
 

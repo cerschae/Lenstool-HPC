@@ -228,10 +228,13 @@ int main(int argc, char *argv[])
 	// Output: Potentials and its parameters
 
 	module_readParameters_PotentialSOA_direct(inputFile, &lenses_SOA, runmode.nhalos, runmode.n_tot_halos, cosmology);
-	module_readParameters_debug_potential_SOA(0, lenses_SOA, runmode.nhalos);
+	module_readParameters_debug_potential_SOA(1, lenses_SOA, runmode.nhalos);
 	module_readParameters_limit(inputFile, host_potentialoptimization, runmode.nhalos );
-	module_readParameters_debug_limit(0, host_potentialoptimization[0]);
-
+#if 0
+	for(int ii = 0; ii <runmode.nhalos ; ii++){
+		module_readParameters_debug_limit(1, host_potentialoptimization[ii]);
+	}
+#endif
 	if (runmode.potfile == 1 )
 	{
 		module_readParameters_readpotfiles_param(inputFile, potfile, cosmology);
