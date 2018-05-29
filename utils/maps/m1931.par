@@ -3,7 +3,7 @@ runmode
 	reference        3 292.95682    -26.575718
 	verbose	0
 	mass	4 200 0.35 mass_4
-	ampli	1 200 1000 ampli_1
+	ampli	5 200 1000 ampli_5
 	end
 image
 	multfile         1 immul_ongoing.cat

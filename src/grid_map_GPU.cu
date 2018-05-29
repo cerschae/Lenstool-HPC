@@ -657,6 +657,7 @@ __global__ void amplif_4_grid_GPU(type_t *ampli,type_t *grid_grad2_a,type_t *gri
         type_t ga2 = grid_grad2_b[index]*dlsds;
         type_t gam = sqrt(ga1 * ga1 + ga2 * ga2);
         type_t gp = gam / (1 - kappa);
+
         ampli[index] = (1 - kappa) * (1 + gp * gp) / (1 - gp * gp);
     }
 }

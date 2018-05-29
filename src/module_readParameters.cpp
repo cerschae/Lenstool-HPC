@@ -1365,6 +1365,7 @@ void module_readParameters_readpotfiles_SOA(const runmode_param *runmode, const 
 	double DTR=acos(-1.)/180.;	/* 1 deg in rad  = pi/180 */
 	//cast variables
 	double cast_x,cast_y,cast_theta,cast_lum,cast_mag, cast_name;
+
 	int index = runmode->nhalos;
 
 
@@ -1396,6 +1397,8 @@ void module_readParameters_readpotfiles_SOA(const runmode_param *runmode, const 
                 else if ( line1[0] == '#' )
                     continue;
 
+
+                 cast_x = cast_y = cast_theta = cast_lum = cast_mag = cast_name = DBL_MAX;
                 //std::cerr << "Turn " << i << std::endl;
 
                 // Default initialisation of clump
@@ -1465,6 +1468,11 @@ void module_readParameters_readpotfiles_SOA(const runmode_param *runmode, const 
 				lens->ellipticity_angle[i] = lens->theta[i]* DTR;
 				lens->anglecos[i]	     = cos(lens->ellipticity_angle[i]);
 				lens->anglesin[i] 	     = sin(lens->ellipticity_angle[i]);
+
+				if(cast_x == DBL_MAX or cast_y == DBL_MAX or cast_theta == DBL_MAX or cast_lum == DBL_MAX or cast_mag == DBL_MAX){
+					std::cerr << "Corrupted potfile: Potential " << i << " of potfile " << potfile[jj].potfile << " has missing values" << std::endl;
+					exit(-1);
+				}
 
 
 
@@ -1571,7 +1579,7 @@ void setScalingRelations(const runmode_param *runmode, const cosmo_param *cosmol
 
                 	 lenses->vdisp[i] = pot->sigma *
                                     pow(10., 0.4 * (pot->mag0 - lenses->mag[i]) / pot->vdslope);
-                	// std::cerr << " "<< pot->sigma1 <<" "<< pot->vdslope << " "<< lenses->mag[i] << " "<< pot->mag0 << " "<< lenses->vdisp[i] << "  " << i << std::endl;
+                	std::cerr << " "<< pot->sigma1 <<" "<< pot->vdslope << " "<< lenses->mag[i] << " "<< pot->mag0 << " "<< lenses->vdisp[i] << "  " << i << std::endl;
                      /* The factor of 2 so that with slope1 = 4, we have
                       * 2/slope1=1/2, then Brainerd, Blandford, Smail, 1996 */
                 	 lenses->rcut[i] = pot->cut *
