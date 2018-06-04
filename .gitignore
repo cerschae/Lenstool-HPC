@@ -3,6 +3,7 @@
 .metadata
 .cproject
 .settings
+
 *.o
 *.cuo
 *.so
@@ -12,3 +13,5 @@ GradienBenchmark
 .nfs*
 *.DIST
 *~
+*.fits
+T-*

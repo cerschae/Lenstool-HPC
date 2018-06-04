@@ -1,0 +1,2617 @@
+Current working dir: /home/cerschae/hff_slmodels/A2744
+T-1523879239
+Reference: Ra 3.58626 Dec:-30.4002
+Runmode: nhalos = 6, nsets = 29, nimagestot = 83, source = 0, image = 0, arclet  = 0, cline = 1, inverse= 0, multi= 100 ampli= 5 DEBUG = 0
+Potfile: potid = 0, filename = potfile_cl_N-NW-S3.txt, ftype = 1, type = 81, zlens = 0.308000, mag0 = 27.000000, sigma = 10.000000,
+ 	 core = 0.000000, corekpc = 0.000000, ircut = 0, cut1 = 66.141178, cut2 = 66.141178,
+ 	 cutkpc1 = 300.000000, cutkpc2 = 300.000000, islope = 0, slope1 = 4.000000, slope2 = 4.200000
+Potfile: potid = 0, filename = new_potfile_with_ASTRODEEP_data.txt, ftype = 1, type = 81, zlens = 0.308000, mag0 = 19.440000, sigma = 120.000000,
+ 	 core = 0.033071, corekpc = 0.150000, ircut = 3, cut1 = 2.803711, cut2 = 0.203883,
+ 	 cutkpc1 = 12.716939, cutkpc2 = 0.924764, islope = 0, slope1 = 4.000000, slope2 = 4.200000
+Potential[0]: x = -1.627000, y = -1.047000, b0 = 16.537099, vdisp = 618.283000, type = 81, 
+ 	 ellipticity = 0.882000, ellipticity_pot = 0.599490, ellipticity angle (radians) = 1.515906, rcore = 21.106752, rcut = 220.470592,
+ 	 z = 0.308000
+, angle cos 0.054863, sin 0.998494 
+Potential[1]: x = -17.331000, y = -17.137000, b0 = 31.037622, vdisp = 847.036000, type = 81, 
+ 	 ellipticity = 0.552000, ellipticity_pot = 0.301007, ellipticity angle (radians) = 0.769149, rcore = 12.980868, rcut = 220.470592,
+ 	 z = 0.308000
+, angle cos 0.718503, sin 0.695524 
+Potential[2]: x = -3.577000, y = 24.718000, b0 = 1.807385, vdisp = 204.401000, type = 81, 
+ 	 ellipticity = 0.720000, ellipticity_pot = 0.425036, ellipticity angle (radians) = -0.575959, rcore = 0.025354, rcut = 2.915503,
+ 	 z = 0.308000
+, angle cos 0.838671, sin -0.544639 
+Potential[3]: x = 0.000000, y = 0.000000, b0 = 4.042209, vdisp = 305.680000, type = 81, 
+ 	 ellipticity = 0.205000, ellipticity_pot = 0.103600, ellipticity angle (radians) = -1.326450, rcore = 0.074078, rcut = 6.276798,
+ 	 z = 0.308000
+, angle cos 0.241922, sin -0.970296 
+Potential[4]: x = -17.945000, y = -19.967000, b0 = 4.193906, vdisp = 311.363000, type = 81, 
+ 	 ellipticity = 0.377000, ellipticity_pot = 0.195721, ellipticity angle (radians) = 0.258309, rcore = 0.076724, rcut = 6.512260,
+ 	 z = 0.308000
+, angle cos 0.966823, sin 0.255446 
+Potential[5]: x = -12.701000, y = -0.782000, b0 = 1.558804, vdisp = 189.825000, type = 81, 
+ 	 ellipticity = 0.299000, ellipticity_pot = 0.153000, ellipticity angle (radians) = -0.813323, rcore = 0.032189, rcut = 6.702526,
+ 	 z = 0.308000
+, angle cos 0.687088, sin -0.726575 
+Potential[6]: x = 138.953000, y = 95.025600, b0 = 0.042167, vdisp = 31.220667, type = 81, 
+ 	 ellipticity = 0.000000, ellipticity_pot = 0.000010, ellipticity angle (radians) = 0.000000, rcore = 0.000000, rcut = 644.697945,
+ 	 z = 0.308000
+, angle cos 1.000000, sin 0.000000 
+Potential[7]: x = 102.996000, y = 84.276000, b0 = 0.045583, vdisp = 32.460862, type = 81, 
+ 	 ellipticity = 0.000000, ellipticity_pot = 0.000010, ellipticity angle (radians) = 0.000000, rcore = 0.000000, rcut = 696.934578,
+ 	 z = 0.308000
+, angle cos 1.000000, sin 0.000000 
+Potential[8]: x = 29.810600, y = 153.295000, b0 = 0.040216, vdisp = 30.489936, type = 81, 
+ 	 ellipticity = 0.000000, ellipticity_pot = 0.000010, ellipticity angle (radians) = 0.000000, rcore = 0.000000, rcut = 614.872335,
+ 	 z = 0.308000
+, angle cos 1.000000, sin 0.000000 
+Potential[9]: x = -26.498892, y = 30.706920, b0 = 1.269050, vdisp = 171.276171, type = 81, 
+ 	 ellipticity = 0.256506, ellipticity_pot = 0.130435, ellipticity angle (radians) = -1.115265, rcore = 0.067371, rcut = 5.711690,
+ 	 z = 0.308000
+, angle cos 0.439939, sin -0.898028 
+Potential[10]: x = 2.718630, y = 21.232080, b0 = 1.169977, vdisp = 164.454721, type = 81, 
+ 	 ellipticity = 0.152941, ellipticity_pot = 0.076923, ellipticity angle (radians) = 0.724312, rcore = 0.062112, rcut = 5.265789,
+ 	 z = 0.308000
+, angle cos 0.748956, sin 0.662620 
+Potential[11]: x = -19.380796, y = -16.053840, b0 = 1.046914, vdisp = 155.565449, type = 81, 
+ 	 ellipticity = 0.342282, ellipticity_pot = 0.176471, ellipticity angle (radians) = 0.644026, rcore = 0.055578, rcut = 4.711911,
+ 	 z = 0.308000
+, angle cos 0.799685, sin 0.600420 
+Potential[12]: x = -4.377349, y = 13.615200, b0 = 0.960892, vdisp = 149.037325, type = 81, 
+ 	 ellipticity = 0.246154, ellipticity_pot = 0.125000, ellipticity angle (radians) = -1.368338, rcore = 0.051012, rcut = 4.324748,
+ 	 z = 0.308000
+, angle cos 0.201078, sin -0.979575 
+Potential[13]: x = -0.930589, y = 2.830680, b0 = 0.931638, vdisp = 146.751060, type = 81, 
+ 	 ellipticity = 0.453858, ellipticity_pot = 0.240000, ellipticity angle (radians) = -1.272345, rcore = 0.049459, rcut = 4.193081,
+ 	 z = 0.308000
+, angle cos 0.294040, sin -0.955793 
+Potential[14]: x = 20.488602, y = -32.439600, b0 = 0.885497, vdisp = 143.070879, type = 81, 
+ 	 ellipticity = 0.280000, ellipticity_pot = 0.142857, ellipticity angle (radians) = 0.015708, rcore = 0.047009, rcut = 3.985412,
+ 	 z = 0.308000
+, angle cos 0.999877, sin 0.015707 
+Potential[15]: x = -6.586541, y = 6.558120, b0 = 0.867855, vdisp = 141.638476, type = 81, 
+ 	 ellipticity = 0.180328, ellipticity_pot = 0.090909, ellipticity angle (radians) = 0.296706, rcore = 0.046073, rcut = 3.906009,
+ 	 z = 0.308000
+, angle cos 0.956305, sin 0.292372 
+Potential[16]: x = -42.747982, y = 37.607037, b0 = 0.847319, vdisp = 139.952689, type = 81, 
+ 	 ellipticity = 0.857864, ellipticity_pot = 0.566667, ellipticity angle (radians) = 0.235619, rcore = 0.044982, rcut = 3.813583,
+ 	 z = 0.308000
+, angle cos 0.972370, sin 0.233445 
+Potential[17]: x = -72.301575, y = 65.035080, b0 = 0.832544, vdisp = 138.727080, type = 81, 
+ 	 ellipticity = 0.403183, ellipticity_pot = 0.210526, ellipticity angle (radians) = -0.575959, rcore = 0.044198, rcut = 3.747083,
+ 	 z = 0.308000
+, angle cos 0.838671, sin -0.544639 
+Potential[18]: x = 24.065163, y = -11.515680, b0 = 0.720555, vdisp = 129.059877, type = 81, 
+ 	 ellipticity = 0.104972, ellipticity_pot = 0.052632, ellipticity angle (radians) = 0.136136, rcore = 0.038253, rcut = 3.243047,
+ 	 z = 0.308000
+, angle cos 0.990748, sin 0.135716 
+Potential[19]: x = -5.871323, y = 18.354600, b0 = 0.690649, vdisp = 126.353200, type = 81, 
+ 	 ellipticity = 0.232082, ellipticity_pot = 0.117647, ellipticity angle (radians) = 0.884882, rcore = 0.036665, rcut = 3.108445,
+ 	 z = 0.308000
+, angle cos 0.633381, sin 0.773840 
+Potential[20]: x = 61.820885, y = 42.903000, b0 = 0.673515, vdisp = 124.776054, type = 81, 
+ 	 ellipticity = 0.830450, ellipticity_pot = 0.533333, ellipticity angle (radians) = -0.439823, rcore = 0.035755, rcut = 3.031330,
+ 	 z = 0.308000
+, angle cos 0.904827, sin -0.425779 
+Potential[21]: x = 35.266182, y = 6.469200, b0 = 0.666051, vdisp = 124.082703, type = 81, 
+ 	 ellipticity = 0.600000, ellipticity_pot = 0.333333, ellipticity angle (radians) = -0.397935, rcore = 0.035359, rcut = 2.997735,
+ 	 z = 0.308000
+, angle cos 0.921863, sin -0.387516 
+Potential[22]: x = 34.727880, y = 83.172960, b0 = 0.650500, vdisp = 122.625628, type = 81, 
+ 	 ellipticity = 0.838588, ellipticity_pot = 0.542857, ellipticity angle (radians) = -0.406662, rcore = 0.034534, rcut = 2.927745,
+ 	 z = 0.308000
+, angle cos 0.918446, sin -0.395546 
+Potential[23]: x = 49.967793, y = 49.420080, b0 = 0.650081, vdisp = 122.586105, type = 81, 
+ 	 ellipticity = 0.219512, ellipticity_pot = 0.111111, ellipticity angle (radians) = -1.523672, rcore = 0.034511, rcut = 2.925858,
+ 	 z = 0.308000
+, angle cos 0.047106, sin -0.998890 
+Potential[24]: x = -20.926311, y = 3.041640, b0 = 0.643972, vdisp = 122.008825, type = 81, 
+ 	 ellipticity = 0.928673, ellipticity_pot = 0.677419, ellipticity angle (radians) = 0.731293, rcore = 0.034187, rcut = 2.898366,
+ 	 z = 0.308000
+, angle cos 0.744312, sin 0.667833 
+Potential[25]: x = -21.824532, y = 56.875317, b0 = 0.613461, vdisp = 119.083406, type = 81, 
+ 	 ellipticity = 0.219512, ellipticity_pot = 0.111111, ellipticity angle (radians) = 0.593412, rcore = 0.032567, rcut = 2.761044,
+ 	 z = 0.308000
+, angle cos 0.829038, sin 0.559193 
+Potential[26]: x = -9.190349, y = 37.217518, b0 = 0.611515, vdisp = 118.894358, type = 81, 
+ 	 ellipticity = 0.334873, ellipticity_pot = 0.172414, ellipticity angle (radians) = -0.171042, rcore = 0.032464, rcut = 2.752284,
+ 	 z = 0.308000
+, angle cos 0.985408, sin -0.170209 
+Potential[27]: x = 38.241432, y = -31.139280, b0 = 0.602681, vdisp = 118.032402, type = 81, 
+ 	 ellipticity = 0.704142, ellipticity_pot = 0.411765, ellipticity angle (radians) = -0.715585, rcore = 0.031995, rcut = 2.712522,
+ 	 z = 0.308000
+, angle cos 0.754710, sin -0.656059 
+Potential[28]: x = 2.948310, y = 45.466920, b0 = 0.595672, vdisp = 117.344097, type = 81, 
+ 	 ellipticity = 0.882353, ellipticity_pot = 0.600000, ellipticity angle (radians) = -1.019272, rcore = 0.031623, rcut = 2.680978,
+ 	 z = 0.308000
+, angle cos 0.523986, sin -0.851727 
+Potential[29]: x = 14.583575, y = 85.177080, b0 = 0.572885, vdisp = 115.077719, type = 81, 
+ 	 ellipticity = 0.165517, ellipticity_pot = 0.083333, ellipticity angle (radians) = 1.127483, rcore = 0.030413, rcut = 2.578418,
+ 	 z = 0.308000
+, angle cos 0.428935, sin 0.903335 
+Potential[30]: x = -7.494648, y = 14.779080, b0 = 0.569964, vdisp = 114.783971, type = 81, 
+ 	 ellipticity = 0.600000, ellipticity_pot = 0.333333, ellipticity angle (radians) = 1.371829, rcore = 0.030258, rcut = 2.565271,
+ 	 z = 0.308000
+, angle cos 0.197657, sin 0.980271 
+Potential[31]: x = -39.473620, y = 9.470520, b0 = 0.564816, vdisp = 114.264480, type = 81, 
+ 	 ellipticity = 0.187015, ellipticity_pot = 0.094340, ellipticity angle (radians) = 1.312488, rcore = 0.029985, rcut = 2.542104,
+ 	 z = 0.308000
+, angle cos 0.255446, sin 0.966823 
+Potential[32]: x = -5.147816, y = -2.421000, b0 = 0.563620, vdisp = 114.143437, type = 81, 
+ 	 ellipticity = 0.661981, ellipticity_pot = 0.378378, ellipticity angle (radians) = -0.253073, rcore = 0.029921, rcut = 2.536721,
+ 	 z = 0.308000
+, angle cos 0.968148, sin -0.250380 
+Potential[33]: x = -9.078161, y = 46.015920, b0 = 0.563569, vdisp = 114.138260, type = 81, 
+ 	 ellipticity = 0.236593, ellipticity_pot = 0.120000, ellipticity angle (radians) = -1.356121, rcore = 0.029919, rcut = 2.536491,
+ 	 z = 0.308000
+, angle cos 0.213030, sin -0.977046 
+Potential[34]: x = 3.275696, y = 19.909800, b0 = 0.560334, vdisp = 113.810216, type = 81, 
+ 	 ellipticity = 0.152941, ellipticity_pot = 0.076923, ellipticity angle (radians) = 0.307178, rcore = 0.029747, rcut = 2.521931,
+ 	 z = 0.308000
+, angle cos 0.953191, sin 0.302370 
+Potential[35]: x = -64.436170, y = -11.888639, b0 = 0.547958, vdisp = 112.546306, type = 81, 
+ 	 ellipticity = 0.314402, ellipticity_pot = 0.161290, ellipticity angle (radians) = -0.504400, rcore = 0.029090, rcut = 2.466228,
+ 	 z = 0.308000
+, angle cos 0.875465, sin -0.483282 
+Potential[36]: x = -56.169956, y = 0.182880, b0 = 0.524164, vdisp = 110.075647, type = 81, 
+ 	 ellipticity = 0.600000, ellipticity_pot = 0.333333, ellipticity angle (radians) = -0.143117, rcore = 0.027827, rcut = 2.359138,
+ 	 z = 0.308000
+, angle cos 0.989776, sin -0.142629 
+Potential[37]: x = -59.519985, y = 55.198800, b0 = 0.520652, vdisp = 109.706219, type = 81, 
+ 	 ellipticity = 0.737265, ellipticity_pot = 0.440000, ellipticity angle (radians) = 0.500909, rcore = 0.027640, rcut = 2.343329,
+ 	 z = 0.308000
+, angle cos 0.877146, sin 0.480223 
+Potential[38]: x = 16.485327, y = 33.726960, b0 = 0.515973, vdisp = 109.212223, type = 81, 
+ 	 ellipticity = 0.470588, ellipticity_pot = 0.250000, ellipticity angle (radians) = -0.537561, rcore = 0.027392, rcut = 2.322273,
+ 	 z = 0.308000
+, angle cos 0.858960, sin -0.512043 
+Potential[39]: x = 12.733683, y = 5.770800, b0 = 0.513390, vdisp = 108.938464, type = 81, 
+ 	 ellipticity = 0.236593, ellipticity_pot = 0.120000, ellipticity angle (radians) = 0.453786, rcore = 0.027255, rcut = 2.310645,
+ 	 z = 0.308000
+, angle cos 0.898794, sin 0.438371 
+Potential[40]: x = 64.339840, y = 47.102757, b0 = 0.503787, vdisp = 107.914859, type = 81, 
+ 	 ellipticity = 0.438202, ellipticity_pot = 0.230769, ellipticity angle (radians) = 0.668461, rcore = 0.026745, rcut = 2.267427,
+ 	 z = 0.308000
+, angle cos 0.784776, sin 0.619779 
+Potential[41]: x = 73.759870, y = -8.008920, b0 = 0.499398, vdisp = 107.443772, type = 81, 
+ 	 ellipticity = 0.415162, ellipticity_pot = 0.217391, ellipticity angle (radians) = 0.933751, rcore = 0.026512, rcut = 2.247674,
+ 	 z = 0.308000
+, angle cos 0.594823, sin 0.803857 
+Potential[42]: x = 45.823833, y = 35.076600, b0 = 0.497952, vdisp = 107.288024, type = 81, 
+ 	 ellipticity = 0.060550, ellipticity_pot = 0.030303, ellipticity angle (radians) = -0.104720, rcore = 0.026435, rcut = 2.241162,
+ 	 z = 0.308000
+, angle cos 0.994522, sin -0.104528 
+Potential[43]: x = -50.904650, y = -60.404040, b0 = 0.486841, vdisp = 106.084332, type = 81, 
+ 	 ellipticity = 0.073973, ellipticity_pot = 0.037037, ellipticity angle (radians) = 0.331613, rcore = 0.025845, rcut = 2.191156,
+ 	 z = 0.308000
+, angle cos 0.945519, sin 0.325568 
+Potential[44]: x = -26.252699, y = 39.812760, b0 = 0.475891, vdisp = 104.884484, type = 81, 
+ 	 ellipticity = 0.060550, ellipticity_pot = 0.030303, ellipticity angle (radians) = -0.300197, rcore = 0.025264, rcut = 2.141871,
+ 	 z = 0.308000
+, angle cos 0.955278, sin -0.295708 
+Potential[45]: x = -55.974140, y = -51.755043, b0 = 0.461474, vdisp = 103.283571, type = 81, 
+ 	 ellipticity = 0.642336, ellipticity_pot = 0.363636, ellipticity angle (radians) = 0.525344, rcore = 0.024499, rcut = 2.076985,
+ 	 z = 0.308000
+, angle cos 0.865151, sin 0.501511 
+Potential[46]: x = -12.671949, y = 33.260036, b0 = 0.460285, vdisp = 103.150478, type = 81, 
+ 	 ellipticity = 0.342282, ellipticity_pot = 0.176471, ellipticity angle (radians) = 0.513127, rcore = 0.024436, rcut = 2.071635,
+ 	 z = 0.308000
+, angle cos 0.871214, sin 0.490904 
+Potential[47]: x = -5.850189, y = 54.622437, b0 = 0.454305, vdisp = 102.478143, type = 81, 
+ 	 ellipticity = 0.778462, ellipticity_pot = 0.478261, ellipticity angle (radians) = -1.260128, rcore = 0.024118, rcut = 2.044717,
+ 	 z = 0.308000
+, angle cos 0.305695, sin -0.952129 
+Potential[48]: x = 22.969040, y = 11.043360, b0 = 0.435920, vdisp = 100.383249, type = 81, 
+ 	 ellipticity = 0.528302, ellipticity_pot = 0.285714, ellipticity angle (radians) = 1.228712, rcore = 0.023142, rcut = 1.961974,
+ 	 z = 0.308000
+, angle cos 0.335452, sin 0.942057 
+Potential[49]: x = -46.868000, y = -54.684360, b0 = 0.431407, vdisp = 99.862227, type = 81, 
+ 	 ellipticity = 0.438202, ellipticity_pot = 0.230769, ellipticity angle (radians) = -0.657989, rcore = 0.022902, rcut = 1.941660,
+ 	 z = 0.308000
+, angle cos 0.791224, sin -0.611527 
+Potential[50]: x = -28.376213, y = 71.187120, b0 = 0.431268, vdisp = 99.846132, type = 81, 
+ 	 ellipticity = 0.456180, ellipticity_pot = 0.241379, ellipticity angle (radians) = -1.251401, rcore = 0.022895, rcut = 1.941035,
+ 	 z = 0.308000
+, angle cos 0.313992, sin -0.949425 
+Potential[51]: x = 64.955310, y = 62.024400, b0 = 0.425135, vdisp = 99.133684, type = 81, 
+ 	 ellipticity = 0.342282, ellipticity_pot = 0.176471, ellipticity angle (radians) = -0.310669, rcore = 0.022569, rcut = 1.913433,
+ 	 z = 0.308000
+, angle cos 0.952129, sin -0.305695 
+Potential[52]: x = -59.010662, y = -2.270520, b0 = 0.422345, vdisp = 98.807804, type = 81, 
+ 	 ellipticity = 0.384615, ellipticity_pot = 0.200000, ellipticity angle (radians) = 0.319395, rcore = 0.022421, rcut = 1.900874,
+ 	 z = 0.308000
+, angle cos 0.949425, sin 0.313992 
+Potential[53]: x = -29.955297, y = -21.737880, b0 = 0.412408, vdisp = 97.638533, type = 81, 
+ 	 ellipticity = 0.256506, ellipticity_pot = 0.130435, ellipticity angle (radians) = -0.804597, rcore = 0.021894, rcut = 1.856151,
+ 	 z = 0.308000
+, angle cos 0.693402, sin -0.720551 
+Potential[54]: x = 7.897380, y = 55.825920, b0 = 0.407368, vdisp = 97.040102, type = 81, 
+ 	 ellipticity = 0.132743, ellipticity_pot = 0.066667, ellipticity angle (radians) = 0.788889, rcore = 0.021626, rcut = 1.833468,
+ 	 z = 0.308000
+, angle cos 0.704634, sin 0.709571 
+Potential[55]: x = -45.650160, y = -63.599762, b0 = 0.407068, vdisp = 97.004358, type = 81, 
+ 	 ellipticity = 0.778462, ellipticity_pot = 0.478261, ellipticity angle (radians) = -0.968658, rcore = 0.021610, rcut = 1.832117,
+ 	 z = 0.308000
+, angle cos 0.566406, sin -0.824126 
+Potential[56]: x = 15.126256, y = 22.483080, b0 = 0.394010, vdisp = 95.435784, type = 81, 
+ 	 ellipticity = 0.600000, ellipticity_pot = 0.333333, ellipticity angle (radians) = 0.769690, rcore = 0.020917, rcut = 1.773345,
+ 	 z = 0.308000
+, angle cos 0.718126, sin 0.695913 
+Potential[57]: x = 22.711388, y = 21.807000, b0 = 0.388246, vdisp = 94.735172, type = 81, 
+ 	 ellipticity = 0.300578, ellipticity_pot = 0.153846, ellipticity angle (radians) = 1.425934, rcore = 0.020611, rcut = 1.747404,
+ 	 z = 0.308000
+, angle cos 0.144356, sin 0.989526 
+Potential[58]: x = 2.295009, y = 10.871640, b0 = 0.385668, vdisp = 94.420098, type = 81, 
+ 	 ellipticity = 0.000000, ellipticity_pot = 0.000010, ellipticity angle (radians) = 0.958186, rcore = 0.020474, rcut = 1.735800,
+ 	 z = 0.308000
+, angle cos 0.575005, sin 0.818150 
+Potential[59]: x = -19.521273, y = 53.508240, b0 = 0.384226, vdisp = 94.243465, type = 81, 
+ 	 ellipticity = 0.384615, ellipticity_pot = 0.200000, ellipticity angle (radians) = 1.521927, rcore = 0.020398, rcut = 1.729312,
+ 	 z = 0.308000
+, angle cos 0.048850, sin 0.998806 
+Potential[60]: x = -8.929246, y = -33.836040, b0 = 0.383378, vdisp = 94.139361, type = 81, 
+ 	 ellipticity = 0.648780, ellipticity_pot = 0.368421, ellipticity angle (radians) = 0.654498, rcore = 0.020353, rcut = 1.725493,
+ 	 z = 0.308000
+, angle cos 0.793353, sin 0.608761 
+Potential[61]: x = -38.835580, y = 43.770958, b0 = 0.371867, vdisp = 92.715265, type = 81, 
+ 	 ellipticity = 0.492228, ellipticity_pot = 0.263158, ellipticity angle (radians) = -0.731293, rcore = 0.019742, rcut = 1.673683,
+ 	 z = 0.308000
+, angle cos 0.744312, sin -0.667833 
+Potential[62]: x = 51.769314, y = -43.146720, b0 = 0.370465, vdisp = 92.540373, type = 81, 
+ 	 ellipticity = 0.766423, ellipticity_pot = 0.466667, ellipticity angle (radians) = 0.701622, rcore = 0.019667, rcut = 1.667375,
+ 	 z = 0.308000
+, angle cos 0.763796, sin 0.645458 
+Potential[63]: x = -16.954075, y = -27.461520, b0 = 0.367796, vdisp = 92.206438, type = 81, 
+ 	 ellipticity = 0.470588, ellipticity_pot = 0.250000, ellipticity angle (radians) = 0.528835, rcore = 0.019525, rcut = 1.655363,
+ 	 z = 0.308000
+, angle cos 0.863396, sin 0.504528 
+Potential[64]: x = -7.938118, y = -37.959843, b0 = 0.356112, vdisp = 90.730070, type = 81, 
+ 	 ellipticity = 0.095023, ellipticity_pot = 0.047619, ellipticity angle (radians) = -0.591667, rcore = 0.018905, rcut = 1.602778,
+ 	 z = 0.308000
+, angle cos 0.830012, sin -0.557745 
+Potential[65]: x = 39.782180, y = 80.083800, b0 = 0.351858, vdisp = 90.186440, type = 81, 
+ 	 ellipticity = 0.470588, ellipticity_pot = 0.250000, ellipticity angle (radians) = -0.862193, rcore = 0.018679, rcut = 1.583628,
+ 	 z = 0.308000
+, angle cos 0.650774, sin -0.759271 
+Potential[66]: x = -28.702982, y = 41.360040, b0 = 0.347398, vdisp = 89.613047, type = 81, 
+ 	 ellipticity = 0.308108, ellipticity_pot = 0.157895, ellipticity angle (radians) = 0.767945, rcore = 0.018443, rcut = 1.563555,
+ 	 z = 0.308000
+, angle cos 0.719340, sin 0.694658 
+Potential[67]: x = 74.343346, y = -25.379640, b0 = 0.347094, vdisp = 89.573851, type = 81, 
+ 	 ellipticity = 0.352000, ellipticity_pot = 0.181818, ellipticity angle (radians) = 1.499238, rcore = 0.018426, rcut = 1.562188,
+ 	 z = 0.308000
+, angle cos 0.071497, sin 0.997441 
+Potential[68]: x = 52.652740, y = 57.379677, b0 = 0.343532, vdisp = 89.113037, type = 81, 
+ 	 ellipticity = 0.470588, ellipticity_pot = 0.250000, ellipticity angle (radians) = 0.952950, rcore = 0.018237, rcut = 1.546156,
+ 	 z = 0.308000
+, angle cos 0.579281, sin 0.815128 
+Potential[69]: x = -24.775430, y = 34.969677, b0 = 0.342695, vdisp = 89.004353, type = 81, 
+ 	 ellipticity = 0.342282, ellipticity_pot = 0.176471, ellipticity angle (radians) = -0.045379, rcore = 0.018193, rcut = 1.542387,
+ 	 z = 0.308000
+, angle cos 0.998971, sin -0.045363 
+Potential[70]: x = 3.960469, y = 26.269920, b0 = 0.340304, vdisp = 88.693388, type = 81, 
+ 	 ellipticity = 0.657534, ellipticity_pot = 0.375000, ellipticity angle (radians) = 0.897099, rcore = 0.018066, rcut = 1.531628,
+ 	 z = 0.308000
+, angle cos 0.623880, sin 0.781520 
+Potential[71]: x = -25.472800, y = -0.623160, b0 = 0.339662, vdisp = 88.609696, type = 81, 
+ 	 ellipticity = 0.280000, ellipticity_pot = 0.142857, ellipticity angle (radians) = -0.741765, rcore = 0.018032, rcut = 1.528739,
+ 	 z = 0.308000
+, angle cos 0.737277, sin -0.675590 
+Potential[72]: x = -12.473328, y = 62.934116, b0 = 0.339178, vdisp = 88.546469, type = 81, 
+ 	 ellipticity = 0.550459, ellipticity_pot = 0.300000, ellipticity angle (radians) = -1.392773, rcore = 0.018006, rcut = 1.526558,
+ 	 z = 0.308000
+, angle cos 0.177085, sin -0.984196 
+Potential[73]: x = -36.012177, y = -19.361880, b0 = 0.337697, vdisp = 88.352989, type = 81, 
+ 	 ellipticity = 0.352000, ellipticity_pot = 0.181818, ellipticity angle (radians) = 0.692896, rcore = 0.017928, rcut = 1.519894,
+ 	 z = 0.308000
+, angle cos 0.769400, sin 0.638768 
+Potential[74]: x = -10.110194, y = 38.429638, b0 = 0.326804, vdisp = 86.916303, type = 81, 
+ 	 ellipticity = 0.165517, ellipticity_pot = 0.083333, ellipticity angle (radians) = 0.363028, rcore = 0.017349, rcut = 1.470866,
+ 	 z = 0.308000
+, angle cos 0.934826, sin 0.355107 
+Potential[75]: x = 18.284610, y = 28.704600, b0 = 0.325632, vdisp = 86.760340, type = 81, 
+ 	 ellipticity = 0.600000, ellipticity_pot = 0.333333, ellipticity angle (radians) = -0.638791, rcore = 0.017287, rcut = 1.465593,
+ 	 z = 0.308000
+, angle cos 0.802817, sin -0.596225 
+Potential[76]: x = 38.903778, y = 51.123238, b0 = 0.322394, vdisp = 86.327914, type = 81, 
+ 	 ellipticity = 0.450644, ellipticity_pot = 0.238095, ellipticity angle (radians) = -1.134464, rcore = 0.017115, rcut = 1.451020,
+ 	 z = 0.308000
+, angle cos 0.422618, sin -0.906308 
+Potential[77]: x = -2.422600, y = -17.190000, b0 = 0.321934, vdisp = 86.266315, type = 81, 
+ 	 ellipticity = 0.324324, ellipticity_pot = 0.166667, ellipticity angle (radians) = 1.392773, rcore = 0.017091, rcut = 1.448950,
+ 	 z = 0.308000
+, angle cos 0.177085, sin 0.984196 
+Potential[78]: x = 2.717256, y = 4.241880, b0 = 0.319483, vdisp = 85.937209, type = 81, 
+ 	 ellipticity = 0.293399, ellipticity_pot = 0.150000, ellipticity angle (radians) = -0.781908, rcore = 0.016961, rcut = 1.437915,
+ 	 z = 0.308000
+, angle cos 0.709571, sin -0.704634 
+Potential[79]: x = 73.728980, y = -27.948960, b0 = 0.315099, vdisp = 85.345622, type = 81, 
+ 	 ellipticity = 0.648780, ellipticity_pot = 0.368421, ellipticity angle (radians) = -0.914553, rcore = 0.016728, rcut = 1.418186,
+ 	 z = 0.308000
+, angle cos 0.610145, sin -0.792290 
+Potential[80]: x = 7.053794, y = 3.300480, b0 = 0.305104, vdisp = 83.981040, type = 81, 
+ 	 ellipticity = 0.648780, ellipticity_pot = 0.368421, ellipticity angle (radians) = -0.235619, rcore = 0.016197, rcut = 1.373198,
+ 	 z = 0.308000
+, angle cos 0.972370, sin -0.233445 
+Potential[81]: x = 39.989630, y = 49.913640, b0 = 0.305047, vdisp = 83.973305, type = 81, 
+ 	 ellipticity = 0.073973, ellipticity_pot = 0.037037, ellipticity angle (radians) = 0.656244, rcore = 0.016194, rcut = 1.372945,
+ 	 z = 0.308000
+, angle cos 0.792290, sin 0.610145 
+Potential[82]: x = -63.766296, y = -19.505880, b0 = 0.304136, vdisp = 83.847718, type = 81, 
+ 	 ellipticity = 0.470588, ellipticity_pot = 0.250000, ellipticity angle (radians) = -1.047198, rcore = 0.016146, rcut = 1.368842,
+ 	 z = 0.308000
+, angle cos 0.500000, sin -0.866025 
+Potential[83]: x = -5.521762, y = 63.428040, b0 = 0.302794, vdisp = 83.662579, type = 81, 
+ 	 ellipticity = 0.507692, ellipticity_pot = 0.272727, ellipticity angle (radians) = 1.532399, rcore = 0.016075, rcut = 1.362804,
+ 	 z = 0.308000
+, angle cos 0.038388, sin 0.999263 
+Potential[84]: x = -45.246660, y = 19.005840, b0 = 0.297870, vdisp = 82.979583, type = 81, 
+ 	 ellipticity = 0.550459, ellipticity_pot = 0.300000, ellipticity angle (radians) = 1.452114, rcore = 0.015813, rcut = 1.340643,
+ 	 z = 0.308000
+, angle cos 0.118404, sin 0.992966 
+Potential[85]: x = 47.829360, y = 65.428200, b0 = 0.296120, vdisp = 82.735376, type = 81, 
+ 	 ellipticity = 0.470588, ellipticity_pot = 0.250000, ellipticity angle (radians) = -0.921534, rcore = 0.015720, rcut = 1.332764,
+ 	 z = 0.308000
+, angle cos 0.604599, sin -0.796530 
+Potential[86]: x = 11.655473, y = -35.312400, b0 = 0.295221, vdisp = 82.609738, type = 81, 
+ 	 ellipticity = 0.000000, ellipticity_pot = 0.000010, ellipticity angle (radians) = -1.110029, rcore = 0.015673, rcut = 1.328719,
+ 	 z = 0.308000
+, angle cos 0.444635, sin -0.895712 
+Potential[87]: x = -59.055950, y = -9.925199, b0 = 0.295085, vdisp = 82.590719, type = 81, 
+ 	 ellipticity = 0.000000, ellipticity_pot = 0.000010, ellipticity angle (radians) = -0.286234, rcore = 0.015665, rcut = 1.328108,
+ 	 z = 0.308000
+, angle cos 0.959314, sin -0.282341 
+Potential[88]: x = 53.994366, y = 53.506440, b0 = 0.287930, vdisp = 81.583296, type = 81, 
+ 	 ellipticity = 0.000000, ellipticity_pot = 0.000010, ellipticity angle (radians) = 0.078540, rcore = 0.015286, rcut = 1.295905,
+ 	 z = 0.308000
+, angle cos 0.996917, sin 0.078459 
+Potential[89]: x = -35.328075, y = 75.516840, b0 = 0.273758, vdisp = 79.550195, type = 81, 
+ 	 ellipticity = 0.492228, ellipticity_pot = 0.263158, ellipticity angle (radians) = -1.015782, rcore = 0.014533, rcut = 1.232121,
+ 	 z = 0.308000
+, angle cos 0.526956, sin -0.849893 
+Potential[90]: x = 68.488495, y = 34.701840, b0 = 0.264928, vdisp = 78.256649, type = 81, 
+ 	 ellipticity = 0.670103, ellipticity_pot = 0.384615, ellipticity angle (radians) = 0.064577, rcore = 0.014064, rcut = 1.192376,
+ 	 z = 0.308000
+, angle cos 0.997916, sin 0.064532 
+Potential[91]: x = 1.716535, y = -49.661280, b0 = 0.264489, vdisp = 78.191806, type = 81, 
+ 	 ellipticity = 0.308108, ellipticity_pot = 0.157895, ellipticity angle (radians) = 0.937242, rcore = 0.014041, rcut = 1.190401,
+ 	 z = 0.308000
+, angle cos 0.592013, sin 0.805928 
+Potential[92]: x = 3.804488, y = -11.293560, b0 = 0.258575, vdisp = 77.312772, type = 81, 
+ 	 ellipticity = 0.280000, ellipticity_pot = 0.142857, ellipticity angle (radians) = 1.354375, rcore = 0.013727, rcut = 1.163786,
+ 	 z = 0.308000
+, angle cos 0.214735, sin 0.976672 
+Potential[93]: x = 70.093200, y = -39.183120, b0 = 0.257127, vdisp = 77.095894, type = 81, 
+ 	 ellipticity = 0.280000, ellipticity_pot = 0.142857, ellipticity angle (radians) = 0.647517, rcore = 0.013650, rcut = 1.157266,
+ 	 z = 0.308000
+, angle cos 0.797584, sin 0.603208 
+Potential[94]: x = 23.822466, y = 3.840840, b0 = 0.256949, vdisp = 77.069270, type = 81, 
+ 	 ellipticity = 0.342282, ellipticity_pot = 0.176471, ellipticity angle (radians) = -1.240929, rcore = 0.013641, rcut = 1.156467,
+ 	 z = 0.308000
+, angle cos 0.323917, sin -0.946085 
+Potential[95]: x = 5.846324, y = -9.752040, b0 = 0.239799, vdisp = 74.452836, type = 81, 
+ 	 ellipticity = 0.280000, ellipticity_pot = 0.142857, ellipticity angle (radians) = -0.247837, rcore = 0.012730, rcut = 1.079278,
+ 	 z = 0.308000
+, angle cos 0.969445, sin -0.245307 
+Potential[96]: x = -23.686604, y = 33.605637, b0 = 0.239611, vdisp = 74.423698, type = 81, 
+ 	 ellipticity = 0.450644, ellipticity_pot = 0.238095, ellipticity angle (radians) = -1.464331, rcore = 0.012720, rcut = 1.078433,
+ 	 z = 0.308000
+, angle cos 0.106264, sin -0.994338 
+Potential[97]: x = -27.524862, y = -33.086163, b0 = 0.238961, vdisp = 74.322660, type = 81, 
+ 	 ellipticity = 0.000000, ellipticity_pot = 0.000010, ellipticity angle (radians) = -1.417207, rcore = 0.012686, rcut = 1.075507,
+ 	 z = 0.308000
+, angle cos 0.152986, sin -0.988228 
+Potential[98]: x = 66.794990, y = 63.296640, b0 = 0.233651, vdisp = 73.492200, type = 81, 
+ 	 ellipticity = 0.104972, ellipticity_pot = 0.052632, ellipticity angle (radians) = -0.394444, rcore = 0.012404, rcut = 1.051606,
+ 	 z = 0.308000
+, angle cos 0.923210, sin -0.384295 
+Potential[99]: x = -21.448692, y = 35.377560, b0 = 0.220530, vdisp = 71.398855, type = 81, 
+ 	 ellipticity = 0.541401, ellipticity_pot = 0.294118, ellipticity angle (radians) = -0.898845, rcore = 0.011707, rcut = 0.992552,
+ 	 z = 0.308000
+, angle cos 0.622515, sin -0.782608 
+Potential[100]: x = 36.352253, y = 77.690880, b0 = 0.220175, vdisp = 71.341337, type = 81, 
+ 	 ellipticity = 0.678689, ellipticity_pot = 0.391304, ellipticity angle (radians) = -0.771436, rcore = 0.011689, rcut = 0.990953,
+ 	 z = 0.308000
+, angle cos 0.716911, sin -0.697165 
+Potential[101]: x = -49.498184, y = 11.478960, b0 = 0.219183, vdisp = 71.180535, type = 81, 
+ 	 ellipticity = 0.132743, ellipticity_pot = 0.066667, ellipticity angle (radians) = 0.596903, rcore = 0.011636, rcut = 0.986491,
+ 	 z = 0.308000
+, angle cos 0.827081, sin 0.562083 
+Potential[102]: x = -5.852899, y = -6.491160, b0 = 0.219022, vdisp = 71.154316, type = 81, 
+ 	 ellipticity = 0.180328, ellipticity_pot = 0.090909, ellipticity angle (radians) = 1.062906, rcore = 0.011627, rcut = 0.985765,
+ 	 z = 0.308000
+, angle cos 0.486335, sin 0.873772 
+Potential[103]: x = 62.903515, y = 22.514040, b0 = 0.208625, vdisp = 69.445042, type = 81, 
+ 	 ellipticity = 0.438202, ellipticity_pot = 0.230769, ellipticity angle (radians) = 0.418879, rcore = 0.011075, rcut = 0.938973,
+ 	 z = 0.308000
+, angle cos 0.913545, sin 0.406737 
+Potential[104]: x = -51.097030, y = 9.381600, b0 = 0.208222, vdisp = 69.377915, type = 81, 
+ 	 ellipticity = 0.541401, ellipticity_pot = 0.294118, ellipticity angle (radians) = -0.326377, rcore = 0.011054, rcut = 0.937159,
+ 	 z = 0.308000
+, angle cos 0.947210, sin -0.320613 
+Potential[105]: x = -71.574240, y = 7.056360, b0 = 0.208184, vdisp = 69.371526, type = 81, 
+ 	 ellipticity = 0.742268, ellipticity_pot = 0.444444, ellipticity angle (radians) = 1.115265, rcore = 0.011052, rcut = 0.936986,
+ 	 z = 0.308000
+, angle cos 0.439939, sin 0.898028 
+Potential[106]: x = 24.197310, y = 67.890236, b0 = 0.207523, vdisp = 69.261397, type = 81, 
+ 	 ellipticity = 0.324324, ellipticity_pot = 0.166667, ellipticity angle (radians) = 0.298451, rcore = 0.011017, rcut = 0.934014,
+ 	 z = 0.308000
+, angle cos 0.955793, sin 0.294040 
+Potential[107]: x = -12.481352, y = -26.007480, b0 = 0.205356, vdisp = 68.898735, type = 81, 
+ 	 ellipticity = 0.219512, ellipticity_pot = 0.111111, ellipticity angle (radians) = 0.099484, rcore = 0.010902, rcut = 0.924258,
+ 	 z = 0.308000
+, angle cos 0.995056, sin 0.099320 
+Potential[108]: x = 24.574460, y = 38.569680, b0 = 0.204234, vdisp = 68.710205, type = 81, 
+ 	 ellipticity = 0.117241, ellipticity_pot = 0.058824, ellipticity angle (radians) = 1.097812, rcore = 0.010842, rcut = 0.919207,
+ 	 z = 0.308000
+, angle cos 0.455545, sin 0.890213 
+Potential[109]: x = 22.315348, y = 0.312840, b0 = 0.203145, vdisp = 68.526925, type = 81, 
+ 	 ellipticity = 0.423529, ellipticity_pot = 0.222222, ellipticity angle (radians) = 0.090757, rcore = 0.010785, rcut = 0.914310,
+ 	 z = 0.308000
+, angle cos 0.995884, sin 0.090633 
+Potential[110]: x = 41.768890, y = -1.288080, b0 = 0.198311, vdisp = 67.706637, type = 81, 
+ 	 ellipticity = 0.180328, ellipticity_pot = 0.090909, ellipticity angle (radians) = 1.366593, rcore = 0.010528, rcut = 0.892551,
+ 	 z = 0.308000
+, angle cos 0.202787, sin 0.979223 
+Potential[111]: x = -31.038612, y = 41.971317, b0 = 0.193583, vdisp = 66.894628, type = 81, 
+ 	 ellipticity = 0.000000, ellipticity_pot = 0.000010, ellipticity angle (radians) = -1.261873, rcore = 0.010277, rcut = 0.871271,
+ 	 z = 0.308000
+, angle cos 0.304033, sin -0.952661 
+Potential[112]: x = 27.078161, y = 76.717080, b0 = 0.189159, vdisp = 66.125847, type = 81, 
+ 	 ellipticity = 0.384615, ellipticity_pot = 0.200000, ellipticity angle (radians) = -1.394518, rcore = 0.010042, rcut = 0.851360,
+ 	 z = 0.308000
+, angle cos 0.175367, sin -0.984503 
+Potential[113]: x = 44.609695, y = 82.021320, b0 = 0.186701, vdisp = 65.694838, type = 81, 
+ 	 ellipticity = 0.246154, ellipticity_pot = 0.125000, ellipticity angle (radians) = -0.497419, rcore = 0.009912, rcut = 0.840298,
+ 	 z = 0.308000
+, angle cos 0.878817, sin -0.477159 
+Potential[114]: x = -26.610312, y = -7.030440, b0 = 0.185296, vdisp = 65.447226, type = 81, 
+ 	 ellipticity = 0.000000, ellipticity_pot = 0.000010, ellipticity angle (radians) = 0.403171, rcore = 0.009837, rcut = 0.833975,
+ 	 z = 0.308000
+, angle cos 0.919821, sin 0.392337 
+Potential[115]: x = -5.311887, y = -14.673240, b0 = 0.183581, vdisp = 65.143524, type = 81, 
+ 	 ellipticity = 0.000000, ellipticity_pot = 0.000010, ellipticity angle (radians) = 0.275762, rcore = 0.009746, rcut = 0.826253,
+ 	 z = 0.308000
+, angle cos 0.962218, sin 0.272280 
+Potential[116]: x = 39.929432, y = -26.220600, b0 = 0.182847, vdisp = 65.013156, type = 81, 
+ 	 ellipticity = 0.198020, ellipticity_pot = 0.100000, ellipticity angle (radians) = -1.349140, rcore = 0.009707, rcut = 0.822950,
+ 	 z = 0.308000
+, angle cos 0.219846, sin -0.975535 
+Potential[117]: x = -72.135400, y = 72.458275, b0 = 0.182763, vdisp = 64.998187, type = 81, 
+ 	 ellipticity = 0.280000, ellipticity_pot = 0.142857, ellipticity angle (radians) = -0.104720, rcore = 0.009702, rcut = 0.822571,
+ 	 z = 0.308000
+, angle cos 0.994522, sin -0.104528 
+Potential[118]: x = 34.553130, y = 77.960520, b0 = 0.181304, vdisp = 64.738293, type = 81, 
+ 	 ellipticity = 0.219512, ellipticity_pot = 0.111111, ellipticity angle (radians) = 0.261799, rcore = 0.009625, rcut = 0.816006,
+ 	 z = 0.308000
+, angle cos 0.965926, sin 0.258819 
+Potential[119]: x = 47.208992, y = 43.266956, b0 = 0.177569, vdisp = 64.068012, type = 81, 
+ 	 ellipticity = 0.000000, ellipticity_pot = 0.000010, ellipticity angle (radians) = 1.017527, rcore = 0.009427, rcut = 0.799196,
+ 	 z = 0.308000
+, angle cos 0.525472, sin 0.850811 
+Potential[120]: x = -10.742657, y = -36.171000, b0 = 0.175601, vdisp = 63.712001, type = 81, 
+ 	 ellipticity = 0.000000, ellipticity_pot = 0.000010, ellipticity angle (radians) = 0.778417, rcore = 0.009322, rcut = 0.790339,
+ 	 z = 0.308000
+, angle cos 0.712026, sin 0.702153 
+Potential[121]: x = -32.596634, y = -1.214280, b0 = 0.175456, vdisp = 63.685600, type = 81, 
+ 	 ellipticity = 0.324324, ellipticity_pot = 0.166667, ellipticity angle (radians) = 0.849975, rcore = 0.009315, rcut = 0.789684,
+ 	 z = 0.308000
+, angle cos 0.660002, sin 0.751264 
+Potential[122]: x = -2.313573, y = 0.806040, b0 = 0.169999, vdisp = 62.687543, type = 81, 
+ 	 ellipticity = 0.470588, ellipticity_pot = 0.250000, ellipticity angle (radians) = -0.328122, rcore = 0.009025, rcut = 0.765127,
+ 	 z = 0.308000
+, angle cos 0.946649, sin -0.322266 
+Potential[123]: x = 7.552296, y = -33.586920, b0 = 0.168542, vdisp = 62.418201, type = 81, 
+ 	 ellipticity = 0.528302, ellipticity_pot = 0.285714, ellipticity angle (radians) = -0.258309, rcore = 0.008948, rcut = 0.758566,
+ 	 z = 0.308000
+, angle cos 0.966823, sin -0.255446 
+Potential[124]: x = 39.031840, y = 52.176598, b0 = 0.162940, vdisp = 61.372137, type = 81, 
+ 	 ellipticity = 0.000000, ellipticity_pot = 0.000010, ellipticity angle (radians) = -0.565487, rcore = 0.008650, rcut = 0.733353,
+ 	 z = 0.308000
+, angle cos 0.844328, sin -0.535827 
+Potential[125]: x = -20.538803, y = 13.751640, b0 = 0.161945, vdisp = 61.184476, type = 81, 
+ 	 ellipticity = 0.180328, ellipticity_pot = 0.090909, ellipticity angle (radians) = 0.886627, rcore = 0.008597, rcut = 0.728875,
+ 	 z = 0.308000
+, angle cos 0.632029, sin 0.774944 
+Potential[126]: x = -6.950503, y = -6.928200, b0 = 0.156945, vdisp = 60.232549, type = 81, 
+ 	 ellipticity = 0.000000, ellipticity_pot = 0.000010, ellipticity angle (radians) = 0.925025, rcore = 0.008332, rcut = 0.706372,
+ 	 z = 0.308000
+, angle cos 0.601815, sin 0.798636 
+Potential[127]: x = 5.855376, y = 30.327480, b0 = 0.149413, vdisp = 58.769399, type = 81, 
+ 	 ellipticity = 0.180328, ellipticity_pot = 0.090909, ellipticity angle (radians) = 0.687660, rcore = 0.007932, rcut = 0.672471,
+ 	 z = 0.308000
+, angle cos 0.772734, sin 0.634731 
+Potential[128]: x = 9.155872, y = 13.101120, b0 = 0.143399, vdisp = 57.574642, type = 81, 
+ 	 ellipticity = 0.000000, ellipticity_pot = 0.000010, ellipticity angle (radians) = -0.101229, rcore = 0.007613, rcut = 0.645406,
+ 	 z = 0.308000
+, angle cos 0.994881, sin -0.101056 
+Potential[129]: x = 5.599430, y = 6.592320, b0 = 0.140103, vdisp = 56.909038, type = 81, 
+ 	 ellipticity = 0.324324, ellipticity_pot = 0.166667, ellipticity angle (radians) = 1.446878, rcore = 0.007438, rcut = 0.630570,
+ 	 z = 0.308000
+, angle cos 0.123601, sin 0.992332 
+Potential[130]: x = 57.206238, y = 29.590920, b0 = 0.138844, vdisp = 56.652783, type = 81, 
+ 	 ellipticity = 0.324324, ellipticity_pot = 0.166667, ellipticity angle (radians) = 1.078613, rcore = 0.007371, rcut = 0.624904,
+ 	 z = 0.308000
+, angle cos 0.472551, sin 0.881303 
+Potential[131]: x = -23.231335, y = -32.566680, b0 = 0.135921, vdisp = 56.053308, type = 81, 
+ 	 ellipticity = 0.600000, ellipticity_pot = 0.333333, ellipticity angle (radians) = 1.219985, rcore = 0.007216, rcut = 0.611749,
+ 	 z = 0.308000
+, angle cos 0.343660, sin 0.939094 
+Potential[132]: x = 13.793528, y = 86.889960, b0 = 0.135035, vdisp = 55.870331, type = 81, 
+ 	 ellipticity = 0.180328, ellipticity_pot = 0.090909, ellipticity angle (radians) = 1.293289, rcore = 0.007169, rcut = 0.607762,
+ 	 z = 0.308000
+, angle cos 0.273959, sin 0.961741 
+Potential[133]: x = -34.819576, y = -35.233562, b0 = 0.134502, vdisp = 55.759805, type = 81, 
+ 	 ellipticity = 0.280000, ellipticity_pot = 0.142857, ellipticity angle (radians) = 0.506145, rcore = 0.007140, rcut = 0.605359,
+ 	 z = 0.308000
+, angle cos 0.874620, sin 0.484810 
+Potential[134]: x = 14.490467, y = 3.891600, b0 = 0.134415, vdisp = 55.741833, type = 81, 
+ 	 ellipticity = 0.280000, ellipticity_pot = 0.142857, ellipticity angle (radians) = 0.602139, rcore = 0.007136, rcut = 0.604969,
+ 	 z = 0.308000
+, angle cos 0.824126, sin 0.566406 
+Potential[135]: x = -46.537083, y = -16.947360, b0 = 0.130487, vdisp = 54.921355, type = 81, 
+ 	 ellipticity = 0.000000, ellipticity_pot = 0.000010, ellipticity angle (radians) = 0.033161, rcore = 0.006927, rcut = 0.587291,
+ 	 z = 0.308000
+, angle cos 0.999450, sin 0.033155 
+Potential[136]: x = -48.436016, y = 5.445720, b0 = 0.129648, vdisp = 54.744595, type = 81, 
+ 	 ellipticity = 0.438202, ellipticity_pot = 0.230769, ellipticity angle (radians) = -0.300197, rcore = 0.006883, rcut = 0.583517,
+ 	 z = 0.308000
+, angle cos 0.955278, sin -0.295708 
+Potential[137]: x = 69.210190, y = -15.700320, b0 = 0.128395, vdisp = 54.479266, type = 81, 
+ 	 ellipticity = 0.219512, ellipticity_pot = 0.111111, ellipticity angle (radians) = -0.619592, rcore = 0.006816, rcut = 0.577874,
+ 	 z = 0.308000
+, angle cos 0.814116, sin -0.580703 
+Potential[138]: x = -10.698260, y = -15.696000, b0 = 0.126779, vdisp = 54.135387, type = 81, 
+ 	 ellipticity = 0.180328, ellipticity_pot = 0.090909, ellipticity angle (radians) = -1.404990, rcore = 0.006730, rcut = 0.570602,
+ 	 z = 0.308000
+, angle cos 0.165048, sin -0.986286 
+Potential[139]: x = 58.691730, y = -2.530440, b0 = 0.124327, vdisp = 53.609437, type = 81, 
+ 	 ellipticity = 0.000000, ellipticity_pot = 0.000010, ellipticity angle (radians) = -0.024435, rcore = 0.006600, rcut = 0.559568,
+ 	 z = 0.308000
+, angle cos 0.999701, sin -0.024432 
+Potential[140]: x = -34.269640, y = 14.864040, b0 = 0.123637, vdisp = 53.460282, type = 81, 
+ 	 ellipticity = 0.180328, ellipticity_pot = 0.090909, ellipticity angle (radians) = 0.082030, rcore = 0.006564, rcut = 0.556459,
+ 	 z = 0.308000
+, angle cos 0.996637, sin 0.081939 
+Potential[141]: x = -22.216310, y = 0.562320, b0 = 0.121593, vdisp = 53.016524, type = 81, 
+ 	 ellipticity = 0.324324, ellipticity_pot = 0.166667, ellipticity angle (radians) = 1.457350, rcore = 0.006455, rcut = 0.547259,
+ 	 z = 0.308000
+, angle cos 0.113203, sin 0.993572 
+Potential[142]: x = -54.561480, y = 3.786840, b0 = 0.120811, vdisp = 52.845894, type = 81, 
+ 	 ellipticity = 0.384615, ellipticity_pot = 0.200000, ellipticity angle (radians) = -1.103048, rcore = 0.006414, rcut = 0.543742,
+ 	 z = 0.308000
+, angle cos 0.450878, sin -0.892586 
+Potential[143]: x = -8.158648, y = -20.454840, b0 = 0.119908, vdisp = 52.647923, type = 81, 
+ 	 ellipticity = 0.280000, ellipticity_pot = 0.142857, ellipticity angle (radians) = -1.244420, rcore = 0.006366, rcut = 0.539676,
+ 	 z = 0.308000
+, angle cos 0.320613, sin -0.947210 
+Potential[144]: x = -21.002796, y = 61.957440, b0 = 0.117914, vdisp = 52.208504, type = 81, 
+ 	 ellipticity = 0.324324, ellipticity_pot = 0.166667, ellipticity angle (radians) = 1.110029, rcore = 0.006260, rcut = 0.530705,
+ 	 z = 0.308000
+, angle cos 0.444635, sin 0.895712 
+Potential[145]: x = 41.146650, y = 46.512360, b0 = 0.117914, vdisp = 52.208504, type = 81, 
+ 	 ellipticity = 0.324324, ellipticity_pot = 0.166667, ellipticity angle (radians) = 0.811578, rcore = 0.006260, rcut = 0.530705,
+ 	 z = 0.308000
+, angle cos 0.688355, sin 0.725374 
+Potential[146]: x = -26.112816, y = -20.602080, b0 = 0.117730, vdisp = 52.167647, type = 81, 
+ 	 ellipticity = 0.000000, ellipticity_pot = 0.000010, ellipticity angle (radians) = 0.335103, rcore = 0.006250, rcut = 0.529875,
+ 	 z = 0.308000
+, angle cos 0.944376, sin 0.328867 
+Potential[147]: x = -25.185274, y = 77.456160, b0 = 0.117146, vdisp = 52.038078, type = 81, 
+ 	 ellipticity = 0.324324, ellipticity_pot = 0.166667, ellipticity angle (radians) = -1.382301, rcore = 0.006219, rcut = 0.527246,
+ 	 z = 0.308000
+, angle cos 0.187381, sin -0.982287 
+Potential[148]: x = 35.662010, y = -12.582360, b0 = 0.115294, vdisp = 51.625140, type = 81, 
+ 	 ellipticity = 0.600000, ellipticity_pot = 0.333333, ellipticity angle (radians) = 0.054105, rcore = 0.006121, rcut = 0.518911,
+ 	 z = 0.308000
+, angle cos 0.998537, sin 0.054079 
+Potential[149]: x = 23.363058, y = 57.399837, b0 = 0.115262, vdisp = 51.618009, type = 81, 
+ 	 ellipticity = 0.000000, ellipticity_pot = 0.000010, ellipticity angle (radians) = -0.083776, rcore = 0.006119, rcut = 0.518768,
+ 	 z = 0.308000
+, angle cos 0.996493, sin -0.083678 
+Potential[150]: x = -8.040069, y = -5.736600, b0 = 0.115161, vdisp = 51.595431, type = 81, 
+ 	 ellipticity = 0.000000, ellipticity_pot = 0.000010, ellipticity angle (radians) = 0.181514, rcore = 0.006114, rcut = 0.518314,
+ 	 z = 0.308000
+, angle cos 0.983571, sin 0.180519 
+Potential[151]: x = -18.765755, y = 66.182040, b0 = 0.115140, vdisp = 51.590679, type = 81, 
+ 	 ellipticity = 0.280000, ellipticity_pot = 0.142857, ellipticity angle (radians) = -0.073304, rcore = 0.006113, rcut = 0.518219,
+ 	 z = 0.308000
+, angle cos 0.997314, sin -0.073238 
+Potential[152]: x = 0.985768, y = -29.721240, b0 = 0.112628, vdisp = 51.024792, type = 81, 
+ 	 ellipticity = 0.152941, ellipticity_pot = 0.076923, ellipticity angle (radians) = -0.246091, rcore = 0.005979, rcut = 0.506913,
+ 	 z = 0.308000
+, angle cos 0.969872, sin -0.243615 
+Potential[153]: x = 58.736645, y = 50.735878, b0 = 0.110685, vdisp = 50.582611, type = 81, 
+ 	 ellipticity = 0.180328, ellipticity_pot = 0.090909, ellipticity angle (radians) = 0.394444, rcore = 0.005876, rcut = 0.498165,
+ 	 z = 0.308000
+, angle cos 0.923210, sin 0.384295 
+Potential[154]: x = -18.119875, y = -46.558804, b0 = 0.110649, vdisp = 50.574459, type = 81, 
+ 	 ellipticity = 0.507692, ellipticity_pot = 0.272727, ellipticity angle (radians) = -0.225147, rcore = 0.005874, rcut = 0.498004,
+ 	 z = 0.308000
+, angle cos 0.974761, sin -0.223250 
+Potential[155]: x = 63.547290, y = 31.434120, b0 = 0.110272, vdisp = 50.488358, type = 81, 
+ 	 ellipticity = 0.384615, ellipticity_pot = 0.200000, ellipticity angle (radians) = -1.076868, rcore = 0.005854, rcut = 0.496310,
+ 	 z = 0.308000
+, angle cos 0.474088, sin -0.880477 
+Potential[156]: x = 52.440360, y = -46.434600, b0 = 0.109988, vdisp = 50.423298, type = 81, 
+ 	 ellipticity = 0.528302, ellipticity_pot = 0.285714, ellipticity angle (radians) = -0.968658, rcore = 0.005839, rcut = 0.495032,
+ 	 z = 0.308000
+, angle cos 0.566406, sin -0.824126 
+Potential[157]: x = 38.999050, y = 84.136680, b0 = 0.108830, vdisp = 50.156965, type = 81, 
+ 	 ellipticity = 0.000000, ellipticity_pot = 0.000010, ellipticity angle (radians) = 0.062832, rcore = 0.005778, rcut = 0.489816,
+ 	 z = 0.308000
+, angle cos 0.998027, sin 0.062791 
+Potential[158]: x = 53.460213, y = 18.761760, b0 = 0.107421, vdisp = 49.831189, type = 81, 
+ 	 ellipticity = 0.180328, ellipticity_pot = 0.090909, ellipticity angle (radians) = 0.528835, rcore = 0.005703, rcut = 0.483474,
+ 	 z = 0.308000
+, angle cos 0.863396, sin 0.504528 
+Potential[159]: x = -38.782024, y = 56.588757, b0 = 0.106907, vdisp = 49.712001, type = 81, 
+ 	 ellipticity = 0.000000, ellipticity_pot = 0.000010, ellipticity angle (radians) = -0.274017, rcore = 0.005675, rcut = 0.481164,
+ 	 z = 0.308000
+, angle cos 0.962692, sin -0.270600 
+Potential[160]: x = 69.356224, y = 49.342320, b0 = 0.106279, vdisp = 49.565700, type = 81, 
+ 	 ellipticity = 0.000000, ellipticity_pot = 0.000010, ellipticity angle (radians) = -0.717330, rcore = 0.005642, rcut = 0.478336,
+ 	 z = 0.308000
+, angle cos 0.753563, sin -0.657375 
+Potential[161]: x = 5.557641, y = 14.839200, b0 = 0.106020, vdisp = 49.505249, type = 81, 
+ 	 ellipticity = 0.000000, ellipticity_pot = 0.000010, ellipticity angle (radians) = 0.495674, rcore = 0.005628, rcut = 0.477170,
+ 	 z = 0.308000
+, angle cos 0.879649, sin 0.475624 
+Potential[162]: x = 3.933223, y = 33.508080, b0 = 0.105377, vdisp = 49.355010, type = 81, 
+ 	 ellipticity = 0.000000, ellipticity_pot = 0.000010, ellipticity angle (radians) = -0.125664, rcore = 0.005594, rcut = 0.474278,
+ 	 z = 0.308000
+, angle cos 0.992115, sin -0.125333 
+Potential[163]: x = -29.470960, y = 0.742680, b0 = 0.105004, vdisp = 49.267582, type = 81, 
+ 	 ellipticity = 0.000000, ellipticity_pot = 0.000010, ellipticity angle (radians) = -0.413643, rcore = 0.005574, rcut = 0.472599,
+ 	 z = 0.308000
+, angle cos 0.915663, sin -0.401948 
+Potential[164]: x = 50.564156, y = 19.956600, b0 = 0.104715, vdisp = 49.199563, type = 81, 
+ 	 ellipticity = 0.324324, ellipticity_pot = 0.166667, ellipticity angle (radians) = -0.284489, rcore = 0.005559, rcut = 0.471295,
+ 	 z = 0.308000
+, angle cos 0.959805, sin -0.280667 
+Potential[165]: x = 44.075195, y = 15.145200, b0 = 0.104618, vdisp = 49.176911, type = 81, 
+ 	 ellipticity = 0.000000, ellipticity_pot = 0.000010, ellipticity angle (radians) = 0.385718, rcore = 0.005554, rcut = 0.470862,
+ 	 z = 0.308000
+, angle cos 0.926529, sin 0.376224 
+Potential[166]: x = -15.400654, y = 48.468597, b0 = 0.102392, vdisp = 48.650941, type = 81, 
+ 	 ellipticity = 0.180328, ellipticity_pot = 0.090909, ellipticity angle (radians) = 1.003564, rcore = 0.005436, rcut = 0.460843,
+ 	 z = 0.308000
+, angle cos 0.537300, sin 0.843391 
+Potential[167]: x = 39.327503, y = 46.794240, b0 = 0.101285, vdisp = 48.387284, type = 81, 
+ 	 ellipticity = 0.507692, ellipticity_pot = 0.272727, ellipticity angle (radians) = 0.979130, rcore = 0.005377, rcut = 0.455862,
+ 	 z = 0.308000
+, angle cos 0.557745, sin 0.830012 
+Potential[168]: x = -1.778851, y = 55.981438, b0 = 0.100025, vdisp = 48.085180, type = 81, 
+ 	 ellipticity = 0.000000, ellipticity_pot = 0.000010, ellipticity angle (radians) = -0.726057, rcore = 0.005310, rcut = 0.450187,
+ 	 z = 0.308000
+, angle cos 0.747798, sin -0.663926 
+Potential[169]: x = 22.434309, y = 20.377440, b0 = 0.098276, vdisp = 47.662986, type = 81, 
+ 	 ellipticity = 0.000000, ellipticity_pot = 0.000010, ellipticity angle (radians) = -1.160644, rcore = 0.005217, rcut = 0.442317,
+ 	 z = 0.308000
+, angle cos 0.398749, sin -0.917060 
+Potential[170]: x = 27.048296, y = -28.878120, b0 = 0.098131, vdisp = 47.627879, type = 81, 
+ 	 ellipticity = 0.000000, ellipticity_pot = 0.000010, ellipticity angle (radians) = -0.057596, rcore = 0.005210, rcut = 0.441665,
+ 	 z = 0.308000
+, angle cos 0.998342, sin -0.057564 
+Potential[171]: x = -36.978996, y = -16.754400, b0 = 0.096482, vdisp = 47.226009, type = 81, 
+ 	 ellipticity = 0.324324, ellipticity_pot = 0.166667, ellipticity angle (radians) = -0.205949, rcore = 0.005122, rcut = 0.434243,
+ 	 z = 0.308000
+, angle cos 0.978867, sin -0.204496 
+Potential[172]: x = 64.123470, y = -5.254200, b0 = 0.096119, vdisp = 47.136925, type = 81, 
+ 	 ellipticity = 0.324324, ellipticity_pot = 0.166667, ellipticity angle (radians) = -0.923279, rcore = 0.005103, rcut = 0.432607,
+ 	 z = 0.308000
+, angle cos 0.603208, sin -0.797584 
+Potential[173]: x = -9.846306, y = -14.580000, b0 = 0.095602, vdisp = 47.010108, type = 81, 
+ 	 ellipticity = 0.219512, ellipticity_pot = 0.111111, ellipticity angle (radians) = -1.247910, rcore = 0.005075, rcut = 0.430282,
+ 	 z = 0.308000
+, angle cos 0.317305, sin -0.948324 
+Potential[174]: x = 51.875720, y = 48.893040, b0 = 0.094477, vdisp = 46.732740, type = 81, 
+ 	 ellipticity = 0.132743, ellipticity_pot = 0.066667, ellipticity angle (radians) = -1.172861, rcore = 0.005016, rcut = 0.425220,
+ 	 z = 0.308000
+, angle cos 0.387516, sin -0.921863 
+Potential[175]: x = -11.076716, y = 52.322400, b0 = 0.094030, vdisp = 46.622037, type = 81, 
+ 	 ellipticity = 0.219512, ellipticity_pot = 0.111111, ellipticity angle (radians) = 1.535890, rcore = 0.004992, rcut = 0.423207,
+ 	 z = 0.308000
+, angle cos 0.034899, sin 0.999391 
+Potential[176]: x = 7.231764, y = 5.697720, b0 = 0.092992, vdisp = 46.364037, type = 81, 
+ 	 ellipticity = 0.507692, ellipticity_pot = 0.272727, ellipticity angle (radians) = -0.385718, rcore = 0.004937, rcut = 0.418536,
+ 	 z = 0.308000
+, angle cos 0.926529, sin -0.376224 
+Potential[177]: x = -34.765495, y = -35.807762, b0 = 0.092992, vdisp = 46.364037, type = 81, 
+ 	 ellipticity = 0.384615, ellipticity_pot = 0.200000, ellipticity angle (radians) = -0.911062, rcore = 0.004937, rcut = 0.418536,
+ 	 z = 0.308000
+, angle cos 0.612907, sin -0.790155 
+Potential[178]: x = -45.189270, y = -33.668640, b0 = 0.092821, vdisp = 46.321354, type = 81, 
+ 	 ellipticity = 0.000000, ellipticity_pot = 0.000010, ellipticity angle (radians) = 0.335103, rcore = 0.004928, rcut = 0.417766,
+ 	 z = 0.308000
+, angle cos 0.944376, sin 0.328867 
+Potential[179]: x = 59.317577, y = -30.866400, b0 = 0.092153, vdisp = 46.154202, type = 81, 
+ 	 ellipticity = 0.000000, ellipticity_pot = 0.000010, ellipticity angle (radians) = -0.284489, rcore = 0.004892, rcut = 0.414757,
+ 	 z = 0.308000
+, angle cos 0.959805, sin -0.280667 
+Potential[180]: x = -9.124786, y = 23.753880, b0 = 0.091291, vdisp = 45.937911, type = 81, 
+ 	 ellipticity = 0.180328, ellipticity_pot = 0.090909, ellipticity angle (radians) = 0.966912, rcore = 0.004846, rcut = 0.410878,
+ 	 z = 0.308000
+, angle cos 0.567844, sin 0.823136 
+Potential[181]: x = -22.903310, y = 65.065315, b0 = 0.089110, vdisp = 45.385931, type = 81, 
+ 	 ellipticity = 0.219512, ellipticity_pot = 0.111111, ellipticity angle (radians) = 1.455605, rcore = 0.004731, rcut = 0.401064,
+ 	 z = 0.308000
+, angle cos 0.114937, sin 0.993373 
+Potential[182]: x = 19.145092, y = 85.804560, b0 = 0.087944, vdisp = 45.088029, type = 81, 
+ 	 ellipticity = 0.280000, ellipticity_pot = 0.142857, ellipticity angle (radians) = -1.106539, rcore = 0.004669, rcut = 0.395816,
+ 	 z = 0.308000
+, angle cos 0.447759, sin -0.894154 
+Potential[183]: x = -67.480370, y = 34.030437, b0 = 0.087102, vdisp = 44.871568, type = 81, 
+ 	 ellipticity = 0.219512, ellipticity_pot = 0.111111, ellipticity angle (radians) = -0.680678, rcore = 0.004624, rcut = 0.392025,
+ 	 z = 0.308000
+, angle cos 0.777146, sin -0.629320 
+Potential[184]: x = 4.641259, y = -12.142800, b0 = 0.086674, vdisp = 44.761151, type = 81, 
+ 	 ellipticity = 0.219512, ellipticity_pot = 0.111111, ellipticity angle (radians) = -0.520108, rcore = 0.004601, rcut = 0.390098,
+ 	 z = 0.308000
+, angle cos 0.867765, sin -0.496974 
+Potential[185]: x = 22.605482, y = 11.885040, b0 = 0.085990, vdisp = 44.584227, type = 81, 
+ 	 ellipticity = 0.600000, ellipticity_pot = 0.333333, ellipticity angle (radians) = -0.113446, rcore = 0.004565, rcut = 0.387020,
+ 	 z = 0.308000
+, angle cos 0.993572, sin -0.113203 
+Potential[186]: x = -8.131634, y = -47.403362, b0 = 0.085477, vdisp = 44.450970, type = 81, 
+ 	 ellipticity = 0.219512, ellipticity_pot = 0.111111, ellipticity angle (radians) = -1.569051, rcore = 0.004538, rcut = 0.384710,
+ 	 z = 0.308000
+, angle cos 0.001745, sin -0.999998 
+Potential[187]: x = -0.677163, y = -24.576479, b0 = 0.084494, vdisp = 44.194807, type = 81, 
+ 	 ellipticity = 0.219512, ellipticity_pot = 0.111111, ellipticity angle (radians) = -0.684169, rcore = 0.004486, rcut = 0.380289,
+ 	 z = 0.308000
+, angle cos 0.774944, sin -0.632029 
+Potential[188]: x = 19.848305, y = 20.832480, b0 = 0.083882, vdisp = 44.034315, type = 81, 
+ 	 ellipticity = 0.000000, ellipticity_pot = 0.000010, ellipticity angle (radians) = 0.624828, rcore = 0.004453, rcut = 0.377532,
+ 	 z = 0.308000
+, angle cos 0.811064, sin 0.584958 
+Potential[189]: x = -9.106964, y = 31.020120, b0 = 0.083316, vdisp = 43.885520, type = 81, 
+ 	 ellipticity = 0.000000, ellipticity_pot = 0.000010, ellipticity angle (radians) = -1.012291, rcore = 0.004423, rcut = 0.374984,
+ 	 z = 0.308000
+, angle cos 0.529919, sin -0.848048 
+Potential[190]: x = 3.631517, y = -43.698600, b0 = 0.083071, vdisp = 43.820895, type = 81, 
+ 	 ellipticity = 0.507692, ellipticity_pot = 0.272727, ellipticity angle (radians) = -0.836013, rcore = 0.004410, rcut = 0.373881,
+ 	 z = 0.308000
+, angle cos 0.670427, sin -0.741976 
+Potential[191]: x = 27.143904, y = 55.314000, b0 = 0.082952, vdisp = 43.789627, type = 81, 
+ 	 ellipticity = 0.000000, ellipticity_pot = 0.000010, ellipticity angle (radians) = -0.476475, rcore = 0.004404, rcut = 0.373348,
+ 	 z = 0.308000
+, angle cos 0.888617, sin -0.458650 
+Potential[192]: x = -7.945996, y = -5.354280, b0 = 0.082880, vdisp = 43.770474, type = 81, 
+ 	 ellipticity = 0.000000, ellipticity_pot = 0.000010, ellipticity angle (radians) = -0.167552, rcore = 0.004400, rcut = 0.373021,
+ 	 z = 0.308000
+, angle cos 0.985996, sin -0.166769 
+Potential[193]: x = -7.010438, y = -22.104720, b0 = 0.082059, vdisp = 43.553318, type = 81, 
+ 	 ellipticity = 0.280000, ellipticity_pot = 0.142857, ellipticity angle (radians) = 0.413643, rcore = 0.004356, rcut = 0.369329,
+ 	 z = 0.308000
+, angle cos 0.915663, sin 0.401948 
+Potential[194]: x = -4.601319, y = 67.849556, b0 = 0.081844, vdisp = 43.496193, type = 81, 
+ 	 ellipticity = 0.180328, ellipticity_pot = 0.090909, ellipticity angle (radians) = 1.295034, rcore = 0.004345, rcut = 0.368361,
+ 	 z = 0.308000
+, angle cos 0.272280, sin 0.962218 
+Potential[195]: x = -60.395138, y = -18.862200, b0 = 0.081705, vdisp = 43.459152, type = 81, 
+ 	 ellipticity = 0.000000, ellipticity_pot = 0.000010, ellipticity angle (radians) = 1.137955, rcore = 0.004338, rcut = 0.367734,
+ 	 z = 0.308000
+, angle cos 0.419452, sin 0.907777 
+Potential[196]: x = -11.946154, y = 30.958920, b0 = 0.081551, vdisp = 43.418143, type = 81, 
+ 	 ellipticity = 0.600000, ellipticity_pot = 0.333333, ellipticity angle (radians) = -1.453859, rcore = 0.004329, rcut = 0.367040,
+ 	 z = 0.308000
+, angle cos 0.116671, sin -0.993171 
+Potential[197]: x = 27.792020, y = 35.564037, b0 = 0.081536, vdisp = 43.414144, type = 81, 
+ 	 ellipticity = 0.753425, ellipticity_pot = 0.454545, ellipticity angle (radians) = -0.219911, rcore = 0.004329, rcut = 0.366972,
+ 	 z = 0.308000
+, angle cos 0.975917, sin -0.218143 
+Potential[198]: x = -73.333820, y = 69.176155, b0 = 0.080874, vdisp = 43.237567, type = 81, 
+ 	 ellipticity = 0.724138, ellipticity_pot = 0.428571, ellipticity angle (radians) = 0.191986, rcore = 0.004293, rcut = 0.363993,
+ 	 z = 0.308000
+, angle cos 0.981627, sin 0.190809 
+Potential[199]: x = 0.985564, y = 8.251920, b0 = 0.080621, vdisp = 43.169920, type = 81, 
+ 	 ellipticity = 0.800000, ellipticity_pot = 0.500000, ellipticity angle (radians) = -0.319395, rcore = 0.004280, rcut = 0.362855,
+ 	 z = 0.308000
+, angle cos 0.949425, sin -0.313992 
+Potential[200]: x = -11.129765, y = 1.458000, b0 = 0.080443, vdisp = 43.122233, type = 81, 
+ 	 ellipticity = 0.470588, ellipticity_pot = 0.250000, ellipticity angle (radians) = 0.541052, rcore = 0.004271, rcut = 0.362054,
+ 	 z = 0.308000
+, angle cos 0.857167, sin 0.515038 
+Potential[201]: x = -14.353352, y = -38.581562, b0 = 0.080066, vdisp = 43.021074, type = 81, 
+ 	 ellipticity = 0.000000, ellipticity_pot = 0.000010, ellipticity angle (radians) = 0.169297, rcore = 0.004251, rcut = 0.360357,
+ 	 z = 0.308000
+, angle cos 0.985703, sin 0.168489 
+Potential[202]: x = -61.073150, y = 36.038517, b0 = 0.079592, vdisp = 42.893476, type = 81, 
+ 	 ellipticity = 0.219512, ellipticity_pot = 0.111111, ellipticity angle (radians) = -1.169371, rcore = 0.004225, rcut = 0.358223,
+ 	 z = 0.308000
+, angle cos 0.390731, sin -0.920505 
+Potential[203]: x = -31.624796, y = -11.158920, b0 = 0.079493, vdisp = 42.866818, type = 81, 
+ 	 ellipticity = 0.384615, ellipticity_pot = 0.200000, ellipticity angle (radians) = 0.139626, rcore = 0.004220, rcut = 0.357778,
+ 	 z = 0.308000
+, angle cos 0.990268, sin 0.139173 
+Potential[204]: x = 22.818434, y = 1.357920, b0 = 0.079379, vdisp = 42.836230, type = 81, 
+ 	 ellipticity = 0.219512, ellipticity_pot = 0.111111, ellipticity angle (radians) = -1.333432, rcore = 0.004214, rcut = 0.357267,
+ 	 z = 0.308000
+, angle cos 0.235142, sin -0.971961 
+Potential[205]: x = 26.826044, y = -40.419724, b0 = 0.079354, vdisp = 42.829327, type = 81, 
+ 	 ellipticity = 0.000000, ellipticity_pot = 0.000010, ellipticity angle (radians) = -0.209440, rcore = 0.004213, rcut = 0.357152,
+ 	 z = 0.308000
+, angle cos 0.978148, sin -0.207912 
+Potential[206]: x = -46.776010, y = 63.630720, b0 = 0.079080, vdisp = 42.755427, type = 81, 
+ 	 ellipticity = 0.219512, ellipticity_pot = 0.111111, ellipticity angle (radians) = -0.951204, rcore = 0.004198, rcut = 0.355921,
+ 	 z = 0.308000
+, angle cos 0.580703, sin -0.814116 
+Potential[207]: x = 60.690050, y = -42.525000, b0 = 0.079058, vdisp = 42.749520, type = 81, 
+ 	 ellipticity = 0.219512, ellipticity_pot = 0.111111, ellipticity angle (radians) = 0.305433, rcore = 0.004197, rcut = 0.355822,
+ 	 z = 0.308000
+, angle cos 0.953717, sin 0.300706 
+Potential[208]: x = 46.806880, y = 69.267960, b0 = 0.079018, vdisp = 42.738694, type = 81, 
+ 	 ellipticity = 0.219512, ellipticity_pot = 0.111111, ellipticity angle (radians) = 0.623083, rcore = 0.004195, rcut = 0.355642,
+ 	 z = 0.308000
+, angle cos 0.812084, sin 0.583541 
+Potential[209]: x = 42.219310, y = 23.562720, b0 = 0.078315, vdisp = 42.548205, type = 81, 
+ 	 ellipticity = 0.219512, ellipticity_pot = 0.111111, ellipticity angle (radians) = 0.738274, rcore = 0.004158, rcut = 0.352479,
+ 	 z = 0.308000
+, angle cos 0.739631, sin 0.673013 
+Potential[210]: x = -64.985860, y = 10.598761, b0 = 0.078027, vdisp = 42.469901, type = 81, 
+ 	 ellipticity = 0.280000, ellipticity_pot = 0.142857, ellipticity angle (radians) = 0.624828, rcore = 0.004142, rcut = 0.351183,
+ 	 z = 0.308000
+, angle cos 0.811064, sin 0.584958 
+Potential[211]: x = -38.507717, y = 61.472157, b0 = 0.077984, vdisp = 42.458168, type = 81, 
+ 	 ellipticity = 0.384615, ellipticity_pot = 0.200000, ellipticity angle (radians) = -1.532399, rcore = 0.004140, rcut = 0.350989,
+ 	 z = 0.308000
+, angle cos 0.038388, sin -0.999263 
+Potential[212]: x = 23.999449, y = -32.636160, b0 = 0.077433, vdisp = 42.307878, type = 81, 
+ 	 ellipticity = 0.753425, ellipticity_pot = 0.454545, ellipticity angle (radians) = -0.577704, rcore = 0.004111, rcut = 0.348508,
+ 	 z = 0.308000
+, angle cos 0.837719, sin -0.546102 
+Potential[213]: x = 20.296991, y = 74.309395, b0 = 0.075758, vdisp = 41.847667, type = 81, 
+ 	 ellipticity = 0.507692, ellipticity_pot = 0.272727, ellipticity angle (radians) = -0.830777, rcore = 0.004022, rcut = 0.340968,
+ 	 z = 0.308000
+, angle cos 0.674302, sin -0.738455 
+Potential[214]: x = 47.215122, y = 84.330000, b0 = 0.075483, vdisp = 41.771613, type = 81, 
+ 	 ellipticity = 0.384615, ellipticity_pot = 0.200000, ellipticity angle (radians) = 0.523599, rcore = 0.004007, rcut = 0.339729,
+ 	 z = 0.308000
+, angle cos 0.866025, sin 0.500000 
+Potential[215]: x = 58.761604, y = 47.691357, b0 = 0.075240, vdisp = 41.704339, type = 81, 
+ 	 ellipticity = 0.470588, ellipticity_pot = 0.250000, ellipticity angle (radians) = 0.057596, rcore = 0.003994, rcut = 0.338636,
+ 	 z = 0.308000
+, angle cos 0.998342, sin 0.057564 
+Potential[216]: x = -7.793385, y = 1.627200, b0 = 0.074901, vdisp = 41.610338, type = 81, 
+ 	 ellipticity = 0.849057, ellipticity_pot = 0.555556, ellipticity angle (radians) = -1.232202, rcore = 0.003976, rcut = 0.337111,
+ 	 z = 0.308000
+, angle cos 0.332161, sin -0.943223 
+Potential[217]: x = 64.050850, y = -25.506720, b0 = 0.074835, vdisp = 41.592138, type = 81, 
+ 	 ellipticity = 0.470588, ellipticity_pot = 0.250000, ellipticity angle (radians) = -1.078613, rcore = 0.003973, rcut = 0.336816,
+ 	 z = 0.308000
+, angle cos 0.472551, sin -0.881303 
+Potential[218]: x = 60.224730, y = 70.311600, b0 = 0.074639, vdisp = 41.537585, type = 81, 
+ 	 ellipticity = 0.470588, ellipticity_pot = 0.250000, ellipticity angle (radians) = 0.193732, rcore = 0.003962, rcut = 0.335933,
+ 	 z = 0.308000
+, angle cos 0.981293, sin 0.192522 
+Potential[219]: x = 3.024566, y = -6.561000, b0 = 0.074550, vdisp = 41.512725, type = 81, 
+ 	 ellipticity = 0.280000, ellipticity_pot = 0.142857, ellipticity angle (radians) = 1.518436, rcore = 0.003958, rcut = 0.335531,
+ 	 z = 0.308000
+, angle cos 0.052336, sin 0.998630 
+Potential[220]: x = -28.744625, y = -34.218723, b0 = 0.073982, vdisp = 41.354354, type = 81, 
+ 	 ellipticity = 0.470588, ellipticity_pot = 0.250000, ellipticity angle (radians) = 1.253146, rcore = 0.003928, rcut = 0.332976,
+ 	 z = 0.308000
+, angle cos 0.312335, sin 0.949972 
+Potential[221]: x = 20.593622, y = 21.906720, b0 = 0.073829, vdisp = 41.311527, type = 81, 
+ 	 ellipticity = 0.219512, ellipticity_pot = 0.111111, ellipticity angle (radians) = -0.998328, rcore = 0.003919, rcut = 0.332287,
+ 	 z = 0.308000
+, angle cos 0.541708, sin -0.840567 
+Potential[222]: x = 13.580636, y = 34.912080, b0 = 0.073747, vdisp = 41.288704, type = 81, 
+ 	 ellipticity = 0.219512, ellipticity_pot = 0.111111, ellipticity angle (radians) = -0.455531, rcore = 0.003915, rcut = 0.331920,
+ 	 z = 0.308000
+, angle cos 0.898028, sin -0.439939 
+Potential[223]: x = 14.586809, y = 35.868237, b0 = 0.073710, vdisp = 41.278247, type = 81, 
+ 	 ellipticity = 0.219512, ellipticity_pot = 0.111111, ellipticity angle (radians) = 1.370083, rcore = 0.003913, rcut = 0.331752,
+ 	 z = 0.308000
+, angle cos 0.199368, sin 0.979925 
+Potential[224]: x = -19.682955, y = -42.860880, b0 = 0.073277, vdisp = 41.156766, type = 81, 
+ 	 ellipticity = 0.280000, ellipticity_pot = 0.142857, ellipticity angle (radians) = -0.024435, rcore = 0.003890, rcut = 0.329802,
+ 	 z = 0.308000
+, angle cos 0.999701, sin -0.024432 
+Potential[225]: x = -6.989475, y = -14.516640, b0 = 0.072132, vdisp = 40.833936, type = 81, 
+ 	 ellipticity = 0.470588, ellipticity_pot = 0.250000, ellipticity angle (radians) = 0.158825, rcore = 0.003829, rcut = 0.324648,
+ 	 z = 0.308000
+, angle cos 0.987414, sin 0.158158 
+Potential[226]: x = 45.309906, y = 73.692360, b0 = 0.071979, vdisp = 40.790708, type = 81, 
+ 	 ellipticity = 0.280000, ellipticity_pot = 0.142857, ellipticity angle (radians) = -0.144862, rcore = 0.003821, rcut = 0.323961,
+ 	 z = 0.308000
+, angle cos 0.989526, sin -0.144356 
+Potential[227]: x = 47.943813, y = 62.070840, b0 = 0.071467, vdisp = 40.645385, type = 81, 
+ 	 ellipticity = 0.219512, ellipticity_pot = 0.111111, ellipticity angle (radians) = -0.954695, rcore = 0.003794, rcut = 0.321657,
+ 	 z = 0.308000
+, angle cos 0.577858, sin -0.816138 
+Potential[228]: x = 29.655298, y = -52.010280, b0 = 0.071424, vdisp = 40.633221, type = 81, 
+ 	 ellipticity = 0.219512, ellipticity_pot = 0.111111, ellipticity angle (radians) = 0.516617, rcore = 0.003792, rcut = 0.321465,
+ 	 z = 0.308000
+, angle cos 0.869495, sin 0.493942 
+Potential[229]: x = -58.329285, y = 30.619080, b0 = 0.070545, vdisp = 40.382318, type = 81, 
+ 	 ellipticity = 0.280000, ellipticity_pot = 0.142857, ellipticity angle (radians) = -0.008727, rcore = 0.003745, rcut = 0.317507,
+ 	 z = 0.308000
+, angle cos 0.999962, sin -0.008727 
+Potential[230]: x = 32.383404, y = 60.421318, b0 = 0.069699, vdisp = 40.139434, type = 81, 
+ 	 ellipticity = 0.000000, ellipticity_pot = 0.000010, ellipticity angle (radians) = -0.623083, rcore = 0.003700, rcut = 0.313699,
+ 	 z = 0.308000
+, angle cos 0.812084, sin -0.583541 
+Potential[231]: x = 28.317610, y = 29.877480, b0 = 0.069523, vdisp = 40.088633, type = 81, 
+ 	 ellipticity = 0.000000, ellipticity_pot = 0.000010, ellipticity angle (radians) = 0.261799, rcore = 0.003691, rcut = 0.312906,
+ 	 z = 0.308000
+, angle cos 0.965926, sin 0.258819 
+Potential[232]: x = -19.374346, y = -42.948000, b0 = 0.068936, vdisp = 39.919146, type = 81, 
+ 	 ellipticity = 0.384615, ellipticity_pot = 0.200000, ellipticity angle (radians) = -0.727802, rcore = 0.003660, rcut = 0.310265,
+ 	 z = 0.308000
+, angle cos 0.746638, sin -0.665230 
+Potential[233]: x = 36.045753, y = -15.875999, b0 = 0.067407, vdisp = 39.474010, type = 81, 
+ 	 ellipticity = 0.000000, ellipticity_pot = 0.000010, ellipticity angle (radians) = -0.219911, rcore = 0.003579, rcut = 0.303384,
+ 	 z = 0.308000
+, angle cos 0.975917, sin -0.218143 
+Potential[234]: x = 21.868330, y = 71.965080, b0 = 0.067317, vdisp = 39.447660, type = 81, 
+ 	 ellipticity = 0.219512, ellipticity_pot = 0.111111, ellipticity angle (radians) = 0.537561, rcore = 0.003574, rcut = 0.302980,
+ 	 z = 0.308000
+, angle cos 0.858960, sin 0.512043 
+Potential[235]: x = -21.237156, y = 34.354797, b0 = 0.067057, vdisp = 39.371435, type = 81, 
+ 	 ellipticity = 0.280000, ellipticity_pot = 0.142857, ellipticity angle (radians) = 0.403171, rcore = 0.003560, rcut = 0.301810,
+ 	 z = 0.308000
+, angle cos 0.919821, sin 0.392337 
+Potential[236]: x = -64.701290, y = 8.099640, b0 = 0.066916, vdisp = 39.329755, type = 81, 
+ 	 ellipticity = 0.470588, ellipticity_pot = 0.250000, ellipticity angle (radians) = -0.923279, rcore = 0.003552, rcut = 0.301171,
+ 	 z = 0.308000
+, angle cos 0.603208, sin -0.797584 
+Potential[237]: x = 44.395863, y = 4.527720, b0 = 0.066811, vdisp = 39.298977, type = 81, 
+ 	 ellipticity = 0.280000, ellipticity_pot = 0.142857, ellipticity angle (radians) = -1.092576, rcore = 0.003547, rcut = 0.300700,
+ 	 z = 0.308000
+, angle cos 0.460200, sin -0.887815 
+Potential[238]: x = -15.505001, y = -21.890880, b0 = 0.066740, vdisp = 39.278170, type = 81, 
+ 	 ellipticity = 0.324324, ellipticity_pot = 0.166667, ellipticity angle (radians) = 0.966912, rcore = 0.003543, rcut = 0.300382,
+ 	 z = 0.308000
+, angle cos 0.567844, sin 0.823136 
+Potential[239]: x = 16.161818, y = 35.196840, b0 = 0.066544, vdisp = 39.220330, type = 81, 
+ 	 ellipticity = 0.219512, ellipticity_pot = 0.111111, ellipticity angle (radians) = 0.008727, rcore = 0.003533, rcut = 0.299498,
+ 	 z = 0.308000
+, angle cos 0.999962, sin 0.008727 
+Potential[240]: x = 4.744834, y = 1.278000, b0 = 0.066327, vdisp = 39.156264, type = 81, 
+ 	 ellipticity = 0.000000, ellipticity_pot = 0.000010, ellipticity angle (radians) = -0.280998, rcore = 0.003521, rcut = 0.298520,
+ 	 z = 0.308000
+, angle cos 0.960779, sin -0.277315 
+Potential[241]: x = -8.786665, y = 12.952080, b0 = 0.066137, vdisp = 39.100404, type = 81, 
+ 	 ellipticity = 0.470588, ellipticity_pot = 0.250000, ellipticity angle (radians) = 0.664970, rcore = 0.003511, rcut = 0.297669,
+ 	 z = 0.308000
+, angle cos 0.786935, sin 0.617036 
+Potential[242]: x = 52.089085, y = 0.796320, b0 = 0.066104, vdisp = 39.090502, type = 81, 
+ 	 ellipticity = 0.280000, ellipticity_pot = 0.142857, ellipticity angle (radians) = -1.551598, rcore = 0.003509, rcut = 0.297518,
+ 	 z = 0.308000
+, angle cos 0.019197, sin -0.999816 
+Potential[243]: x = 35.367530, y = 10.775520, b0 = 0.065925, vdisp = 39.037432, type = 81, 
+ 	 ellipticity = 0.000000, ellipticity_pot = 0.000010, ellipticity angle (radians) = 0.565487, rcore = 0.003500, rcut = 0.296711,
+ 	 z = 0.308000
+, angle cos 0.844328, sin 0.535827 
+Potential[244]: x = -34.057426, y = 16.714800, b0 = 0.064963, vdisp = 38.751743, type = 81, 
+ 	 ellipticity = 0.000000, ellipticity_pot = 0.000010, ellipticity angle (radians) = 0.918043, rcore = 0.003449, rcut = 0.292384,
+ 	 z = 0.308000
+, angle cos 0.607376, sin 0.794415 
+Potential[245]: x = 7.480233, y = 23.185440, b0 = 0.064751, vdisp = 38.688442, type = 81, 
+ 	 ellipticity = 0.219512, ellipticity_pot = 0.111111, ellipticity angle (radians) = 0.544543, rcore = 0.003437, rcut = 0.291429,
+ 	 z = 0.308000
+, angle cos 0.855364, sin 0.518027 
+Potential[246]: x = 32.926353, y = -47.956680, b0 = 0.064347, vdisp = 38.567478, type = 81, 
+ 	 ellipticity = 0.000000, ellipticity_pot = 0.000010, ellipticity angle (radians) = -0.942478, rcore = 0.003416, rcut = 0.289610,
+ 	 z = 0.308000
+, angle cos 0.587785, sin -0.809017 
+Potential[247]: x = 16.612720, y = 22.149000, b0 = 0.064335, vdisp = 38.563926, type = 81, 
+ 	 ellipticity = 0.753425, ellipticity_pot = 0.454545, ellipticity angle (radians) = -0.015708, rcore = 0.003415, rcut = 0.289556,
+ 	 z = 0.308000
+, angle cos 0.999877, sin -0.015707 
+Potential[248]: x = -35.602276, y = -1.527480, b0 = 0.063672, vdisp = 38.364650, type = 81, 
+ 	 ellipticity = 0.280000, ellipticity_pot = 0.142857, ellipticity angle (radians) = -0.020944, rcore = 0.003380, rcut = 0.286572,
+ 	 z = 0.308000
+, angle cos 0.999781, sin -0.020942 
+Potential[249]: x = 54.585400, y = 59.862600, b0 = 0.063470, vdisp = 38.303746, type = 81, 
+ 	 ellipticity = 0.280000, ellipticity_pot = 0.142857, ellipticity angle (radians) = -0.347321, rcore = 0.003369, rcut = 0.285663,
+ 	 z = 0.308000
+, angle cos 0.940288, sin -0.340380 
+Potential[250]: x = 25.362413, y = -20.039040, b0 = 0.063190, vdisp = 38.219170, type = 81, 
+ 	 ellipticity = 0.470588, ellipticity_pot = 0.250000, ellipticity angle (radians) = 1.082104, rcore = 0.003355, rcut = 0.284402,
+ 	 z = 0.308000
+, angle cos 0.469472, sin 0.882948 
+Potential[251]: x = 41.960384, y = 13.571640, b0 = 0.063082, vdisp = 38.186622, type = 81, 
+ 	 ellipticity = 0.470588, ellipticity_pot = 0.250000, ellipticity angle (radians) = -0.434587, rcore = 0.003349, rcut = 0.283918,
+ 	 z = 0.308000
+, angle cos 0.907044, sin -0.421036 
+Potential[252]: x = 22.991210, y = 74.693520, b0 = 0.063074, vdisp = 38.183985, type = 81, 
+ 	 ellipticity = 0.000000, ellipticity_pot = 0.000010, ellipticity angle (radians) = 0.858702, rcore = 0.003348, rcut = 0.283879,
+ 	 z = 0.308000
+, angle cos 0.653421, sin 0.756995 
+Potential[253]: x = 26.474442, y = -30.066120, b0 = 0.062478, vdisp = 38.003294, type = 81, 
+ 	 ellipticity = 0.280000, ellipticity_pot = 0.142857, ellipticity angle (radians) = 1.431170, rcore = 0.003317, rcut = 0.281199,
+ 	 z = 0.308000
+, angle cos 0.139173, sin 0.990268 
+Potential[254]: x = 32.503654, y = 71.185320, b0 = 0.062303, vdisp = 37.949953, type = 81, 
+ 	 ellipticity = 0.000000, ellipticity_pot = 0.000010, ellipticity angle (radians) = 0.630064, rcore = 0.003308, rcut = 0.280410,
+ 	 z = 0.308000
+, angle cos 0.807990, sin 0.589196 
+Potential[255]: x = 191.066000, y = 110.128000, b0 = 0.056795, vdisp = 36.233846, type = 81, 
+ 	 ellipticity = 0.000000, ellipticity_pot = 0.000010, ellipticity angle (radians) = 0.000000, rcore = 0.000000, rcut = 1736.723885,
+ 	 z = 0.308000
+, angle cos 1.000000, sin 0.000000 
+Potential[256]: x = -39.406100, y = 155.696000, b0 = 0.054049, vdisp = 35.346933, type = 81, 
+ 	 ellipticity = 0.000000, ellipticity_pot = 0.000010, ellipticity angle (radians) = 0.000000, rcore = 0.000000, rcut = 1652.743285,
+ 	 z = 0.308000
+, angle cos 1.000000, sin 0.000000 
+Potential[257]: x = -55.480000, y = 91.886700, b0 = 0.046614, vdisp = 32.825825, type = 81, 
+ 	 ellipticity = 0.000000, ellipticity_pot = 0.000010, ellipticity angle (radians) = 0.000000, rcore = 0.000000, rcut = 1425.388401,
+ 	 z = 0.308000
+, angle cos 1.000000, sin 0.000000 
+--------------------------
+
+Setting up lenstool using 258 lenses...ok
+Lenstool Potential[0]: x = -2.233186, y = 0.760461, vdisp = 601.593908, type = 81 
+ 	 ellipticity = 0.860362, ellipticity_pot = 0.569896, ellipticity angle (radians) = 1.577913, rcore = 20.527624, rcut = 220.470592,
+ z = 0.308000
+Lenstool Potential[1]: x = -17.496668, y = -15.217002, vdisp = 783.007754, type = 81 
+ 	 ellipticity = 0.521964, ellipticity_pot = 0.281691, ellipticity angle (radians) = 0.783919, rcore = 12.522610, rcut = 220.470592,
+ z = 0.308000
+Lenstool Potential[2]: x = -3.577000, y = 24.718000, vdisp = 175.147625, type = 81 
+ 	 ellipticity = 0.720000, ellipticity_pot = 0.425036, ellipticity angle (radians) = -0.575959, rcore = 0.025354, rcut = 2.915503,
+ z = 0.308000
+Lenstool Potential[3]: x = 0.000000, y = 0.000000, vdisp = 352.444512, type = 81 
+ 	 ellipticity = 0.205000, ellipticity_pot = 0.103600, ellipticity angle (radians) = -1.326450, rcore = 0.074078, rcut = 6.276798,
+ z = 0.308000
+Lenstool Potential[4]: x = -17.945000, y = -19.967000, vdisp = 339.177562, type = 81 
+ 	 ellipticity = 0.377000, ellipticity_pot = 0.195721, ellipticity angle (radians) = 0.258309, rcore = 0.076724, rcut = 6.512260,
+ z = 0.308000
+Lenstool Potential[5]: x = -12.701000, y = -0.782000, vdisp = 58.291717, type = 81 
+ 	 ellipticity = 0.299000, ellipticity_pot = 0.153000, ellipticity angle (radians) = -0.813323, rcore = 0.032189, rcut = 6.211040,
+ z = 0.308000
+Lenstool Potential[6]: x = 138.953311, y = 95.025600, vdisp = 622.241634, type = 81 
+ 	 ellipticity = 0.000000, ellipticity_pot = 0.000010, ellipticity angle (radians) = 0.000000, rcore = 0.000000, rcut = 644.697945,
+ z = 0.308000
+Lenstool Potential[7]: x = 102.996311, y = 84.276000, vdisp = 646.959254, type = 81 
+ 	 ellipticity = 0.000000, ellipticity_pot = 0.000010, ellipticity angle (radians) = 0.000000, rcore = 0.000000, rcut = 696.934578,
+ z = 0.308000
+Lenstool Potential[8]: x = 29.810911, y = 153.295000, vdisp = 607.677840, type = 81 
+ 	 ellipticity = 0.000000, ellipticity_pot = 0.000010, ellipticity angle (radians) = 0.000000, rcore = 0.000000, rcut = 614.872335,
+ z = 0.308000
+Lenstool Potential[9]: x = -26.498581, y = 30.706920, vdisp = 234.408448, type = 81 
+ 	 ellipticity = 0.256506, ellipticity_pot = 0.130435, ellipticity angle (radians) = -1.115265, rcore = 0.067371, rcut = 6.091188,
+ z = 0.308000
+Lenstool Potential[10]: x = 2.718941, y = 21.232080, vdisp = 225.072616, type = 81 
+ 	 ellipticity = 0.152941, ellipticity_pot = 0.076923, ellipticity angle (radians) = 0.724312, rcore = 0.062112, rcut = 5.615660,
+ z = 0.308000
+Lenstool Potential[11]: x = -19.380485, y = -16.053840, vdisp = 212.906764, type = 81 
+ 	 ellipticity = 0.342282, ellipticity_pot = 0.176471, ellipticity angle (radians) = 0.644026, rcore = 0.055578, rcut = 5.024981,
+ z = 0.308000
+Lenstool Potential[12]: x = -4.377039, y = 13.615200, vdisp = 203.972378, type = 81 
+ 	 ellipticity = 0.246154, ellipticity_pot = 0.125000, ellipticity angle (radians) = -1.368338, rcore = 0.051012, rcut = 4.612095,
+ z = 0.308000
+Lenstool Potential[13]: x = -0.930278, y = 2.830680, vdisp = 200.843398, type = 81 
+ 	 ellipticity = 0.453858, ellipticity_pot = 0.240000, ellipticity angle (radians) = -1.272345, rcore = 0.049459, rcut = 4.471679,
+ z = 0.308000
+Lenstool Potential[14]: x = 20.488913, y = -32.439600, vdisp = 195.806705, type = 81 
+ 	 ellipticity = 0.280000, ellipticity_pot = 0.142857, ellipticity angle (radians) = 0.015708, rcore = 0.047009, rcut = 4.250212,
+ z = 0.308000
+Lenstool Potential[15]: x = -6.586230, y = 6.558120, vdisp = 193.846319, type = 81 
+ 	 ellipticity = 0.180328, ellipticity_pot = 0.090909, ellipticity angle (radians) = 0.296706, rcore = 0.046073, rcut = 4.165533,
+ z = 0.308000
+Lenstool Potential[16]: x = -42.747671, y = 37.607037, vdisp = 191.539152, type = 81 
+ 	 ellipticity = 0.857864, ellipticity_pot = 0.566667, ellipticity angle (radians) = 0.235619, rcore = 0.044982, rcut = 4.066967,
+ z = 0.308000
+Lenstool Potential[17]: x = -72.301264, y = 65.035080, vdisp = 189.861785, type = 81 
+ 	 ellipticity = 0.403183, ellipticity_pot = 0.210526, ellipticity angle (radians) = -0.575959, rcore = 0.044198, rcut = 3.996047,
+ z = 0.308000
+Lenstool Potential[18]: x = 24.065474, y = -11.515680, vdisp = 176.631257, type = 81 
+ 	 ellipticity = 0.104972, ellipticity_pot = 0.052632, ellipticity angle (radians) = 0.136136, rcore = 0.038253, rcut = 3.458523,
+ z = 0.308000
+Lenstool Potential[19]: x = -5.871012, y = 18.354600, vdisp = 172.926901, type = 81 
+ 	 ellipticity = 0.232082, ellipticity_pot = 0.117647, ellipticity angle (radians) = 0.884882, rcore = 0.036665, rcut = 3.314978,
+ z = 0.308000
+Lenstool Potential[20]: x = 61.821196, y = 42.903000, vdisp = 170.768420, type = 81 
+ 	 ellipticity = 0.830450, ellipticity_pot = 0.533333, ellipticity angle (radians) = -0.439823, rcore = 0.035755, rcut = 3.232739,
+ z = 0.308000
+Lenstool Potential[21]: x = 35.266493, y = 6.469200, vdisp = 169.819501, type = 81 
+ 	 ellipticity = 0.600000, ellipticity_pot = 0.333333, ellipticity angle (radians) = -0.397935, rcore = 0.035359, rcut = 3.196911,
+ z = 0.308000
+Lenstool Potential[22]: x = 34.728191, y = 83.172960, vdisp = 167.825349, type = 81 
+ 	 ellipticity = 0.838588, ellipticity_pot = 0.542857, ellipticity angle (radians) = -0.406662, rcore = 0.034534, rcut = 3.122271,
+ z = 0.308000
+Lenstool Potential[23]: x = 49.968104, y = 49.420080, vdisp = 167.771257, type = 81 
+ 	 ellipticity = 0.219512, ellipticity_pot = 0.111111, ellipticity angle (radians) = -1.523672, rcore = 0.034511, rcut = 3.120259,
+ z = 0.308000
+Lenstool Potential[24]: x = -20.926000, y = 3.041640, vdisp = 166.981193, type = 81 
+ 	 ellipticity = 0.928673, ellipticity_pot = 0.677419, ellipticity angle (radians) = 0.731293, rcore = 0.034187, rcut = 3.090940,
+ z = 0.308000
+Lenstool Potential[25]: x = -21.824221, y = 56.875317, vdisp = 162.977465, type = 81 
+ 	 ellipticity = 0.219512, ellipticity_pot = 0.111111, ellipticity angle (radians) = 0.593412, rcore = 0.032567, rcut = 2.944494,
+ z = 0.308000
+Lenstool Potential[26]: x = -9.190038, y = 37.217518, vdisp = 162.718735, type = 81 
+ 	 ellipticity = 0.334873, ellipticity_pot = 0.172414, ellipticity angle (radians) = -0.171042, rcore = 0.032464, rcut = 2.935152,
+ z = 0.308000
+Lenstool Potential[27]: x = 38.241743, y = -31.139280, vdisp = 161.539063, type = 81 
+ 	 ellipticity = 0.704142, ellipticity_pot = 0.411765, ellipticity angle (radians) = -0.715585, rcore = 0.031995, rcut = 2.892748,
+ z = 0.308000
+Lenstool Potential[28]: x = 2.948621, y = 45.466920, vdisp = 160.597049, type = 81 
+ 	 ellipticity = 0.882353, ellipticity_pot = 0.600000, ellipticity angle (radians) = -1.019272, rcore = 0.031623, rcut = 2.859108,
+ z = 0.308000
+Lenstool Potential[29]: x = 14.583886, y = 85.177080, vdisp = 157.495286, type = 81 
+ 	 ellipticity = 0.165517, ellipticity_pot = 0.083333, ellipticity angle (radians) = 1.127483, rcore = 0.030413, rcut = 2.749734,
+ z = 0.308000
+Lenstool Potential[30]: x = -7.494337, y = 14.779080, vdisp = 157.093263, type = 81 
+ 	 ellipticity = 0.600000, ellipticity_pot = 0.333333, ellipticity angle (radians) = 1.371829, rcore = 0.030258, rcut = 2.735713,
+ z = 0.308000
+Lenstool Potential[31]: x = -39.473309, y = 9.470520, vdisp = 156.382287, type = 81 
+ 	 ellipticity = 0.187015, ellipticity_pot = 0.094340, ellipticity angle (radians) = 1.312488, rcore = 0.029985, rcut = 2.711007,
+ z = 0.308000
+Lenstool Potential[32]: x = -5.147505, y = -2.421000, vdisp = 156.216628, type = 81 
+ 	 ellipticity = 0.661981, ellipticity_pot = 0.378378, ellipticity angle (radians) = -0.253073, rcore = 0.029921, rcut = 2.705266,
+ z = 0.308000
+Lenstool Potential[33]: x = -9.077850, y = 46.015920, vdisp = 156.209542, type = 81 
+ 	 ellipticity = 0.236593, ellipticity_pot = 0.120000, ellipticity angle (radians) = -1.356121, rcore = 0.029919, rcut = 2.705021,
+ z = 0.308000
+Lenstool Potential[34]: x = 3.276007, y = 19.909800, vdisp = 155.760581, type = 81 
+ 	 ellipticity = 0.152941, ellipticity_pot = 0.076923, ellipticity angle (radians) = 0.307178, rcore = 0.029747, rcut = 2.689494,
+ z = 0.308000
+Lenstool Potential[35]: x = -64.435859, y = -11.888639, vdisp = 154.030796, type = 81 
+ 	 ellipticity = 0.314402, ellipticity_pot = 0.161290, ellipticity angle (radians) = -0.504400, rcore = 0.029090, rcut = 2.630090,
+ z = 0.308000
+Lenstool Potential[36]: x = -56.169645, y = 0.182880, vdisp = 150.649453, type = 81 
+ 	 ellipticity = 0.600000, ellipticity_pot = 0.333333, ellipticity angle (radians) = -0.143117, rcore = 0.027827, rcut = 2.515884,
+ z = 0.308000
+Lenstool Potential[37]: x = -59.519674, y = 55.198800, vdisp = 150.143854, type = 81 
+ 	 ellipticity = 0.737265, ellipticity_pot = 0.440000, ellipticity angle (radians) = 0.500909, rcore = 0.027640, rcut = 2.499025,
+ z = 0.308000
+Lenstool Potential[38]: x = 16.485638, y = 33.726960, vdisp = 149.467772, type = 81 
+ 	 ellipticity = 0.470588, ellipticity_pot = 0.250000, ellipticity angle (radians) = -0.537561, rcore = 0.027392, rcut = 2.476570,
+ z = 0.308000
+Lenstool Potential[39]: x = 12.733994, y = 5.770800, vdisp = 149.093105, type = 81 
+ 	 ellipticity = 0.236593, ellipticity_pot = 0.120000, ellipticity angle (radians) = 0.453786, rcore = 0.027255, rcut = 2.464170,
+ z = 0.308000
+Lenstool Potential[40]: x = 64.340151, y = 47.102757, vdisp = 147.692200, type = 81 
+ 	 ellipticity = 0.438202, ellipticity_pot = 0.230769, ellipticity angle (radians) = 0.668461, rcore = 0.026745, rcut = 2.418080,
+ z = 0.308000
+Lenstool Potential[41]: x = 73.760181, y = -8.008920, vdisp = 147.047471, type = 81 
+ 	 ellipticity = 0.415162, ellipticity_pot = 0.217391, ellipticity angle (radians) = 0.933751, rcore = 0.026512, rcut = 2.397014,
+ z = 0.308000
+Lenstool Potential[42]: x = 45.824144, y = 35.076600, vdisp = 146.834314, type = 81 
+ 	 ellipticity = 0.060550, ellipticity_pot = 0.030303, ellipticity angle (radians) = -0.104720, rcore = 0.026435, rcut = 2.390070,
+ z = 0.308000
+Lenstool Potential[43]: x = -50.904339, y = -60.404040, vdisp = 145.186943, type = 81 
+ 	 ellipticity = 0.073973, ellipticity_pot = 0.037037, ellipticity angle (radians) = 0.331613, rcore = 0.025845, rcut = 2.336741,
+ z = 0.308000
+Lenstool Potential[44]: x = -26.252388, y = 39.812760, vdisp = 143.544831, type = 81 
+ 	 ellipticity = 0.060550, ellipticity_pot = 0.030303, ellipticity angle (radians) = -0.300197, rcore = 0.025264, rcut = 2.284181,
+ z = 0.308000
+Lenstool Potential[45]: x = -55.973829, y = -51.755043, vdisp = 141.353823, type = 81 
+ 	 ellipticity = 0.642336, ellipticity_pot = 0.363636, ellipticity angle (radians) = 0.525344, rcore = 0.024499, rcut = 2.214984,
+ z = 0.308000
+Lenstool Potential[46]: x = -12.671638, y = 33.260036, vdisp = 141.171672, type = 81 
+ 	 ellipticity = 0.342282, ellipticity_pot = 0.176471, ellipticity angle (radians) = 0.513127, rcore = 0.024436, rcut = 2.209279,
+ z = 0.308000
+Lenstool Potential[47]: x = -5.849878, y = 54.622437, vdisp = 140.251514, type = 81 
+ 	 ellipticity = 0.778462, ellipticity_pot = 0.478261, ellipticity angle (radians) = -1.260128, rcore = 0.024118, rcut = 2.180573,
+ z = 0.308000
+Lenstool Potential[48]: x = 22.969351, y = 11.043360, vdisp = 137.384444, type = 81 
+ 	 ellipticity = 0.528302, ellipticity_pot = 0.285714, ellipticity angle (radians) = 1.228712, rcore = 0.023142, rcut = 2.092332,
+ z = 0.308000
+Lenstool Potential[49]: x = -46.867689, y = -54.684360, vdisp = 136.671374, type = 81 
+ 	 ellipticity = 0.438202, ellipticity_pot = 0.230769, ellipticity angle (radians) = -0.657989, rcore = 0.022902, rcut = 2.070669,
+ z = 0.308000
+Lenstool Potential[50]: x = -28.375902, y = 71.187120, vdisp = 136.649347, type = 81 
+ 	 ellipticity = 0.456180, ellipticity_pot = 0.241379, ellipticity angle (radians) = -1.251401, rcore = 0.022895, rcut = 2.070001,
+ z = 0.308000
+Lenstool Potential[51]: x = 64.955621, y = 62.024400, vdisp = 135.674291, type = 81 
+ 	 ellipticity = 0.342282, ellipticity_pot = 0.176471, ellipticity angle (radians) = -0.310669, rcore = 0.022569, rcut = 2.040566,
+ z = 0.308000
+Lenstool Potential[52]: x = -59.010351, y = -2.270520, vdisp = 135.228291, type = 81 
+ 	 ellipticity = 0.384615, ellipticity_pot = 0.200000, ellipticity angle (radians) = 0.319395, rcore = 0.022421, rcut = 2.027172,
+ z = 0.308000
+Lenstool Potential[53]: x = -29.954986, y = -21.737880, vdisp = 133.628028, type = 81 
+ 	 ellipticity = 0.256506, ellipticity_pot = 0.130435, ellipticity angle (radians) = -0.804597, rcore = 0.021894, rcut = 1.979478,
+ z = 0.308000
+Lenstool Potential[54]: x = 7.897691, y = 55.825920, vdisp = 132.809016, type = 81 
+ 	 ellipticity = 0.132743, ellipticity_pot = 0.066667, ellipticity angle (radians) = 0.788889, rcore = 0.021626, rcut = 1.955287,
+ z = 0.308000
+Lenstool Potential[55]: x = -45.649849, y = -63.599762, vdisp = 132.760097, type = 81 
+ 	 ellipticity = 0.778462, ellipticity_pot = 0.478261, ellipticity angle (radians) = -0.968658, rcore = 0.021610, rcut = 1.953847,
+ z = 0.308000
+Lenstool Potential[56]: x = 15.126567, y = 22.483080, vdisp = 130.613347, type = 81 
+ 	 ellipticity = 0.600000, ellipticity_pot = 0.333333, ellipticity angle (radians) = 0.769690, rcore = 0.020917, rcut = 1.891170,
+ z = 0.308000
+Lenstool Potential[57]: x = 22.711699, y = 21.807000, vdisp = 129.654490, type = 81 
+ 	 ellipticity = 0.300578, ellipticity_pot = 0.153846, ellipticity angle (radians) = 1.425934, rcore = 0.020611, rcut = 1.863505,
+ z = 0.308000
+Lenstool Potential[58]: x = 2.295320, y = 10.871640, vdisp = 129.223280, type = 81 
+ 	 ellipticity = 0.000000, ellipticity_pot = 0.000010, ellipticity angle (radians) = 0.958186, rcore = 0.020474, rcut = 1.851130,
+ z = 0.308000
+Lenstool Potential[59]: x = -19.520962, y = 53.508240, vdisp = 128.981540, type = 81 
+ 	 ellipticity = 0.384615, ellipticity_pot = 0.200000, ellipticity angle (radians) = 1.521927, rcore = 0.020398, rcut = 1.844211,
+ z = 0.308000
+Lenstool Potential[60]: x = -8.928935, y = -33.836040, vdisp = 128.839064, type = 81 
+ 	 ellipticity = 0.648780, ellipticity_pot = 0.368421, ellipticity angle (radians) = 0.654498, rcore = 0.020353, rcut = 1.840139,
+ z = 0.308000
+Lenstool Potential[61]: x = -38.835269, y = 43.770958, vdisp = 126.890047, type = 81 
+ 	 ellipticity = 0.492228, ellipticity_pot = 0.263158, ellipticity angle (radians) = -0.731293, rcore = 0.019742, rcut = 1.784887,
+ z = 0.308000
+Lenstool Potential[62]: x = 51.769625, y = -43.146720, vdisp = 126.650690, type = 81 
+ 	 ellipticity = 0.766423, ellipticity_pot = 0.466667, ellipticity angle (radians) = 0.701622, rcore = 0.019667, rcut = 1.778159,
+ z = 0.308000
+Lenstool Potential[63]: x = -16.953764, y = -27.461520, vdisp = 126.193667, type = 81 
+ 	 ellipticity = 0.470588, ellipticity_pot = 0.250000, ellipticity angle (radians) = 0.528835, rcore = 0.019525, rcut = 1.765349,
+ z = 0.308000
+Lenstool Potential[64]: x = -7.937808, y = -37.959843, vdisp = 124.173110, type = 81 
+ 	 ellipticity = 0.095023, ellipticity_pot = 0.047619, ellipticity angle (radians) = -0.591667, rcore = 0.018905, rcut = 1.709270,
+ z = 0.308000
+Lenstool Potential[65]: x = 39.782491, y = 80.083800, vdisp = 123.429099, type = 81 
+ 	 ellipticity = 0.470588, ellipticity_pot = 0.250000, ellipticity angle (radians) = -0.862193, rcore = 0.018679, rcut = 1.688848,
+ z = 0.308000
+Lenstool Potential[66]: x = -28.702671, y = 41.360040, vdisp = 122.644354, type = 81 
+ 	 ellipticity = 0.308108, ellipticity_pot = 0.157895, ellipticity angle (radians) = 0.767945, rcore = 0.018443, rcut = 1.667442,
+ z = 0.308000
+Lenstool Potential[67]: x = 74.343657, y = -25.379640, vdisp = 122.590710, type = 81 
+ 	 ellipticity = 0.352000, ellipticity_pot = 0.181818, ellipticity angle (radians) = 1.499238, rcore = 0.018426, rcut = 1.665983,
+ z = 0.308000
+Lenstool Potential[68]: x = 52.653051, y = 57.379677, vdisp = 121.960040, type = 81 
+ 	 ellipticity = 0.470588, ellipticity_pot = 0.250000, ellipticity angle (radians) = 0.952950, rcore = 0.018237, rcut = 1.648886,
+ z = 0.308000
+Lenstool Potential[69]: x = -24.775119, y = 34.969677, vdisp = 121.811295, type = 81 
+ 	 ellipticity = 0.342282, ellipticity_pot = 0.176471, ellipticity angle (radians) = -0.045379, rcore = 0.018193, rcut = 1.644866,
+ z = 0.308000
+Lenstool Potential[70]: x = 3.960779, y = 26.269920, vdisp = 121.385709, type = 81 
+ 	 ellipticity = 0.657534, ellipticity_pot = 0.375000, ellipticity angle (radians) = 0.897099, rcore = 0.018066, rcut = 1.633393,
+ z = 0.308000
+Lenstool Potential[71]: x = -25.472489, y = -0.623160, vdisp = 121.271168, type = 81 
+ 	 ellipticity = 0.280000, ellipticity_pot = 0.142857, ellipticity angle (radians) = -0.741765, rcore = 0.018032, rcut = 1.630312,
+ z = 0.308000
+Lenstool Potential[72]: x = -12.473017, y = 62.934116, vdisp = 121.184635, type = 81 
+ 	 ellipticity = 0.550459, ellipticity_pot = 0.300000, ellipticity angle (radians) = -1.392773, rcore = 0.018006, rcut = 1.627986,
+ z = 0.308000
+Lenstool Potential[73]: x = -36.011866, y = -19.361880, vdisp = 120.919839, type = 81 
+ 	 ellipticity = 0.352000, ellipticity_pot = 0.181818, ellipticity angle (radians) = 0.692896, rcore = 0.017928, rcut = 1.620879,
+ z = 0.308000
+Lenstool Potential[74]: x = -10.109883, y = 38.429638, vdisp = 118.953592, type = 81 
+ 	 ellipticity = 0.165517, ellipticity_pot = 0.083333, ellipticity angle (radians) = 0.363028, rcore = 0.017349, rcut = 1.568594,
+ z = 0.308000
+Lenstool Potential[75]: x = 18.284921, y = 28.704600, vdisp = 118.740141, type = 81 
+ 	 ellipticity = 0.600000, ellipticity_pot = 0.333333, ellipticity angle (radians) = -0.638791, rcore = 0.017287, rcut = 1.562970,
+ z = 0.308000
+Lenstool Potential[76]: x = 38.904089, y = 51.123238, vdisp = 118.148322, type = 81 
+ 	 ellipticity = 0.450644, ellipticity_pot = 0.238095, ellipticity angle (radians) = -1.134464, rcore = 0.017115, rcut = 1.547429,
+ z = 0.308000
+Lenstool Potential[77]: x = -2.422289, y = -17.190000, vdisp = 118.064018, type = 81 
+ 	 ellipticity = 0.324324, ellipticity_pot = 0.166667, ellipticity angle (radians) = 1.392773, rcore = 0.017091, rcut = 1.545221,
+ z = 0.308000
+Lenstool Potential[78]: x = 2.717567, y = 4.241880, vdisp = 117.613604, type = 81 
+ 	 ellipticity = 0.293399, ellipticity_pot = 0.150000, ellipticity angle (radians) = -0.781908, rcore = 0.016961, rcut = 1.533453,
+ z = 0.308000
+Lenstool Potential[79]: x = 73.729291, y = -27.948960, vdisp = 116.803958, type = 81 
+ 	 ellipticity = 0.648780, ellipticity_pot = 0.368421, ellipticity angle (radians) = -0.914553, rcore = 0.016728, rcut = 1.512414,
+ z = 0.308000
+Lenstool Potential[80]: x = 7.054105, y = 3.300480, vdisp = 114.936392, type = 81 
+ 	 ellipticity = 0.648780, ellipticity_pot = 0.368421, ellipticity angle (radians) = -0.235619, rcore = 0.016197, rcut = 1.464437,
+ z = 0.308000
+Lenstool Potential[81]: x = 39.989941, y = 49.913640, vdisp = 114.925806, type = 81 
+ 	 ellipticity = 0.073973, ellipticity_pot = 0.037037, ellipticity angle (radians) = 0.656244, rcore = 0.016194, rcut = 1.464167,
+ z = 0.308000
+Lenstool Potential[82]: x = -63.765985, y = -19.505880, vdisp = 114.753928, type = 81 
+ 	 ellipticity = 0.470588, ellipticity_pot = 0.250000, ellipticity angle (radians) = -1.047198, rcore = 0.016146, rcut = 1.459791,
+ z = 0.308000
+Lenstool Potential[83]: x = -5.521452, y = 63.428040, vdisp = 114.500547, type = 81 
+ 	 ellipticity = 0.507692, ellipticity_pot = 0.272727, ellipticity angle (radians) = 1.532399, rcore = 0.016075, rcut = 1.453351,
+ z = 0.308000
+Lenstool Potential[84]: x = -45.246349, y = 19.005840, vdisp = 113.565799, type = 81 
+ 	 ellipticity = 0.550459, ellipticity_pot = 0.300000, ellipticity angle (radians) = 1.452114, rcore = 0.015813, rcut = 1.429719,
+ z = 0.308000
+Lenstool Potential[85]: x = 47.829671, y = 65.428200, vdisp = 113.231578, type = 81 
+ 	 ellipticity = 0.470588, ellipticity_pot = 0.250000, ellipticity angle (radians) = -0.921534, rcore = 0.015720, rcut = 1.421316,
+ z = 0.308000
+Lenstool Potential[86]: x = 11.655784, y = -35.312400, vdisp = 113.059630, type = 81 
+ 	 ellipticity = 0.000000, ellipticity_pot = 0.000010, ellipticity angle (radians) = -1.110029, rcore = 0.015673, rcut = 1.417002,
+ z = 0.308000
+Lenstool Potential[87]: x = -59.055639, y = -9.925200, vdisp = 113.033600, type = 81 
+ 	 ellipticity = 0.000000, ellipticity_pot = 0.000010, ellipticity angle (radians) = -0.286234, rcore = 0.015665, rcut = 1.416350,
+ z = 0.308000
+Lenstool Potential[88]: x = 53.994677, y = 53.506440, vdisp = 111.654842, type = 81 
+ 	 ellipticity = 0.000000, ellipticity_pot = 0.000010, ellipticity angle (radians) = 0.078540, rcore = 0.015286, rcut = 1.382008,
+ z = 0.308000
+Lenstool Potential[89]: x = -35.327764, y = 75.516840, vdisp = 108.872341, type = 81 
+ 	 ellipticity = 0.492228, ellipticity_pot = 0.263158, ellipticity angle (radians) = -1.015782, rcore = 0.014533, rcut = 1.313986,
+ z = 0.308000
+Lenstool Potential[90]: x = 68.488806, y = 34.701840, vdisp = 107.101995, type = 81 
+ 	 ellipticity = 0.670103, ellipticity_pot = 0.384615, ellipticity angle (radians) = 0.064577, rcore = 0.014064, rcut = 1.271600,
+ z = 0.308000
+Lenstool Potential[91]: x = 1.716846, y = -49.661280, vdisp = 107.013251, type = 81 
+ 	 ellipticity = 0.308108, ellipticity_pot = 0.157895, ellipticity angle (radians) = 0.937242, rcore = 0.014041, rcut = 1.269494,
+ z = 0.308000
+Lenstool Potential[92]: x = 3.804798, y = -11.293560, vdisp = 105.810206, type = 81 
+ 	 ellipticity = 0.280000, ellipticity_pot = 0.142857, ellipticity angle (radians) = 1.354375, rcore = 0.013727, rcut = 1.241111,
+ z = 0.308000
+Lenstool Potential[93]: x = 70.093511, y = -39.183120, vdisp = 105.513386, type = 81 
+ 	 ellipticity = 0.280000, ellipticity_pot = 0.142857, ellipticity angle (radians) = 0.647517, rcore = 0.013650, rcut = 1.234158,
+ z = 0.308000
+Lenstool Potential[94]: x = 23.822777, y = 3.840840, vdisp = 105.476949, type = 81 
+ 	 ellipticity = 0.342282, ellipticity_pot = 0.176471, ellipticity angle (radians) = -1.240929, rcore = 0.013641, rcut = 1.233305,
+ z = 0.308000
+Lenstool Potential[95]: x = 5.846635, y = -9.752040, vdisp = 101.896099, type = 81 
+ 	 ellipticity = 0.280000, ellipticity_pot = 0.142857, ellipticity angle (radians) = -0.247837, rcore = 0.012730, rcut = 1.150988,
+ z = 0.308000
+Lenstool Potential[96]: x = -23.686293, y = 33.605637, vdisp = 101.856221, type = 81 
+ 	 ellipticity = 0.450644, ellipticity_pot = 0.238095, ellipticity angle (radians) = -1.464331, rcore = 0.012720, rcut = 1.150087,
+ z = 0.308000
+Lenstool Potential[97]: x = -27.524551, y = -33.086163, vdisp = 101.717941, type = 81 
+ 	 ellipticity = 0.000000, ellipticity_pot = 0.000010, ellipticity angle (radians) = -1.417207, rcore = 0.012686, rcut = 1.146966,
+ z = 0.308000
+Lenstool Potential[98]: x = 66.795301, y = 63.296640, vdisp = 100.581373, type = 81 
+ 	 ellipticity = 0.104972, ellipticity_pot = 0.052632, ellipticity angle (radians) = -0.394444, rcore = 0.012404, rcut = 1.121478,
+ z = 0.308000
+Lenstool Potential[99]: x = -21.448381, y = 35.377560, vdisp = 97.716423, type = 81 
+ 	 ellipticity = 0.541401, ellipticity_pot = 0.294118, ellipticity angle (radians) = -0.898845, rcore = 0.011707, rcut = 1.058499,
+ z = 0.308000
+Lenstool Potential[100]: x = 36.352564, y = 77.690880, vdisp = 97.637704, type = 81 
+ 	 ellipticity = 0.678689, ellipticity_pot = 0.391304, ellipticity angle (radians) = -0.771436, rcore = 0.011689, rcut = 1.056795,
+ z = 0.308000
+Lenstool Potential[101]: x = -49.497873, y = 11.478960, vdisp = 97.417630, type = 81 
+ 	 ellipticity = 0.132743, ellipticity_pot = 0.066667, ellipticity angle (radians) = 0.596903, rcore = 0.011636, rcut = 1.052036,
+ z = 0.308000
+Lenstool Potential[102]: x = -5.852588, y = -6.491160, vdisp = 97.381747, type = 81 
+ 	 ellipticity = 0.180328, ellipticity_pot = 0.090909, ellipticity angle (radians) = 1.062906, rcore = 0.011627, rcut = 1.051261,
+ z = 0.308000
+Lenstool Potential[103]: x = 62.903826, y = 22.514040, vdisp = 95.042436, type = 81 
+ 	 ellipticity = 0.438202, ellipticity_pot = 0.230769, ellipticity angle (radians) = 0.418879, rcore = 0.011075, rcut = 1.001361,
+ z = 0.308000
+Lenstool Potential[104]: x = -51.096719, y = 9.381600, vdisp = 94.950566, type = 81 
+ 	 ellipticity = 0.541401, ellipticity_pot = 0.294118, ellipticity angle (radians) = -0.326377, rcore = 0.011054, rcut = 0.999426,
+ z = 0.308000
+Lenstool Potential[105]: x = -71.573929, y = 7.056360, vdisp = 94.941821, type = 81 
+ 	 ellipticity = 0.742268, ellipticity_pot = 0.444444, ellipticity angle (radians) = 1.115265, rcore = 0.011052, rcut = 0.999242,
+ z = 0.308000
+Lenstool Potential[106]: x = 24.197621, y = 67.890236, vdisp = 94.791099, type = 81 
+ 	 ellipticity = 0.324324, ellipticity_pot = 0.166667, ellipticity angle (radians) = 0.298451, rcore = 0.011017, rcut = 0.996072,
+ z = 0.308000
+Lenstool Potential[107]: x = -12.481041, y = -26.007480, vdisp = 94.294760, type = 81 
+ 	 ellipticity = 0.219512, ellipticity_pot = 0.111111, ellipticity angle (radians) = 0.099484, rcore = 0.010902, rcut = 0.985668,
+ z = 0.308000
+Lenstool Potential[108]: x = 24.574771, y = 38.569680, vdisp = 94.036739, type = 81 
+ 	 ellipticity = 0.117241, ellipticity_pot = 0.058824, ellipticity angle (radians) = 1.097812, rcore = 0.010842, rcut = 0.980281,
+ z = 0.308000
+Lenstool Potential[109]: x = 22.315659, y = 0.312840, vdisp = 93.785902, type = 81 
+ 	 ellipticity = 0.423529, ellipticity_pot = 0.222222, ellipticity angle (radians) = 0.090757, rcore = 0.010785, rcut = 0.975058,
+ z = 0.308000
+Lenstool Potential[110]: x = 41.769201, y = -1.288080, vdisp = 92.663257, type = 81 
+ 	 ellipticity = 0.180328, ellipticity_pot = 0.090909, ellipticity angle (radians) = 1.366593, rcore = 0.010528, rcut = 0.951855,
+ z = 0.308000
+Lenstool Potential[111]: x = -31.038301, y = 41.971317, vdisp = 91.551942, type = 81 
+ 	 ellipticity = 0.000000, ellipticity_pot = 0.000010, ellipticity angle (radians) = -1.261873, rcore = 0.010277, rcut = 0.929160,
+ z = 0.308000
+Lenstool Potential[112]: x = 27.078472, y = 76.717080, vdisp = 90.499788, type = 81 
+ 	 ellipticity = 0.384615, ellipticity_pot = 0.200000, ellipticity angle (radians) = -1.394518, rcore = 0.010042, rcut = 0.907926,
+ z = 0.308000
+Lenstool Potential[113]: x = 44.610006, y = 82.021320, vdisp = 89.909909, type = 81 
+ 	 ellipticity = 0.246154, ellipticity_pot = 0.125000, ellipticity angle (radians) = -0.497419, rcore = 0.009912, rcut = 0.896129,
+ z = 0.308000
+Lenstool Potential[114]: x = -26.610001, y = -7.030440, vdisp = 89.571028, type = 81 
+ 	 ellipticity = 0.000000, ellipticity_pot = 0.000010, ellipticity angle (radians) = 0.403171, rcore = 0.009837, rcut = 0.889387,
+ z = 0.308000
+Lenstool Potential[115]: x = -5.311577, y = -14.673240, vdisp = 89.155381, type = 81 
+ 	 ellipticity = 0.000000, ellipticity_pot = 0.000010, ellipticity angle (radians) = 0.275762, rcore = 0.009746, rcut = 0.881152,
+ z = 0.308000
+Lenstool Potential[116]: x = 39.929743, y = -26.220600, vdisp = 88.976959, type = 81 
+ 	 ellipticity = 0.198020, ellipticity_pot = 0.100000, ellipticity angle (radians) = -1.349140, rcore = 0.009707, rcut = 0.877628,
+ z = 0.308000
+Lenstool Potential[117]: x = -72.135089, y = 72.458275, vdisp = 88.956474, type = 81 
+ 	 ellipticity = 0.280000, ellipticity_pot = 0.142857, ellipticity angle (radians) = -0.104720, rcore = 0.009702, rcut = 0.877224,
+ z = 0.308000
+Lenstool Potential[118]: x = 34.553441, y = 77.960520, vdisp = 88.600783, type = 81 
+ 	 ellipticity = 0.219512, ellipticity_pot = 0.111111, ellipticity angle (radians) = 0.261799, rcore = 0.009625, rcut = 0.870223,
+ z = 0.308000
+Lenstool Potential[119]: x = 47.209303, y = 43.266956, vdisp = 87.683436, type = 81 
+ 	 ellipticity = 0.000000, ellipticity_pot = 0.000010, ellipticity angle (radians) = 1.017527, rcore = 0.009427, rcut = 0.852296,
+ z = 0.308000
+Lenstool Potential[120]: x = -10.742346, y = -36.171000, vdisp = 87.196200, type = 81 
+ 	 ellipticity = 0.000000, ellipticity_pot = 0.000010, ellipticity angle (radians) = 0.778417, rcore = 0.009322, rcut = 0.842851,
+ z = 0.308000
+Lenstool Potential[121]: x = -32.596323, y = -1.214280, vdisp = 87.160068, type = 81 
+ 	 ellipticity = 0.324324, ellipticity_pot = 0.166667, ellipticity angle (radians) = 0.849975, rcore = 0.009315, rcut = 0.842152,
+ z = 0.308000
+Lenstool Potential[122]: x = -2.313263, y = 0.806040, vdisp = 85.794127, type = 81 
+ 	 ellipticity = 0.470588, ellipticity_pot = 0.250000, ellipticity angle (radians) = -0.328122, rcore = 0.009025, rcut = 0.815963,
+ z = 0.308000
+Lenstool Potential[123]: x = 7.552607, y = -33.586920, vdisp = 85.425506, type = 81 
+ 	 ellipticity = 0.528302, ellipticity_pot = 0.285714, ellipticity angle (radians) = -0.258309, rcore = 0.008948, rcut = 0.808967,
+ z = 0.308000
+Lenstool Potential[124]: x = 39.032151, y = 52.176598, vdisp = 83.993864, type = 81 
+ 	 ellipticity = 0.000000, ellipticity_pot = 0.000010, ellipticity angle (radians) = -0.565487, rcore = 0.008650, rcut = 0.782079,
+ z = 0.308000
+Lenstool Potential[125]: x = -20.538492, y = 13.751640, vdisp = 83.737031, type = 81 
+ 	 ellipticity = 0.180328, ellipticity_pot = 0.090909, ellipticity angle (radians) = 0.886627, rcore = 0.008597, rcut = 0.777303,
+ z = 0.308000
+Lenstool Potential[126]: x = -6.950193, y = -6.928200, vdisp = 82.434225, type = 81 
+ 	 ellipticity = 0.000000, ellipticity_pot = 0.000010, ellipticity angle (radians) = 0.925025, rcore = 0.008332, rcut = 0.753305,
+ z = 0.308000
+Lenstool Potential[127]: x = 5.855687, y = 30.327480, vdisp = 80.431758, type = 81 
+ 	 ellipticity = 0.180328, ellipticity_pot = 0.090909, ellipticity angle (radians) = 0.687660, rcore = 0.007932, rcut = 0.717151,
+ z = 0.308000
+Lenstool Potential[128]: x = 9.156183, y = 13.101120, vdisp = 78.796615, type = 81 
+ 	 ellipticity = 0.000000, ellipticity_pot = 0.000010, ellipticity angle (radians) = -0.101229, rcore = 0.007613, rcut = 0.688289,
+ z = 0.308000
+Lenstool Potential[129]: x = 5.599741, y = 6.592320, vdisp = 77.885670, type = 81 
+ 	 ellipticity = 0.324324, ellipticity_pot = 0.166667, ellipticity angle (radians) = 1.446878, rcore = 0.007438, rcut = 0.672466,
+ z = 0.308000
+Lenstool Potential[130]: x = 57.206549, y = 29.590920, vdisp = 77.534959, type = 81 
+ 	 ellipticity = 0.324324, ellipticity_pot = 0.166667, ellipticity angle (radians) = 1.078613, rcore = 0.007371, rcut = 0.666424,
+ z = 0.308000
+Lenstool Potential[131]: x = -23.231024, y = -32.566680, vdisp = 76.714518, type = 81 
+ 	 ellipticity = 0.600000, ellipticity_pot = 0.333333, ellipticity angle (radians) = 1.219985, rcore = 0.007216, rcut = 0.652395,
+ z = 0.308000
+Lenstool Potential[132]: x = 13.793839, y = 86.889960, vdisp = 76.464096, type = 81 
+ 	 ellipticity = 0.180328, ellipticity_pot = 0.090909, ellipticity angle (radians) = 1.293289, rcore = 0.007169, rcut = 0.648143,
+ z = 0.308000
+Lenstool Potential[133]: x = -34.819265, y = -35.233562, vdisp = 76.312830, type = 81 
+ 	 ellipticity = 0.280000, ellipticity_pot = 0.142857, ellipticity angle (radians) = 0.506145, rcore = 0.007140, rcut = 0.645581,
+ z = 0.308000
+Lenstool Potential[134]: x = 14.490778, y = 3.891600, vdisp = 76.288234, type = 81 
+ 	 ellipticity = 0.280000, ellipticity_pot = 0.142857, ellipticity angle (radians) = 0.602139, rcore = 0.007136, rcut = 0.645165,
+ z = 0.308000
+Lenstool Potential[135]: x = -46.536772, y = -16.947360, vdisp = 75.165328, type = 81 
+ 	 ellipticity = 0.000000, ellipticity_pot = 0.000010, ellipticity angle (radians) = 0.033161, rcore = 0.006927, rcut = 0.626312,
+ z = 0.308000
+Lenstool Potential[136]: x = -48.435705, y = 5.445720, vdisp = 74.923414, type = 81 
+ 	 ellipticity = 0.438202, ellipticity_pot = 0.230769, ellipticity angle (radians) = -0.300197, rcore = 0.006883, rcut = 0.622287,
+ z = 0.308000
+Lenstool Potential[137]: x = 69.210501, y = -15.700320, vdisp = 74.560285, type = 81 
+ 	 ellipticity = 0.219512, ellipticity_pot = 0.111111, ellipticity angle (radians) = -0.619592, rcore = 0.006816, rcut = 0.616269,
+ z = 0.308000
+Lenstool Potential[138]: x = -10.697949, y = -15.696000, vdisp = 74.089653, type = 81 
+ 	 ellipticity = 0.180328, ellipticity_pot = 0.090909, ellipticity angle (radians) = -1.404990, rcore = 0.006730, rcut = 0.608514,
+ z = 0.308000
+Lenstool Potential[139]: x = 58.692041, y = -2.530440, vdisp = 73.369838, type = 81 
+ 	 ellipticity = 0.000000, ellipticity_pot = 0.000010, ellipticity angle (radians) = -0.024435, rcore = 0.006600, rcut = 0.596747,
+ z = 0.308000
+Lenstool Potential[140]: x = -34.269329, y = 14.864040, vdisp = 73.165705, type = 81 
+ 	 ellipticity = 0.180328, ellipticity_pot = 0.090909, ellipticity angle (radians) = 0.082030, rcore = 0.006564, rcut = 0.593432,
+ z = 0.308000
+Lenstool Potential[141]: x = -22.215999, y = 0.562320, vdisp = 72.558377, type = 81 
+ 	 ellipticity = 0.324324, ellipticity_pot = 0.166667, ellipticity angle (radians) = 1.457350, rcore = 0.006455, rcut = 0.583621,
+ z = 0.308000
+Lenstool Potential[142]: x = -54.561169, y = 3.786840, vdisp = 72.324853, type = 81 
+ 	 ellipticity = 0.384615, ellipticity_pot = 0.200000, ellipticity angle (radians) = -1.103048, rcore = 0.006414, rcut = 0.579870,
+ z = 0.308000
+Lenstool Potential[143]: x = -8.158338, y = -20.454840, vdisp = 72.053911, type = 81 
+ 	 ellipticity = 0.280000, ellipticity_pot = 0.142857, ellipticity angle (radians) = -1.244420, rcore = 0.006366, rcut = 0.575533,
+ z = 0.308000
+Lenstool Potential[144]: x = -21.002485, y = 61.957440, vdisp = 71.452522, type = 81 
+ 	 ellipticity = 0.324324, ellipticity_pot = 0.166667, ellipticity angle (radians) = 1.110029, rcore = 0.006260, rcut = 0.565966,
+ z = 0.308000
+Lenstool Potential[145]: x = 41.146961, y = 46.512360, vdisp = 71.452522, type = 81 
+ 	 ellipticity = 0.324324, ellipticity_pot = 0.166667, ellipticity angle (radians) = 0.811578, rcore = 0.006260, rcut = 0.565966,
+ z = 0.308000
+Lenstool Potential[146]: x = -26.112505, y = -20.602080, vdisp = 71.396605, type = 81 
+ 	 ellipticity = 0.000000, ellipticity_pot = 0.000010, ellipticity angle (radians) = 0.335103, rcore = 0.006250, rcut = 0.565081,
+ z = 0.308000
+Lenstool Potential[147]: x = -25.184963, y = 77.456160, vdisp = 71.219277, type = 81 
+ 	 ellipticity = 0.324324, ellipticity_pot = 0.166667, ellipticity angle (radians) = -1.382301, rcore = 0.006219, rcut = 0.562277,
+ z = 0.308000
+Lenstool Potential[148]: x = 35.662321, y = -12.582360, vdisp = 70.654131, type = 81 
+ 	 ellipticity = 0.600000, ellipticity_pot = 0.333333, ellipticity angle (radians) = 0.054105, rcore = 0.006121, rcut = 0.553389,
+ z = 0.308000
+Lenstool Potential[149]: x = 23.363369, y = 57.399837, vdisp = 70.644371, type = 81 
+ 	 ellipticity = 0.000000, ellipticity_pot = 0.000010, ellipticity angle (radians) = -0.083776, rcore = 0.006119, rcut = 0.553236,
+ z = 0.308000
+Lenstool Potential[150]: x = -8.039758, y = -5.736600, vdisp = 70.613471, type = 81 
+ 	 ellipticity = 0.000000, ellipticity_pot = 0.000010, ellipticity angle (radians) = 0.181514, rcore = 0.006114, rcut = 0.552752,
+ z = 0.308000
+Lenstool Potential[151]: x = -18.765444, y = 66.182040, vdisp = 70.606968, type = 81 
+ 	 ellipticity = 0.280000, ellipticity_pot = 0.142857, ellipticity angle (radians) = -0.073304, rcore = 0.006113, rcut = 0.552651,
+ z = 0.308000
+Lenstool Potential[152]: x = 0.986078, y = -29.721240, vdisp = 69.832495, type = 81 
+ 	 ellipticity = 0.152941, ellipticity_pot = 0.076923, ellipticity angle (radians) = -0.246091, rcore = 0.005979, rcut = 0.540593,
+ z = 0.308000
+Lenstool Potential[153]: x = 58.736956, y = 50.735878, vdisp = 69.227326, type = 81 
+ 	 ellipticity = 0.180328, ellipticity_pot = 0.090909, ellipticity angle (radians) = 0.394444, rcore = 0.005876, rcut = 0.531264,
+ z = 0.308000
+Lenstool Potential[154]: x = -18.119564, y = -46.558804, vdisp = 69.216169, type = 81 
+ 	 ellipticity = 0.507692, ellipticity_pot = 0.272727, ellipticity angle (radians) = -0.225147, rcore = 0.005874, rcut = 0.531093,
+ z = 0.308000
+Lenstool Potential[155]: x = 63.547601, y = 31.434120, vdisp = 69.098331, type = 81 
+ 	 ellipticity = 0.384615, ellipticity_pot = 0.200000, ellipticity angle (radians) = -1.076868, rcore = 0.005854, rcut = 0.529286,
+ z = 0.308000
+Lenstool Potential[156]: x = 52.440671, y = -46.434600, vdisp = 69.009290, type = 81 
+ 	 ellipticity = 0.528302, ellipticity_pot = 0.285714, ellipticity angle (radians) = -0.968658, rcore = 0.005839, rcut = 0.527923,
+ z = 0.308000
+Lenstool Potential[157]: x = 38.999361, y = 84.136680, vdisp = 68.644787, type = 81 
+ 	 ellipticity = 0.000000, ellipticity_pot = 0.000010, ellipticity angle (radians) = 0.062832, rcore = 0.005778, rcut = 0.522361,
+ z = 0.308000
+Lenstool Potential[158]: x = 53.460524, y = 18.761760, vdisp = 68.198930, type = 81 
+ 	 ellipticity = 0.180328, ellipticity_pot = 0.090909, ellipticity angle (radians) = 0.528835, rcore = 0.005703, rcut = 0.515597,
+ z = 0.308000
+Lenstool Potential[159]: x = -38.781713, y = 56.588757, vdisp = 68.035810, type = 81 
+ 	 ellipticity = 0.000000, ellipticity_pot = 0.000010, ellipticity angle (radians) = -0.274017, rcore = 0.005675, rcut = 0.513134,
+ z = 0.308000
+Lenstool Potential[160]: x = 69.356535, y = 49.342320, vdisp = 67.835583, type = 81 
+ 	 ellipticity = 0.000000, ellipticity_pot = 0.000010, ellipticity angle (radians) = -0.717330, rcore = 0.005642, rcut = 0.510118,
+ z = 0.308000
+Lenstool Potential[161]: x = 5.557952, y = 14.839200, vdisp = 67.752849, type = 81 
+ 	 ellipticity = 0.000000, ellipticity_pot = 0.000010, ellipticity angle (radians) = 0.495674, rcore = 0.005628, rcut = 0.508874,
+ z = 0.308000
+Lenstool Potential[162]: x = 3.933534, y = 33.508080, vdisp = 67.547232, type = 81 
+ 	 ellipticity = 0.000000, ellipticity_pot = 0.000010, ellipticity angle (radians) = -0.125664, rcore = 0.005594, rcut = 0.505790,
+ z = 0.308000
+Lenstool Potential[163]: x = -29.470649, y = 0.742680, vdisp = 67.427578, type = 81 
+ 	 ellipticity = 0.000000, ellipticity_pot = 0.000010, ellipticity angle (radians) = -0.413643, rcore = 0.005574, rcut = 0.504000,
+ z = 0.308000
+Lenstool Potential[164]: x = 50.564467, y = 19.956600, vdisp = 67.334488, type = 81 
+ 	 ellipticity = 0.324324, ellipticity_pot = 0.166667, ellipticity angle (radians) = -0.284489, rcore = 0.005559, rcut = 0.502609,
+ z = 0.308000
+Lenstool Potential[165]: x = 44.075506, y = 15.145200, vdisp = 67.303486, type = 81 
+ 	 ellipticity = 0.000000, ellipticity_pot = 0.000010, ellipticity angle (radians) = 0.385718, rcore = 0.005554, rcut = 0.502147,
+ z = 0.308000
+Lenstool Potential[166]: x = -15.400343, y = 48.468597, vdisp = 66.583644, type = 81 
+ 	 ellipticity = 0.180328, ellipticity_pot = 0.090909, ellipticity angle (radians) = 1.003564, rcore = 0.005436, rcut = 0.491463,
+ z = 0.308000
+Lenstool Potential[167]: x = 39.327814, y = 46.794240, vdisp = 66.222803, type = 81 
+ 	 ellipticity = 0.507692, ellipticity_pot = 0.272727, ellipticity angle (radians) = 0.979130, rcore = 0.005377, rcut = 0.486150,
+ z = 0.308000
+Lenstool Potential[168]: x = -1.778541, y = 55.981438, vdisp = 65.809344, type = 81 
+ 	 ellipticity = 0.000000, ellipticity_pot = 0.000010, ellipticity angle (radians) = -0.726057, rcore = 0.005310, rcut = 0.480099,
+ z = 0.308000
+Lenstool Potential[169]: x = 22.434620, y = 20.377440, vdisp = 65.231529, type = 81 
+ 	 ellipticity = 0.000000, ellipticity_pot = 0.000010, ellipticity angle (radians) = -1.160644, rcore = 0.005217, rcut = 0.471705,
+ z = 0.308000
+Lenstool Potential[170]: x = 27.048607, y = -28.878120, vdisp = 65.183483, type = 81 
+ 	 ellipticity = 0.000000, ellipticity_pot = 0.000010, ellipticity angle (radians) = -0.057596, rcore = 0.005210, rcut = 0.471011,
+ z = 0.308000
+Lenstool Potential[171]: x = -36.978685, y = -16.754400, vdisp = 64.633483, type = 81 
+ 	 ellipticity = 0.324324, ellipticity_pot = 0.166667, ellipticity angle (radians) = -0.205949, rcore = 0.005122, rcut = 0.463096,
+ z = 0.308000
+Lenstool Potential[172]: x = 64.123781, y = -5.254200, vdisp = 64.511562, type = 81 
+ 	 ellipticity = 0.324324, ellipticity_pot = 0.166667, ellipticity angle (radians) = -0.923279, rcore = 0.005103, rcut = 0.461350,
+ z = 0.308000
+Lenstool Potential[173]: x = -9.845995, y = -14.580000, vdisp = 64.338000, type = 81 
+ 	 ellipticity = 0.219512, ellipticity_pot = 0.111111, ellipticity angle (radians) = -1.247910, rcore = 0.005075, rcut = 0.458871,
+ z = 0.308000
+Lenstool Potential[174]: x = 51.876031, y = 48.893040, vdisp = 63.958395, type = 81 
+ 	 ellipticity = 0.132743, ellipticity_pot = 0.066667, ellipticity angle (radians) = -1.172861, rcore = 0.005016, rcut = 0.453472,
+ z = 0.308000
+Lenstool Potential[175]: x = -11.076405, y = 52.322400, vdisp = 63.806887, type = 81 
+ 	 ellipticity = 0.219512, ellipticity_pot = 0.111111, ellipticity angle (radians) = 1.535890, rcore = 0.004992, rcut = 0.451326,
+ z = 0.308000
+Lenstool Potential[176]: x = 7.232075, y = 5.697720, vdisp = 63.453789, type = 81 
+ 	 ellipticity = 0.507692, ellipticity_pot = 0.272727, ellipticity angle (radians) = -0.385718, rcore = 0.004937, rcut = 0.446345,
+ z = 0.308000
+Lenstool Potential[177]: x = -34.765184, y = -35.807762, vdisp = 63.453789, type = 81 
+ 	 ellipticity = 0.384615, ellipticity_pot = 0.200000, ellipticity angle (radians) = -0.911062, rcore = 0.004937, rcut = 0.446345,
+ z = 0.308000
+Lenstool Potential[178]: x = -45.188959, y = -33.668640, vdisp = 63.395373, type = 81 
+ 	 ellipticity = 0.000000, ellipticity_pot = 0.000010, ellipticity angle (radians) = 0.335103, rcore = 0.004928, rcut = 0.445523,
+ z = 0.308000
+Lenstool Potential[179]: x = 59.317888, y = -30.866400, vdisp = 63.166608, type = 81 
+ 	 ellipticity = 0.000000, ellipticity_pot = 0.000010, ellipticity angle (radians) = -0.284489, rcore = 0.004892, rcut = 0.442314,
+ z = 0.308000
+Lenstool Potential[180]: x = -9.124475, y = 23.753880, vdisp = 62.870593, type = 81 
+ 	 ellipticity = 0.180328, ellipticity_pot = 0.090909, ellipticity angle (radians) = 0.966912, rcore = 0.004846, rcut = 0.438178,
+ z = 0.308000
+Lenstool Potential[181]: x = -22.902999, y = 65.065315, vdisp = 62.115153, type = 81 
+ 	 ellipticity = 0.219512, ellipticity_pot = 0.111111, ellipticity angle (radians) = 1.455605, rcore = 0.004731, rcut = 0.427711,
+ z = 0.308000
+Lenstool Potential[182]: x = 19.145403, y = 85.804560, vdisp = 61.707444, type = 81 
+ 	 ellipticity = 0.280000, ellipticity_pot = 0.142857, ellipticity angle (radians) = -1.106539, rcore = 0.004669, rcut = 0.422115,
+ z = 0.308000
+Lenstool Potential[183]: x = -67.480059, y = 34.030437, vdisp = 61.411197, type = 81 
+ 	 ellipticity = 0.219512, ellipticity_pot = 0.111111, ellipticity angle (radians) = -0.680678, rcore = 0.004624, rcut = 0.418072,
+ z = 0.308000
+Lenstool Potential[184]: x = 4.641569, y = -12.142800, vdisp = 61.260080, type = 81 
+ 	 ellipticity = 0.219512, ellipticity_pot = 0.111111, ellipticity angle (radians) = -0.520108, rcore = 0.004601, rcut = 0.416017,
+ z = 0.308000
+Lenstool Potential[185]: x = 22.605793, y = 11.885040, vdisp = 61.017943, type = 81 
+ 	 ellipticity = 0.600000, ellipticity_pot = 0.333333, ellipticity angle (radians) = -0.113446, rcore = 0.004565, rcut = 0.412734,
+ z = 0.308000
+Lenstool Potential[186]: x = -8.131323, y = -47.403362, vdisp = 60.835567, type = 81 
+ 	 ellipticity = 0.219512, ellipticity_pot = 0.111111, ellipticity angle (radians) = -1.569051, rcore = 0.004538, rcut = 0.410271,
+ z = 0.308000
+Lenstool Potential[187]: x = -0.676853, y = -24.576479, vdisp = 60.484983, type = 81 
+ 	 ellipticity = 0.219512, ellipticity_pot = 0.111111, ellipticity angle (radians) = -0.684169, rcore = 0.004486, rcut = 0.405556,
+ z = 0.308000
+Lenstool Potential[188]: x = 19.848616, y = 20.832480, vdisp = 60.265333, type = 81 
+ 	 ellipticity = 0.000000, ellipticity_pot = 0.000010, ellipticity angle (radians) = 0.624828, rcore = 0.004453, rcut = 0.402616,
+ z = 0.308000
+Lenstool Potential[189]: x = -9.106653, y = 31.020120, vdisp = 60.061692, type = 81 
+ 	 ellipticity = 0.000000, ellipticity_pot = 0.000010, ellipticity angle (radians) = -1.012291, rcore = 0.004423, rcut = 0.399899,
+ z = 0.308000
+Lenstool Potential[190]: x = 3.631828, y = -43.698600, vdisp = 59.973247, type = 81 
+ 	 ellipticity = 0.507692, ellipticity_pot = 0.272727, ellipticity angle (radians) = -0.836013, rcore = 0.004410, rcut = 0.398722,
+ z = 0.308000
+Lenstool Potential[191]: x = 27.144215, y = 55.314000, vdisp = 59.930453, type = 81 
+ 	 ellipticity = 0.000000, ellipticity_pot = 0.000010, ellipticity angle (radians) = -0.476475, rcore = 0.004404, rcut = 0.398154,
+ z = 0.308000
+Lenstool Potential[192]: x = -7.945685, y = -5.354280, vdisp = 59.904240, type = 81 
+ 	 ellipticity = 0.000000, ellipticity_pot = 0.000010, ellipticity angle (radians) = -0.167552, rcore = 0.004400, rcut = 0.397805,
+ z = 0.308000
+Lenstool Potential[193]: x = -7.010127, y = -22.104720, vdisp = 59.607041, type = 81 
+ 	 ellipticity = 0.280000, ellipticity_pot = 0.142857, ellipticity angle (radians) = 0.413643, rcore = 0.004356, rcut = 0.393868,
+ z = 0.308000
+Lenstool Potential[194]: x = -4.601009, y = 67.849556, vdisp = 59.528859, type = 81 
+ 	 ellipticity = 0.180328, ellipticity_pot = 0.090909, ellipticity angle (radians) = 1.295034, rcore = 0.004345, rcut = 0.392835,
+ z = 0.308000
+Lenstool Potential[195]: x = -60.394827, y = -18.862200, vdisp = 59.478165, type = 81 
+ 	 ellipticity = 0.000000, ellipticity_pot = 0.000010, ellipticity angle (radians) = 1.137955, rcore = 0.004338, rcut = 0.392167,
+ z = 0.308000
+Lenstool Potential[196]: x = -11.945843, y = 30.958920, vdisp = 59.422040, type = 81 
+ 	 ellipticity = 0.600000, ellipticity_pot = 0.333333, ellipticity angle (radians) = -1.453859, rcore = 0.004329, rcut = 0.391427,
+ z = 0.308000
+Lenstool Potential[197]: x = 27.792331, y = 35.564037, vdisp = 59.416568, type = 81 
+ 	 ellipticity = 0.753425, ellipticity_pot = 0.454545, ellipticity angle (radians) = -0.219911, rcore = 0.004329, rcut = 0.391355,
+ z = 0.308000
+Lenstool Potential[198]: x = -73.333509, y = 69.176155, vdisp = 59.174904, type = 81 
+ 	 ellipticity = 0.724138, ellipticity_pot = 0.428571, ellipticity angle (radians) = 0.191986, rcore = 0.004293, rcut = 0.388178,
+ z = 0.308000
+Lenstool Potential[199]: x = 0.985875, y = 8.251920, vdisp = 59.082323, type = 81 
+ 	 ellipticity = 0.800000, ellipticity_pot = 0.500000, ellipticity angle (radians) = -0.319395, rcore = 0.004280, rcut = 0.386964,
+ z = 0.308000
+Lenstool Potential[200]: x = -11.129454, y = 1.458000, vdisp = 59.017058, type = 81 
+ 	 ellipticity = 0.470588, ellipticity_pot = 0.250000, ellipticity angle (radians) = 0.541052, rcore = 0.004271, rcut = 0.386110,
+ z = 0.308000
+Lenstool Potential[201]: x = -14.353041, y = -38.581562, vdisp = 58.878611, type = 81 
+ 	 ellipticity = 0.000000, ellipticity_pot = 0.000010, ellipticity angle (radians) = 0.169297, rcore = 0.004251, rcut = 0.384300,
+ z = 0.308000
+Lenstool Potential[202]: x = -61.072839, y = 36.038517, vdisp = 58.703982, type = 81 
+ 	 ellipticity = 0.219512, ellipticity_pot = 0.111111, ellipticity angle (radians) = -1.169371, rcore = 0.004225, rcut = 0.382024,
+ z = 0.308000
+Lenstool Potential[203]: x = -31.624485, y = -11.158920, vdisp = 58.667497, type = 81 
+ 	 ellipticity = 0.384615, ellipticity_pot = 0.200000, ellipticity angle (radians) = 0.139626, rcore = 0.004220, rcut = 0.381549,
+ z = 0.308000
+Lenstool Potential[204]: x = 22.818745, y = 1.357920, vdisp = 58.625635, type = 81 
+ 	 ellipticity = 0.219512, ellipticity_pot = 0.111111, ellipticity angle (radians) = -1.333432, rcore = 0.004214, rcut = 0.381005,
+ z = 0.308000
+Lenstool Potential[205]: x = 26.826355, y = -40.419724, vdisp = 58.616186, type = 81 
+ 	 ellipticity = 0.000000, ellipticity_pot = 0.000010, ellipticity angle (radians) = -0.209440, rcore = 0.004213, rcut = 0.380882,
+ z = 0.308000
+Lenstool Potential[206]: x = -46.775699, y = 63.630720, vdisp = 58.515047, type = 81 
+ 	 ellipticity = 0.219512, ellipticity_pot = 0.111111, ellipticity angle (radians) = -0.951204, rcore = 0.004198, rcut = 0.379569,
+ z = 0.308000
+Lenstool Potential[207]: x = 60.690361, y = -42.525000, vdisp = 58.506964, type = 81 
+ 	 ellipticity = 0.219512, ellipticity_pot = 0.111111, ellipticity angle (radians) = 0.305433, rcore = 0.004197, rcut = 0.379464,
+ z = 0.308000
+Lenstool Potential[208]: x = 46.807191, y = 69.267960, vdisp = 58.492147, type = 81 
+ 	 ellipticity = 0.219512, ellipticity_pot = 0.111111, ellipticity angle (radians) = 0.623083, rcore = 0.004195, rcut = 0.379272,
+ z = 0.308000
+Lenstool Potential[209]: x = 42.219621, y = 23.562720, vdisp = 58.231444, type = 81 
+ 	 ellipticity = 0.219512, ellipticity_pot = 0.111111, ellipticity angle (radians) = 0.738274, rcore = 0.004158, rcut = 0.375899,
+ z = 0.308000
+Lenstool Potential[210]: x = -64.985549, y = 10.598761, vdisp = 58.124276, type = 81 
+ 	 ellipticity = 0.280000, ellipticity_pot = 0.142857, ellipticity angle (radians) = 0.624828, rcore = 0.004142, rcut = 0.374516,
+ z = 0.308000
+Lenstool Potential[211]: x = -38.507406, y = 61.472157, vdisp = 58.108218, type = 81 
+ 	 ellipticity = 0.384615, ellipticity_pot = 0.200000, ellipticity angle (radians) = -1.532399, rcore = 0.004140, rcut = 0.374309,
+ z = 0.308000
+Lenstool Potential[212]: x = 23.999760, y = -32.636160, vdisp = 57.902533, type = 81 
+ 	 ellipticity = 0.753425, ellipticity_pot = 0.454545, ellipticity angle (radians) = -0.577704, rcore = 0.004111, rcut = 0.371664,
+ z = 0.308000
+Lenstool Potential[213]: x = 20.297302, y = 74.309395, vdisp = 57.272687, type = 81 
+ 	 ellipticity = 0.507692, ellipticity_pot = 0.272727, ellipticity angle (radians) = -0.830777, rcore = 0.004022, rcut = 0.363622,
+ z = 0.308000
+Lenstool Potential[214]: x = 47.215433, y = 84.330000, vdisp = 57.168600, type = 81 
+ 	 ellipticity = 0.384615, ellipticity_pot = 0.200000, ellipticity angle (radians) = 0.523599, rcore = 0.004007, rcut = 0.362302,
+ z = 0.308000
+Lenstool Potential[215]: x = 58.761915, y = 47.691357, vdisp = 57.076530, type = 81 
+ 	 ellipticity = 0.470588, ellipticity_pot = 0.250000, ellipticity angle (radians) = 0.057596, rcore = 0.003994, rcut = 0.361136,
+ z = 0.308000
+Lenstool Potential[216]: x = -7.793074, y = 1.627200, vdisp = 56.947880, type = 81 
+ 	 ellipticity = 0.849057, ellipticity_pot = 0.555556, ellipticity angle (radians) = -1.232202, rcore = 0.003976, rcut = 0.359510,
+ z = 0.308000
+Lenstool Potential[217]: x = 64.051161, y = -25.506720, vdisp = 56.922971, type = 81 
+ 	 ellipticity = 0.470588, ellipticity_pot = 0.250000, ellipticity angle (radians) = -1.078613, rcore = 0.003973, rcut = 0.359195,
+ z = 0.308000
+Lenstool Potential[218]: x = 60.225041, y = 70.311600, vdisp = 56.848310, type = 81 
+ 	 ellipticity = 0.470588, ellipticity_pot = 0.250000, ellipticity angle (radians) = 0.193732, rcore = 0.003962, rcut = 0.358254,
+ z = 0.308000
+Lenstool Potential[219]: x = 3.024877, y = -6.561000, vdisp = 56.814287, type = 81 
+ 	 ellipticity = 0.280000, ellipticity_pot = 0.142857, ellipticity angle (radians) = 1.518436, rcore = 0.003958, rcut = 0.357825,
+ z = 0.308000
+Lenstool Potential[220]: x = -28.744314, y = -34.218723, vdisp = 56.597541, type = 81 
+ 	 ellipticity = 0.470588, ellipticity_pot = 0.250000, ellipticity angle (radians) = 1.253146, rcore = 0.003928, rcut = 0.355100,
+ z = 0.308000
+Lenstool Potential[221]: x = 20.593933, y = 21.906720, vdisp = 56.538927, type = 81 
+ 	 ellipticity = 0.219512, ellipticity_pot = 0.111111, ellipticity angle (radians) = -0.998328, rcore = 0.003919, rcut = 0.354365,
+ z = 0.308000
+Lenstool Potential[222]: x = 13.580947, y = 34.912080, vdisp = 56.507691, type = 81 
+ 	 ellipticity = 0.219512, ellipticity_pot = 0.111111, ellipticity angle (radians) = -0.455531, rcore = 0.003915, rcut = 0.353973,
+ z = 0.308000
+Lenstool Potential[223]: x = 14.587120, y = 35.868237, vdisp = 56.493380, type = 81 
+ 	 ellipticity = 0.219512, ellipticity_pot = 0.111111, ellipticity angle (radians) = 1.370083, rcore = 0.003913, rcut = 0.353794,
+ z = 0.308000
+Lenstool Potential[224]: x = -19.682644, y = -42.860880, vdisp = 56.327122, type = 81 
+ 	 ellipticity = 0.280000, ellipticity_pot = 0.142857, ellipticity angle (radians) = -0.024435, rcore = 0.003890, rcut = 0.351715,
+ z = 0.308000
+Lenstool Potential[225]: x = -6.989165, y = -14.516640, vdisp = 55.885297, type = 81 
+ 	 ellipticity = 0.470588, ellipticity_pot = 0.250000, ellipticity angle (radians) = 0.158825, rcore = 0.003829, rcut = 0.346219,
+ z = 0.308000
+Lenstool Potential[226]: x = 45.310217, y = 73.692360, vdisp = 55.826135, type = 81 
+ 	 ellipticity = 0.280000, ellipticity_pot = 0.142857, ellipticity angle (radians) = -0.144862, rcore = 0.003821, rcut = 0.345486,
+ z = 0.308000
+Lenstool Potential[227]: x = 47.944124, y = 62.070840, vdisp = 55.627246, type = 81 
+ 	 ellipticity = 0.219512, ellipticity_pot = 0.111111, ellipticity angle (radians) = -0.954695, rcore = 0.003794, rcut = 0.343029,
+ z = 0.308000
+Lenstool Potential[228]: x = 29.655609, y = -52.010280, vdisp = 55.610597, type = 81 
+ 	 ellipticity = 0.219512, ellipticity_pot = 0.111111, ellipticity angle (radians) = 0.516617, rcore = 0.003792, rcut = 0.342824,
+ z = 0.308000
+Lenstool Potential[229]: x = -58.328974, y = 30.619080, vdisp = 55.267212, type = 81 
+ 	 ellipticity = 0.280000, ellipticity_pot = 0.142857, ellipticity angle (radians) = -0.008727, rcore = 0.003745, rcut = 0.338603,
+ z = 0.308000
+Lenstool Potential[230]: x = 32.383715, y = 60.421318, vdisp = 54.934801, type = 81 
+ 	 ellipticity = 0.000000, ellipticity_pot = 0.000010, ellipticity angle (radians) = -0.623083, rcore = 0.003700, rcut = 0.334542,
+ z = 0.308000
+Lenstool Potential[231]: x = 28.317921, y = 29.877480, vdisp = 54.865275, type = 81 
+ 	 ellipticity = 0.000000, ellipticity_pot = 0.000010, ellipticity angle (radians) = 0.261799, rcore = 0.003691, rcut = 0.333696,
+ z = 0.308000
+Lenstool Potential[232]: x = -19.374035, y = -42.948000, vdisp = 54.633316, type = 81 
+ 	 ellipticity = 0.384615, ellipticity_pot = 0.200000, ellipticity angle (radians) = -0.727802, rcore = 0.003660, rcut = 0.330880,
+ z = 0.308000
+Lenstool Potential[233]: x = 36.046064, y = -15.875999, vdisp = 54.024102, type = 81 
+ 	 ellipticity = 0.000000, ellipticity_pot = 0.000010, ellipticity angle (radians) = -0.219911, rcore = 0.003579, rcut = 0.323542,
+ z = 0.308000
+Lenstool Potential[234]: x = 21.868641, y = 71.965080, vdisp = 53.988040, type = 81 
+ 	 ellipticity = 0.219512, ellipticity_pot = 0.111111, ellipticity angle (radians) = 0.537561, rcore = 0.003574, rcut = 0.323110,
+ z = 0.308000
+Lenstool Potential[235]: x = -21.236845, y = 34.354797, vdisp = 53.883719, type = 81 
+ 	 ellipticity = 0.280000, ellipticity_pot = 0.142857, ellipticity angle (radians) = 0.403171, rcore = 0.003560, rcut = 0.321863,
+ z = 0.308000
+Lenstool Potential[236]: x = -64.700979, y = 8.099640, vdisp = 53.826676, type = 81 
+ 	 ellipticity = 0.470588, ellipticity_pot = 0.250000, ellipticity angle (radians) = -0.923279, rcore = 0.003552, rcut = 0.321182,
+ z = 0.308000
+Lenstool Potential[237]: x = 44.396174, y = 4.527720, vdisp = 53.784553, type = 81 
+ 	 ellipticity = 0.280000, ellipticity_pot = 0.142857, ellipticity angle (radians) = -1.092576, rcore = 0.003547, rcut = 0.320679,
+ z = 0.308000
+Lenstool Potential[238]: x = -15.504690, y = -21.890880, vdisp = 53.756076, type = 81 
+ 	 ellipticity = 0.324324, ellipticity_pot = 0.166667, ellipticity angle (radians) = 0.966912, rcore = 0.003543, rcut = 0.320340,
+ z = 0.308000
+Lenstool Potential[239]: x = 16.162129, y = 35.196840, vdisp = 53.676916, type = 81 
+ 	 ellipticity = 0.219512, ellipticity_pot = 0.111111, ellipticity angle (radians) = 0.008727, rcore = 0.003533, rcut = 0.319397,
+ z = 0.308000
+Lenstool Potential[240]: x = 4.745145, y = 1.278000, vdisp = 53.589235, type = 81 
+ 	 ellipticity = 0.000000, ellipticity_pot = 0.000010, ellipticity angle (radians) = -0.280998, rcore = 0.003521, rcut = 0.318354,
+ z = 0.308000
+Lenstool Potential[241]: x = -8.786354, y = 12.952080, vdisp = 53.512786, type = 81 
+ 	 ellipticity = 0.470588, ellipticity_pot = 0.250000, ellipticity angle (radians) = 0.664970, rcore = 0.003511, rcut = 0.317447,
+ z = 0.308000
+Lenstool Potential[242]: x = 52.089396, y = 0.796320, vdisp = 53.499233, type = 81 
+ 	 ellipticity = 0.280000, ellipticity_pot = 0.142857, ellipticity angle (radians) = -1.551598, rcore = 0.003509, rcut = 0.317286,
+ z = 0.308000
+Lenstool Potential[243]: x = 35.367841, y = 10.775520, vdisp = 53.426603, type = 81 
+ 	 ellipticity = 0.000000, ellipticity_pot = 0.000010, ellipticity angle (radians) = 0.565487, rcore = 0.003500, rcut = 0.316425,
+ z = 0.308000
+Lenstool Potential[244]: x = -34.057115, y = 16.714800, vdisp = 53.035609, type = 81 
+ 	 ellipticity = 0.000000, ellipticity_pot = 0.000010, ellipticity angle (radians) = 0.918043, rcore = 0.003449, rcut = 0.311810,
+ z = 0.308000
+Lenstool Potential[245]: x = 7.480544, y = 23.185440, vdisp = 52.948975, type = 81 
+ 	 ellipticity = 0.219512, ellipticity_pot = 0.111111, ellipticity angle (radians) = 0.544543, rcore = 0.003437, rcut = 0.310793,
+ z = 0.308000
+Lenstool Potential[246]: x = 32.926664, y = -47.956680, vdisp = 52.783424, type = 81 
+ 	 ellipticity = 0.000000, ellipticity_pot = 0.000010, ellipticity angle (radians) = -0.942478, rcore = 0.003416, rcut = 0.308852,
+ z = 0.308000
+Lenstool Potential[247]: x = 16.613031, y = 22.149000, vdisp = 52.778563, type = 81 
+ 	 ellipticity = 0.753425, ellipticity_pot = 0.454545, ellipticity angle (radians) = -0.015708, rcore = 0.003415, rcut = 0.308795,
+ z = 0.308000
+Lenstool Potential[248]: x = -35.601965, y = -1.527480, vdisp = 52.505834, type = 81 
+ 	 ellipticity = 0.280000, ellipticity_pot = 0.142857, ellipticity angle (radians) = -0.020944, rcore = 0.003380, rcut = 0.305612,
+ z = 0.308000
+Lenstool Potential[249]: x = 54.585711, y = 59.862600, vdisp = 52.422480, type = 81 
+ 	 ellipticity = 0.280000, ellipticity_pot = 0.142857, ellipticity angle (radians) = -0.347321, rcore = 0.003369, rcut = 0.304643,
+ z = 0.308000
+Lenstool Potential[250]: x = 25.362724, y = -20.039040, vdisp = 52.306729, type = 81 
+ 	 ellipticity = 0.470588, ellipticity_pot = 0.250000, ellipticity angle (radians) = 1.082104, rcore = 0.003355, rcut = 0.303299,
+ z = 0.308000
+Lenstool Potential[251]: x = 41.960695, y = 13.571640, vdisp = 52.262185, type = 81 
+ 	 ellipticity = 0.470588, ellipticity_pot = 0.250000, ellipticity angle (radians) = -0.434587, rcore = 0.003349, rcut = 0.302782,
+ z = 0.308000
+Lenstool Potential[252]: x = 22.991521, y = 74.693520, vdisp = 52.258575, type = 81 
+ 	 ellipticity = 0.000000, ellipticity_pot = 0.000010, ellipticity angle (radians) = 0.858702, rcore = 0.003348, rcut = 0.302741,
+ z = 0.308000
+Lenstool Potential[253]: x = 26.474753, y = -30.066120, vdisp = 52.011282, type = 81 
+ 	 ellipticity = 0.280000, ellipticity_pot = 0.142857, ellipticity angle (radians) = 1.431170, rcore = 0.003317, rcut = 0.299882,
+ z = 0.308000
+Lenstool Potential[254]: x = 32.503965, y = 71.185320, vdisp = 51.938280, type = 81 
+ 	 ellipticity = 0.000000, ellipticity_pot = 0.000010, ellipticity angle (radians) = 0.630064, rcore = 0.003308, rcut = 0.299041,
+ z = 0.308000
+Lenstool Potential[255]: x = 191.066311, y = 110.128000, vdisp = 299.150767, type = 81 
+ 	 ellipticity = 0.000000, ellipticity_pot = 0.000010, ellipticity angle (radians) = 0.000000, rcore = 0.000000, rcut = 1736.723885,
+ z = 0.308000
+Lenstool Potential[256]: x = -39.405789, y = 155.696000, vdisp = 291.828319, type = 81 
+ 	 ellipticity = 0.000000, ellipticity_pot = 0.000010, ellipticity angle (radians) = 0.000000, rcore = 0.000000, rcut = 1652.743285,
+ z = 0.308000
+Lenstool Potential[257]: x = -55.479689, y = 91.886700, vdisp = 271.013761, type = 81 
+ 	 ellipticity = 0.000000, ellipticity_pot = 0.000010, ellipticity angle (radians) = 0.000000, rcore = 0.000000, rcut = 1425.388401,
+ z = 0.308000
+INFO: Compute file 1/2 : tmp/Amplif_0.fits [CTRL-C to interrupt]
+WRITE: FITS file: tmp/Amplif_0.fits[200,200] (-60.00:60.00 -60.00:60.00)
+ Time  = 4.1133861541748 1
+Lenstool Potential[0]: x = -1.956518, y = 1.088214, vdisp = 602.911334, type = 81 
+ 	 ellipticity = 0.867165, ellipticity_pot = 0.578874, ellipticity angle (radians) = 1.592578, rcore = 21.490635, rcut = 220.470592,
+ z = 0.308000
+Lenstool Potential[1]: x = -17.458973, y = -15.462080, vdisp = 783.669577, type = 81 
+ 	 ellipticity = 0.496906, ellipticity_pot = 0.266037, ellipticity angle (radians) = 0.769641, rcore = 12.798877, rcut = 220.470592,
+ z = 0.308000
+Lenstool Potential[2]: x = -3.577000, y = 24.718000, vdisp = 167.239805, type = 81 
+ 	 ellipticity = 0.720000, ellipticity_pot = 0.425036, ellipticity angle (radians) = -0.575959, rcore = 0.025354, rcut = 2.915503,
+ z = 0.308000
+Lenstool Potential[3]: x = 0.000000, y = 0.000000, vdisp = 349.480180, type = 81 
+ 	 ellipticity = 0.205000, ellipticity_pot = 0.103600, ellipticity angle (radians) = -1.326450, rcore = 0.074078, rcut = 6.276798,
+ z = 0.308000
+Lenstool Potential[4]: x = -17.945000, y = -19.967000, vdisp = 343.680305, type = 81 
+ 	 ellipticity = 0.377000, ellipticity_pot = 0.195721, ellipticity angle (radians) = 0.258309, rcore = 0.076724, rcut = 6.512260,
+ z = 0.308000
+Lenstool Potential[5]: x = -12.701000, y = -0.782000, vdisp = 75.210359, type = 81 
+ 	 ellipticity = 0.299000, ellipticity_pot = 0.153000, ellipticity angle (radians) = -0.813323, rcore = 0.032189, rcut = 11.151005,
+ z = 0.308000
+Lenstool Potential[6]: x = 138.953311, y = 95.025600, vdisp = 635.278438, type = 81 
+ 	 ellipticity = 0.000000, ellipticity_pot = 0.000010, ellipticity angle (radians) = 0.000000, rcore = 0.000000, rcut = 644.697945,
+ z = 0.308000
+Lenstool Potential[7]: x = 102.996311, y = 84.276000, vdisp = 660.513926, type = 81 
+ 	 ellipticity = 0.000000, ellipticity_pot = 0.000010, ellipticity angle (radians) = 0.000000, rcore = 0.000000, rcut = 696.934578,
+ z = 0.308000
+Lenstool Potential[8]: x = 29.810911, y = 153.295000, vdisp = 620.409514, type = 81 
+ 	 ellipticity = 0.000000, ellipticity_pot = 0.000010, ellipticity angle (radians) = 0.000000, rcore = 0.000000, rcut = 614.872335,
+ z = 0.308000
+Lenstool Potential[9]: x = -26.498581, y = 30.706920, vdisp = 237.997446, type = 81 
+ 	 ellipticity = 0.256506, ellipticity_pot = 0.130435, ellipticity angle (radians) = -1.115265, rcore = 0.067371, rcut = 6.116830,
+ z = 0.308000
+Lenstool Potential[10]: x = 2.718941, y = 21.232080, vdisp = 228.518675, type = 81 
+ 	 ellipticity = 0.152941, ellipticity_pot = 0.076923, ellipticity angle (radians) = 0.724312, rcore = 0.062112, rcut = 5.639300,
+ z = 0.308000
+Lenstool Potential[11]: x = -19.380485, y = -16.053840, vdisp = 216.166553, type = 81 
+ 	 ellipticity = 0.342282, ellipticity_pot = 0.176471, ellipticity angle (radians) = 0.644026, rcore = 0.055578, rcut = 5.046134,
+ z = 0.308000
+Lenstool Potential[12]: x = -4.377039, y = 13.615200, vdisp = 207.095373, type = 81 
+ 	 ellipticity = 0.246154, ellipticity_pot = 0.125000, ellipticity angle (radians) = -1.368338, rcore = 0.051012, rcut = 4.631510,
+ z = 0.308000
+Lenstool Potential[13]: x = -0.930278, y = 2.830680, vdisp = 203.918485, type = 81 
+ 	 ellipticity = 0.453858, ellipticity_pot = 0.240000, ellipticity angle (radians) = -1.272345, rcore = 0.049459, rcut = 4.490503,
+ z = 0.308000
+Lenstool Potential[14]: x = 20.488913, y = -32.439600, vdisp = 198.804677, type = 81 
+ 	 ellipticity = 0.280000, ellipticity_pot = 0.142857, ellipticity angle (radians) = 0.015708, rcore = 0.047009, rcut = 4.268104,
+ z = 0.308000
+Lenstool Potential[15]: x = -6.586230, y = 6.558120, vdisp = 196.814276, type = 81 
+ 	 ellipticity = 0.180328, ellipticity_pot = 0.090909, ellipticity angle (radians) = 0.296706, rcore = 0.046073, rcut = 4.183069,
+ z = 0.308000
+Lenstool Potential[16]: x = -42.747671, y = 37.607037, vdisp = 194.471783, type = 81 
+ 	 ellipticity = 0.857864, ellipticity_pot = 0.566667, ellipticity angle (radians) = 0.235619, rcore = 0.044982, rcut = 4.084087,
+ z = 0.308000
+Lenstool Potential[17]: x = -72.301264, y = 65.035080, vdisp = 192.768735, type = 81 
+ 	 ellipticity = 0.403183, ellipticity_pot = 0.210526, ellipticity angle (radians) = -0.575959, rcore = 0.044198, rcut = 4.012869,
+ z = 0.308000
+Lenstool Potential[18]: x = 24.065474, y = -11.515680, vdisp = 179.335636, type = 81 
+ 	 ellipticity = 0.104972, ellipticity_pot = 0.052632, ellipticity angle (radians) = 0.136136, rcore = 0.038253, rcut = 3.473082,
+ z = 0.308000
+Lenstool Potential[19]: x = -5.871012, y = 18.354600, vdisp = 175.574563, type = 81 
+ 	 ellipticity = 0.232082, ellipticity_pot = 0.117647, ellipticity angle (radians) = 0.884882, rcore = 0.036665, rcut = 3.328933,
+ z = 0.308000
+Lenstool Potential[20]: x = 61.821196, y = 42.903000, vdisp = 173.383033, type = 81 
+ 	 ellipticity = 0.830450, ellipticity_pot = 0.533333, ellipticity angle (radians) = -0.439823, rcore = 0.035755, rcut = 3.246348,
+ z = 0.308000
+Lenstool Potential[21]: x = 35.266493, y = 6.469200, vdisp = 172.419585, type = 81 
+ 	 ellipticity = 0.600000, ellipticity_pot = 0.333333, ellipticity angle (radians) = -0.397935, rcore = 0.035359, rcut = 3.210370,
+ z = 0.308000
+Lenstool Potential[22]: x = 34.728191, y = 83.172960, vdisp = 170.394902, type = 81 
+ 	 ellipticity = 0.838588, ellipticity_pot = 0.542857, ellipticity angle (radians) = -0.406662, rcore = 0.034534, rcut = 3.135415,
+ z = 0.308000
+Lenstool Potential[23]: x = 49.968104, y = 49.420080, vdisp = 170.339982, type = 81 
+ 	 ellipticity = 0.219512, ellipticity_pot = 0.111111, ellipticity angle (radians) = -1.523672, rcore = 0.034511, rcut = 3.133394,
+ z = 0.308000
+Lenstool Potential[24]: x = -20.926000, y = 3.041640, vdisp = 169.537821, type = 81 
+ 	 ellipticity = 0.928673, ellipticity_pot = 0.677419, ellipticity angle (radians) = 0.731293, rcore = 0.034187, rcut = 3.103952,
+ z = 0.308000
+Lenstool Potential[25]: x = -21.824221, y = 56.875317, vdisp = 165.472793, type = 81 
+ 	 ellipticity = 0.219512, ellipticity_pot = 0.111111, ellipticity angle (radians) = 0.593412, rcore = 0.032567, rcut = 2.956889,
+ z = 0.308000
+Lenstool Potential[26]: x = -9.190038, y = 37.217518, vdisp = 165.210101, type = 81 
+ 	 ellipticity = 0.334873, ellipticity_pot = 0.172414, ellipticity angle (radians) = -0.171042, rcore = 0.032464, rcut = 2.947508,
+ z = 0.308000
+Lenstool Potential[27]: x = 38.241743, y = -31.139280, vdisp = 164.012367, type = 81 
+ 	 ellipticity = 0.704142, ellipticity_pot = 0.411765, ellipticity angle (radians) = -0.715585, rcore = 0.031995, rcut = 2.904926,
+ z = 0.308000
+Lenstool Potential[28]: x = 2.948621, y = 45.466920, vdisp = 163.055930, type = 81 
+ 	 ellipticity = 0.882353, ellipticity_pot = 0.600000, ellipticity angle (radians) = -1.019272, rcore = 0.031623, rcut = 2.871144,
+ z = 0.308000
+Lenstool Potential[29]: x = 14.583886, y = 85.177080, vdisp = 159.906676, type = 81 
+ 	 ellipticity = 0.165517, ellipticity_pot = 0.083333, ellipticity angle (radians) = 1.127483, rcore = 0.030413, rcut = 2.761309,
+ z = 0.308000
+Lenstool Potential[30]: x = -7.494337, y = 14.779080, vdisp = 159.498498, type = 81 
+ 	 ellipticity = 0.600000, ellipticity_pot = 0.333333, ellipticity angle (radians) = 1.371829, rcore = 0.030258, rcut = 2.747230,
+ z = 0.308000
+Lenstool Potential[31]: x = -39.473309, y = 9.470520, vdisp = 158.776636, type = 81 
+ 	 ellipticity = 0.187015, ellipticity_pot = 0.094340, ellipticity angle (radians) = 1.312488, rcore = 0.029985, rcut = 2.722419,
+ z = 0.308000
+Lenstool Potential[32]: x = -5.147505, y = -2.421000, vdisp = 158.608441, type = 81 
+ 	 ellipticity = 0.661981, ellipticity_pot = 0.378378, ellipticity angle (radians) = -0.253073, rcore = 0.029921, rcut = 2.716655,
+ z = 0.308000
+Lenstool Potential[33]: x = -9.077850, y = 46.015920, vdisp = 158.601247, type = 81 
+ 	 ellipticity = 0.236593, ellipticity_pot = 0.120000, ellipticity angle (radians) = -1.356121, rcore = 0.029919, rcut = 2.716408,
+ z = 0.308000
+Lenstool Potential[34]: x = 3.276007, y = 19.909800, vdisp = 158.145412, type = 81 
+ 	 ellipticity = 0.152941, ellipticity_pot = 0.076923, ellipticity angle (radians) = 0.307178, rcore = 0.029747, rcut = 2.700816,
+ z = 0.308000
+Lenstool Potential[35]: x = -64.435859, y = -11.888639, vdisp = 156.389142, type = 81 
+ 	 ellipticity = 0.314402, ellipticity_pot = 0.161290, ellipticity angle (radians) = -0.504400, rcore = 0.029090, rcut = 2.641162,
+ z = 0.308000
+Lenstool Potential[36]: x = -56.169645, y = 0.182880, vdisp = 152.956028, type = 81 
+ 	 ellipticity = 0.600000, ellipticity_pot = 0.333333, ellipticity angle (radians) = -0.143117, rcore = 0.027827, rcut = 2.526475,
+ z = 0.308000
+Lenstool Potential[37]: x = -59.519674, y = 55.198800, vdisp = 152.442688, type = 81 
+ 	 ellipticity = 0.737265, ellipticity_pot = 0.440000, ellipticity angle (radians) = 0.500909, rcore = 0.027640, rcut = 2.509545,
+ z = 0.308000
+Lenstool Potential[38]: x = 16.485638, y = 33.726960, vdisp = 151.756254, type = 81 
+ 	 ellipticity = 0.470588, ellipticity_pot = 0.250000, ellipticity angle (radians) = -0.537561, rcore = 0.027392, rcut = 2.486996,
+ z = 0.308000
+Lenstool Potential[39]: x = 12.733994, y = 5.770800, vdisp = 151.375851, type = 81 
+ 	 ellipticity = 0.236593, ellipticity_pot = 0.120000, ellipticity angle (radians) = 0.453786, rcore = 0.027255, rcut = 2.474543,
+ z = 0.308000
+Lenstool Potential[40]: x = 64.340151, y = 47.102757, vdisp = 149.953496, type = 81 
+ 	 ellipticity = 0.438202, ellipticity_pot = 0.230769, ellipticity angle (radians) = 0.668461, rcore = 0.026745, rcut = 2.428259,
+ z = 0.308000
+Lenstool Potential[41]: x = 73.760181, y = -8.008920, vdisp = 149.298896, type = 81 
+ 	 ellipticity = 0.415162, ellipticity_pot = 0.217391, ellipticity angle (radians) = 0.933751, rcore = 0.026512, rcut = 2.407105,
+ z = 0.308000
+Lenstool Potential[42]: x = 45.824144, y = 35.076600, vdisp = 149.082476, type = 81 
+ 	 ellipticity = 0.060550, ellipticity_pot = 0.030303, ellipticity angle (radians) = -0.104720, rcore = 0.026435, rcut = 2.400131,
+ z = 0.308000
+Lenstool Potential[43]: x = -50.904339, y = -60.404040, vdisp = 147.409881, type = 81 
+ 	 ellipticity = 0.073973, ellipticity_pot = 0.037037, ellipticity angle (radians) = 0.331613, rcore = 0.025845, rcut = 2.346578,
+ z = 0.308000
+Lenstool Potential[44]: x = -26.252388, y = 39.812760, vdisp = 145.742628, type = 81 
+ 	 ellipticity = 0.060550, ellipticity_pot = 0.030303, ellipticity angle (radians) = -0.300197, rcore = 0.025264, rcut = 2.293797,
+ z = 0.308000
+Lenstool Potential[45]: x = -55.973829, y = -51.755043, vdisp = 143.518074, type = 81 
+ 	 ellipticity = 0.642336, ellipticity_pot = 0.363636, ellipticity angle (radians) = 0.525344, rcore = 0.024499, rcut = 2.224308,
+ z = 0.308000
+Lenstool Potential[46]: x = -12.671638, y = 33.260036, vdisp = 143.333134, type = 81 
+ 	 ellipticity = 0.342282, ellipticity_pot = 0.176471, ellipticity angle (radians) = 0.513127, rcore = 0.024436, rcut = 2.218580,
+ z = 0.308000
+Lenstool Potential[47]: x = -5.849878, y = 54.622437, vdisp = 142.398888, type = 81 
+ 	 ellipticity = 0.778462, ellipticity_pot = 0.478261, ellipticity angle (radians) = -1.260128, rcore = 0.024118, rcut = 2.189752,
+ z = 0.308000
+Lenstool Potential[48]: x = 22.969351, y = 11.043360, vdisp = 139.487919, type = 81 
+ 	 ellipticity = 0.528302, ellipticity_pot = 0.285714, ellipticity angle (radians) = 1.228712, rcore = 0.023142, rcut = 2.101140,
+ z = 0.308000
+Lenstool Potential[49]: x = -46.867689, y = -54.684360, vdisp = 138.763932, type = 81 
+ 	 ellipticity = 0.438202, ellipticity_pot = 0.230769, ellipticity angle (radians) = -0.657989, rcore = 0.022902, rcut = 2.079386,
+ z = 0.308000
+Lenstool Potential[50]: x = -28.375902, y = 71.187120, vdisp = 138.741567, type = 81 
+ 	 ellipticity = 0.456180, ellipticity_pot = 0.241379, ellipticity angle (radians) = -1.251401, rcore = 0.022895, rcut = 2.078715,
+ z = 0.308000
+Lenstool Potential[51]: x = 64.955621, y = 62.024400, vdisp = 137.751582, type = 81 
+ 	 ellipticity = 0.342282, ellipticity_pot = 0.176471, ellipticity angle (radians) = -0.310669, rcore = 0.022569, rcut = 2.049156,
+ z = 0.308000
+Lenstool Potential[52]: x = -59.010351, y = -2.270520, vdisp = 137.298754, type = 81 
+ 	 ellipticity = 0.384615, ellipticity_pot = 0.200000, ellipticity angle (radians) = 0.319395, rcore = 0.022421, rcut = 2.035706,
+ z = 0.308000
+Lenstool Potential[53]: x = -29.954986, y = -21.737880, vdisp = 135.673990, type = 81 
+ 	 ellipticity = 0.256506, ellipticity_pot = 0.130435, ellipticity angle (radians) = -0.804597, rcore = 0.021894, rcut = 1.987811,
+ z = 0.308000
+Lenstool Potential[54]: x = 7.897691, y = 55.825920, vdisp = 134.842438, type = 81 
+ 	 ellipticity = 0.132743, ellipticity_pot = 0.066667, ellipticity angle (radians) = 0.788889, rcore = 0.021626, rcut = 1.963519,
+ z = 0.308000
+Lenstool Potential[55]: x = -45.649849, y = -63.599762, vdisp = 134.792770, type = 81 
+ 	 ellipticity = 0.778462, ellipticity_pot = 0.478261, ellipticity angle (radians) = -0.968658, rcore = 0.021610, rcut = 1.962072,
+ z = 0.308000
+Lenstool Potential[56]: x = 15.126567, y = 22.483080, vdisp = 132.613152, type = 81 
+ 	 ellipticity = 0.600000, ellipticity_pot = 0.333333, ellipticity angle (radians) = 0.769690, rcore = 0.020917, rcut = 1.899131,
+ z = 0.308000
+Lenstool Potential[57]: x = 22.711699, y = 21.807000, vdisp = 131.639613, type = 81 
+ 	 ellipticity = 0.300578, ellipticity_pot = 0.153846, ellipticity angle (radians) = 1.425934, rcore = 0.020611, rcut = 1.871350,
+ z = 0.308000
+Lenstool Potential[58]: x = 2.295320, y = 10.871640, vdisp = 131.201801, type = 81 
+ 	 ellipticity = 0.000000, ellipticity_pot = 0.000010, ellipticity angle (radians) = 0.958186, rcore = 0.020474, rcut = 1.858923,
+ z = 0.308000
+Lenstool Potential[59]: x = -19.520962, y = 53.508240, vdisp = 130.956360, type = 81 
+ 	 ellipticity = 0.384615, ellipticity_pot = 0.200000, ellipticity angle (radians) = 1.521927, rcore = 0.020398, rcut = 1.851975,
+ z = 0.308000
+Lenstool Potential[60]: x = -8.928935, y = -33.836040, vdisp = 130.811702, type = 81 
+ 	 ellipticity = 0.648780, ellipticity_pot = 0.368421, ellipticity angle (radians) = 0.654498, rcore = 0.020353, rcut = 1.847885,
+ z = 0.308000
+Lenstool Potential[61]: x = -38.835269, y = 43.770958, vdisp = 128.832845, type = 81 
+ 	 ellipticity = 0.492228, ellipticity_pot = 0.263158, ellipticity angle (radians) = -0.731293, rcore = 0.019742, rcut = 1.792400,
+ z = 0.308000
+Lenstool Potential[62]: x = 51.769625, y = -43.146720, vdisp = 128.589822, type = 81 
+ 	 ellipticity = 0.766423, ellipticity_pot = 0.466667, ellipticity angle (radians) = 0.701622, rcore = 0.019667, rcut = 1.785645,
+ z = 0.308000
+Lenstool Potential[63]: x = -16.953764, y = -27.461520, vdisp = 128.125802, type = 81 
+ 	 ellipticity = 0.470588, ellipticity_pot = 0.250000, ellipticity angle (radians) = 0.528835, rcore = 0.019525, rcut = 1.772781,
+ z = 0.308000
+Lenstool Potential[64]: x = -7.937808, y = -37.959843, vdisp = 126.074309, type = 81 
+ 	 ellipticity = 0.095023, ellipticity_pot = 0.047619, ellipticity angle (radians) = -0.591667, rcore = 0.018905, rcut = 1.716465,
+ z = 0.308000
+Lenstool Potential[65]: x = 39.782491, y = 80.083800, vdisp = 125.318906, type = 81 
+ 	 ellipticity = 0.470588, ellipticity_pot = 0.250000, ellipticity angle (radians) = -0.862193, rcore = 0.018679, rcut = 1.695958,
+ z = 0.308000
+Lenstool Potential[66]: x = -28.702671, y = 41.360040, vdisp = 124.522146, type = 81 
+ 	 ellipticity = 0.308108, ellipticity_pot = 0.157895, ellipticity angle (radians) = 0.767945, rcore = 0.018443, rcut = 1.674461,
+ z = 0.308000
+Lenstool Potential[67]: x = 74.343657, y = -25.379640, vdisp = 124.467681, type = 81 
+ 	 ellipticity = 0.352000, ellipticity_pot = 0.181818, ellipticity angle (radians) = 1.499238, rcore = 0.018426, rcut = 1.672996,
+ z = 0.308000
+Lenstool Potential[68]: x = 52.653051, y = 57.379677, vdisp = 123.827355, type = 81 
+ 	 ellipticity = 0.470588, ellipticity_pot = 0.250000, ellipticity angle (radians) = 0.952950, rcore = 0.018237, rcut = 1.655827,
+ z = 0.308000
+Lenstool Potential[69]: x = -24.775119, y = 34.969677, vdisp = 123.676332, type = 81 
+ 	 ellipticity = 0.342282, ellipticity_pot = 0.176471, ellipticity angle (radians) = -0.045379, rcore = 0.018193, rcut = 1.651791,
+ z = 0.308000
+Lenstool Potential[70]: x = 3.960779, y = 26.269920, vdisp = 123.244230, type = 81 
+ 	 ellipticity = 0.657534, ellipticity_pot = 0.375000, ellipticity angle (radians) = 0.897099, rcore = 0.018066, rcut = 1.640269,
+ z = 0.308000
+Lenstool Potential[71]: x = -25.472489, y = -0.623160, vdisp = 123.127935, type = 81 
+ 	 ellipticity = 0.280000, ellipticity_pot = 0.142857, ellipticity angle (radians) = -0.741765, rcore = 0.018032, rcut = 1.637175,
+ z = 0.308000
+Lenstool Potential[72]: x = -12.473017, y = 62.934116, vdisp = 123.040078, type = 81 
+ 	 ellipticity = 0.550459, ellipticity_pot = 0.300000, ellipticity angle (radians) = -1.392773, rcore = 0.018006, rcut = 1.634839,
+ z = 0.308000
+Lenstool Potential[73]: x = -36.011866, y = -19.361880, vdisp = 122.771227, type = 81 
+ 	 ellipticity = 0.352000, ellipticity_pot = 0.181818, ellipticity angle (radians) = 0.692896, rcore = 0.017928, rcut = 1.627702,
+ z = 0.308000
+Lenstool Potential[74]: x = -10.109883, y = 38.429638, vdisp = 120.774875, type = 81 
+ 	 ellipticity = 0.165517, ellipticity_pot = 0.083333, ellipticity angle (radians) = 0.363028, rcore = 0.017349, rcut = 1.575198,
+ z = 0.308000
+Lenstool Potential[75]: x = 18.284921, y = 28.704600, vdisp = 120.558156, type = 81 
+ 	 ellipticity = 0.600000, ellipticity_pot = 0.333333, ellipticity angle (radians) = -0.638791, rcore = 0.017287, rcut = 1.569550,
+ z = 0.308000
+Lenstool Potential[76]: x = 38.904089, y = 51.123238, vdisp = 119.957276, type = 81 
+ 	 ellipticity = 0.450644, ellipticity_pot = 0.238095, ellipticity angle (radians) = -1.134464, rcore = 0.017115, rcut = 1.553943,
+ z = 0.308000
+Lenstool Potential[77]: x = -2.422289, y = -17.190000, vdisp = 119.871681, type = 81 
+ 	 ellipticity = 0.324324, ellipticity_pot = 0.166667, ellipticity angle (radians) = 1.392773, rcore = 0.017091, rcut = 1.551726,
+ z = 0.308000
+Lenstool Potential[78]: x = 2.717567, y = 4.241880, vdisp = 119.414371, type = 81 
+ 	 ellipticity = 0.293399, ellipticity_pot = 0.150000, ellipticity angle (radians) = -0.781908, rcore = 0.016961, rcut = 1.539909,
+ z = 0.308000
+Lenstool Potential[79]: x = 73.729291, y = -27.948960, vdisp = 118.592329, type = 81 
+ 	 ellipticity = 0.648780, ellipticity_pot = 0.368421, ellipticity angle (radians) = -0.914553, rcore = 0.016728, rcut = 1.518781,
+ z = 0.308000
+Lenstool Potential[80]: x = 7.054105, y = 3.300480, vdisp = 116.696168, type = 81 
+ 	 ellipticity = 0.648780, ellipticity_pot = 0.368421, ellipticity angle (radians) = -0.235619, rcore = 0.016197, rcut = 1.470602,
+ z = 0.308000
+Lenstool Potential[81]: x = 39.989941, y = 49.913640, vdisp = 116.685421, type = 81 
+ 	 ellipticity = 0.073973, ellipticity_pot = 0.037037, ellipticity angle (radians) = 0.656244, rcore = 0.016194, rcut = 1.470331,
+ z = 0.308000
+Lenstool Potential[82]: x = -63.765985, y = -19.505880, vdisp = 116.510911, type = 81 
+ 	 ellipticity = 0.470588, ellipticity_pot = 0.250000, ellipticity angle (radians) = -1.047198, rcore = 0.016146, rcut = 1.465936,
+ z = 0.308000
+Lenstool Potential[83]: x = -5.521452, y = 63.428040, vdisp = 116.253650, type = 81 
+ 	 ellipticity = 0.507692, ellipticity_pot = 0.272727, ellipticity angle (radians) = 1.532399, rcore = 0.016075, rcut = 1.459469,
+ z = 0.308000
+Lenstool Potential[84]: x = -45.246349, y = 19.005840, vdisp = 115.304590, type = 81 
+ 	 ellipticity = 0.550459, ellipticity_pot = 0.300000, ellipticity angle (radians) = 1.452114, rcore = 0.015813, rcut = 1.435737,
+ z = 0.308000
+Lenstool Potential[85]: x = 47.829671, y = 65.428200, vdisp = 114.965252, type = 81 
+ 	 ellipticity = 0.470588, ellipticity_pot = 0.250000, ellipticity angle (radians) = -0.921534, rcore = 0.015720, rcut = 1.427299,
+ z = 0.308000
+Lenstool Potential[86]: x = 11.655784, y = -35.312400, vdisp = 114.790672, type = 81 
+ 	 ellipticity = 0.000000, ellipticity_pot = 0.000010, ellipticity angle (radians) = -1.110029, rcore = 0.015673, rcut = 1.422968,
+ z = 0.308000
+Lenstool Potential[87]: x = -59.055639, y = -9.925200, vdisp = 114.764243, type = 81 
+ 	 ellipticity = 0.000000, ellipticity_pot = 0.000010, ellipticity angle (radians) = -0.286234, rcore = 0.015665, rcut = 1.422312,
+ z = 0.308000
+Lenstool Potential[88]: x = 53.994677, y = 53.506440, vdisp = 113.364375, type = 81 
+ 	 ellipticity = 0.000000, ellipticity_pot = 0.000010, ellipticity angle (radians) = 0.078540, rcore = 0.015286, rcut = 1.387826,
+ z = 0.308000
+Lenstool Potential[89]: x = -35.327764, y = 75.516840, vdisp = 110.539271, type = 81 
+ 	 ellipticity = 0.492228, ellipticity_pot = 0.263158, ellipticity angle (radians) = -1.015782, rcore = 0.014533, rcut = 1.319517,
+ z = 0.308000
+Lenstool Potential[90]: x = 68.488806, y = 34.701840, vdisp = 108.741820, type = 81 
+ 	 ellipticity = 0.670103, ellipticity_pot = 0.384615, ellipticity angle (radians) = 0.064577, rcore = 0.014064, rcut = 1.276953,
+ z = 0.308000
+Lenstool Potential[91]: x = 1.716846, y = -49.661280, vdisp = 108.651718, type = 81 
+ 	 ellipticity = 0.308108, ellipticity_pot = 0.157895, ellipticity angle (radians) = 0.937242, rcore = 0.014041, rcut = 1.274838,
+ z = 0.308000
+Lenstool Potential[92]: x = 3.804798, y = -11.293560, vdisp = 107.430253, type = 81 
+ 	 ellipticity = 0.280000, ellipticity_pot = 0.142857, ellipticity angle (radians) = 1.354375, rcore = 0.013727, rcut = 1.246336,
+ z = 0.308000
+Lenstool Potential[93]: x = 70.093511, y = -39.183120, vdisp = 107.128888, type = 81 
+ 	 ellipticity = 0.280000, ellipticity_pot = 0.142857, ellipticity angle (radians) = 0.647517, rcore = 0.013650, rcut = 1.239353,
+ z = 0.308000
+Lenstool Potential[94]: x = 23.822777, y = 3.840840, vdisp = 107.091893, type = 81 
+ 	 ellipticity = 0.342282, ellipticity_pot = 0.176471, ellipticity angle (radians) = -1.240929, rcore = 0.013641, rcut = 1.238497,
+ z = 0.308000
+Lenstool Potential[95]: x = 5.846635, y = -9.752040, vdisp = 103.456218, type = 81 
+ 	 ellipticity = 0.280000, ellipticity_pot = 0.142857, ellipticity angle (radians) = -0.247837, rcore = 0.012730, rcut = 1.155833,
+ z = 0.308000
+Lenstool Potential[96]: x = -23.686293, y = 33.605637, vdisp = 103.415729, type = 81 
+ 	 ellipticity = 0.450644, ellipticity_pot = 0.238095, ellipticity angle (radians) = -1.464331, rcore = 0.012720, rcut = 1.154928,
+ z = 0.308000
+Lenstool Potential[97]: x = -27.524551, y = -33.086163, vdisp = 103.275331, type = 81 
+ 	 ellipticity = 0.000000, ellipticity_pot = 0.000010, ellipticity angle (radians) = -1.417207, rcore = 0.012686, rcut = 1.151795,
+ z = 0.308000
+Lenstool Potential[98]: x = 66.795301, y = 63.296640, vdisp = 102.121362, type = 81 
+ 	 ellipticity = 0.104972, ellipticity_pot = 0.052632, ellipticity angle (radians) = -0.394444, rcore = 0.012404, rcut = 1.126199,
+ z = 0.308000
+Lenstool Potential[99]: x = -21.448381, y = 35.377560, vdisp = 99.212546, type = 81 
+ 	 ellipticity = 0.541401, ellipticity_pot = 0.294118, ellipticity angle (radians) = -0.898845, rcore = 0.011707, rcut = 1.062955,
+ z = 0.308000
+Lenstool Potential[100]: x = 36.352564, y = 77.690880, vdisp = 99.132623, type = 81 
+ 	 ellipticity = 0.678689, ellipticity_pot = 0.391304, ellipticity angle (radians) = -0.771436, rcore = 0.011689, rcut = 1.061243,
+ z = 0.308000
+Lenstool Potential[101]: x = -49.497873, y = 11.478960, vdisp = 98.909179, type = 81 
+ 	 ellipticity = 0.132743, ellipticity_pot = 0.066667, ellipticity angle (radians) = 0.596903, rcore = 0.011636, rcut = 1.056465,
+ z = 0.308000
+Lenstool Potential[102]: x = -5.852588, y = -6.491160, vdisp = 98.872746, type = 81 
+ 	 ellipticity = 0.180328, ellipticity_pot = 0.090909, ellipticity angle (radians) = 1.062906, rcore = 0.011627, rcut = 1.055687,
+ z = 0.308000
+Lenstool Potential[103]: x = 62.903826, y = 22.514040, vdisp = 96.497619, type = 81 
+ 	 ellipticity = 0.438202, ellipticity_pot = 0.230769, ellipticity angle (radians) = 0.418879, rcore = 0.011075, rcut = 1.005576,
+ z = 0.308000
+Lenstool Potential[104]: x = -51.096719, y = 9.381600, vdisp = 96.404342, type = 81 
+ 	 ellipticity = 0.541401, ellipticity_pot = 0.294118, ellipticity angle (radians) = -0.326377, rcore = 0.011054, rcut = 1.003633,
+ z = 0.308000
+Lenstool Potential[105]: x = -71.573929, y = 7.056360, vdisp = 96.395464, type = 81 
+ 	 ellipticity = 0.742268, ellipticity_pot = 0.444444, ellipticity angle (radians) = 1.115265, rcore = 0.011052, rcut = 1.003448,
+ z = 0.308000
+Lenstool Potential[106]: x = 24.197621, y = 67.890236, vdisp = 96.242434, type = 81 
+ 	 ellipticity = 0.324324, ellipticity_pot = 0.166667, ellipticity angle (radians) = 0.298451, rcore = 0.011017, rcut = 1.000265,
+ z = 0.308000
+Lenstool Potential[107]: x = -12.481041, y = -26.007480, vdisp = 95.738495, type = 81 
+ 	 ellipticity = 0.219512, ellipticity_pot = 0.111111, ellipticity angle (radians) = 0.099484, rcore = 0.010902, rcut = 0.989817,
+ z = 0.308000
+Lenstool Potential[108]: x = 24.574771, y = 38.569680, vdisp = 95.476523, type = 81 
+ 	 ellipticity = 0.117241, ellipticity_pot = 0.058824, ellipticity angle (radians) = 1.097812, rcore = 0.010842, rcut = 0.984408,
+ z = 0.308000
+Lenstool Potential[109]: x = 22.315659, y = 0.312840, vdisp = 95.221846, type = 81 
+ 	 ellipticity = 0.423529, ellipticity_pot = 0.222222, ellipticity angle (radians) = 0.090757, rcore = 0.010785, rcut = 0.979163,
+ z = 0.308000
+Lenstool Potential[110]: x = 41.769201, y = -1.288080, vdisp = 94.082012, type = 81 
+ 	 ellipticity = 0.180328, ellipticity_pot = 0.090909, ellipticity angle (radians) = 1.366593, rcore = 0.010528, rcut = 0.955862,
+ z = 0.308000
+Lenstool Potential[111]: x = -31.038301, y = 41.971317, vdisp = 92.953682, type = 81 
+ 	 ellipticity = 0.000000, ellipticity_pot = 0.000010, ellipticity angle (radians) = -1.261873, rcore = 0.010277, rcut = 0.933072,
+ z = 0.308000
+Lenstool Potential[112]: x = 27.078472, y = 76.717080, vdisp = 91.885418, type = 81 
+ 	 ellipticity = 0.384615, ellipticity_pot = 0.200000, ellipticity angle (radians) = -1.394518, rcore = 0.010042, rcut = 0.911748,
+ z = 0.308000
+Lenstool Potential[113]: x = 44.610006, y = 82.021320, vdisp = 91.286509, type = 81 
+ 	 ellipticity = 0.246154, ellipticity_pot = 0.125000, ellipticity angle (radians) = -0.497419, rcore = 0.009912, rcut = 0.899902,
+ z = 0.308000
+Lenstool Potential[114]: x = -26.610001, y = -7.030440, vdisp = 90.942439, type = 81 
+ 	 ellipticity = 0.000000, ellipticity_pot = 0.000010, ellipticity angle (radians) = 0.403171, rcore = 0.009837, rcut = 0.893131,
+ z = 0.308000
+Lenstool Potential[115]: x = -5.311577, y = -14.673240, vdisp = 90.520428, type = 81 
+ 	 ellipticity = 0.000000, ellipticity_pot = 0.000010, ellipticity angle (radians) = 0.275762, rcore = 0.009746, rcut = 0.884861,
+ z = 0.308000
+Lenstool Potential[116]: x = 39.929743, y = -26.220600, vdisp = 90.339274, type = 81 
+ 	 ellipticity = 0.198020, ellipticity_pot = 0.100000, ellipticity angle (radians) = -1.349140, rcore = 0.009707, rcut = 0.881323,
+ z = 0.308000
+Lenstool Potential[117]: x = -72.135089, y = 72.458275, vdisp = 90.318475, type = 81 
+ 	 ellipticity = 0.280000, ellipticity_pot = 0.142857, ellipticity angle (radians) = -0.104720, rcore = 0.009702, rcut = 0.880917,
+ z = 0.308000
+Lenstool Potential[118]: x = 34.553441, y = 77.960520, vdisp = 89.957338, type = 81 
+ 	 ellipticity = 0.219512, ellipticity_pot = 0.111111, ellipticity angle (radians) = 0.261799, rcore = 0.009625, rcut = 0.873886,
+ z = 0.308000
+Lenstool Potential[119]: x = 47.209303, y = 43.266956, vdisp = 89.025946, type = 81 
+ 	 ellipticity = 0.000000, ellipticity_pot = 0.000010, ellipticity angle (radians) = 1.017527, rcore = 0.009427, rcut = 0.855884,
+ z = 0.308000
+Lenstool Potential[120]: x = -10.742346, y = -36.171000, vdisp = 88.531250, type = 81 
+ 	 ellipticity = 0.000000, ellipticity_pot = 0.000010, ellipticity angle (radians) = 0.778417, rcore = 0.009322, rcut = 0.846399,
+ z = 0.308000
+Lenstool Potential[121]: x = -32.596323, y = -1.214280, vdisp = 88.494565, type = 81 
+ 	 ellipticity = 0.324324, ellipticity_pot = 0.166667, ellipticity angle (radians) = 0.849975, rcore = 0.009315, rcut = 0.845697,
+ z = 0.308000
+Lenstool Potential[122]: x = -2.313263, y = 0.806040, vdisp = 87.107710, type = 81 
+ 	 ellipticity = 0.470588, ellipticity_pot = 0.250000, ellipticity angle (radians) = -0.328122, rcore = 0.009025, rcut = 0.819398,
+ z = 0.308000
+Lenstool Potential[123]: x = 7.552607, y = -33.586920, vdisp = 86.733445, type = 81 
+ 	 ellipticity = 0.528302, ellipticity_pot = 0.285714, ellipticity angle (radians) = -0.258309, rcore = 0.008948, rcut = 0.812372,
+ z = 0.308000
+Lenstool Potential[124]: x = 39.032151, y = 52.176598, vdisp = 85.279883, type = 81 
+ 	 ellipticity = 0.000000, ellipticity_pot = 0.000010, ellipticity angle (radians) = -0.565487, rcore = 0.008650, rcut = 0.785371,
+ z = 0.308000
+Lenstool Potential[125]: x = -20.538492, y = 13.751640, vdisp = 85.019118, type = 81 
+ 	 ellipticity = 0.180328, ellipticity_pot = 0.090909, ellipticity angle (radians) = 0.886627, rcore = 0.008597, rcut = 0.780576,
+ z = 0.308000
+Lenstool Potential[126]: x = -6.950193, y = -6.928200, vdisp = 83.696365, type = 81 
+ 	 ellipticity = 0.000000, ellipticity_pot = 0.000010, ellipticity angle (radians) = 0.925025, rcore = 0.008332, rcut = 0.756476,
+ z = 0.308000
+Lenstool Potential[127]: x = 5.855687, y = 30.327480, vdisp = 81.663238, type = 81 
+ 	 ellipticity = 0.180328, ellipticity_pot = 0.090909, ellipticity angle (radians) = 0.687660, rcore = 0.007932, rcut = 0.720170,
+ z = 0.308000
+Lenstool Potential[128]: x = 9.156183, y = 13.101120, vdisp = 80.003060, type = 81 
+ 	 ellipticity = 0.000000, ellipticity_pot = 0.000010, ellipticity angle (radians) = -0.101229, rcore = 0.007613, rcut = 0.691186,
+ z = 0.308000
+Lenstool Potential[129]: x = 5.599741, y = 6.592320, vdisp = 79.078167, type = 81 
+ 	 ellipticity = 0.324324, ellipticity_pot = 0.166667, ellipticity angle (radians) = 1.446878, rcore = 0.007438, rcut = 0.675297,
+ z = 0.308000
+Lenstool Potential[130]: x = 57.206549, y = 29.590920, vdisp = 78.722087, type = 81 
+ 	 ellipticity = 0.324324, ellipticity_pot = 0.166667, ellipticity angle (radians) = 1.078613, rcore = 0.007371, rcut = 0.669229,
+ z = 0.308000
+Lenstool Potential[131]: x = -23.231024, y = -32.566680, vdisp = 77.889084, type = 81 
+ 	 ellipticity = 0.600000, ellipticity_pot = 0.333333, ellipticity angle (radians) = 1.219985, rcore = 0.007216, rcut = 0.655141,
+ z = 0.308000
+Lenstool Potential[132]: x = 13.793839, y = 86.889960, vdisp = 77.634828, type = 81 
+ 	 ellipticity = 0.180328, ellipticity_pot = 0.090909, ellipticity angle (radians) = 1.293289, rcore = 0.007169, rcut = 0.650871,
+ z = 0.308000
+Lenstool Potential[133]: x = -34.819265, y = -35.233562, vdisp = 77.481246, type = 81 
+ 	 ellipticity = 0.280000, ellipticity_pot = 0.142857, ellipticity angle (radians) = 0.506145, rcore = 0.007140, rcut = 0.648299,
+ z = 0.308000
+Lenstool Potential[134]: x = 14.490778, y = 3.891600, vdisp = 77.456273, type = 81 
+ 	 ellipticity = 0.280000, ellipticity_pot = 0.142857, ellipticity angle (radians) = 0.602139, rcore = 0.007136, rcut = 0.647881,
+ z = 0.308000
+Lenstool Potential[135]: x = -46.536772, y = -16.947360, vdisp = 76.316175, type = 81 
+ 	 ellipticity = 0.000000, ellipticity_pot = 0.000010, ellipticity angle (radians) = 0.033161, rcore = 0.006927, rcut = 0.628948,
+ z = 0.308000
+Lenstool Potential[136]: x = -48.435705, y = 5.445720, vdisp = 76.070557, type = 81 
+ 	 ellipticity = 0.438202, ellipticity_pot = 0.230769, ellipticity angle (radians) = -0.300197, rcore = 0.006883, rcut = 0.624906,
+ z = 0.308000
+Lenstool Potential[137]: x = 69.210501, y = -15.700320, vdisp = 75.701868, type = 81 
+ 	 ellipticity = 0.219512, ellipticity_pot = 0.111111, ellipticity angle (radians) = -0.619592, rcore = 0.006816, rcut = 0.618864,
+ z = 0.308000
+Lenstool Potential[138]: x = -10.697949, y = -15.696000, vdisp = 75.224030, type = 81 
+ 	 ellipticity = 0.180328, ellipticity_pot = 0.090909, ellipticity angle (radians) = -1.404990, rcore = 0.006730, rcut = 0.611076,
+ z = 0.308000
+Lenstool Potential[139]: x = 58.692041, y = -2.530440, vdisp = 74.493194, type = 81 
+ 	 ellipticity = 0.000000, ellipticity_pot = 0.000010, ellipticity angle (radians) = -0.024435, rcore = 0.006600, rcut = 0.599260,
+ z = 0.308000
+Lenstool Potential[140]: x = -34.269329, y = 14.864040, vdisp = 74.285935, type = 81 
+ 	 ellipticity = 0.180328, ellipticity_pot = 0.090909, ellipticity angle (radians) = 0.082030, rcore = 0.006564, rcut = 0.595930,
+ z = 0.308000
+Lenstool Potential[141]: x = -22.215999, y = 0.562320, vdisp = 73.669309, type = 81 
+ 	 ellipticity = 0.324324, ellipticity_pot = 0.166667, ellipticity angle (radians) = 1.457350, rcore = 0.006455, rcut = 0.586077,
+ z = 0.308000
+Lenstool Potential[142]: x = -54.561169, y = 3.786840, vdisp = 73.432210, type = 81 
+ 	 ellipticity = 0.384615, ellipticity_pot = 0.200000, ellipticity angle (radians) = -1.103048, rcore = 0.006414, rcut = 0.582311,
+ z = 0.308000
+Lenstool Potential[143]: x = -8.158338, y = -20.454840, vdisp = 73.157119, type = 81 
+ 	 ellipticity = 0.280000, ellipticity_pot = 0.142857, ellipticity angle (radians) = -1.244420, rcore = 0.006366, rcut = 0.577956,
+ z = 0.308000
+Lenstool Potential[144]: x = -21.002485, y = 61.957440, vdisp = 72.546522, type = 81 
+ 	 ellipticity = 0.324324, ellipticity_pot = 0.166667, ellipticity angle (radians) = 1.110029, rcore = 0.006260, rcut = 0.568349,
+ z = 0.308000
+Lenstool Potential[145]: x = 41.146961, y = 46.512360, vdisp = 72.546522, type = 81 
+ 	 ellipticity = 0.324324, ellipticity_pot = 0.166667, ellipticity angle (radians) = 0.811578, rcore = 0.006260, rcut = 0.568349,
+ z = 0.308000
+Lenstool Potential[146]: x = -26.112505, y = -20.602080, vdisp = 72.489749, type = 81 
+ 	 ellipticity = 0.000000, ellipticity_pot = 0.000010, ellipticity angle (radians) = 0.335103, rcore = 0.006250, rcut = 0.567460,
+ z = 0.308000
+Lenstool Potential[147]: x = -25.184963, y = 77.456160, vdisp = 72.309706, type = 81 
+ 	 ellipticity = 0.324324, ellipticity_pot = 0.166667, ellipticity angle (radians) = -1.382301, rcore = 0.006219, rcut = 0.564644,
+ z = 0.308000
+Lenstool Potential[148]: x = 35.662321, y = -12.582360, vdisp = 71.735907, type = 81 
+ 	 ellipticity = 0.600000, ellipticity_pot = 0.333333, ellipticity angle (radians) = 0.054105, rcore = 0.006121, rcut = 0.555719,
+ z = 0.308000
+Lenstool Potential[149]: x = 23.363369, y = 57.399837, vdisp = 71.725997, type = 81 
+ 	 ellipticity = 0.000000, ellipticity_pot = 0.000010, ellipticity angle (radians) = -0.083776, rcore = 0.006119, rcut = 0.555565,
+ z = 0.308000
+Lenstool Potential[150]: x = -8.039758, y = -5.736600, vdisp = 71.694625, type = 81 
+ 	 ellipticity = 0.000000, ellipticity_pot = 0.000010, ellipticity angle (radians) = 0.181514, rcore = 0.006114, rcut = 0.555079,
+ z = 0.308000
+Lenstool Potential[151]: x = -18.765444, y = 66.182040, vdisp = 71.688022, type = 81 
+ 	 ellipticity = 0.280000, ellipticity_pot = 0.142857, ellipticity angle (radians) = -0.073304, rcore = 0.006113, rcut = 0.554977,
+ z = 0.308000
+Lenstool Potential[152]: x = 0.986078, y = -29.721240, vdisp = 70.901692, type = 81 
+ 	 ellipticity = 0.152941, ellipticity_pot = 0.076923, ellipticity angle (radians) = -0.246091, rcore = 0.005979, rcut = 0.542869,
+ z = 0.308000
+Lenstool Potential[153]: x = 58.736956, y = 50.735878, vdisp = 70.287257, type = 81 
+ 	 ellipticity = 0.180328, ellipticity_pot = 0.090909, ellipticity angle (radians) = 0.394444, rcore = 0.005876, rcut = 0.533501,
+ z = 0.308000
+Lenstool Potential[154]: x = -18.119564, y = -46.558804, vdisp = 70.275929, type = 81 
+ 	 ellipticity = 0.507692, ellipticity_pot = 0.272727, ellipticity angle (radians) = -0.225147, rcore = 0.005874, rcut = 0.533329,
+ z = 0.308000
+Lenstool Potential[155]: x = 63.547601, y = 31.434120, vdisp = 70.156287, type = 81 
+ 	 ellipticity = 0.384615, ellipticity_pot = 0.200000, ellipticity angle (radians) = -1.076868, rcore = 0.005854, rcut = 0.531514,
+ z = 0.308000
+Lenstool Potential[156]: x = 52.440671, y = -46.434600, vdisp = 70.065883, type = 81 
+ 	 ellipticity = 0.528302, ellipticity_pot = 0.285714, ellipticity angle (radians) = -0.968658, rcore = 0.005839, rcut = 0.530145,
+ z = 0.308000
+Lenstool Potential[157]: x = 38.999361, y = 84.136680, vdisp = 69.695798, type = 81 
+ 	 ellipticity = 0.000000, ellipticity_pot = 0.000010, ellipticity angle (radians) = 0.062832, rcore = 0.005778, rcut = 0.524560,
+ z = 0.308000
+Lenstool Potential[158]: x = 53.460524, y = 18.761760, vdisp = 69.243115, type = 81 
+ 	 ellipticity = 0.180328, ellipticity_pot = 0.090909, ellipticity angle (radians) = 0.528835, rcore = 0.005703, rcut = 0.517768,
+ z = 0.308000
+Lenstool Potential[159]: x = -38.781713, y = 56.588757, vdisp = 69.077498, type = 81 
+ 	 ellipticity = 0.000000, ellipticity_pot = 0.000010, ellipticity angle (radians) = -0.274017, rcore = 0.005675, rcut = 0.515294,
+ z = 0.308000
+Lenstool Potential[160]: x = 69.356535, y = 49.342320, vdisp = 68.874205, type = 81 
+ 	 ellipticity = 0.000000, ellipticity_pot = 0.000010, ellipticity angle (radians) = -0.717330, rcore = 0.005642, rcut = 0.512265,
+ z = 0.308000
+Lenstool Potential[161]: x = 5.557952, y = 14.839200, vdisp = 68.790204, type = 81 
+ 	 ellipticity = 0.000000, ellipticity_pot = 0.000010, ellipticity angle (radians) = 0.495674, rcore = 0.005628, rcut = 0.511017,
+ z = 0.308000
+Lenstool Potential[162]: x = 3.933534, y = 33.508080, vdisp = 68.581440, type = 81 
+ 	 ellipticity = 0.000000, ellipticity_pot = 0.000010, ellipticity angle (radians) = -0.125664, rcore = 0.005594, rcut = 0.507920,
+ z = 0.308000
+Lenstool Potential[163]: x = -29.470649, y = 0.742680, vdisp = 68.459953, type = 81 
+ 	 ellipticity = 0.000000, ellipticity_pot = 0.000010, ellipticity angle (radians) = -0.413643, rcore = 0.005574, rcut = 0.506122,
+ z = 0.308000
+Lenstool Potential[164]: x = 50.564467, y = 19.956600, vdisp = 68.365437, type = 81 
+ 	 ellipticity = 0.324324, ellipticity_pot = 0.166667, ellipticity angle (radians) = -0.284489, rcore = 0.005559, rcut = 0.504725,
+ z = 0.308000
+Lenstool Potential[165]: x = 44.075506, y = 15.145200, vdisp = 68.333961, type = 81 
+ 	 ellipticity = 0.000000, ellipticity_pot = 0.000010, ellipticity angle (radians) = 0.385718, rcore = 0.005554, rcut = 0.504261,
+ z = 0.308000
+Lenstool Potential[166]: x = -15.400343, y = 48.468597, vdisp = 67.603098, type = 81 
+ 	 ellipticity = 0.180328, ellipticity_pot = 0.090909, ellipticity angle (radians) = 1.003564, rcore = 0.005436, rcut = 0.493532,
+ z = 0.308000
+Lenstool Potential[167]: x = 39.327814, y = 46.794240, vdisp = 67.236732, type = 81 
+ 	 ellipticity = 0.507692, ellipticity_pot = 0.272727, ellipticity angle (radians) = 0.979130, rcore = 0.005377, rcut = 0.488197,
+ z = 0.308000
+Lenstool Potential[168]: x = -1.778541, y = 55.981438, vdisp = 66.816942, type = 81 
+ 	 ellipticity = 0.000000, ellipticity_pot = 0.000010, ellipticity angle (radians) = -0.726057, rcore = 0.005310, rcut = 0.482120,
+ z = 0.308000
+Lenstool Potential[169]: x = 22.434620, y = 20.377440, vdisp = 66.230281, type = 81 
+ 	 ellipticity = 0.000000, ellipticity_pot = 0.000010, ellipticity angle (radians) = -1.160644, rcore = 0.005217, rcut = 0.473691,
+ z = 0.308000
+Lenstool Potential[170]: x = 27.048607, y = -28.878120, vdisp = 66.181499, type = 81 
+ 	 ellipticity = 0.000000, ellipticity_pot = 0.000010, ellipticity angle (radians) = -0.057596, rcore = 0.005210, rcut = 0.472993,
+ z = 0.308000
+Lenstool Potential[171]: x = -36.978685, y = -16.754400, vdisp = 65.623078, type = 81 
+ 	 ellipticity = 0.324324, ellipticity_pot = 0.166667, ellipticity angle (radians) = -0.205949, rcore = 0.005122, rcut = 0.465045,
+ z = 0.308000
+Lenstool Potential[172]: x = 64.123781, y = -5.254200, vdisp = 65.499291, type = 81 
+ 	 ellipticity = 0.324324, ellipticity_pot = 0.166667, ellipticity angle (radians) = -0.923279, rcore = 0.005103, rcut = 0.463292,
+ z = 0.308000
+Lenstool Potential[173]: x = -9.845995, y = -14.580000, vdisp = 65.323071, type = 81 
+ 	 ellipticity = 0.219512, ellipticity_pot = 0.111111, ellipticity angle (radians) = -1.247910, rcore = 0.005075, rcut = 0.460803,
+ z = 0.308000
+Lenstool Potential[174]: x = 51.876031, y = 48.893040, vdisp = 64.937654, type = 81 
+ 	 ellipticity = 0.132743, ellipticity_pot = 0.066667, ellipticity angle (radians) = -1.172861, rcore = 0.005016, rcut = 0.455381,
+ z = 0.308000
+Lenstool Potential[175]: x = -11.076405, y = 52.322400, vdisp = 64.783827, type = 81 
+ 	 ellipticity = 0.219512, ellipticity_pot = 0.111111, ellipticity angle (radians) = 1.535890, rcore = 0.004992, rcut = 0.453226,
+ z = 0.308000
+Lenstool Potential[176]: x = 7.232075, y = 5.697720, vdisp = 64.425322, type = 81 
+ 	 ellipticity = 0.507692, ellipticity_pot = 0.272727, ellipticity angle (radians) = -0.385718, rcore = 0.004937, rcut = 0.448224,
+ z = 0.308000
+Lenstool Potential[177]: x = -34.765184, y = -35.807762, vdisp = 64.425322, type = 81 
+ 	 ellipticity = 0.384615, ellipticity_pot = 0.200000, ellipticity angle (radians) = -0.911062, rcore = 0.004937, rcut = 0.448224,
+ z = 0.308000
+Lenstool Potential[178]: x = -45.188959, y = -33.668640, vdisp = 64.366011, type = 81 
+ 	 ellipticity = 0.000000, ellipticity_pot = 0.000010, ellipticity angle (radians) = 0.335103, rcore = 0.004928, rcut = 0.447399,
+ z = 0.308000
+Lenstool Potential[179]: x = 59.317888, y = -30.866400, vdisp = 64.133744, type = 81 
+ 	 ellipticity = 0.000000, ellipticity_pot = 0.000010, ellipticity angle (radians) = -0.284489, rcore = 0.004892, rcut = 0.444176,
+ z = 0.308000
+Lenstool Potential[180]: x = -9.124475, y = 23.753880, vdisp = 63.833197, type = 81 
+ 	 ellipticity = 0.180328, ellipticity_pot = 0.090909, ellipticity angle (radians) = 0.966912, rcore = 0.004846, rcut = 0.440023,
+ z = 0.308000
+Lenstool Potential[181]: x = -22.902999, y = 65.065315, vdisp = 63.066190, type = 81 
+ 	 ellipticity = 0.219512, ellipticity_pot = 0.111111, ellipticity angle (radians) = 1.455605, rcore = 0.004731, rcut = 0.429512,
+ z = 0.308000
+Lenstool Potential[182]: x = 19.145403, y = 85.804560, vdisp = 62.652239, type = 81 
+ 	 ellipticity = 0.280000, ellipticity_pot = 0.142857, ellipticity angle (radians) = -1.106539, rcore = 0.004669, rcut = 0.423892,
+ z = 0.308000
+Lenstool Potential[183]: x = -67.480059, y = 34.030437, vdisp = 62.351456, type = 81 
+ 	 ellipticity = 0.219512, ellipticity_pot = 0.111111, ellipticity angle (radians) = -0.680678, rcore = 0.004624, rcut = 0.419832,
+ z = 0.308000
+Lenstool Potential[184]: x = 4.641569, y = -12.142800, vdisp = 62.198025, type = 81 
+ 	 ellipticity = 0.219512, ellipticity_pot = 0.111111, ellipticity angle (radians) = -0.520108, rcore = 0.004601, rcut = 0.417768,
+ z = 0.308000
+Lenstool Potential[185]: x = 22.605793, y = 11.885040, vdisp = 61.952181, type = 81 
+ 	 ellipticity = 0.600000, ellipticity_pot = 0.333333, ellipticity angle (radians) = -0.113446, rcore = 0.004565, rcut = 0.414472,
+ z = 0.308000
+Lenstool Potential[186]: x = -8.131323, y = -47.403362, vdisp = 61.767013, type = 81 
+ 	 ellipticity = 0.219512, ellipticity_pot = 0.111111, ellipticity angle (radians) = -1.569051, rcore = 0.004538, rcut = 0.411998,
+ z = 0.308000
+Lenstool Potential[187]: x = -0.676853, y = -24.576479, vdisp = 61.411060, type = 81 
+ 	 ellipticity = 0.219512, ellipticity_pot = 0.111111, ellipticity angle (radians) = -0.684169, rcore = 0.004486, rcut = 0.407263,
+ z = 0.308000
+Lenstool Potential[188]: x = 19.848616, y = 20.832480, vdisp = 61.188048, type = 81 
+ 	 ellipticity = 0.000000, ellipticity_pot = 0.000010, ellipticity angle (radians) = 0.624828, rcore = 0.004453, rcut = 0.404311,
+ z = 0.308000
+Lenstool Potential[189]: x = -9.106653, y = 31.020120, vdisp = 60.981289, type = 81 
+ 	 ellipticity = 0.000000, ellipticity_pot = 0.000010, ellipticity angle (radians) = -1.012291, rcore = 0.004423, rcut = 0.401583,
+ z = 0.308000
+Lenstool Potential[190]: x = 3.631828, y = -43.698600, vdisp = 60.891489, type = 81 
+ 	 ellipticity = 0.507692, ellipticity_pot = 0.272727, ellipticity angle (radians) = -0.836013, rcore = 0.004410, rcut = 0.400401,
+ z = 0.308000
+Lenstool Potential[191]: x = 27.144215, y = 55.314000, vdisp = 60.848040, type = 81 
+ 	 ellipticity = 0.000000, ellipticity_pot = 0.000010, ellipticity angle (radians) = -0.476475, rcore = 0.004404, rcut = 0.399830,
+ z = 0.308000
+Lenstool Potential[192]: x = -7.945685, y = -5.354280, vdisp = 60.821426, type = 81 
+ 	 ellipticity = 0.000000, ellipticity_pot = 0.000010, ellipticity angle (radians) = -0.167552, rcore = 0.004400, rcut = 0.399480,
+ z = 0.308000
+Lenstool Potential[193]: x = -7.010127, y = -22.104720, vdisp = 60.519676, type = 81 
+ 	 ellipticity = 0.280000, ellipticity_pot = 0.142857, ellipticity angle (radians) = 0.413643, rcore = 0.004356, rcut = 0.395526,
+ z = 0.308000
+Lenstool Potential[194]: x = -4.601009, y = 67.849556, vdisp = 60.440298, type = 81 
+ 	 ellipticity = 0.180328, ellipticity_pot = 0.090909, ellipticity angle (radians) = 1.295034, rcore = 0.004345, rcut = 0.394489,
+ z = 0.308000
+Lenstool Potential[195]: x = -60.394827, y = -18.862200, vdisp = 60.388827, type = 81 
+ 	 ellipticity = 0.000000, ellipticity_pot = 0.000010, ellipticity angle (radians) = 1.137955, rcore = 0.004338, rcut = 0.393818,
+ z = 0.308000
+Lenstool Potential[196]: x = -11.945843, y = 30.958920, vdisp = 60.331844, type = 81 
+ 	 ellipticity = 0.600000, ellipticity_pot = 0.333333, ellipticity angle (radians) = -1.453859, rcore = 0.004329, rcut = 0.393075,
+ z = 0.308000
+Lenstool Potential[197]: x = 27.792331, y = 35.564037, vdisp = 60.326287, type = 81 
+ 	 ellipticity = 0.753425, ellipticity_pot = 0.454545, ellipticity angle (radians) = -0.219911, rcore = 0.004329, rcut = 0.393002,
+ z = 0.308000
+Lenstool Potential[198]: x = -73.333509, y = 69.176155, vdisp = 60.080923, type = 81 
+ 	 ellipticity = 0.724138, ellipticity_pot = 0.428571, ellipticity angle (radians) = 0.191986, rcore = 0.004293, rcut = 0.389812,
+ z = 0.308000
+Lenstool Potential[199]: x = 0.985875, y = 8.251920, vdisp = 59.986925, type = 81 
+ 	 ellipticity = 0.800000, ellipticity_pot = 0.500000, ellipticity angle (radians) = -0.319395, rcore = 0.004280, rcut = 0.388593,
+ z = 0.308000
+Lenstool Potential[200]: x = -11.129454, y = 1.458000, vdisp = 59.920661, type = 81 
+ 	 ellipticity = 0.470588, ellipticity_pot = 0.250000, ellipticity angle (radians) = 0.541052, rcore = 0.004271, rcut = 0.387735,
+ z = 0.308000
+Lenstool Potential[201]: x = -14.353041, y = -38.581562, vdisp = 59.780094, type = 81 
+ 	 ellipticity = 0.000000, ellipticity_pot = 0.000010, ellipticity angle (radians) = 0.169297, rcore = 0.004251, rcut = 0.385918,
+ z = 0.308000
+Lenstool Potential[202]: x = -61.072839, y = 36.038517, vdisp = 59.602791, type = 81 
+ 	 ellipticity = 0.219512, ellipticity_pot = 0.111111, ellipticity angle (radians) = -1.169371, rcore = 0.004225, rcut = 0.383632,
+ z = 0.308000
+Lenstool Potential[203]: x = -31.624485, y = -11.158920, vdisp = 59.565748, type = 81 
+ 	 ellipticity = 0.384615, ellipticity_pot = 0.200000, ellipticity angle (radians) = 0.139626, rcore = 0.004220, rcut = 0.383155,
+ z = 0.308000
+Lenstool Potential[204]: x = 22.818745, y = 1.357920, vdisp = 59.523245, type = 81 
+ 	 ellipticity = 0.219512, ellipticity_pot = 0.111111, ellipticity angle (radians) = -1.333432, rcore = 0.004214, rcut = 0.382609,
+ z = 0.308000
+Lenstool Potential[205]: x = 26.826355, y = -40.419724, vdisp = 59.513651, type = 81 
+ 	 ellipticity = 0.000000, ellipticity_pot = 0.000010, ellipticity angle (radians) = -0.209440, rcore = 0.004213, rcut = 0.382486,
+ z = 0.308000
+Lenstool Potential[206]: x = -46.775699, y = 63.630720, vdisp = 59.410964, type = 81 
+ 	 ellipticity = 0.219512, ellipticity_pot = 0.111111, ellipticity angle (radians) = -0.951204, rcore = 0.004198, rcut = 0.381167,
+ z = 0.308000
+Lenstool Potential[207]: x = 60.690361, y = -42.525000, vdisp = 59.402756, type = 81 
+ 	 ellipticity = 0.219512, ellipticity_pot = 0.111111, ellipticity angle (radians) = 0.305433, rcore = 0.004197, rcut = 0.381061,
+ z = 0.308000
+Lenstool Potential[208]: x = 46.807191, y = 69.267960, vdisp = 59.387712, type = 81 
+ 	 ellipticity = 0.219512, ellipticity_pot = 0.111111, ellipticity angle (radians) = 0.623083, rcore = 0.004195, rcut = 0.380868,
+ z = 0.308000
+Lenstool Potential[209]: x = 42.219621, y = 23.562720, vdisp = 59.123018, type = 81 
+ 	 ellipticity = 0.219512, ellipticity_pot = 0.111111, ellipticity angle (radians) = 0.738274, rcore = 0.004158, rcut = 0.377481,
+ z = 0.308000
+Lenstool Potential[210]: x = -64.985549, y = 10.598761, vdisp = 59.014210, type = 81 
+ 	 ellipticity = 0.280000, ellipticity_pot = 0.142857, ellipticity angle (radians) = 0.624828, rcore = 0.004142, rcut = 0.376093,
+ z = 0.308000
+Lenstool Potential[211]: x = -38.507406, y = 61.472157, vdisp = 58.997906, type = 81 
+ 	 ellipticity = 0.384615, ellipticity_pot = 0.200000, ellipticity angle (radians) = -1.532399, rcore = 0.004140, rcut = 0.375885,
+ z = 0.308000
+Lenstool Potential[212]: x = 23.999760, y = -32.636160, vdisp = 58.789071, type = 81 
+ 	 ellipticity = 0.753425, ellipticity_pot = 0.454545, ellipticity angle (radians) = -0.577704, rcore = 0.004111, rcut = 0.373229,
+ z = 0.308000
+Lenstool Potential[213]: x = 20.297302, y = 74.309395, vdisp = 58.149582, type = 81 
+ 	 ellipticity = 0.507692, ellipticity_pot = 0.272727, ellipticity angle (radians) = -0.830777, rcore = 0.004022, rcut = 0.365153,
+ z = 0.308000
+Lenstool Potential[214]: x = 47.215433, y = 84.330000, vdisp = 58.043902, type = 81 
+ 	 ellipticity = 0.384615, ellipticity_pot = 0.200000, ellipticity angle (radians) = 0.523599, rcore = 0.004007, rcut = 0.363827,
+ z = 0.308000
+Lenstool Potential[215]: x = 58.761915, y = 47.691357, vdisp = 57.950421, type = 81 
+ 	 ellipticity = 0.470588, ellipticity_pot = 0.250000, ellipticity angle (radians) = 0.057596, rcore = 0.003994, rcut = 0.362656,
+ z = 0.308000
+Lenstool Potential[216]: x = -7.793074, y = 1.627200, vdisp = 57.819802, type = 81 
+ 	 ellipticity = 0.849057, ellipticity_pot = 0.555556, ellipticity angle (radians) = -1.232202, rcore = 0.003976, rcut = 0.361023,
+ z = 0.308000
+Lenstool Potential[217]: x = 64.051161, y = -25.506720, vdisp = 57.794511, type = 81 
+ 	 ellipticity = 0.470588, ellipticity_pot = 0.250000, ellipticity angle (radians) = -1.078613, rcore = 0.003973, rcut = 0.360707,
+ z = 0.308000
+Lenstool Potential[218]: x = 60.225041, y = 70.311600, vdisp = 57.718707, type = 81 
+ 	 ellipticity = 0.470588, ellipticity_pot = 0.250000, ellipticity angle (radians) = 0.193732, rcore = 0.003962, rcut = 0.359762,
+ z = 0.308000
+Lenstool Potential[219]: x = 3.024877, y = -6.561000, vdisp = 57.684163, type = 81 
+ 	 ellipticity = 0.280000, ellipticity_pot = 0.142857, ellipticity angle (radians) = 1.518436, rcore = 0.003958, rcut = 0.359331,
+ z = 0.308000
+Lenstool Potential[220]: x = -28.744314, y = -34.218723, vdisp = 57.464098, type = 81 
+ 	 ellipticity = 0.470588, ellipticity_pot = 0.250000, ellipticity angle (radians) = 1.253146, rcore = 0.003928, rcut = 0.356595,
+ z = 0.308000
+Lenstool Potential[221]: x = 20.593933, y = 21.906720, vdisp = 57.404587, type = 81 
+ 	 ellipticity = 0.219512, ellipticity_pot = 0.111111, ellipticity angle (radians) = -0.998328, rcore = 0.003919, rcut = 0.355857,
+ z = 0.308000
+Lenstool Potential[222]: x = 13.580947, y = 34.912080, vdisp = 57.372873, type = 81 
+ 	 ellipticity = 0.219512, ellipticity_pot = 0.111111, ellipticity angle (radians) = -0.455531, rcore = 0.003915, rcut = 0.355464,
+ z = 0.308000
+Lenstool Potential[223]: x = 14.587120, y = 35.868237, vdisp = 57.358343, type = 81 
+ 	 ellipticity = 0.219512, ellipticity_pot = 0.111111, ellipticity angle (radians) = 1.370083, rcore = 0.003913, rcut = 0.355283,
+ z = 0.308000
+Lenstool Potential[224]: x = -19.682644, y = -42.860880, vdisp = 57.189539, type = 81 
+ 	 ellipticity = 0.280000, ellipticity_pot = 0.142857, ellipticity angle (radians) = -0.024435, rcore = 0.003890, rcut = 0.353195,
+ z = 0.308000
+Lenstool Potential[225]: x = -6.989165, y = -14.516640, vdisp = 56.740949, type = 81 
+ 	 ellipticity = 0.470588, ellipticity_pot = 0.250000, ellipticity angle (radians) = 0.158825, rcore = 0.003829, rcut = 0.347676,
+ z = 0.308000
+Lenstool Potential[226]: x = 45.310217, y = 73.692360, vdisp = 56.680882, type = 81 
+ 	 ellipticity = 0.280000, ellipticity_pot = 0.142857, ellipticity angle (radians) = -0.144862, rcore = 0.003821, rcut = 0.346941,
+ z = 0.308000
+Lenstool Potential[227]: x = 47.944124, y = 62.070840, vdisp = 56.478948, type = 81 
+ 	 ellipticity = 0.219512, ellipticity_pot = 0.111111, ellipticity angle (radians) = -0.954695, rcore = 0.003794, rcut = 0.344473,
+ z = 0.308000
+Lenstool Potential[228]: x = 29.655609, y = -52.010280, vdisp = 56.462044, type = 81 
+ 	 ellipticity = 0.219512, ellipticity_pot = 0.111111, ellipticity angle (radians) = 0.516617, rcore = 0.003792, rcut = 0.344267,
+ z = 0.308000
+Lenstool Potential[229]: x = -58.328974, y = 30.619080, vdisp = 56.113402, type = 81 
+ 	 ellipticity = 0.280000, ellipticity_pot = 0.142857, ellipticity angle (radians) = -0.008727, rcore = 0.003745, rcut = 0.340028,
+ z = 0.308000
+Lenstool Potential[230]: x = 32.383715, y = 60.421318, vdisp = 55.775901, type = 81 
+ 	 ellipticity = 0.000000, ellipticity_pot = 0.000010, ellipticity angle (radians) = -0.623083, rcore = 0.003700, rcut = 0.335950,
+ z = 0.308000
+Lenstool Potential[231]: x = 28.317921, y = 29.877480, vdisp = 55.705310, type = 81 
+ 	 ellipticity = 0.000000, ellipticity_pot = 0.000010, ellipticity angle (radians) = 0.261799, rcore = 0.003691, rcut = 0.335100,
+ z = 0.308000
+Lenstool Potential[232]: x = -19.374035, y = -42.948000, vdisp = 55.469800, type = 81 
+ 	 ellipticity = 0.384615, ellipticity_pot = 0.200000, ellipticity angle (radians) = -0.727802, rcore = 0.003660, rcut = 0.332273,
+ z = 0.308000
+Lenstool Potential[233]: x = 36.046064, y = -15.875999, vdisp = 54.851259, type = 81 
+ 	 ellipticity = 0.000000, ellipticity_pot = 0.000010, ellipticity angle (radians) = -0.219911, rcore = 0.003579, rcut = 0.324904,
+ z = 0.308000
+Lenstool Potential[234]: x = 21.868641, y = 71.965080, vdisp = 54.814644, type = 81 
+ 	 ellipticity = 0.219512, ellipticity_pot = 0.111111, ellipticity angle (radians) = 0.537561, rcore = 0.003574, rcut = 0.324470,
+ z = 0.308000
+Lenstool Potential[235]: x = -21.236845, y = 34.354797, vdisp = 54.708725, type = 81 
+ 	 ellipticity = 0.280000, ellipticity_pot = 0.142857, ellipticity angle (radians) = 0.403171, rcore = 0.003560, rcut = 0.323218,
+ z = 0.308000
+Lenstool Potential[236]: x = -64.700979, y = 8.099640, vdisp = 54.650809, type = 81 
+ 	 ellipticity = 0.470588, ellipticity_pot = 0.250000, ellipticity angle (radians) = -0.923279, rcore = 0.003552, rcut = 0.322534,
+ z = 0.308000
+Lenstool Potential[237]: x = 44.396174, y = 4.527720, vdisp = 54.608041, type = 81 
+ 	 ellipticity = 0.280000, ellipticity_pot = 0.142857, ellipticity angle (radians) = -1.092576, rcore = 0.003547, rcut = 0.322029,
+ z = 0.308000
+Lenstool Potential[238]: x = -15.504690, y = -21.890880, vdisp = 54.579128, type = 81 
+ 	 ellipticity = 0.324324, ellipticity_pot = 0.166667, ellipticity angle (radians) = 0.966912, rcore = 0.003543, rcut = 0.321688,
+ z = 0.308000
+Lenstool Potential[239]: x = 16.162129, y = 35.196840, vdisp = 54.498757, type = 81 
+ 	 ellipticity = 0.219512, ellipticity_pot = 0.111111, ellipticity angle (radians) = 0.008727, rcore = 0.003533, rcut = 0.320741,
+ z = 0.308000
+Lenstool Potential[240]: x = 4.745145, y = 1.278000, vdisp = 54.409733, type = 81 
+ 	 ellipticity = 0.000000, ellipticity_pot = 0.000010, ellipticity angle (radians) = -0.280998, rcore = 0.003521, rcut = 0.319694,
+ z = 0.308000
+Lenstool Potential[241]: x = -8.786354, y = 12.952080, vdisp = 54.332113, type = 81 
+ 	 ellipticity = 0.470588, ellipticity_pot = 0.250000, ellipticity angle (radians) = 0.664970, rcore = 0.003511, rcut = 0.318783,
+ z = 0.308000
+Lenstool Potential[242]: x = 52.089396, y = 0.796320, vdisp = 54.318353, type = 81 
+ 	 ellipticity = 0.280000, ellipticity_pot = 0.142857, ellipticity angle (radians) = -1.551598, rcore = 0.003509, rcut = 0.318621,
+ z = 0.308000
+Lenstool Potential[243]: x = 35.367841, y = 10.775520, vdisp = 54.244611, type = 81 
+ 	 ellipticity = 0.000000, ellipticity_pot = 0.000010, ellipticity angle (radians) = 0.565487, rcore = 0.003500, rcut = 0.317757,
+ z = 0.308000
+Lenstool Potential[244]: x = -34.057115, y = 16.714800, vdisp = 53.847630, type = 81 
+ 	 ellipticity = 0.000000, ellipticity_pot = 0.000010, ellipticity angle (radians) = 0.918043, rcore = 0.003449, rcut = 0.313123,
+ z = 0.308000
+Lenstool Potential[245]: x = 7.480544, y = 23.185440, vdisp = 53.759670, type = 81 
+ 	 ellipticity = 0.219512, ellipticity_pot = 0.111111, ellipticity angle (radians) = 0.544543, rcore = 0.003437, rcut = 0.312101,
+ z = 0.308000
+Lenstool Potential[246]: x = 32.926664, y = -47.956680, vdisp = 53.591584, type = 81 
+ 	 ellipticity = 0.000000, ellipticity_pot = 0.000010, ellipticity angle (radians) = -0.942478, rcore = 0.003416, rcut = 0.310152,
+ z = 0.308000
+Lenstool Potential[247]: x = 16.613031, y = 22.149000, vdisp = 53.586649, type = 81 
+ 	 ellipticity = 0.753425, ellipticity_pot = 0.454545, ellipticity angle (radians) = -0.015708, rcore = 0.003415, rcut = 0.310095,
+ z = 0.308000
+Lenstool Potential[248]: x = -35.601965, y = -1.527480, vdisp = 53.309744, type = 81 
+ 	 ellipticity = 0.280000, ellipticity_pot = 0.142857, ellipticity angle (radians) = -0.020944, rcore = 0.003380, rcut = 0.306899,
+ z = 0.308000
+Lenstool Potential[249]: x = 54.585711, y = 59.862600, vdisp = 53.225114, type = 81 
+ 	 ellipticity = 0.280000, ellipticity_pot = 0.142857, ellipticity angle (radians) = -0.347321, rcore = 0.003369, rcut = 0.305925,
+ z = 0.308000
+Lenstool Potential[250]: x = 25.362724, y = -20.039040, vdisp = 53.107590, type = 81 
+ 	 ellipticity = 0.470588, ellipticity_pot = 0.250000, ellipticity angle (radians) = 1.082104, rcore = 0.003355, rcut = 0.304576,
+ z = 0.308000
+Lenstool Potential[251]: x = 41.960695, y = 13.571640, vdisp = 53.062364, type = 81 
+ 	 ellipticity = 0.470588, ellipticity_pot = 0.250000, ellipticity angle (radians) = -0.434587, rcore = 0.003349, rcut = 0.304057,
+ z = 0.308000
+Lenstool Potential[252]: x = 22.991521, y = 74.693520, vdisp = 53.058699, type = 81 
+ 	 ellipticity = 0.000000, ellipticity_pot = 0.000010, ellipticity angle (radians) = 0.858702, rcore = 0.003348, rcut = 0.304015,
+ z = 0.308000
+Lenstool Potential[253]: x = 26.474753, y = -30.066120, vdisp = 52.807620, type = 81 
+ 	 ellipticity = 0.280000, ellipticity_pot = 0.142857, ellipticity angle (radians) = 1.431170, rcore = 0.003317, rcut = 0.301145,
+ z = 0.308000
+Lenstool Potential[254]: x = 32.503965, y = 71.185320, vdisp = 52.733500, type = 81 
+ 	 ellipticity = 0.000000, ellipticity_pot = 0.000010, ellipticity angle (radians) = 0.630064, rcore = 0.003308, rcut = 0.300300,
+ z = 0.308000
+Lenstool Potential[255]: x = 191.066311, y = 110.128000, vdisp = 303.479545, type = 81 
+ 	 ellipticity = 0.000000, ellipticity_pot = 0.000010, ellipticity angle (radians) = 0.000000, rcore = 0.000000, rcut = 1736.723885,
+ z = 0.308000
+Lenstool Potential[256]: x = -39.405789, y = 155.696000, vdisp = 296.051139, type = 81 
+ 	 ellipticity = 0.000000, ellipticity_pot = 0.000010, ellipticity angle (radians) = 0.000000, rcore = 0.000000, rcut = 1652.743285,
+ z = 0.308000
+Lenstool Potential[257]: x = -55.479689, y = 91.886700, vdisp = 274.935390, type = 81 
+ 	 ellipticity = 0.000000, ellipticity_pot = 0.000010, ellipticity angle (radians) = 0.000000, rcore = 0.000000, rcut = 1425.388401,
+ z = 0.308000
+INFO: Compute file 2/2 : tmp/Amplif_1.fits [CTRL-C to interrupt]
+WRITE: FITS file: tmp/Amplif_1.fits[200,200] (-60.00:60.00 -60.00:60.00)
+ Time  = 3.90895009040833 2
+ GPU launching for map amplif 0
+grid_size_x = 7, grid_size_y = 13, nbgridcells_x = 200, nbgridcells_y = 200, istart = 0, jstart = 0 (split)
+nhalos = 258, size of shared memory = 20608.000000 (split)
+GPU kernel done...
+GPU kernel done...
+	kernel time = 0.00310397148132324 s.
+WRITE: FITS file: T-1523879239/ampli_5_0.fits[200,200] (-60.00:60.00 -60.00:60.00)
+ Time  0.294373035430908
+ GPU launching for map amplif 1
+grid_size_x = 7, grid_size_y = 13, nbgridcells_x = 200, nbgridcells_y = 200, istart = 0, jstart = 0 (split)
+nhalos = 258, size of shared memory = 20608.000000 (split)
+GPU kernel done...
+GPU kernel done...
+	kernel time = 0.00313091278076172 s.
+WRITE: FITS file: T-1523879239/ampli_5_1.fits[200,200] (-60.00:60.00 -60.00:60.00)
+ Time  0.00891613960266113
+Lenstool Total Time 8.02620601654053
+HPC Total Time  0.303395986557007

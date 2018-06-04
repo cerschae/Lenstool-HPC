@@ -1,0 +1,201 @@
+runmode
+	inverse          0 0.2 350
+	reference        3 177.39873    22.398529
+	verbose          0
+	mass	4 200 0.544 mass.fits 
+	ampli		 5 200 2 ampli.fits 
+	end
+image
+	multfile         1 imawcs_spiral_secured.mul
+	mult_wcs         1
+	forme            -1
+        z_m_limit        1  6   1 2.0 3.0 0.1
+        z_m_limit        2  7   1 2.0 3.0 0.1
+        z_m_limit        3  8   1 2.0 3.0 0.1
+        z_m_limit        4  10   1 1.0 1.5 0.1
+        z_m_limit        5  13   1 1.0 1.5 0.1
+        z_m_limit        6 14   1 2.5 4.0 0.1
+        z_m_limit        7 15   1 2.0 8.0 0.1
+        z_m_limit        8 16   1 1.0 6.0 0.1
+        z_m_limit        9 17   1 1.0 7.0 0.1
+        z_m_limit        10 18   1 1.0 8.0 0.1
+        z_m_limit        11 21   1 2.0 3.0 0.1
+        z_m_limit        12 26   1 0.6 1.5 0.1
+        z_m_limit        13 29   1 2.0 4.0 0.1
+        z_m_limit        14 31   1 2.0 3.0 0.1
+        z_m_limit        15 34   1 2.0 5.0 0.1
+	sigposArcsec     0.5
+	end
+grille
+	nombre           128
+	polaire          0
+	nlentille        217
+	nlens_opt        7
+	nlens_crit       1
+	end
+source
+	z_source         1.25
+	end
+potentiel 1 # halo A
+        profil           81
+        x_centre         0.
+        y_centre         0.
+        ellipticite      0.2
+        angle_pos        34.0
+        v_disp           1000.
+        core_radius_kpc  50.
+        cut_radius_kpc   1000.
+        z_lens           0.544
+        end
+limit 1
+        x_centre         1 -5. 5. 0.1
+        y_centre         1 -5. 5. 0.1
+        ellipticite      1 0.0 0.7 0.1
+        angle_pos        1 0.0 180.0 0.1
+        core_radius  1 1. 35. 0.1
+        v_disp           1 800. 1300. 0.1
+        end
+potentiel 2 # halo B
+        profil           81
+        x_centre         -25.592
+        y_centre         -32.193
+        ellipticite      0.
+        angle_pos        34.0
+        v_disp           1000.
+        core_radius_kpc  50. 
+        cut_radius_kpc   1000.
+        z_lens           0.544
+        end
+limit 2
+        x_centre         1 -30. -20. 0.1
+        y_centre         1 -37. -20. 0.1
+        ellipticite      1 0.0 0.7 0.1
+        angle_pos        1 0.0 180.0 0.1
+        core_radius      1 1. 35. 0.1
+        v_disp           1 100. 1000. 0.1
+        end
+potentiel 3 # halo D
+        profil           81
+        x_centre         19.369
+        y_centre         48.077
+        ellipticite      0.
+        angle_pos        34.0
+        v_disp           1000.
+        core_radius_kpc  50.
+        cut_radius_kpc   1000.
+        z_lens           0.544
+        end
+limit 3
+        x_centre         1 15. 25. 0.1
+        y_centre         1 43. 53. 0.1
+        ellipticite      1 0.0 0.7 0.1
+        angle_pos        1 0.0 180.0 0.1
+        core_radius      1 1. 35. 0.1
+        v_disp           1 0. 1000. 0.1
+        end
+
+potentiel 4 # halo E
+        profil           81
+        x_centre         -17.1
+        y_centre         101.1
+        ellipticite      0.234
+        angle_pos        -66.2
+        v_disp           1000.
+        core_radius_kpc  50.
+        cut_radius_kpc   1000.
+        z_lens           0.544
+        end
+limit 4
+        x_centre         1 -22. -12. 0.1
+        y_centre         1 100. 105. 0.1
+        ellipticite      1 0.0 0.7 0.1
+        angle_pos        1 0.0 180.0 0.1
+        core_radius_kpc  1 2. 300. 0.1
+        v_disp           1 0. 2000. 0.1
+        end
+potentiel 5 # halo Bbis
+        profil           81
+        x_centre         -45.192
+        y_centre         -54.493
+        ellipticite      0.
+        angle_pos        34.0
+        v_disp           1000.
+        core_radius_kpc  50.
+        cut_radius_kpc   1000.
+        z_lens           0.544
+        end
+limit 2
+        x_centre         1 -50. -40. 0.1
+        y_centre         1 -59. -49. 0.1
+        ellipticite      1 0.0 0.7 0.1
+        angle_pos        1 0.0 180.0 0.1
+        core_radius      1 1. 35. 0.1
+        v_disp           1 100. 1000. 0.1
+        end
+potentiel 6 # BCG
+        profil           81
+        x_centre         0.
+        y_centre         0.
+        ellipticite      0.2
+        angle_pos        34.0
+        v_disp           300.
+        core_radius_kpc  1.
+        cut_radius_kpc   50.
+        z_lens           0.544
+        end
+limit 5
+        core_radius_kpc  1 0.1 50. 0.1
+        v_disp           1 150. 450. 0.1
+        cut_radius_kpc   1 30. 300. 0.1
+        end
+potentiel O7 # SN lens
+        profil       81
+        x_centre     3.160
+        y_centre     -11.102
+        ellipticite     0.425
+        angle_pos       134.000
+        core_radius_kpc     0.15
+        cut_radius_kpc     205.613
+        v_disp     310.572
+        z_lens     0.5440
+        end
+limit 6 
+        core_radius_kpc  1 0.1 0.18 0.1
+        v_disp           1 150. 450. 0.1
+        cut_radius_kpc   1 30. 70. 0.1
+        ellipticite      1 0.0 0.7 0.1
+        end
+potfile galaxies
+        filein           1 galaxies_v2.cat
+        zlens            0.544
+        profil           81
+        type             81
+        corekpc          0.15
+        mag0             20.645
+        sigma            1 70. 220.
+        cutkpc           1 10.  70.
+	slope   0 4.
+        vdslope 0 4.
+        end
+cline
+	nplan            3 1.49 1.894 2.497
+	dmax             150.0
+	pas              .1
+	algorithm	 marchingsquare
+	end
+grande
+	iso              0 0 0.0 0.0 0.0
+	name             best
+	profil           0 0
+	contour          1 0
+	large_dist       0.3
+	end
+cosmologie
+        H0               70.
+	omega            0.3
+	lambda           0.7
+	end
+champ
+	dmax 300
+	end
+fini

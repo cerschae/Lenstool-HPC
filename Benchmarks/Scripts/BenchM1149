@@ -1,0 +1,24 @@
+#!/bin/bash
+echo "Starting Bench M1149"
+
+#if recompiling lenstool is needed
+#cd ../Libs/lenstool-6.8.1/
+#make
+
+#Recompile Lenstool-HPC code
+cd ../../src/
+make clean
+make
+
+#Recompile Maps code
+cd ../utils/maps
+make -f Makefile.GPU clean
+make -f Makefile.GPU
+
+#Run Test
+cd ../../Benchmarks/ConfigFiles/hff_slmodels/M1149/m1149_jauzac16
+rm -r tmp
+rm -r Test
+../../../../../utils/maps/Bayesmap_GPU mod.par Test
+
+echo "Finish M1149 test"

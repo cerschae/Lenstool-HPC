@@ -256,7 +256,11 @@ return(grad2);
 
 __device__ matrix module_potentialDerivatives_totalGradient2_14_SOA_GPU(const struct point *pImage, const struct Potential_SOA *lens, int shalos, int nhalos){
 
-	struct matrix grad2, clump, clumpcore, clumpcut;
+	int col = blockIdx.x*blockDim.x + threadIdx.x;
+	int row = blockIdx.y*blockDim.y + threadIdx.y;
+	if(row == 0 && col == 0) printf("Start GPU Grad 14 %f %f\n",lens->anglecos[0],lens->anglesin[0]);
+
+	struct matrix grad2, clump;
 	grad2.a =  0;
 	grad2.b =  0;
 	grad2.c =  0;
@@ -265,10 +269,28 @@ __device__ matrix module_potentialDerivatives_totalGradient2_14_SOA_GPU(const st
 
 	for(int i = shalos; i < shalos + nhalos; i++)
 	{
-		grad2.a += lens->ellipticity[i];
-		grad2.c += -lens->ellipticity[i];
+		type_t cose = lens->anglecos[i];
+		type_t sine = lens->anglesin[i];
+
+		grad2.a += lens->ellipticity_potential[i]*3;
+		grad2.c += -lens->ellipticity_potential[i]*3;
 		//grad2.b = grad2.d = 0;
+
+		//rotation matrix  1
+		clump.a = grad2.a * cose + grad2.b * -sine;
+		clump.b = grad2.a * sine + grad2.b * cose;
+		clump.c = grad2.d * sine + grad2.c * cose;
+		clump.d = grad2.d * cose + grad2.c * -sine;
+		//if(blockIdx.x*blockDim.x + threadIdx.x == 0 && blockIdx.y*blockDim.y + threadIdx.y == 0) printmat_gpu(clumpcut);
+		//rotation matrix  2
+		grad2.a = cose * clump.a + -sine * clump.d;
+		grad2.b = cose * clump.b + -sine * clump.c;
+		grad2.c = sine * clump.b + cose * clump.c;
+		grad2.d = sine * clump.a + cose * clump.d;
 	}
+
+
+
 	return(grad2);
 }
 
@@ -327,10 +349,15 @@ module_potentialDerivatives_totalGradient2_SOA_GPU(type_t *grid_grad2_a, type_t 
 			while (lens->type[shalos + count] == lens_type and shalos + count < nhalos) count++;
 			//
 			//if(row == 0 && col == 0) printf("point = %d \n", lens_type );
+			//if(row == 0 && col == 0) printf("point = %f \n", lens->ellipticity_potential[0] );
 			//if(row == 0 && col == 0) printf("point = %p \n", halo_func2_GPU[81] );
 			//
 			//clumpgrad = (*halo_func2_GPU[lens_type])(&image_point, lens, shalos, count);
-			clumpgrad = module_potentialDerivatives_totalGradient2_81_SOA_GPU(&image_point, lens, shalos, count);
+			//clumpgrad = module_potentialDerivatives_totalGradient2_81_SOA_GPU(&image_point, lens, shalos, count);
+
+			if(lens_type == 81) clumpgrad = module_potentialDerivatives_totalGradient2_81_SOA_GPU(&image_point, lens, shalos, count);
+			else if(lens_type == 14) clumpgrad = module_potentialDerivatives_totalGradient2_14_SOA_GPU(&image_point, lens, shalos, count);
+			else if(row == 0 && col == 0) printf("No kernel selected \n");
 
 			//
 			grad.a += clumpgrad.a;
@@ -412,7 +439,7 @@ module_potentialDerivatives_Kmap_SOA_GPU(type_t *grid_grad2_a, type_t *grid_grad
 	//
 	int col = blockIdx.x*blockDim.x + threadIdx.x;
 	int row = blockIdx.y*blockDim.y + threadIdx.y;
-	if(row == 0 && col == 0) printf("Start GPU \n");
+	//if(row == 0 && col == 0) printf("Start GPU \n");
 
 	//
 	if ((row + jstart < nbgridcells_y) && (col + istart < nbgridcells_x))
@@ -447,7 +474,9 @@ module_potentialDerivatives_Kmap_SOA_GPU(type_t *grid_grad2_a, type_t *grid_grad
 //if(row == 0 && col == 0) printf("point = %p \n", halo_func2_GPU[lens_type] );
 //
 //clumpgrad = (*halo_func2_GPU[lens_type])(&image_point, lens, shalos, count);
-			clumpgrad = module_potentialDerivatives_totalGradient2_81_SOA_GPU(&image_point, lens, shalos, count);
+			if(lens_type == 81) clumpgrad = module_potentialDerivatives_totalGradient2_81_SOA_GPU(&image_point, lens, shalos, count);
+			else if(lens_type == 14) clumpgrad = module_potentialDerivatives_totalGradient2_14_SOA_GPU(&image_point, lens, shalos, count);
+			else if(row == 0 && col == 0) printf("No kernel selected \n");
 			//
 			grad.a += clumpgrad.a*dlsds;
 			grad.b += clumpgrad.b*dlsds;

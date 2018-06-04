@@ -1,0 +1,201 @@
+#Chi2tot: 150.084066
+#Chi2pos: 150.084066
+#Chi2_vel: 0.000000
+#Chi2_mass: 0.000000
+#Chi2formex: 0.000000
+#Chi2formey: 0.000000
+#Chi2l: 0.000000
+#log(Evidence) : -154.201248
+runmode
+	reference     3 3.586259 -30.400174
+	image     0 
+	source    0 
+	inverse   3 0.200000 1000
+	end
+image
+	multfile    29 img_mul_constraints.cat
+	forme       -2
+	mult_wcs    1
+	sigposArcsec   0.500000
+	end
+grille
+	nombre      128
+	polaire     0
+	nlentille   258
+	nlens_opt   6
+	end
+potentiel O1
+	profil       81
+	x_centre     -2.076312
+	y_centre     1.388524
+	ellipticite     0.828247
+	angle_pos       90.533509
+	core_radius_kpc     85.050453
+	cut_radius_kpc     1000.000000
+	v_disp     607.070068
+	z_lens     0.3080
+	end
+limit O1
+	x_centre     3 -2.270524 0.890185 0.000000
+	y_centre     3 1.226934 0.829535 0.000000
+	ellipticite     3 0.848200 0.040196 0.000000
+	angle_pos     3 90.295370 3.303912 0.100000
+	core_radius_kpc     3 94.140672 14.622153 0.010000
+	v_disp    3 604.870943 16.387841 0.000000
+	end
+potentiel O2
+	profil       81
+	x_centre     -17.731515
+	y_centre     -15.716566
+	ellipticite     0.506974
+	angle_pos       45.172907
+	core_radius_kpc     48.138721
+	cut_radius_kpc     1000.000000
+	v_disp     742.806183
+	z_lens     0.3080
+	end
+limit O2
+	x_centre     3 -17.595168 0.794675 0.000000
+	y_centre     3 -15.691437 1.095363 0.000000
+	ellipticite     3 0.501661 0.062148 0.000000
+	angle_pos     3 43.995962 3.203777 0.100000
+	core_radius_kpc     3 49.128367 12.090357 0.010000
+	v_disp    3 746.821543 53.416231 0.100000
+	end
+potentiel O3
+	profil       81
+	x_centre     -3.577000
+	y_centre     24.718000
+	ellipticite     0.720000
+	angle_pos       -33.000000
+	core_radius_kpc     0.115000
+	cut_radius_kpc     13.224000
+	v_disp     175.555629
+	mag		  20.020000
+	z_lens     0.3080
+	end
+limit O3
+	v_disp    3 184.418078 33.720065 0.500000
+	end
+potentiel O4
+	profil       81
+	x_centre     0.000000
+	y_centre     0.000000
+	ellipticite     0.205000
+	angle_pos       -76.000000
+	core_radius_kpc     0.336000
+	cut_radius_kpc     28.470000
+	v_disp     355.175951
+	mag		  17.690000
+	z_lens     0.3080
+	end
+limit O4
+	v_disp    3 359.534631 32.035407 0.100000
+	end
+potentiel O5
+	profil       81
+	x_centre     -17.945000
+	y_centre     -19.967000
+	ellipticite     0.377000
+	angle_pos       14.800000
+	core_radius_kpc     0.348000
+	cut_radius_kpc     29.538000
+	v_disp     321.651661
+	mag		  17.610000
+	z_lens     0.3080
+	end
+limit O5
+	v_disp    3 321.197115 41.890774 0.100000
+	end
+potentiel O6
+	profil       81
+	x_centre     -12.701000
+	y_centre     -0.782000
+	ellipticite     0.299000
+	angle_pos       -46.600000
+	core_radius_kpc     0.146000
+	cut_radius_kpc     6.807466
+	v_disp     10.566560
+	mag		  19.500000
+	z_lens     0.3080
+	end
+limit O6
+	cut_radius_kpc     3 58.931755 58.931755 0.100000
+	v_disp    3 31.289983 31.289983 0.100000
+	end
+potfile0
+	filein  1 potfile_cl_N-NW-S3.txt
+	zlens   0.308000
+	type    81
+	corekpc 0.000000
+	mag0    27.000000
+	sigma   3 209.564668 18.196805
+	cutkpc  0 300.000000 0.000000
+	slope   0 4.000000 4.200000
+	vdslope 0 4.000000 0.000000
+	vdscatter 0 0.000000 0.000000
+	rcutscatter 0 0.000000 0.000000
+	end
+potfile1
+	filein  1 new_potfile_with_ASTRODEEP_data.txt
+	zlens   0.308000
+	type    81
+	corekpc 0.150000
+	mag0    19.440000
+	sigma   3 155.468261 15.020037
+	cutkpc  3 13.692444 2.314133
+	slope   0 4.000000 4.200000
+	vdslope 0 4.000000 0.000000
+	vdscatter 0 0.000000 0.000000
+	rcutscatter 0 0.000000 0.000000
+	end
+potfile2
+	filein  1 potfile_cl_S1-S2-S4.txt
+	zlens   0.308000
+	type    81
+	corekpc 0.000000
+	mag0    27.000000
+	sigma   3 82.722120 26.781103
+	cutkpc  0 600.000000 0.000000
+	slope   0 4.000000 4.200000
+	vdslope 0 4.000000 0.000000
+	vdscatter 0 0.000000 0.000000
+	rcutscatter 0 0.000000 0.000000
+	end
+cline
+	nplan    0
+	dmax     40.000000
+	algorithm   MARCHINGSQUARES
+	limitHigh   10.0
+	limitLow    3.000000
+	end
+grande
+	iso         0 0 0.000000 0.000000 0.000000
+	name        best
+	profil      0 0
+	contour     1 0
+	large_dist  0.300000
+	end
+cosmologie
+	model       1
+	H0         70.000000
+	omegaM     0.300000
+	omegaX     0.700000
+	omegaK     0.
+	wX         -1.000000
+	wa         0.000000
+	end
+cosmolimit
+	omegaM		0 0.000000 0.000000
+	omegaX		0 0.000000 0.000000
+	wX		0 0.000000 0.000000
+	wa 	0 0.000000 0.000000
+	end
+champ
+	xmin     -60.000000
+	xmax     60.000000
+	ymin     -60.000000
+	ymax     60.000000
+	end
+	end
+fini

@@ -1,0 +1,25 @@
+#!/bin/bash
+echo "Starting Bench A370"
+
+#if recompiling lenstool is needed
+#cd ../Libs/lenstool-6.8.1/
+#make
+
+#Recompile Lenstool-HPC code
+cd ../../src/
+make clean
+make
+
+#Recompile Maps code
+cd ../utils/maps
+make -f Makefile.GPU clean
+make -f Makefile.GPU
+
+#Run Test
+cd ../../Benchmarks/ConfigFiles/hff_slmodels/A370
+rm -r tmp
+rm -r Test
+../../../../utils/maps/Bayesmap_GPU A370_multiplane.par Test
+
+echo "Finish A370 test"
+

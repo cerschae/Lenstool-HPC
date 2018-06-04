@@ -1,0 +1,140 @@
+#Chi2tot: 66.691125
+#Chi2pos: 66.691125
+#Chi2_vel: 0.000000
+#Chi2_mass: 0.000000
+#Chi2formex: 0.000000
+#Chi2formey: 0.000000
+#Chi2l: 0.000000
+#log(Evidence): -103.091601
+runmode
+	reference     3 342.183220 -44.530889
+	image     0 
+	source    0 
+	inverse   3 0.200000 100
+	end
+image
+	multfile    27 mul_silver.cat
+	forme       -2
+	z_m_limit  1 3.0 3 2.157891 0.329137 0.0100 
+	z_m_limit  2 8.0 3 2.763501 0.251890 0.0100 
+	z_m_limit  3 9.0 3 2.779699 0.228681 0.0100 
+	z_m_limit  4 43.0 3 1.593560 0.103921 0.0100 
+	z_m_limit  5 141.0 3 3.373761 0.464934 0.0100 
+	z_m_limit  6 142.0 3 3.088656 0.483175 0.0100 
+	z_m_limit  7 143.0 3 3.230556 0.450631 0.0100 
+	z_m_limit  8 144.0 3 3.242178 0.507973 0.0100 
+	mult_wcs    1
+	sigposArcsec   0.500000
+	end
+grille
+	nombre      512
+	polaire     0
+	nlentille   264
+	nlens_opt   4
+	end
+potentiel O1
+	profil       81
+	x_centre     0.000000
+	y_centre     0.000000
+	ellipticite     0.510685
+	angle_pos       -35.641805
+	core_radius_kpc     97.661288
+	cut_radius_kpc     1000.000000
+	v_disp     1219.808191
+	z_lens     0.3475
+	end
+limit O1
+	ellipticite     3 0.513673 0.033130 0.000000
+	angle_pos     3 -35.730483 1.294172 0.010000
+	core_radius_kpc     3 97.846139 13.933189 0.010000
+	v_disp    3 1219.925618 44.271168 0.100000
+	end
+potentiel O2
+	profil       14
+	gamma     0.1043
+	angle_pos     49.7303
+	kappa         0.0000
+	z_lens     0.3475
+	end
+limit O2
+	gamma     3 0.101385 0.035977 0.000000
+	angle_pos     3 49.831953 3.792211 0.100000
+	end
+potentiel O3
+	profil       81
+	x_centre     0.006000
+	y_centre     0.037000
+	ellipticite     0.271000
+	angle_pos       -35.000000
+	core_radius_kpc     0.508000
+	cut_radius_kpc     169.485000
+	v_disp     294.146846
+	mag		  17.037000
+	z_lens     0.3475
+	end
+limit O3
+	v_disp    3 289.482592 50.581245 0.010000
+	end
+potentiel O4
+	profil       81
+	x_centre     -22.973630
+	y_centre     33.233498
+	ellipticite     0.000000
+	angle_pos       0.000000
+	core_radius_kpc     49.167916
+	cut_radius_kpc     500.000000
+	v_disp     206.505964
+	mag		  20.496000
+	z_lens     0.3475
+	end
+limit O4
+	x_centre     3 -25.413798 13.329979 0.100000
+	y_centre     3 33.512815 10.788711 0.100000
+	v_disp    3 212.542248 34.501805 0.010000
+	end
+potfile0
+	filein  1 ref_potential_w_clumpNE.cat
+	zlens   0.347500
+	type    81
+	corekpc 0.150000
+	mag0    19.687500
+	sigma   3 102.103365 17.702845
+	cutkpc  0 45.000000 100.000000
+	slope   0 4.000000 4.200000
+	vdslope 0 4.000000 0.000000
+	vdscatter 0 0.000000 0.000000
+	rcutscatter 0 0.000000 0.000000
+	end
+cline
+	nplan    0
+	dmax     100.000000
+	algorithm   MARCHINGSQUARES
+	limitHigh   1.0
+	limitLow    0.200000
+	end
+grande
+	iso         0 0 0.000000 0.000000 0.000000
+	name        best
+	profil      0 0
+	contour     1 0
+	large_dist  0.300000
+	end
+cosmologie
+	model       1
+	H0         70.000000
+	omegaM     0.300000
+	omegaX     0.700000
+	omegaK     0.
+	wX         -1.000000
+	wa         0.000000
+	end
+cosmolimit
+	omegaM		0 0.000000 0.000000
+	omegaX		0 0.000000 0.000000
+	wX		0 0.000000 0.000000
+	wa 	0 0.000000 0.000000
+	end
+champ
+        dmax 150.0
+	end
+fini

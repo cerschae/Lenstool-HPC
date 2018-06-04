@@ -273,6 +273,7 @@ struct Potential_SOA
 	type_t* anglesin; //theta
 	type_t* sigma; // sigma
 	type_t* dlsds; // dls/dos (for Kmapping purposes
+	int* SOA_index; //for bayes map purposes, it contains at the ith position the position in the SOA list of potential[i]
 };
 
 
@@ -398,6 +399,7 @@ struct runmode_param
 	int		time;
 	  //SOA variables
 	 int Nlens[NTYPES];
+
 	 std::string    imagefile;
 	 std::string 	potfilename[N_MAX_POTFILE];
 	 std::string    sourfile;

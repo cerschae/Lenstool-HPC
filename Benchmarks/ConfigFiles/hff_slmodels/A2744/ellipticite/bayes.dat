@@ -1,0 +1,47 @@
+#Nsample
+#ln(Lhood)
+#O1 : x (arcsec)
+#O1 : y (arcsec)
+#O1 : emass
+#O1 : theta (deg)
+#O1 : sigma (km/s)
+#O2 : x (arcsec)
+#O2 : y (arcsec)
+#O2 : emass
+#O2 : theta (deg)
+#O2 : sigma (km/s)
+#O3 : sigma (km/s)
+#O4 : sigma (km/s)
+#O5 : sigma (km/s)
+#O6 : sigma (km/s)
+#O7 : emass
+#O8 : emass
+#O9 : emass
+#O10 : emass
+#O11 : emass
+#O12 : emass
+#O13 : emass
+#O14 : emass
+#O15 : emass
+#O16 : emass
+#O17 : emass
+#O18 : emass
+#O19 : emass
+#O20 : emass
+#O21 : emass
+#O22 : emass
+#O23 : emass
+#O24 : emass
+#O25 : emass
+#O26 : emass
+#O27 : emass
+#O28 : emass
+#O29 : emass
+#O30 : emass
+#O31 : emass
+#O32 : emass
+#Pot0 sigma (km/s)
+#Pot1 rcut (arcsec)
+#Pot1 sigma (km/s)
+#Pot2 sigma (km/s)
+#Chi2

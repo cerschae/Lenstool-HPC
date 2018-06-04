@@ -148,8 +148,8 @@ int module_readCheckInput_readInput(int argc, char *argv[], std::string *outdir)
 	//
 	//std::string outdir = argv[2];
 	*outdir = argv[2];
-	*outdir += "-";
-	*outdir += trimstamp;
+	//*outdir += "-";
+	//*outdir += trimstamp;
 	std::cout << *outdir << std::endl;
 
 	// check whether the output directory already exists

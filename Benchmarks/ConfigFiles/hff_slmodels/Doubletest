@@ -1,0 +1,42 @@
+#!/bin/bash
+echo "Starting Double test"
+
+#if recompiling lenstool is needed
+cd ../Libs/lenstool-6.8.1/
+make
+
+cd ../../lenstool-hpc
+
+#cd ../lenstool-hpc
+
+cd src/
+make  clean
+make
+
+#cd ../Benchmarks/GridGradient2Benchmark
+#cd ../Benchmarks/MappingBenchmark
+cd ../utils/maps
+make -f Makefile.GPU clean
+make -f Makefile.GPU
+
+
+#cd /users/cerschae/hff_slmodels/A2744
+#rm -r tmp
+#../../lenstool-hpc/utils/maps/Bayesmap_GPU A2744_SLspec.par T 
+
+cd /users/cerschae/hff_slmodels/A370
+rm -r tmp
+../../lenstool-hpc/utils/maps/Bayesmap_GPU A370_multiplane.par T
+
+#./Bayesmap_GPU m1931.par T
+#./GridGradient_GPU ../ConfigFiles/TestResultParameter.par T
+#./ChiBenchmark_GPU ../ConfigFiles/MarkusBenchmark.par T
+#./ChiBenchmark_GPU ../ConfigFiles/MarkusBenchmark1SIS.par T
+
+#cd ../Benchmarks/GradientBenchmark
+#make -f Makefile clean
+#make -f MakefileDouble
+#./GradientBenchmark
+
+echo "Finish Double test"
+

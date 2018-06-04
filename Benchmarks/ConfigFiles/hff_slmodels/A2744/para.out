@@ -1,0 +1,2024 @@
+runmode
+	reference	3 3.586259 -30.400174 3.586259 -30.400174
+	inverse	0 0
+	mass	4 200 0.308000 mass_4
+	ampli	5 200 1000.000000 ampli_5
+	end
+image
+	multfile	100 img_mul_constraints.cat
+	forme		-2
+	mult_wcs	1
+	sigposArcsec		0.500000
+	end
+grille
+	nombre		128
+	polaire		0
+	nlentille	258
+	nlens_opt	6
+	end
+source
+	z_source	0.800000
+	end
+potentiel	O1
+0
+	profil		81
+	x_centre	-1.627000
+	y_centre	-1.047000
+	ellipticite	0.882000
+	angle_pos	86.855000
+	core_radius_kpc	95.735000
+	cut_radius_kpc	1000.000000
+	v_disp		618.283000
+	z_lens		0.308000
+	end
+limit	O1
+0
+	x_centre	3 -1.588000 0.906000 0.000000
+	y_centre	1 -0.500000 1.500000 0.000000
+	ellipticite	3 0.879000 0.020000 0.000000
+	angle_pos	3 1.510582 0.104720 0.001745
+	core_radius_kpc	3 93.702000 7.677000 0.010000
+	v_disp		1 600.000000 725.000000 0.000000
+	end
+potentiel	O2
+1
+	profil		81
+	x_centre	-17.331000
+	y_centre	-17.137000
+	ellipticite	0.552000
+	angle_pos	44.069000
+	core_radius_kpc	58.878000
+	cut_radius_kpc	1000.000000
+	v_disp		847.036000
+	z_lens		0.308000
+	end
+limit	O2
+1
+	x_centre	3 -17.279000 0.354000 0.000000
+	y_centre	1 -17.300000 -13.000000 0.000000
+	ellipticite	1 0.250000 0.550000 0.000000
+	angle_pos	3 0.771662 0.087266 0.001745
+	core_radius_kpc	3 50.000000 10.000000 0.010000
+	v_disp		1 600.000000 850.000000 0.100000
+	end
+potentiel	O4
+2
+	profil		81
+	x_centre	-3.577000
+	y_centre	24.718000
+	ellipticite	0.720000
+	angle_pos	-33.000000
+	core_radius_kpc	0.115000
+	cut_radius_kpc	13.224000
+	v_disp		204.401000
+	mag		20.020000
+	z_lens		0.308000
+	end
+limit	O4
+2
+	v_disp		3 201.608000 80.000000 0.500000
+	end
+potentiel	O5
+3
+	profil		81
+	x_centre	0.000000
+	y_centre	0.000000
+	ellipticite	0.205000
+	angle_pos	-76.000000
+	core_radius	0.074000
+	core_radius_kpc	0.336000
+	cut_radius	6.277000
+	cut_radius_kpc	28.470000
+	v_disp		305.680000
+	mag		17.690000
+	z_lens		0.308000
+	end
+limit	O5
+3
+	v_disp		1 200.000000 500.000000 0.100000
+	end
+potentiel	O6
+4
+	profil		81
+	x_centre	-17.945000
+	y_centre	-19.967000
+	ellipticite	0.377000
+	angle_pos	14.800000
+	core_radius	0.077000
+	core_radius_kpc	0.348000
+	cut_radius	6.512000
+	cut_radius_kpc	29.538000
+	v_disp		311.363000
+	mag		17.610000
+	z_lens		0.308000
+	end
+limit	O6
+4
+	v_disp		1 50.000000 700.000000 0.100000
+	end
+potentiel	O7
+5
+	profil		81
+	x_centre	-12.701000
+	y_centre	-0.782000
+	ellipticite	0.299000
+	angle_pos	-46.600000
+	core_radius_kpc	0.146000
+	cut_radius_kpc	30.401000
+	v_disp		189.825000
+	mag		19.500000
+	z_lens		0.308000
+	end
+limit	O7
+5
+	cut_radius_kpc	1 0.000000 150.000000 0.100000
+	v_disp		1 0.000000 250.000000 0.100000
+	end
+potfile
+	filein	1 potfile_cl_N-NW-S3.txt
+	zlens	0.308000
+	type	81
+	corekpc	150.000000
+	mag0	27.000000
+	sigma	1 10.000000 300.000000
+	cutkpc	0 300.000000 0.000000
+	slope	0 4.000000 4.200000
+	vdslope	0 4.000000 0.000000
+	vdscatter	0 0.000000 0.000000
+	rcutscatter	0 0.000000 0.000000
+	end
+potfile0
+	filein	1 new_potfile_with_ASTRODEEP_data.txt
+	zlens	0.308000
+	type	81
+	corekpc	0.150000
+	mag0	19.440000
+	sigma	1 120.000000 208.000000
+	cutkpc	3 12.716939 0.924764
+	slope	0 4.000000 4.200000
+	vdslope	0 4.000000 0.000000
+	vdscatter	0 0.000000 0.000000
+	rcutscatter	0 0.000000 0.000000
+	end
+potfile
+	filein	1 potfile_cl_S1-S2-S4.txt
+	zlens	0.308000
+	type	81
+	corekpc	400.000000
+	mag0	27.000000
+	sigma	1 10.000000 300.000000
+	cutkpc	0 600.000000 0.000000
+	slope	0 4.000000 4.200000
+	vdslope	0 4.000000 0.000000
+	vdscatter	0 0.000000 0.000000
+	rcutscatter	0 0.000000 0.000000
+	end
+cline
+	nplan		0
+	dmax		40.000000
+	algorithm		MARCHINGSQUARES
+	limitHigh		10.000000
+	limitLow		3.000000
+	end
+grande
+	iso	0 0 0.000000 0.000000 0.000000
+	name	best
+	profil	0 0
+	contour	1 0
+	large_dist	0.300000
+	end
+cosmologie
+	model	1
+	H0	70.000000
+	omegaM	0.300000
+	omegaX	0.700000
+	omegaK	0.000000
+	wX	-1.000000
+	wa	0.000000
+	kcourb	0.000000
+	end
+cosmolimit
+	omegaM	0 0.000000 0.000000
+	omegaX	0 0.000000 0.000000
+	wX	0 0.000000 0.000000
+	wa	0 0.000000 0.000000
+	end
+champ
+	xmin	-60.000000
+	xmax	60.000000
+	ymin	-60.000000
+	ymax	60.000000
+	end
+fini
+For z_s = 0.8000  DLS/DS:0.5610
+DLS:0.2029(lt) 868.86(Mpc) DOS:0.3616(lt) 1548.71(Mpc)
+DOL:0.2184(lt) 935.57(Mpc) DOL_lum:0.3737(lt) 1600.63(Mpc)
+Mcrit:3.167718e-03 (10^12 Msol/kpc^2)
+Conversion Factor @ z = 0.308000, 1 arcsec == 4.536 kpc
+Number of Clumps: 258
+-------- Clump O1: PIEMD Kovner, truncated
+ Total mass: 462.917316(cor) 382.396531 (10^12 M_sol)
+ rcut:220.47(") 1000.00(kpc)
+ vdisp:618.28(km/s) b0:16.5371
+ rc:21.11(") 95.73(kpc)
+ rt:220.47(") 1000.00(kpc)
+ r_ct:0.0000 r_cr:0.0000
+-------- Clump O2: PIEMD Kovner, truncated
+ Total mass: 868.825487(cor) 742.681626 (10^12 M_sol)
+ rcut:220.47(") 1000.00(kpc)
+ vdisp:847.04(km/s) b0:31.0376
+ rc:12.98(") 58.88(kpc)
+ rt:220.47(") 1000.00(kpc)
+ r_ct:0.0000 r_cr:0.0000
+-------- Clump O3: PIEMD Kovner, truncated
+ Total mass: 0.669049(cor) 0.600362 (10^12 M_sol)
+ rcut:2.92(") 13.22(kpc)
+ vdisp:204.40(km/s) b0:1.8074
+ rc:0.03(") 0.12(kpc)
+ rt:2.92(") 13.22(kpc)
+ r_ct:0.0000 r_cr:0.0000
+-------- Clump O4: PIEMD Kovner, truncated
+ Total mass: 3.221442(cor) 2.881847 (10^12 M_sol)
+ rcut:6.28(") 28.47(kpc)
+ vdisp:305.68(km/s) b0:4.0422
+ rc:0.07(") 0.34(kpc)
+ rt:6.28(") 28.47(kpc)
+ r_ct:0.0000 r_cr:0.0000
+-------- Clump O5: PIEMD Kovner, truncated
+ Total mass: 3.467719(cor) 3.102225 (10^12 M_sol)
+ rcut:6.51(") 29.54(kpc)
+ vdisp:311.36(km/s) b0:4.1939
+ rc:0.08(") 0.35(kpc)
+ rt:6.51(") 29.54(kpc)
+ r_ct:0.0000 r_cr:0.0000
+-------- Clump O6: PIEMD Kovner, truncated
+ Total mass: 1.326550(cor) 1.194975 (10^12 M_sol)
+ rcut:6.70(") 30.40(kpc)
+ vdisp:189.82(km/s) b0:1.5588
+ rc:0.03(") 0.15(kpc)
+ rt:6.70(") 30.40(kpc)
+ r_ct:0.0000 r_cr:0.0000
+-------- Clump S3: PIEMD Kovner, truncated
+ Total mass: 3.451587(cor) 2.082781 (10^12 M_sol)
+ rcut:644.70(") 2924.19(kpc)
+ vdisp:31.22(km/s) b0:0.0422
+ rc:322.35(") 1462.10(kpc)
+ rt:644.70(") 2924.19(kpc)
+ r_ct:0.0000 r_cr:0.0000
+-------- Clump NW: PIEMD Kovner, truncated
+ Total mass: 4.033576(cor) 2.433969 (10^12 M_sol)
+ rcut:696.93(") 3161.12(kpc)
+ vdisp:32.46(km/s) b0:0.0456
+ rc:348.47(") 1580.56(kpc)
+ rt:696.93(") 3161.12(kpc)
+ r_ct:0.0000 r_cr:0.0000
+-------- Clump N: PIEMD Kovner, truncated
+ Total mass: 3.139613(cor) 1.894528 (10^12 M_sol)
+ rcut:614.87(") 2788.91(kpc)
+ vdisp:30.49(km/s) b0:0.0402
+ rc:307.44(") 1394.45(kpc)
+ rt:614.87(") 2788.91(kpc)
+ r_ct:0.0000 r_cr:0.0000
+-------- Clump 1439.0: PIEMD Kovner, truncated
+ Total mass: 0.920315(cor) 0.823304 (10^12 M_sol)
+ rcut:5.71(") 25.91(kpc)
+ vdisp:171.28(km/s) b0:1.2690
+ rc:0.07(") 0.31(kpc)
+ rt:5.71(") 25.91(kpc)
+ r_ct:0.0000 r_cr:0.0000
+-------- Clump 1412.0: PIEMD Kovner, truncated
+ Total mass: 0.782230(cor) 0.699774 (10^12 M_sol)
+ rcut:5.27(") 23.88(kpc)
+ vdisp:164.45(km/s) b0:1.1700
+ rc:0.06(") 0.28(kpc)
+ rt:5.27(") 23.88(kpc)
+ r_ct:0.0000 r_cr:0.0000
+-------- Clump 1061.0: PIEMD Kovner, truncated
+ Total mass: 0.626328(cor) 0.560306 (10^12 M_sol)
+ rcut:4.71(") 21.37(kpc)
+ vdisp:155.57(km/s) b0:1.0469
+ rc:0.06(") 0.25(kpc)
+ rt:4.71(") 21.37(kpc)
+ r_ct:0.0000 r_cr:0.0000
+-------- Clump 1305.0: PIEMD Kovner, truncated
+ Total mass: 0.527630(cor) 0.472011 (10^12 M_sol)
+ rcut:4.32(") 19.62(kpc)
+ vdisp:149.04(km/s) b0:0.9609
+ rc:0.05(") 0.23(kpc)
+ rt:4.32(") 19.62(kpc)
+ r_ct:0.0000 r_cr:0.0000
+-------- Clump 1237.0: PIEMD Kovner, truncated
+ Total mass: 0.495991(cor) 0.443708 (10^12 M_sol)
+ rcut:4.19(") 19.02(kpc)
+ vdisp:146.75(km/s) b0:0.9316
+ rc:0.05(") 0.22(kpc)
+ rt:4.19(") 19.02(kpc)
+ r_ct:0.0000 r_cr:0.0000
+-------- Clump 951.0: PIEMD Kovner, truncated
+ Total mass: 0.448078(cor) 0.400846 (10^12 M_sol)
+ rcut:3.99(") 18.08(kpc)
+ vdisp:143.07(km/s) b0:0.8855
+ rc:0.05(") 0.21(kpc)
+ rt:3.99(") 18.08(kpc)
+ r_ct:0.0000 r_cr:0.0000
+-------- Clump 1359.0: PIEMD Kovner, truncated
+ Total mass: 0.430402(cor) 0.385032 (10^12 M_sol)
+ rcut:3.91(") 17.72(kpc)
+ vdisp:141.64(km/s) b0:0.8679
+ rc:0.05(") 0.21(kpc)
+ rt:3.91(") 17.72(kpc)
+ r_ct:0.0000 r_cr:0.0000
+-------- Clump 1596.0: PIEMD Kovner, truncated
+ Total mass: 0.410274(cor) 0.367026 (10^12 M_sol)
+ rcut:3.81(") 17.30(kpc)
+ vdisp:139.95(km/s) b0:0.8473
+ rc:0.04(") 0.20(kpc)
+ rt:3.81(") 17.30(kpc)
+ r_ct:0.0000 r_cr:0.0000
+-------- Clump 1916.0: PIEMD Kovner, truncated
+ Total mass: 0.396090(cor) 0.354338 (10^12 M_sol)
+ rcut:3.75(") 17.00(kpc)
+ vdisp:138.73(km/s) b0:0.8325
+ rc:0.04(") 0.20(kpc)
+ rt:3.75(") 17.00(kpc)
+ r_ct:0.0000 r_cr:0.0000
+-------- Clump 1127.0: PIEMD Kovner, truncated
+ Total mass: 0.296698(cor) 0.265422 (10^12 M_sol)
+ rcut:3.24(") 14.71(kpc)
+ vdisp:129.06(km/s) b0:0.7206
+ rc:0.04(") 0.17(kpc)
+ rt:3.24(") 14.71(kpc)
+ r_ct:0.0000 r_cr:0.0000
+-------- Clump 1432.0: PIEMD Kovner, truncated
+ Total mass: 0.272580(cor) 0.243847 (10^12 M_sol)
+ rcut:3.11(") 14.10(kpc)
+ vdisp:126.35(km/s) b0:0.6906
+ rc:0.04(") 0.17(kpc)
+ rt:3.11(") 14.10(kpc)
+ r_ct:0.0000 r_cr:0.0000
+-------- Clump 1765.0: PIEMD Kovner, truncated
+ Total mass: 0.259223(cor) 0.231898 (10^12 M_sol)
+ rcut:3.03(") 13.75(kpc)
+ vdisp:124.78(km/s) b0:0.6735
+ rc:0.04(") 0.16(kpc)
+ rt:3.03(") 13.75(kpc)
+ r_ct:0.0000 r_cr:0.0000
+-------- Clump 1317.0: PIEMD Kovner, truncated
+ Total mass: 0.253509(cor) 0.226787 (10^12 M_sol)
+ rcut:3.00(") 13.60(kpc)
+ vdisp:124.08(km/s) b0:0.6661
+ rc:0.04(") 0.16(kpc)
+ rt:3.00(") 13.60(kpc)
+ r_ct:0.0000 r_cr:0.0000
+-------- Clump 2124.0: PIEMD Kovner, truncated
+ Total mass: 0.241810(cor) 0.216320 (10^12 M_sol)
+ rcut:2.93(") 13.28(kpc)
+ vdisp:122.63(km/s) b0:0.6505
+ rc:0.03(") 0.16(kpc)
+ rt:2.93(") 13.28(kpc)
+ r_ct:0.0000 r_cr:0.0000
+-------- Clump 1787.0: PIEMD Kovner, truncated
+ Total mass: 0.241498(cor) 0.216042 (10^12 M_sol)
+ rcut:2.93(") 13.27(kpc)
+ vdisp:122.59(km/s) b0:0.6501
+ rc:0.03(") 0.16(kpc)
+ rt:2.93(") 13.27(kpc)
+ r_ct:0.0000 r_cr:0.0000
+-------- Clump 1261.0: PIEMD Kovner, truncated
+ Total mass: 0.236981(cor) 0.212001 (10^12 M_sol)
+ rcut:2.90(") 13.15(kpc)
+ vdisp:122.01(km/s) b0:0.6440
+ rc:0.03(") 0.16(kpc)
+ rt:2.90(") 13.15(kpc)
+ r_ct:0.0000 r_cr:0.0000
+-------- Clump 1886.0: PIEMD Kovner, truncated
+ Total mass: 0.215057(cor) 0.192388 (10^12 M_sol)
+ rcut:2.76(") 12.52(kpc)
+ vdisp:119.08(km/s) b0:0.6135
+ rc:0.03(") 0.15(kpc)
+ rt:2.76(") 12.52(kpc)
+ r_ct:0.0000 r_cr:0.0000
+-------- Clump 1704.0: PIEMD Kovner, truncated
+ Total mass: 0.213695(cor) 0.191169 (10^12 M_sol)
+ rcut:2.75(") 12.48(kpc)
+ vdisp:118.89(km/s) b0:0.6115
+ rc:0.03(") 0.15(kpc)
+ rt:2.75(") 12.48(kpc)
+ r_ct:0.0000 r_cr:0.0000
+-------- Clump 971.0: PIEMD Kovner, truncated
+ Total mass: 0.207565(cor) 0.185685 (10^12 M_sol)
+ rcut:2.71(") 12.30(kpc)
+ vdisp:118.03(km/s) b0:0.6027
+ rc:0.03(") 0.15(kpc)
+ rt:2.71(") 12.30(kpc)
+ r_ct:0.0000 r_cr:0.0000
+-------- Clump 1579.0: PIEMD Kovner, truncated
+ Total mass: 0.202765(cor) 0.181392 (10^12 M_sol)
+ rcut:2.68(") 12.16(kpc)
+ vdisp:117.34(km/s) b0:0.5957
+ rc:0.03(") 0.14(kpc)
+ rt:2.68(") 12.16(kpc)
+ r_ct:0.0000 r_cr:0.0000
+-------- Clump 2150.0: PIEMD Kovner, truncated
+ Total mass: 0.187549(cor) 0.167779 (10^12 M_sol)
+ rcut:2.58(") 11.70(kpc)
+ vdisp:115.08(km/s) b0:0.5729
+ rc:0.03(") 0.14(kpc)
+ rt:2.58(") 11.70(kpc)
+ r_ct:0.0000 r_cr:0.0000
+-------- Clump 1405.0: PIEMD Kovner, truncated
+ Total mass: 0.185641(cor) 0.166072 (10^12 M_sol)
+ rcut:2.57(") 11.64(kpc)
+ vdisp:114.78(km/s) b0:0.5700
+ rc:0.03(") 0.14(kpc)
+ rt:2.57(") 11.64(kpc)
+ r_ct:0.0000 r_cr:0.0000
+-------- Clump 1311.0: PIEMD Kovner, truncated
+ Total mass: 0.182303(cor) 0.163086 (10^12 M_sol)
+ rcut:2.54(") 11.53(kpc)
+ vdisp:114.26(km/s) b0:0.5648
+ rc:0.03(") 0.14(kpc)
+ rt:2.54(") 11.53(kpc)
+ r_ct:0.0000 r_cr:0.0000
+-------- Clump 1154.0: PIEMD Kovner, truncated
+ Total mass: 0.181532(cor) 0.162396 (10^12 M_sol)
+ rcut:2.54(") 11.51(kpc)
+ vdisp:114.14(km/s) b0:0.5636
+ rc:0.03(") 0.14(kpc)
+ rt:2.54(") 11.51(kpc)
+ r_ct:0.0000 r_cr:0.0000
+-------- Clump 1782.0: PIEMD Kovner, truncated
+ Total mass: 0.181499(cor) 0.162367 (10^12 M_sol)
+ rcut:2.54(") 11.50(kpc)
+ vdisp:114.14(km/s) b0:0.5636
+ rc:0.03(") 0.14(kpc)
+ rt:2.54(") 11.50(kpc)
+ r_ct:0.0000 r_cr:0.0000
+-------- Clump 1508.0: PIEMD Kovner, truncated
+ Total mass: 0.179421(cor) 0.160508 (10^12 M_sol)
+ rcut:2.52(") 11.44(kpc)
+ vdisp:113.81(km/s) b0:0.5603
+ rc:0.03(") 0.13(kpc)
+ rt:2.52(") 11.44(kpc)
+ r_ct:0.0000 r_cr:0.0000
+-------- Clump 1130.0: PIEMD Kovner, truncated
+ Total mass: 0.171583(cor) 0.153496 (10^12 M_sol)
+ rcut:2.47(") 11.19(kpc)
+ vdisp:112.55(km/s) b0:0.5480
+ rc:0.03(") 0.13(kpc)
+ rt:2.47(") 11.19(kpc)
+ r_ct:0.0000 r_cr:0.0000
+-------- Clump 1281.0: PIEMD Kovner, truncated
+ Total mass: 0.157005(cor) 0.140455 (10^12 M_sol)
+ rcut:2.36(") 10.70(kpc)
+ vdisp:110.08(km/s) b0:0.5242
+ rc:0.03(") 0.13(kpc)
+ rt:2.36(") 10.70(kpc)
+ r_ct:0.0000 r_cr:0.0000
+-------- Clump 1883.0: PIEMD Kovner, truncated
+ Total mass: 0.154908(cor) 0.138579 (10^12 M_sol)
+ rcut:2.34(") 10.63(kpc)
+ vdisp:109.71(km/s) b0:0.5207
+ rc:0.03(") 0.13(kpc)
+ rt:2.34(") 10.63(kpc)
+ r_ct:0.0000 r_cr:0.0000
+-------- Clump 1688.0: PIEMD Kovner, truncated
+ Total mass: 0.152137(cor) 0.136100 (10^12 M_sol)
+ rcut:2.32(") 10.53(kpc)
+ vdisp:109.21(km/s) b0:0.5160
+ rc:0.03(") 0.12(kpc)
+ rt:2.32(") 10.53(kpc)
+ r_ct:0.0000 r_cr:0.0000
+-------- Clump 1336.0: PIEMD Kovner, truncated
+ Total mass: 0.150617(cor) 0.134740 (10^12 M_sol)
+ rcut:2.31(") 10.48(kpc)
+ vdisp:108.94(km/s) b0:0.5134
+ rc:0.03(") 0.12(kpc)
+ rt:2.31(") 10.48(kpc)
+ r_ct:0.0000 r_cr:0.0000
+-------- Clump 1807.0: PIEMD Kovner, truncated
+ Total mass: 0.145035(cor) 0.129747 (10^12 M_sol)
+ rcut:2.27(") 10.28(kpc)
+ vdisp:107.91(km/s) b0:0.5038
+ rc:0.03(") 0.12(kpc)
+ rt:2.27(") 10.28(kpc)
+ r_ct:0.0000 r_cr:0.0000
+-------- Clump 1187.0: PIEMD Kovner, truncated
+ Total mass: 0.142519(cor) 0.127496 (10^12 M_sol)
+ rcut:2.25(") 10.19(kpc)
+ vdisp:107.44(km/s) b0:0.4994
+ rc:0.03(") 0.12(kpc)
+ rt:2.25(") 10.19(kpc)
+ r_ct:0.0000 r_cr:0.0000
+-------- Clump 1634.0: PIEMD Kovner, truncated
+ Total mass: 0.141695(cor) 0.126759 (10^12 M_sol)
+ rcut:2.24(") 10.17(kpc)
+ vdisp:107.29(km/s) b0:0.4980
+ rc:0.03(") 0.12(kpc)
+ rt:2.24(") 10.17(kpc)
+ r_ct:0.0000 r_cr:0.0000
+-------- Clump 646.0: PIEMD Kovner, truncated
+ Total mass: 0.135442(cor) 0.121165 (10^12 M_sol)
+ rcut:2.19(") 9.94(kpc)
+ vdisp:106.08(km/s) b0:0.4868
+ rc:0.03(") 0.12(kpc)
+ rt:2.19(") 9.94(kpc)
+ r_ct:0.0000 r_cr:0.0000
+-------- Clump 1726.0: PIEMD Kovner, truncated
+ Total mass: 0.129418(cor) 0.115776 (10^12 M_sol)
+ rcut:2.14(") 9.71(kpc)
+ vdisp:104.88(km/s) b0:0.4759
+ rc:0.03(") 0.11(kpc)
+ rt:2.14(") 9.71(kpc)
+ r_ct:0.0000 r_cr:0.0000
+-------- Clump 743.0: PIEMD Kovner, truncated
+ Total mass: 0.121695(cor) 0.108867 (10^12 M_sol)
+ rcut:2.08(") 9.42(kpc)
+ vdisp:103.28(km/s) b0:0.4615
+ rc:0.02(") 0.11(kpc)
+ rt:2.08(") 9.42(kpc)
+ r_ct:0.0000 r_cr:0.0000
+-------- Clump 1702.0: PIEMD Kovner, truncated
+ Total mass: 0.121069(cor) 0.108307 (10^12 M_sol)
+ rcut:2.07(") 9.40(kpc)
+ vdisp:103.15(km/s) b0:0.4603
+ rc:0.02(") 0.11(kpc)
+ rt:2.07(") 9.40(kpc)
+ r_ct:0.0000 r_cr:0.0000
+-------- Clump 1849.0: PIEMD Kovner, truncated
+ Total mass: 0.117943(cor) 0.105511 (10^12 M_sol)
+ rcut:2.04(") 9.27(kpc)
+ vdisp:102.48(km/s) b0:0.4543
+ rc:0.02(") 0.11(kpc)
+ rt:2.04(") 9.27(kpc)
+ r_ct:0.0000 r_cr:0.0000
+-------- Clump 1386.0: PIEMD Kovner, truncated
+ Total mass: 0.108591(cor) 0.097144 (10^12 M_sol)
+ rcut:1.96(") 8.90(kpc)
+ vdisp:100.38(km/s) b0:0.4359
+ rc:0.02(") 0.10(kpc)
+ rt:1.96(") 8.90(kpc)
+ r_ct:0.0000 r_cr:0.0000
+-------- Clump 713.0: PIEMD Kovner, truncated
+ Total mass: 0.106354(cor) 0.095143 (10^12 M_sol)
+ rcut:1.94(") 8.81(kpc)
+ vdisp:99.86(km/s) b0:0.4314
+ rc:0.02(") 0.10(kpc)
+ rt:1.94(") 8.81(kpc)
+ r_ct:0.0000 r_cr:0.0000
+-------- Clump 2007.0: PIEMD Kovner, truncated
+ Total mass: 0.106285(cor) 0.095082 (10^12 M_sol)
+ rcut:1.94(") 8.80(kpc)
+ vdisp:99.85(km/s) b0:0.4313
+ rc:0.02(") 0.10(kpc)
+ rt:1.94(") 8.80(kpc)
+ r_ct:0.0000 r_cr:0.0000
+-------- Clump 1958.0: PIEMD Kovner, truncated
+ Total mass: 0.103284(cor) 0.092397 (10^12 M_sol)
+ rcut:1.91(") 8.68(kpc)
+ vdisp:99.13(km/s) b0:0.4251
+ rc:0.02(") 0.10(kpc)
+ rt:1.91(") 8.68(kpc)
+ r_ct:0.0000 r_cr:0.0000
+-------- Clump 1266.0: PIEMD Kovner, truncated
+ Total mass: 0.101933(cor) 0.091188 (10^12 M_sol)
+ rcut:1.90(") 8.62(kpc)
+ vdisp:98.81(km/s) b0:0.4223
+ rc:0.02(") 0.10(kpc)
+ rt:1.90(") 8.62(kpc)
+ r_ct:0.0000 r_cr:0.0000
+-------- Clump 1074.0: PIEMD Kovner, truncated
+ Total mass: 0.097193(cor) 0.086948 (10^12 M_sol)
+ rcut:1.86(") 8.42(kpc)
+ vdisp:97.64(km/s) b0:0.4124
+ rc:0.02(") 0.10(kpc)
+ rt:1.86(") 8.42(kpc)
+ r_ct:0.0000 r_cr:0.0000
+-------- Clump 1880.0: PIEMD Kovner, truncated
+ Total mass: 0.094832(cor) 0.084835 (10^12 M_sol)
+ rcut:1.83(") 8.32(kpc)
+ vdisp:97.04(km/s) b0:0.4074
+ rc:0.02(") 0.10(kpc)
+ rt:1.83(") 8.32(kpc)
+ r_ct:0.0000 r_cr:0.0000
+-------- Clump 600.0: PIEMD Kovner, truncated
+ Total mass: 0.094692(cor) 0.084711 (10^12 M_sol)
+ rcut:1.83(") 8.31(kpc)
+ vdisp:97.00(km/s) b0:0.4071
+ rc:0.02(") 0.10(kpc)
+ rt:1.83(") 8.31(kpc)
+ r_ct:0.0000 r_cr:0.0000
+-------- Clump 1565.0: PIEMD Kovner, truncated
+ Total mass: 0.088714(cor) 0.079363 (10^12 M_sol)
+ rcut:1.77(") 8.04(kpc)
+ vdisp:95.44(km/s) b0:0.3940
+ rc:0.02(") 0.09(kpc)
+ rt:1.77(") 8.04(kpc)
+ r_ct:0.0000 r_cr:0.0000
+-------- Clump 1523.0: PIEMD Kovner, truncated
+ Total mass: 0.086138(cor) 0.077058 (10^12 M_sol)
+ rcut:1.75(") 7.93(kpc)
+ vdisp:94.74(km/s) b0:0.3882
+ rc:0.02(") 0.09(kpc)
+ rt:1.75(") 7.93(kpc)
+ r_ct:0.0000 r_cr:0.0000
+-------- Clump 1414.0: PIEMD Kovner, truncated
+ Total mass: 0.084998(cor) 0.076038 (10^12 M_sol)
+ rcut:1.74(") 7.87(kpc)
+ vdisp:94.42(km/s) b0:0.3857
+ rc:0.02(") 0.09(kpc)
+ rt:1.74(") 7.87(kpc)
+ r_ct:0.0000 r_cr:0.0000
+-------- Clump 1876.0: PIEMD Kovner, truncated
+ Total mass: 0.084363(cor) 0.075471 (10^12 M_sol)
+ rcut:1.73(") 7.84(kpc)
+ vdisp:94.24(km/s) b0:0.3842
+ rc:0.02(") 0.09(kpc)
+ rt:1.73(") 7.84(kpc)
+ r_ct:0.0000 r_cr:0.0000
+-------- Clump 987.0: PIEMD Kovner, truncated
+ Total mass: 0.083991(cor) 0.075138 (10^12 M_sol)
+ rcut:1.73(") 7.83(kpc)
+ vdisp:94.14(km/s) b0:0.3834
+ rc:0.02(") 0.09(kpc)
+ rt:1.73(") 7.83(kpc)
+ r_ct:0.0000 r_cr:0.0000
+-------- Clump 1789.0: PIEMD Kovner, truncated
+ Total mass: 0.079023(cor) 0.070693 (10^12 M_sol)
+ rcut:1.67(") 7.59(kpc)
+ vdisp:92.72(km/s) b0:0.3719
+ rc:0.02(") 0.09(kpc)
+ rt:1.67(") 7.59(kpc)
+ r_ct:0.0000 r_cr:0.0000
+-------- Clump 862.0: PIEMD Kovner, truncated
+ Total mass: 0.078428(cor) 0.070161 (10^12 M_sol)
+ rcut:1.67(") 7.56(kpc)
+ vdisp:92.54(km/s) b0:0.3705
+ rc:0.02(") 0.09(kpc)
+ rt:1.67(") 7.56(kpc)
+ r_ct:0.0000 r_cr:0.0000
+-------- Clump 1050.0: PIEMD Kovner, truncated
+ Total mass: 0.077303(cor) 0.069154 (10^12 M_sol)
+ rcut:1.66(") 7.51(kpc)
+ vdisp:92.21(km/s) b0:0.3678
+ rc:0.02(") 0.09(kpc)
+ rt:1.66(") 7.51(kpc)
+ r_ct:0.0000 r_cr:0.0000
+-------- Clump 956.0: PIEMD Kovner, truncated
+ Total mass: 0.072469(cor) 0.064830 (10^12 M_sol)
+ rcut:1.60(") 7.27(kpc)
+ vdisp:90.73(km/s) b0:0.3561
+ rc:0.02(") 0.09(kpc)
+ rt:1.60(") 7.27(kpc)
+ r_ct:0.0000 r_cr:0.0000
+-------- Clump 2009.0: PIEMD Kovner, truncated
+ Total mass: 0.070748(cor) 0.063290 (10^12 M_sol)
+ rcut:1.58(") 7.18(kpc)
+ vdisp:90.19(km/s) b0:0.3519
+ rc:0.02(") 0.08(kpc)
+ rt:1.58(") 7.18(kpc)
+ r_ct:0.0000 r_cr:0.0000
+-------- Clump 1770.0: PIEMD Kovner, truncated
+ Total mass: 0.068966(cor) 0.061696 (10^12 M_sol)
+ rcut:1.56(") 7.09(kpc)
+ vdisp:89.61(km/s) b0:0.3474
+ rc:0.02(") 0.08(kpc)
+ rt:1.56(") 7.09(kpc)
+ r_ct:0.0000 r_cr:0.0000
+-------- Clump 1047.0: PIEMD Kovner, truncated
+ Total mass: 0.068845(cor) 0.061588 (10^12 M_sol)
+ rcut:1.56(") 7.09(kpc)
+ vdisp:89.57(km/s) b0:0.3471
+ rc:0.02(") 0.08(kpc)
+ rt:1.56(") 7.09(kpc)
+ r_ct:0.0000 r_cr:0.0000
+-------- Clump 1897.0: PIEMD Kovner, truncated
+ Total mass: 0.067439(cor) 0.060331 (10^12 M_sol)
+ rcut:1.55(") 7.01(kpc)
+ vdisp:89.11(km/s) b0:0.3435
+ rc:0.02(") 0.08(kpc)
+ rt:1.55(") 7.01(kpc)
+ r_ct:0.0000 r_cr:0.0000
+-------- Clump 1712.0: PIEMD Kovner, truncated
+ Total mass: 0.067111(cor) 0.060037 (10^12 M_sol)
+ rcut:1.54(") 7.00(kpc)
+ vdisp:89.00(km/s) b0:0.3427
+ rc:0.02(") 0.08(kpc)
+ rt:1.54(") 7.00(kpc)
+ r_ct:0.0000 r_cr:0.0000
+-------- Clump 1602.0: PIEMD Kovner, truncated
+ Total mass: 0.066178(cor) 0.059202 (10^12 M_sol)
+ rcut:1.53(") 6.95(kpc)
+ vdisp:88.69(km/s) b0:0.3403
+ rc:0.02(") 0.08(kpc)
+ rt:1.53(") 6.95(kpc)
+ r_ct:0.0000 r_cr:0.0000
+-------- Clump 1286.0: PIEMD Kovner, truncated
+ Total mass: 0.065929(cor) 0.058979 (10^12 M_sol)
+ rcut:1.53(") 6.93(kpc)
+ vdisp:88.61(km/s) b0:0.3397
+ rc:0.02(") 0.08(kpc)
+ rt:1.53(") 6.93(kpc)
+ r_ct:0.0000 r_cr:0.0000
+-------- Clump 1937.0: PIEMD Kovner, truncated
+ Total mass: 0.065741(cor) 0.058811 (10^12 M_sol)
+ rcut:1.53(") 6.92(kpc)
+ vdisp:88.55(km/s) b0:0.3392
+ rc:0.02(") 0.08(kpc)
+ rt:1.53(") 6.92(kpc)
+ r_ct:0.0000 r_cr:0.0000
+-------- Clump 1092.0: PIEMD Kovner, truncated
+ Total mass: 0.065168(cor) 0.058298 (10^12 M_sol)
+ rcut:1.52(") 6.89(kpc)
+ vdisp:88.35(km/s) b0:0.3377
+ rc:0.02(") 0.08(kpc)
+ rt:1.52(") 6.89(kpc)
+ r_ct:0.0000 r_cr:0.0000
+-------- Clump 1741.0: PIEMD Kovner, truncated
+ Total mass: 0.061031(cor) 0.054598 (10^12 M_sol)
+ rcut:1.47(") 6.67(kpc)
+ vdisp:86.92(km/s) b0:0.3268
+ rc:0.02(") 0.08(kpc)
+ rt:1.47(") 6.67(kpc)
+ r_ct:0.0000 r_cr:0.0000
+-------- Clump 1644.0: PIEMD Kovner, truncated
+ Total mass: 0.060595(cor) 0.054207 (10^12 M_sol)
+ rcut:1.47(") 6.65(kpc)
+ vdisp:86.76(km/s) b0:0.3256
+ rc:0.02(") 0.08(kpc)
+ rt:1.47(") 6.65(kpc)
+ r_ct:0.0000 r_cr:0.0000
+-------- Clump 1847.0: PIEMD Kovner, truncated
+ Total mass: 0.059396(cor) 0.053135 (10^12 M_sol)
+ rcut:1.45(") 6.58(kpc)
+ vdisp:86.33(km/s) b0:0.3224
+ rc:0.02(") 0.08(kpc)
+ rt:1.45(") 6.58(kpc)
+ r_ct:0.0000 r_cr:0.0000
+-------- Clump 1142.0: PIEMD Kovner, truncated
+ Total mass: 0.059226(cor) 0.052983 (10^12 M_sol)
+ rcut:1.45(") 6.57(kpc)
+ vdisp:86.27(km/s) b0:0.3219
+ rc:0.02(") 0.08(kpc)
+ rt:1.45(") 6.57(kpc)
+ r_ct:0.0000 r_cr:0.0000
+-------- Clump 1313.0: PIEMD Kovner, truncated
+ Total mass: 0.058328(cor) 0.052179 (10^12 M_sol)
+ rcut:1.44(") 6.52(kpc)
+ vdisp:85.94(km/s) b0:0.3195
+ rc:0.02(") 0.08(kpc)
+ rt:1.44(") 6.52(kpc)
+ r_ct:0.0000 r_cr:0.0000
+-------- Clump 1032.0: PIEMD Kovner, truncated
+ Total mass: 0.056738(cor) 0.050757 (10^12 M_sol)
+ rcut:1.42(") 6.43(kpc)
+ vdisp:85.35(km/s) b0:0.3151
+ rc:0.02(") 0.08(kpc)
+ rt:1.42(") 6.43(kpc)
+ r_ct:0.0000 r_cr:0.0000
+-------- Clump 1356.0: PIEMD Kovner, truncated
+ Total mass: 0.053195(cor) 0.047588 (10^12 M_sol)
+ rcut:1.37(") 6.23(kpc)
+ vdisp:83.98(km/s) b0:0.3051
+ rc:0.02(") 0.07(kpc)
+ rt:1.37(") 6.23(kpc)
+ r_ct:0.0000 r_cr:0.0000
+-------- Clump 1829.0: PIEMD Kovner, truncated
+ Total mass: 0.053176(cor) 0.047570 (10^12 M_sol)
+ rcut:1.37(") 6.23(kpc)
+ vdisp:83.97(km/s) b0:0.3050
+ rc:0.02(") 0.07(kpc)
+ rt:1.37(") 6.23(kpc)
+ r_ct:0.0000 r_cr:0.0000
+-------- Clump 1108.0: PIEMD Kovner, truncated
+ Total mass: 0.052858(cor) 0.047287 (10^12 M_sol)
+ rcut:1.37(") 6.21(kpc)
+ vdisp:83.85(km/s) b0:0.3041
+ rc:0.02(") 0.07(kpc)
+ rt:1.37(") 6.21(kpc)
+ r_ct:0.0000 r_cr:0.0000
+-------- Clump 1951.0: PIEMD Kovner, truncated
+ Total mass: 0.052393(cor) 0.046870 (10^12 M_sol)
+ rcut:1.36(") 6.18(kpc)
+ vdisp:83.66(km/s) b0:0.3028
+ rc:0.02(") 0.07(kpc)
+ rt:1.36(") 6.18(kpc)
+ r_ct:0.0000 r_cr:0.0000
+-------- Clump 1501.0: PIEMD Kovner, truncated
+ Total mass: 0.050703(cor) 0.045358 (10^12 M_sol)
+ rcut:1.34(") 6.08(kpc)
+ vdisp:82.98(km/s) b0:0.2979
+ rc:0.02(") 0.07(kpc)
+ rt:1.34(") 6.08(kpc)
+ r_ct:0.0000 r_cr:0.0000
+-------- Clump 1997.0: PIEMD Kovner, truncated
+ Total mass: 0.050109(cor) 0.044827 (10^12 M_sol)
+ rcut:1.33(") 6.05(kpc)
+ vdisp:82.74(km/s) b0:0.2961
+ rc:0.02(") 0.07(kpc)
+ rt:1.33(") 6.05(kpc)
+ r_ct:0.0000 r_cr:0.0000
+-------- Clump 985.0: PIEMD Kovner, truncated
+ Total mass: 0.049805(cor) 0.044555 (10^12 M_sol)
+ rcut:1.33(") 6.03(kpc)
+ vdisp:82.61(km/s) b0:0.2952
+ rc:0.02(") 0.07(kpc)
+ rt:1.33(") 6.03(kpc)
+ r_ct:0.0000 r_cr:0.0000
+-------- Clump 1191.0: PIEMD Kovner, truncated
+ Total mass: 0.049759(cor) 0.044514 (10^12 M_sol)
+ rcut:1.33(") 6.02(kpc)
+ vdisp:82.59(km/s) b0:0.2951
+ rc:0.02(") 0.07(kpc)
+ rt:1.33(") 6.02(kpc)
+ r_ct:0.0000 r_cr:0.0000
+-------- Clump 1879.0: PIEMD Kovner, truncated
+ Total mass: 0.047376(cor) 0.042382 (10^12 M_sol)
+ rcut:1.30(") 5.88(kpc)
+ vdisp:81.58(km/s) b0:0.2879
+ rc:0.02(") 0.07(kpc)
+ rt:1.30(") 5.88(kpc)
+ r_ct:0.0000 r_cr:0.0000
+-------- Clump 2074.0: PIEMD Kovner, truncated
+ Total mass: 0.042827(cor) 0.038312 (10^12 M_sol)
+ rcut:1.23(") 5.59(kpc)
+ vdisp:79.55(km/s) b0:0.2738
+ rc:0.01(") 0.07(kpc)
+ rt:1.23(") 5.59(kpc)
+ r_ct:0.0000 r_cr:0.0000
+-------- Clump 1738.0: PIEMD Kovner, truncated
+ Total mass: 0.040108(cor) 0.035880 (10^12 M_sol)
+ rcut:1.19(") 5.41(kpc)
+ vdisp:78.26(km/s) b0:0.2649
+ rc:0.01(") 0.06(kpc)
+ rt:1.19(") 5.41(kpc)
+ r_ct:0.0000 r_cr:0.0000
+-------- Clump 796.0: PIEMD Kovner, truncated
+ Total mass: 0.039975(cor) 0.035762 (10^12 M_sol)
+ rcut:1.19(") 5.40(kpc)
+ vdisp:78.19(km/s) b0:0.2645
+ rc:0.01(") 0.06(kpc)
+ rt:1.19(") 5.40(kpc)
+ r_ct:0.0000 r_cr:0.0000
+-------- Clump 1182.0: PIEMD Kovner, truncated
+ Total mass: 0.038208(cor) 0.034180 (10^12 M_sol)
+ rcut:1.16(") 5.28(kpc)
+ vdisp:77.31(km/s) b0:0.2586
+ rc:0.01(") 0.06(kpc)
+ rt:1.16(") 5.28(kpc)
+ r_ct:0.0000 r_cr:0.0000
+-------- Clump 965.0: PIEMD Kovner, truncated
+ Total mass: 0.037781(cor) 0.033798 (10^12 M_sol)
+ rcut:1.16(") 5.25(kpc)
+ vdisp:77.10(km/s) b0:0.2571
+ rc:0.01(") 0.06(kpc)
+ rt:1.16(") 5.25(kpc)
+ r_ct:0.0000 r_cr:0.0000
+-------- Clump 1340.0: PIEMD Kovner, truncated
+ Total mass: 0.037729(cor) 0.033752 (10^12 M_sol)
+ rcut:1.16(") 5.25(kpc)
+ vdisp:77.07(km/s) b0:0.2569
+ rc:0.01(") 0.06(kpc)
+ rt:1.16(") 5.25(kpc)
+ r_ct:0.0000 r_cr:0.0000
+-------- Clump 1203.0: PIEMD Kovner, truncated
+ Total mass: 0.032860(cor) 0.029397 (10^12 M_sol)
+ rcut:1.08(") 4.90(kpc)
+ vdisp:74.45(km/s) b0:0.2398
+ rc:0.01(") 0.06(kpc)
+ rt:1.08(") 4.90(kpc)
+ r_ct:0.0000 r_cr:0.0000
+-------- Clump 1673.0: PIEMD Kovner, truncated
+ Total mass: 0.032809(cor) 0.029351 (10^12 M_sol)
+ rcut:1.08(") 4.89(kpc)
+ vdisp:74.42(km/s) b0:0.2396
+ rc:0.01(") 0.06(kpc)
+ rt:1.08(") 4.89(kpc)
+ r_ct:0.0000 r_cr:0.0000
+-------- Clump 1014.0: PIEMD Kovner, truncated
+ Total mass: 0.032631(cor) 0.029192 (10^12 M_sol)
+ rcut:1.08(") 4.88(kpc)
+ vdisp:74.32(km/s) b0:0.2390
+ rc:0.01(") 0.06(kpc)
+ rt:1.08(") 4.88(kpc)
+ r_ct:0.0000 r_cr:0.0000
+-------- Clump 1988.0: PIEMD Kovner, truncated
+ Total mass: 0.031197(cor) 0.027909 (10^12 M_sol)
+ rcut:1.05(") 4.77(kpc)
+ vdisp:73.49(km/s) b0:0.2337
+ rc:0.01(") 0.06(kpc)
+ rt:1.05(") 4.77(kpc)
+ r_ct:0.0000 r_cr:0.0000
+-------- Clump 1719.0: PIEMD Kovner, truncated
+ Total mass: 0.027792(cor) 0.024862 (10^12 M_sol)
+ rcut:0.99(") 4.50(kpc)
+ vdisp:71.40(km/s) b0:0.2205
+ rc:0.01(") 0.05(kpc)
+ rt:0.99(") 4.50(kpc)
+ r_ct:0.0000 r_cr:0.0000
+-------- Clump 2097.0: PIEMD Kovner, truncated
+ Total mass: 0.027702(cor) 0.024782 (10^12 M_sol)
+ rcut:0.99(") 4.49(kpc)
+ vdisp:71.34(km/s) b0:0.2202
+ rc:0.01(") 0.05(kpc)
+ rt:0.99(") 4.49(kpc)
+ r_ct:0.0000 r_cr:0.0000
+-------- Clump 1445.0: PIEMD Kovner, truncated
+ Total mass: 0.027453(cor) 0.024559 (10^12 M_sol)
+ rcut:0.99(") 4.47(kpc)
+ vdisp:71.18(km/s) b0:0.2192
+ rc:0.01(") 0.05(kpc)
+ rt:0.99(") 4.47(kpc)
+ r_ct:0.0000 r_cr:0.0000
+-------- Clump 1230.0: PIEMD Kovner, truncated
+ Total mass: 0.027413(cor) 0.024523 (10^12 M_sol)
+ rcut:0.99(") 4.47(kpc)
+ vdisp:71.15(km/s) b0:0.2190
+ rc:0.01(") 0.05(kpc)
+ rt:0.99(") 4.47(kpc)
+ r_ct:0.0000 r_cr:0.0000
+-------- Clump 1595.0: PIEMD Kovner, truncated
+ Total mass: 0.024872(cor) 0.022250 (10^12 M_sol)
+ rcut:0.94(") 4.26(kpc)
+ vdisp:69.45(km/s) b0:0.2086
+ rc:0.01(") 0.05(kpc)
+ rt:0.94(") 4.26(kpc)
+ r_ct:0.0000 r_cr:0.0000
+-------- Clump 1422.0: PIEMD Kovner, truncated
+ Total mass: 0.024776(cor) 0.022164 (10^12 M_sol)
+ rcut:0.94(") 4.25(kpc)
+ vdisp:69.38(km/s) b0:0.2082
+ rc:0.01(") 0.05(kpc)
+ rt:0.94(") 4.25(kpc)
+ r_ct:0.0000 r_cr:0.0000
+-------- Clump 1382.0: PIEMD Kovner, truncated
+ Total mass: 0.024767(cor) 0.022156 (10^12 M_sol)
+ rcut:0.94(") 4.25(kpc)
+ vdisp:69.37(km/s) b0:0.2082
+ rc:0.01(") 0.05(kpc)
+ rt:0.94(") 4.25(kpc)
+ r_ct:0.0000 r_cr:0.0000
+-------- Clump 2035.0: PIEMD Kovner, truncated
+ Total mass: 0.024610(cor) 0.022016 (10^12 M_sol)
+ rcut:0.93(") 4.24(kpc)
+ vdisp:69.26(km/s) b0:0.2075
+ rc:0.01(") 0.05(kpc)
+ rt:0.93(") 4.24(kpc)
+ r_ct:0.0000 r_cr:0.0000
+-------- Clump 1069.0: PIEMD Kovner, truncated
+ Total mass: 0.024099(cor) 0.021558 (10^12 M_sol)
+ rcut:0.92(") 4.19(kpc)
+ vdisp:68.90(km/s) b0:0.2054
+ rc:0.01(") 0.05(kpc)
+ rt:0.92(") 4.19(kpc)
+ r_ct:0.0000 r_cr:0.0000
+-------- Clump 1756.0: PIEMD Kovner, truncated
+ Total mass: 0.023836(cor) 0.021323 (10^12 M_sol)
+ rcut:0.92(") 4.17(kpc)
+ vdisp:68.71(km/s) b0:0.2042
+ rc:0.01(") 0.05(kpc)
+ rt:0.92(") 4.17(kpc)
+ r_ct:0.0000 r_cr:0.0000
+-------- Clump 1314.0: PIEMD Kovner, truncated
+ Total mass: 0.023583(cor) 0.021097 (10^12 M_sol)
+ rcut:0.91(") 4.15(kpc)
+ vdisp:68.53(km/s) b0:0.2031
+ rc:0.01(") 0.05(kpc)
+ rt:0.91(") 4.15(kpc)
+ r_ct:0.0000 r_cr:0.0000
+-------- Clump 1291.0: PIEMD Kovner, truncated
+ Total mass: 0.022474(cor) 0.020105 (10^12 M_sol)
+ rcut:0.89(") 4.05(kpc)
+ vdisp:67.71(km/s) b0:0.1983
+ rc:0.01(") 0.05(kpc)
+ rt:0.89(") 4.05(kpc)
+ r_ct:0.0000 r_cr:0.0000
+-------- Clump 1792.0: PIEMD Kovner, truncated
+ Total mass: 0.021415(cor) 0.019157 (10^12 M_sol)
+ rcut:0.87(") 3.95(kpc)
+ vdisp:66.89(km/s) b0:0.1936
+ rc:0.01(") 0.05(kpc)
+ rt:0.87(") 3.95(kpc)
+ r_ct:0.0000 r_cr:0.0000
+-------- Clump 2098.0: PIEMD Kovner, truncated
+ Total mass: 0.020447(cor) 0.018292 (10^12 M_sol)
+ rcut:0.85(") 3.86(kpc)
+ vdisp:66.13(km/s) b0:0.1892
+ rc:0.01(") 0.05(kpc)
+ rt:0.85(") 3.86(kpc)
+ r_ct:0.0000 r_cr:0.0000
+-------- Clump 2158.0: PIEMD Kovner, truncated
+ Total mass: 0.019919(cor) 0.017820 (10^12 M_sol)
+ rcut:0.84(") 3.81(kpc)
+ vdisp:65.69(km/s) b0:0.1867
+ rc:0.01(") 0.04(kpc)
+ rt:0.84(") 3.81(kpc)
+ r_ct:0.0000 r_cr:0.0000
+-------- Clump 1228.0: PIEMD Kovner, truncated
+ Total mass: 0.019621(cor) 0.017552 (10^12 M_sol)
+ rcut:0.83(") 3.78(kpc)
+ vdisp:65.45(km/s) b0:0.1853
+ rc:0.01(") 0.04(kpc)
+ rt:0.83(") 3.78(kpc)
+ r_ct:0.0000 r_cr:0.0000
+-------- Clump 1168.0: PIEMD Kovner, truncated
+ Total mass: 0.019259(cor) 0.017229 (10^12 M_sol)
+ rcut:0.83(") 3.75(kpc)
+ vdisp:65.14(km/s) b0:0.1836
+ rc:0.01(") 0.04(kpc)
+ rt:0.83(") 3.75(kpc)
+ r_ct:0.0000 r_cr:0.0000
+-------- Clump 1056.0: PIEMD Kovner, truncated
+ Total mass: 0.019105(cor) 0.017091 (10^12 M_sol)
+ rcut:0.82(") 3.73(kpc)
+ vdisp:65.01(km/s) b0:0.1828
+ rc:0.01(") 0.04(kpc)
+ rt:0.82(") 3.73(kpc)
+ r_ct:0.0000 r_cr:0.0000
+-------- Clump 2077.0: PIEMD Kovner, truncated
+ Total mass: 0.019088(cor) 0.017076 (10^12 M_sol)
+ rcut:0.82(") 3.73(kpc)
+ vdisp:65.00(km/s) b0:0.1828
+ rc:0.01(") 0.04(kpc)
+ rt:0.82(") 3.73(kpc)
+ r_ct:0.0000 r_cr:0.0000
+-------- Clump 2114.0: PIEMD Kovner, truncated
+ Total mass: 0.018784(cor) 0.016804 (10^12 M_sol)
+ rcut:0.82(") 3.70(kpc)
+ vdisp:64.74(km/s) b0:0.1813
+ rc:0.01(") 0.04(kpc)
+ rt:0.82(") 3.70(kpc)
+ r_ct:0.0000 r_cr:0.0000
+-------- Clump 1803.0: PIEMD Kovner, truncated
+ Total mass: 0.018018(cor) 0.016119 (10^12 M_sol)
+ rcut:0.80(") 3.62(kpc)
+ vdisp:64.07(km/s) b0:0.1776
+ rc:0.01(") 0.04(kpc)
+ rt:0.80(") 3.62(kpc)
+ r_ct:0.0000 r_cr:0.0000
+-------- Clump 983.0: PIEMD Kovner, truncated
+ Total mass: 0.017621(cor) 0.015764 (10^12 M_sol)
+ rcut:0.79(") 3.58(kpc)
+ vdisp:63.71(km/s) b0:0.1756
+ rc:0.01(") 0.04(kpc)
+ rt:0.79(") 3.58(kpc)
+ r_ct:0.0000 r_cr:0.0000
+-------- Clump 1296.0: PIEMD Kovner, truncated
+ Total mass: 0.017592(cor) 0.015738 (10^12 M_sol)
+ rcut:0.79(") 3.58(kpc)
+ vdisp:63.69(km/s) b0:0.1755
+ rc:0.01(") 0.04(kpc)
+ rt:0.79(") 3.58(kpc)
+ r_ct:0.0000 r_cr:0.0000
+-------- Clump 1328.0: PIEMD Kovner, truncated
+ Total mass: 0.016515(cor) 0.014774 (10^12 M_sol)
+ rcut:0.77(") 3.47(kpc)
+ vdisp:62.69(km/s) b0:0.1700
+ rc:0.01(") 0.04(kpc)
+ rt:0.77(") 3.47(kpc)
+ r_ct:0.0000 r_cr:0.0000
+-------- Clump 1016.0: PIEMD Kovner, truncated
+ Total mass: 0.016233(cor) 0.014522 (10^12 M_sol)
+ rcut:0.76(") 3.44(kpc)
+ vdisp:62.42(km/s) b0:0.1685
+ rc:0.01(") 0.04(kpc)
+ rt:0.76(") 3.44(kpc)
+ r_ct:0.0000 r_cr:0.0000
+-------- Clump 1890.0: PIEMD Kovner, truncated
+ Total mass: 0.015172(cor) 0.013572 (10^12 M_sol)
+ rcut:0.73(") 3.33(kpc)
+ vdisp:61.37(km/s) b0:0.1629
+ rc:0.01(") 0.04(kpc)
+ rt:0.73(") 3.33(kpc)
+ r_ct:0.0000 r_cr:0.0000
+-------- Clump 1487.0: PIEMD Kovner, truncated
+ Total mass: 0.014987(cor) 0.013407 (10^12 M_sol)
+ rcut:0.73(") 3.31(kpc)
+ vdisp:61.18(km/s) b0:0.1619
+ rc:0.01(") 0.04(kpc)
+ rt:0.73(") 3.31(kpc)
+ r_ct:0.0000 r_cr:0.0000
+-------- Clump 1239.0: PIEMD Kovner, truncated
+ Total mass: 0.014076(cor) 0.012592 (10^12 M_sol)
+ rcut:0.71(") 3.20(kpc)
+ vdisp:60.23(km/s) b0:0.1569
+ rc:0.01(") 0.04(kpc)
+ rt:0.71(") 3.20(kpc)
+ r_ct:0.0000 r_cr:0.0000
+-------- Clump 1692.0: PIEMD Kovner, truncated
+ Total mass: 0.012757(cor) 0.011412 (10^12 M_sol)
+ rcut:0.67(") 3.05(kpc)
+ vdisp:58.77(km/s) b0:0.1494
+ rc:0.01(") 0.04(kpc)
+ rt:0.67(") 3.05(kpc)
+ r_ct:0.0000 r_cr:0.0000
+-------- Clump 1482.0: PIEMD Kovner, truncated
+ Total mass: 0.011751(cor) 0.010512 (10^12 M_sol)
+ rcut:0.65(") 2.93(kpc)
+ vdisp:57.57(km/s) b0:0.1434
+ rc:0.01(") 0.03(kpc)
+ rt:0.65(") 2.93(kpc)
+ r_ct:0.0000 r_cr:0.0000
+-------- Clump 1401.0: PIEMD Kovner, truncated
+ Total mass: 0.011217(cor) 0.010035 (10^12 M_sol)
+ rcut:0.63(") 2.86(kpc)
+ vdisp:56.91(km/s) b0:0.1401
+ rc:0.01(") 0.03(kpc)
+ rt:0.63(") 2.86(kpc)
+ r_ct:0.0000 r_cr:0.0000
+-------- Clump 1674.0: PIEMD Kovner, truncated
+ Total mass: 0.011016(cor) 0.009855 (10^12 M_sol)
+ rcut:0.62(") 2.83(kpc)
+ vdisp:56.65(km/s) b0:0.1388
+ rc:0.01(") 0.03(kpc)
+ rt:0.62(") 2.83(kpc)
+ r_ct:0.0000 r_cr:0.0000
+-------- Clump 1011.0: PIEMD Kovner, truncated
+ Total mass: 0.010557(cor) 0.009444 (10^12 M_sol)
+ rcut:0.61(") 2.77(kpc)
+ vdisp:56.05(km/s) b0:0.1359
+ rc:0.01(") 0.03(kpc)
+ rt:0.61(") 2.77(kpc)
+ r_ct:0.0000 r_cr:0.0000
+-------- Clump 2214.0: PIEMD Kovner, truncated
+ Total mass: 0.010420(cor) 0.009322 (10^12 M_sol)
+ rcut:0.61(") 2.76(kpc)
+ vdisp:55.87(km/s) b0:0.1350
+ rc:0.01(") 0.03(kpc)
+ rt:0.61(") 2.76(kpc)
+ r_ct:0.0000 r_cr:0.0000
+-------- Clump 995.0: PIEMD Kovner, truncated
+ Total mass: 0.010338(cor) 0.009248 (10^12 M_sol)
+ rcut:0.61(") 2.75(kpc)
+ vdisp:55.76(km/s) b0:0.1345
+ rc:0.01(") 0.03(kpc)
+ rt:0.61(") 2.75(kpc)
+ r_ct:0.0000 r_cr:0.0000
+-------- Clump 1380.0: PIEMD Kovner, truncated
+ Total mass: 0.010325(cor) 0.009236 (10^12 M_sol)
+ rcut:0.60(") 2.74(kpc)
+ vdisp:55.74(km/s) b0:0.1344
+ rc:0.01(") 0.03(kpc)
+ rt:0.60(") 2.74(kpc)
+ r_ct:0.0000 r_cr:0.0000
+-------- Clump 1124.0: PIEMD Kovner, truncated
+ Total mass: 0.009730(cor) 0.008704 (10^12 M_sol)
+ rcut:0.59(") 2.66(kpc)
+ vdisp:54.92(km/s) b0:0.1305
+ rc:0.01(") 0.03(kpc)
+ rt:0.59(") 2.66(kpc)
+ r_ct:0.0000 r_cr:0.0000
+-------- Clump 1400.0: PIEMD Kovner, truncated
+ Total mass: 0.009605(cor) 0.008593 (10^12 M_sol)
+ rcut:0.58(") 2.65(kpc)
+ vdisp:54.74(km/s) b0:0.1296
+ rc:0.01(") 0.03(kpc)
+ rt:0.58(") 2.65(kpc)
+ r_ct:0.0000 r_cr:0.0000
+-------- Clump 1165.0: PIEMD Kovner, truncated
+ Total mass: 0.009420(cor) 0.008427 (10^12 M_sol)
+ rcut:0.58(") 2.62(kpc)
+ vdisp:54.48(km/s) b0:0.1284
+ rc:0.01(") 0.03(kpc)
+ rt:0.58(") 2.62(kpc)
+ r_ct:0.0000 r_cr:0.0000
+-------- Clump 1134.0: PIEMD Kovner, truncated
+ Total mass: 0.009185(cor) 0.008217 (10^12 M_sol)
+ rcut:0.57(") 2.59(kpc)
+ vdisp:54.14(km/s) b0:0.1268
+ rc:0.01(") 0.03(kpc)
+ rt:0.57(") 2.59(kpc)
+ r_ct:0.0000 r_cr:0.0000
+-------- Clump 1285.0: PIEMD Kovner, truncated
+ Total mass: 0.008833(cor) 0.007902 (10^12 M_sol)
+ rcut:0.56(") 2.54(kpc)
+ vdisp:53.61(km/s) b0:0.1243
+ rc:0.01(") 0.03(kpc)
+ rt:0.56(") 2.54(kpc)
+ r_ct:0.0000 r_cr:0.0000
+-------- Clump 1507.0: PIEMD Kovner, truncated
+ Total mass: 0.008735(cor) 0.007814 (10^12 M_sol)
+ rcut:0.56(") 2.52(kpc)
+ vdisp:53.46(km/s) b0:0.1236
+ rc:0.01(") 0.03(kpc)
+ rt:0.56(") 2.52(kpc)
+ r_ct:0.0000 r_cr:0.0000
+-------- Clump 1312.0: PIEMD Kovner, truncated
+ Total mass: 0.008449(cor) 0.007558 (10^12 M_sol)
+ rcut:0.55(") 2.48(kpc)
+ vdisp:53.02(km/s) b0:0.1216
+ rc:0.01(") 0.03(kpc)
+ rt:0.55(") 2.48(kpc)
+ r_ct:0.0000 r_cr:0.0000
+-------- Clump 1375.0: PIEMD Kovner, truncated
+ Total mass: 0.008341(cor) 0.007461 (10^12 M_sol)
+ rcut:0.54(") 2.47(kpc)
+ vdisp:52.85(km/s) b0:0.1208
+ rc:0.01(") 0.03(kpc)
+ rt:0.54(") 2.47(kpc)
+ r_ct:0.0000 r_cr:0.0000
+-------- Clump 1135.0: PIEMD Kovner, truncated
+ Total mass: 0.008216(cor) 0.007350 (10^12 M_sol)
+ rcut:0.54(") 2.45(kpc)
+ vdisp:52.65(km/s) b0:0.1199
+ rc:0.01(") 0.03(kpc)
+ rt:0.54(") 2.45(kpc)
+ r_ct:0.0000 r_cr:0.0000
+-------- Clump 1986.0: PIEMD Kovner, truncated
+ Total mass: 0.007945(cor) 0.007108 (10^12 M_sol)
+ rcut:0.53(") 2.41(kpc)
+ vdisp:52.21(km/s) b0:0.1179
+ rc:0.01(") 0.03(kpc)
+ rt:0.53(") 2.41(kpc)
+ r_ct:0.0000 r_cr:0.0000
+-------- Clump 1843.0: PIEMD Kovner, truncated
+ Total mass: 0.007945(cor) 0.007108 (10^12 M_sol)
+ rcut:0.53(") 2.41(kpc)
+ vdisp:52.21(km/s) b0:0.1179
+ rc:0.01(") 0.03(kpc)
+ rt:0.53(") 2.41(kpc)
+ r_ct:0.0000 r_cr:0.0000
+-------- Clump 1111.0: PIEMD Kovner, truncated
+ Total mass: 0.007921(cor) 0.007086 (10^12 M_sol)
+ rcut:0.53(") 2.40(kpc)
+ vdisp:52.17(km/s) b0:0.1177
+ rc:0.01(") 0.03(kpc)
+ rt:0.53(") 2.40(kpc)
+ r_ct:0.0000 r_cr:0.0000
+-------- Clump 2119.0: PIEMD Kovner, truncated
+ Total mass: 0.007842(cor) 0.007015 (10^12 M_sol)
+ rcut:0.53(") 2.39(kpc)
+ vdisp:52.04(km/s) b0:0.1171
+ rc:0.01(") 0.03(kpc)
+ rt:0.53(") 2.39(kpc)
+ r_ct:0.0000 r_cr:0.0000
+-------- Clump 1194.0: PIEMD Kovner, truncated
+ Total mass: 0.007596(cor) 0.006795 (10^12 M_sol)
+ rcut:0.52(") 2.35(kpc)
+ vdisp:51.63(km/s) b0:0.1153
+ rc:0.01(") 0.03(kpc)
+ rt:0.52(") 2.35(kpc)
+ r_ct:0.0000 r_cr:0.0000
+-------- Clump 1932.0: PIEMD Kovner, truncated
+ Total mass: 0.007592(cor) 0.006792 (10^12 M_sol)
+ rcut:0.52(") 2.35(kpc)
+ vdisp:51.62(km/s) b0:0.1153
+ rc:0.01(") 0.03(kpc)
+ rt:0.52(") 2.35(kpc)
+ r_ct:0.0000 r_cr:0.0000
+-------- Clump 1260.0: PIEMD Kovner, truncated
+ Total mass: 0.007579(cor) 0.006780 (10^12 M_sol)
+ rcut:0.52(") 2.35(kpc)
+ vdisp:51.60(km/s) b0:0.1152
+ rc:0.01(") 0.03(kpc)
+ rt:0.52(") 2.35(kpc)
+ r_ct:0.0000 r_cr:0.0000
+-------- Clump 2033.0: PIEMD Kovner, truncated
+ Total mass: 0.007576(cor) 0.006777 (10^12 M_sol)
+ rcut:0.52(") 2.35(kpc)
+ vdisp:51.59(km/s) b0:0.1151
+ rc:0.01(") 0.03(kpc)
+ rt:0.52(") 2.35(kpc)
+ r_ct:0.0000 r_cr:0.0000
+-------- Clump 1046.0: PIEMD Kovner, truncated
+ Total mass: 0.007249(cor) 0.006485 (10^12 M_sol)
+ rcut:0.51(") 2.30(kpc)
+ vdisp:51.02(km/s) b0:0.1126
+ rc:0.01(") 0.03(kpc)
+ rt:0.51(") 2.30(kpc)
+ r_ct:0.0000 r_cr:0.0000
+-------- Clump 1882.0: PIEMD Kovner, truncated
+ Total mass: 0.007001(cor) 0.006263 (10^12 M_sol)
+ rcut:0.50(") 2.26(kpc)
+ vdisp:50.58(km/s) b0:0.1107
+ rc:0.01(") 0.03(kpc)
+ rt:0.50(") 2.26(kpc)
+ r_ct:0.0000 r_cr:0.0000
+-------- Clump 889.0: PIEMD Kovner, truncated
+ Total mass: 0.006996(cor) 0.006259 (10^12 M_sol)
+ rcut:0.50(") 2.26(kpc)
+ vdisp:50.57(km/s) b0:0.1106
+ rc:0.01(") 0.03(kpc)
+ rt:0.50(") 2.26(kpc)
+ r_ct:0.0000 r_cr:0.0000
+-------- Clump 1705.0: PIEMD Kovner, truncated
+ Total mass: 0.006949(cor) 0.006216 (10^12 M_sol)
+ rcut:0.50(") 2.25(kpc)
+ vdisp:50.49(km/s) b0:0.1103
+ rc:0.01(") 0.03(kpc)
+ rt:0.50(") 2.25(kpc)
+ r_ct:0.0000 r_cr:0.0000
+-------- Clump 878.0: PIEMD Kovner, truncated
+ Total mass: 0.006913(cor) 0.006184 (10^12 M_sol)
+ rcut:0.50(") 2.25(kpc)
+ vdisp:50.42(km/s) b0:0.1100
+ rc:0.01(") 0.03(kpc)
+ rt:0.50(") 2.25(kpc)
+ r_ct:0.0000 r_cr:0.0000
+-------- Clump 2191.0: PIEMD Kovner, truncated
+ Total mass: 0.006768(cor) 0.006055 (10^12 M_sol)
+ rcut:0.49(") 2.22(kpc)
+ vdisp:50.16(km/s) b0:0.1088
+ rc:0.01(") 0.03(kpc)
+ rt:0.49(") 2.22(kpc)
+ r_ct:0.0000 r_cr:0.0000
+-------- Clump 1567.0: PIEMD Kovner, truncated
+ Total mass: 0.006594(cor) 0.005899 (10^12 M_sol)
+ rcut:0.48(") 2.19(kpc)
+ vdisp:49.83(km/s) b0:0.1074
+ rc:0.01(") 0.03(kpc)
+ rt:0.48(") 2.19(kpc)
+ r_ct:0.0000 r_cr:0.0000
+-------- Clump 1930.0: PIEMD Kovner, truncated
+ Total mass: 0.006531(cor) 0.005843 (10^12 M_sol)
+ rcut:0.48(") 2.18(kpc)
+ vdisp:49.71(km/s) b0:0.1069
+ rc:0.01(") 0.03(kpc)
+ rt:0.48(") 2.18(kpc)
+ r_ct:0.0000 r_cr:0.0000
+-------- Clump 1870.0: PIEMD Kovner, truncated
+ Total mass: 0.006455(cor) 0.005774 (10^12 M_sol)
+ rcut:0.48(") 2.17(kpc)
+ vdisp:49.57(km/s) b0:0.1063
+ rc:0.01(") 0.03(kpc)
+ rt:0.48(") 2.17(kpc)
+ r_ct:0.0000 r_cr:0.0000
+-------- Clump 1518.0: PIEMD Kovner, truncated
+ Total mass: 0.006423(cor) 0.005746 (10^12 M_sol)
+ rcut:0.48(") 2.16(kpc)
+ vdisp:49.51(km/s) b0:0.1060
+ rc:0.01(") 0.03(kpc)
+ rt:0.48(") 2.16(kpc)
+ r_ct:0.0000 r_cr:0.0000
+-------- Clump 1722.0: PIEMD Kovner, truncated
+ Total mass: 0.006346(cor) 0.005677 (10^12 M_sol)
+ rcut:0.47(") 2.15(kpc)
+ vdisp:49.36(km/s) b0:0.1054
+ rc:0.01(") 0.03(kpc)
+ rt:0.47(") 2.15(kpc)
+ r_ct:0.0000 r_cr:0.0000
+-------- Clump 1330.0: PIEMD Kovner, truncated
+ Total mass: 0.006301(cor) 0.005637 (10^12 M_sol)
+ rcut:0.47(") 2.14(kpc)
+ vdisp:49.27(km/s) b0:0.1050
+ rc:0.01(") 0.03(kpc)
+ rt:0.47(") 2.14(kpc)
+ r_ct:0.0000 r_cr:0.0000
+-------- Clump 1582.0: PIEMD Kovner, truncated
+ Total mass: 0.006266(cor) 0.005606 (10^12 M_sol)
+ rcut:0.47(") 2.14(kpc)
+ vdisp:49.20(km/s) b0:0.1047
+ rc:0.01(") 0.03(kpc)
+ rt:0.47(") 2.14(kpc)
+ r_ct:0.0000 r_cr:0.0000
+-------- Clump 1519.0: PIEMD Kovner, truncated
+ Total mass: 0.006255(cor) 0.005595 (10^12 M_sol)
+ rcut:0.47(") 2.14(kpc)
+ vdisp:49.18(km/s) b0:0.1046
+ rc:0.01(") 0.03(kpc)
+ rt:0.47(") 2.14(kpc)
+ r_ct:0.0000 r_cr:0.0000
+-------- Clump 1860.0: PIEMD Kovner, truncated
+ Total mass: 0.005991(cor) 0.005360 (10^12 M_sol)
+ rcut:0.46(") 2.09(kpc)
+ vdisp:48.65(km/s) b0:0.1024
+ rc:0.01(") 0.02(kpc)
+ rt:0.46(") 2.09(kpc)
+ r_ct:0.0000 r_cr:0.0000
+-------- Clump 1844.0: PIEMD Kovner, truncated
+ Total mass: 0.005862(cor) 0.005244 (10^12 M_sol)
+ rcut:0.46(") 2.07(kpc)
+ vdisp:48.39(km/s) b0:0.1013
+ rc:0.01(") 0.02(kpc)
+ rt:0.46(") 2.07(kpc)
+ r_ct:0.0000 r_cr:0.0000
+-------- Clump 1925.0: PIEMD Kovner, truncated
+ Total mass: 0.005717(cor) 0.005115 (10^12 M_sol)
+ rcut:0.45(") 2.04(kpc)
+ vdisp:48.09(km/s) b0:0.1000
+ rc:0.01(") 0.02(kpc)
+ rt:0.45(") 2.04(kpc)
+ r_ct:0.0000 r_cr:0.0000
+-------- Clump 1588.0: PIEMD Kovner, truncated
+ Total mass: 0.005519(cor) 0.004937 (10^12 M_sol)
+ rcut:0.44(") 2.01(kpc)
+ vdisp:47.66(km/s) b0:0.0983
+ rc:0.01(") 0.02(kpc)
+ rt:0.44(") 2.01(kpc)
+ r_ct:0.0000 r_cr:0.0000
+-------- Clump 1055.0: PIEMD Kovner, truncated
+ Total mass: 0.005503(cor) 0.004923 (10^12 M_sol)
+ rcut:0.44(") 2.00(kpc)
+ vdisp:47.63(km/s) b0:0.0981
+ rc:0.01(") 0.02(kpc)
+ rt:0.44(") 2.00(kpc)
+ r_ct:0.0000 r_cr:0.0000
+-------- Clump 1159.0: PIEMD Kovner, truncated
+ Total mass: 0.005320(cor) 0.004759 (10^12 M_sol)
+ rcut:0.43(") 1.97(kpc)
+ vdisp:47.23(km/s) b0:0.0965
+ rc:0.01(") 0.02(kpc)
+ rt:0.43(") 1.97(kpc)
+ r_ct:0.0000 r_cr:0.0000
+-------- Clump 1259.0: PIEMD Kovner, truncated
+ Total mass: 0.005280(cor) 0.004723 (10^12 M_sol)
+ rcut:0.43(") 1.96(kpc)
+ vdisp:47.14(km/s) b0:0.0961
+ rc:0.01(") 0.02(kpc)
+ rt:0.43(") 1.96(kpc)
+ r_ct:0.0000 r_cr:0.0000
+-------- Clump 1174.0: PIEMD Kovner, truncated
+ Total mass: 0.005223(cor) 0.004672 (10^12 M_sol)
+ rcut:0.43(") 1.95(kpc)
+ vdisp:47.01(km/s) b0:0.0956
+ rc:0.01(") 0.02(kpc)
+ rt:0.43(") 1.95(kpc)
+ r_ct:0.0000 r_cr:0.0000
+-------- Clump 1855.0: PIEMD Kovner, truncated
+ Total mass: 0.005101(cor) 0.004563 (10^12 M_sol)
+ rcut:0.43(") 1.93(kpc)
+ vdisp:46.73(km/s) b0:0.0945
+ rc:0.01(") 0.02(kpc)
+ rt:0.43(") 1.93(kpc)
+ r_ct:0.0000 r_cr:0.0000
+-------- Clump 1893.0: PIEMD Kovner, truncated
+ Total mass: 0.005053(cor) 0.004520 (10^12 M_sol)
+ rcut:0.42(") 1.92(kpc)
+ vdisp:46.62(km/s) b0:0.0940
+ rc:0.00(") 0.02(kpc)
+ rt:0.42(") 1.92(kpc)
+ r_ct:0.0000 r_cr:0.0000
+-------- Clump 1406.0: PIEMD Kovner, truncated
+ Total mass: 0.004942(cor) 0.004421 (10^12 M_sol)
+ rcut:0.42(") 1.90(kpc)
+ vdisp:46.36(km/s) b0:0.0930
+ rc:0.00(") 0.02(kpc)
+ rt:0.42(") 1.90(kpc)
+ r_ct:0.0000 r_cr:0.0000
+-------- Clump 997.0: PIEMD Kovner, truncated
+ Total mass: 0.004942(cor) 0.004421 (10^12 M_sol)
+ rcut:0.42(") 1.90(kpc)
+ vdisp:46.36(km/s) b0:0.0930
+ rc:0.00(") 0.02(kpc)
+ rt:0.42(") 1.90(kpc)
+ r_ct:0.0000 r_cr:0.0000
+-------- Clump 1018.0: PIEMD Kovner, truncated
+ Total mass: 0.004923(cor) 0.004405 (10^12 M_sol)
+ rcut:0.42(") 1.89(kpc)
+ vdisp:46.32(km/s) b0:0.0928
+ rc:0.00(") 0.02(kpc)
+ rt:0.42(") 1.89(kpc)
+ r_ct:0.0000 r_cr:0.0000
+-------- Clump 1041.0: PIEMD Kovner, truncated
+ Total mass: 0.004853(cor) 0.004341 (10^12 M_sol)
+ rcut:0.41(") 1.88(kpc)
+ vdisp:46.15(km/s) b0:0.0922
+ rc:0.00(") 0.02(kpc)
+ rt:0.41(") 1.88(kpc)
+ r_ct:0.0000 r_cr:0.0000
+-------- Clump 1610.0: PIEMD Kovner, truncated
+ Total mass: 0.004762(cor) 0.004260 (10^12 M_sol)
+ rcut:0.41(") 1.86(kpc)
+ vdisp:45.94(km/s) b0:0.0913
+ rc:0.00(") 0.02(kpc)
+ rt:0.41(") 1.86(kpc)
+ r_ct:0.0000 r_cr:0.0000
+-------- Clump 2016.0: PIEMD Kovner, truncated
+ Total mass: 0.004538(cor) 0.004059 (10^12 M_sol)
+ rcut:0.40(") 1.82(kpc)
+ vdisp:45.39(km/s) b0:0.0891
+ rc:0.00(") 0.02(kpc)
+ rt:0.40(") 1.82(kpc)
+ r_ct:0.0000 r_cr:0.0000
+-------- Clump 2220.0: PIEMD Kovner, truncated
+ Total mass: 0.004420(cor) 0.003954 (10^12 M_sol)
+ rcut:0.40(") 1.80(kpc)
+ vdisp:45.09(km/s) b0:0.0879
+ rc:0.00(") 0.02(kpc)
+ rt:0.40(") 1.80(kpc)
+ r_ct:0.0000 r_cr:0.0000
+-------- Clump 1731.0: PIEMD Kovner, truncated
+ Total mass: 0.004335(cor) 0.003878 (10^12 M_sol)
+ rcut:0.39(") 1.78(kpc)
+ vdisp:44.87(km/s) b0:0.0871
+ rc:0.00(") 0.02(kpc)
+ rt:0.39(") 1.78(kpc)
+ r_ct:0.0000 r_cr:0.0000
+-------- Clump 1197.0: PIEMD Kovner, truncated
+ Total mass: 0.004293(cor) 0.003840 (10^12 M_sol)
+ rcut:0.39(") 1.77(kpc)
+ vdisp:44.76(km/s) b0:0.0867
+ rc:0.00(") 0.02(kpc)
+ rt:0.39(") 1.77(kpc)
+ r_ct:0.0000 r_cr:0.0000
+-------- Clump 1486.0: PIEMD Kovner, truncated
+ Total mass: 0.004225(cor) 0.003780 (10^12 M_sol)
+ rcut:0.39(") 1.76(kpc)
+ vdisp:44.58(km/s) b0:0.0860
+ rc:0.00(") 0.02(kpc)
+ rt:0.39(") 1.76(kpc)
+ r_ct:0.0000 r_cr:0.0000
+-------- Clump 879.0: PIEMD Kovner, truncated
+ Total mass: 0.004175(cor) 0.003735 (10^12 M_sol)
+ rcut:0.38(") 1.74(kpc)
+ vdisp:44.45(km/s) b0:0.0855
+ rc:0.00(") 0.02(kpc)
+ rt:0.38(") 1.74(kpc)
+ r_ct:0.0000 r_cr:0.0000
+-------- Clump 1088.0: PIEMD Kovner, truncated
+ Total mass: 0.004080(cor) 0.003650 (10^12 M_sol)
+ rcut:0.38(") 1.72(kpc)
+ vdisp:44.19(km/s) b0:0.0845
+ rc:0.00(") 0.02(kpc)
+ rt:0.38(") 1.72(kpc)
+ r_ct:0.0000 r_cr:0.0000
+-------- Clump 1594.0: PIEMD Kovner, truncated
+ Total mass: 0.004021(cor) 0.003597 (10^12 M_sol)
+ rcut:0.38(") 1.71(kpc)
+ vdisp:44.03(km/s) b0:0.0839
+ rc:0.00(") 0.02(kpc)
+ rt:0.38(") 1.71(kpc)
+ r_ct:0.0000 r_cr:0.0000
+-------- Clump 1708.0: PIEMD Kovner, truncated
+ Total mass: 0.003967(cor) 0.003549 (10^12 M_sol)
+ rcut:0.37(") 1.70(kpc)
+ vdisp:43.89(km/s) b0:0.0833
+ rc:0.00(") 0.02(kpc)
+ rt:0.37(") 1.70(kpc)
+ r_ct:0.0000 r_cr:0.0000
+-------- Clump 935.0: PIEMD Kovner, truncated
+ Total mass: 0.003943(cor) 0.003528 (10^12 M_sol)
+ rcut:0.37(") 1.70(kpc)
+ vdisp:43.82(km/s) b0:0.0831
+ rc:0.00(") 0.02(kpc)
+ rt:0.37(") 1.70(kpc)
+ r_ct:0.0000 r_cr:0.0000
+-------- Clump 1924.0: PIEMD Kovner, truncated
+ Total mass: 0.003932(cor) 0.003518 (10^12 M_sol)
+ rcut:0.37(") 1.69(kpc)
+ vdisp:43.79(km/s) b0:0.0830
+ rc:0.00(") 0.02(kpc)
+ rt:0.37(") 1.69(kpc)
+ r_ct:0.0000 r_cr:0.0000
+-------- Clump 1270.0: PIEMD Kovner, truncated
+ Total mass: 0.003925(cor) 0.003512 (10^12 M_sol)
+ rcut:0.37(") 1.69(kpc)
+ vdisp:43.77(km/s) b0:0.0829
+ rc:0.00(") 0.02(kpc)
+ rt:0.37(") 1.69(kpc)
+ r_ct:0.0000 r_cr:0.0000
+-------- Clump 1118.0: PIEMD Kovner, truncated
+ Total mass: 0.003848(cor) 0.003442 (10^12 M_sol)
+ rcut:0.37(") 1.68(kpc)
+ vdisp:43.55(km/s) b0:0.0821
+ rc:0.00(") 0.02(kpc)
+ rt:0.37(") 1.68(kpc)
+ r_ct:0.0000 r_cr:0.0000
+-------- Clump 2040.0: PIEMD Kovner, truncated
+ Total mass: 0.003828(cor) 0.003424 (10^12 M_sol)
+ rcut:0.37(") 1.67(kpc)
+ vdisp:43.50(km/s) b0:0.0818
+ rc:0.00(") 0.02(kpc)
+ rt:0.37(") 1.67(kpc)
+ r_ct:0.0000 r_cr:0.0000
+-------- Clump 1146.0: PIEMD Kovner, truncated
+ Total mass: 0.003815(cor) 0.003413 (10^12 M_sol)
+ rcut:0.37(") 1.67(kpc)
+ vdisp:43.46(km/s) b0:0.0817
+ rc:0.00(") 0.02(kpc)
+ rt:0.37(") 1.67(kpc)
+ r_ct:0.0000 r_cr:0.0000
+-------- Clump 1700.0: PIEMD Kovner, truncated
+ Total mass: 0.003800(cor) 0.003400 (10^12 M_sol)
+ rcut:0.37(") 1.66(kpc)
+ vdisp:43.42(km/s) b0:0.0816
+ rc:0.00(") 0.02(kpc)
+ rt:0.37(") 1.66(kpc)
+ r_ct:0.0000 r_cr:0.0000
+-------- Clump 1751.0: PIEMD Kovner, truncated
+ Total mass: 0.003799(cor) 0.003399 (10^12 M_sol)
+ rcut:0.37(") 1.66(kpc)
+ vdisp:43.41(km/s) b0:0.0815
+ rc:0.00(") 0.02(kpc)
+ rt:0.37(") 1.66(kpc)
+ r_ct:0.0000 r_cr:0.0000
+-------- Clump 2060.0: PIEMD Kovner, truncated
+ Total mass: 0.003738(cor) 0.003344 (10^12 M_sol)
+ rcut:0.36(") 1.65(kpc)
+ vdisp:43.24(km/s) b0:0.0809
+ rc:0.00(") 0.02(kpc)
+ rt:0.36(") 1.65(kpc)
+ r_ct:0.0000 r_cr:0.0000
+-------- Clump 1433.0: PIEMD Kovner, truncated
+ Total mass: 0.003714(cor) 0.003323 (10^12 M_sol)
+ rcut:0.36(") 1.65(kpc)
+ vdisp:43.17(km/s) b0:0.0806
+ rc:0.00(") 0.02(kpc)
+ rt:0.36(") 1.65(kpc)
+ r_ct:0.0000 r_cr:0.0000
+-------- Clump 1326.0: PIEMD Kovner, truncated
+ Total mass: 0.003698(cor) 0.003308 (10^12 M_sol)
+ rcut:0.36(") 1.64(kpc)
+ vdisp:43.12(km/s) b0:0.0804
+ rc:0.00(") 0.02(kpc)
+ rt:0.36(") 1.64(kpc)
+ r_ct:0.0000 r_cr:0.0000
+-------- Clump 978.0: PIEMD Kovner, truncated
+ Total mass: 0.003663(cor) 0.003277 (10^12 M_sol)
+ rcut:0.36(") 1.63(kpc)
+ vdisp:43.02(km/s) b0:0.0801
+ rc:0.00(") 0.02(kpc)
+ rt:0.36(") 1.63(kpc)
+ r_ct:0.0000 r_cr:0.0000
+-------- Clump 1753.0: PIEMD Kovner, truncated
+ Total mass: 0.003620(cor) 0.003238 (10^12 M_sol)
+ rcut:0.36(") 1.62(kpc)
+ vdisp:42.89(km/s) b0:0.0796
+ rc:0.00(") 0.02(kpc)
+ rt:0.36(") 1.62(kpc)
+ r_ct:0.0000 r_cr:0.0000
+-------- Clump 1212.0: PIEMD Kovner, truncated
+ Total mass: 0.003611(cor) 0.003230 (10^12 M_sol)
+ rcut:0.36(") 1.62(kpc)
+ vdisp:42.87(km/s) b0:0.0795
+ rc:0.00(") 0.02(kpc)
+ rt:0.36(") 1.62(kpc)
+ r_ct:0.0000 r_cr:0.0000
+-------- Clump 1345.0: PIEMD Kovner, truncated
+ Total mass: 0.003601(cor) 0.003221 (10^12 M_sol)
+ rcut:0.36(") 1.62(kpc)
+ vdisp:42.84(km/s) b0:0.0794
+ rc:0.00(") 0.02(kpc)
+ rt:0.36(") 1.62(kpc)
+ r_ct:0.0000 r_cr:0.0000
+-------- Clump 973.0: PIEMD Kovner, truncated
+ Total mass: 0.003598(cor) 0.003219 (10^12 M_sol)
+ rcut:0.36(") 1.62(kpc)
+ vdisp:42.83(km/s) b0:0.0794
+ rc:0.00(") 0.02(kpc)
+ rt:0.36(") 1.62(kpc)
+ r_ct:0.0000 r_cr:0.0000
+-------- Clump 2004.0: PIEMD Kovner, truncated
+ Total mass: 0.003574(cor) 0.003197 (10^12 M_sol)
+ rcut:0.36(") 1.61(kpc)
+ vdisp:42.76(km/s) b0:0.0791
+ rc:0.00(") 0.02(kpc)
+ rt:0.36(") 1.61(kpc)
+ r_ct:0.0000 r_cr:0.0000
+-------- Clump 953.0: PIEMD Kovner, truncated
+ Total mass: 0.003572(cor) 0.003195 (10^12 M_sol)
+ rcut:0.36(") 1.61(kpc)
+ vdisp:42.75(km/s) b0:0.0791
+ rc:0.00(") 0.02(kpc)
+ rt:0.36(") 1.61(kpc)
+ r_ct:0.0000 r_cr:0.0000
+-------- Clump 2055.0: PIEMD Kovner, truncated
+ Total mass: 0.003568(cor) 0.003192 (10^12 M_sol)
+ rcut:0.36(") 1.61(kpc)
+ vdisp:42.74(km/s) b0:0.0790
+ rc:0.00(") 0.02(kpc)
+ rt:0.36(") 1.61(kpc)
+ r_ct:0.0000 r_cr:0.0000
+-------- Clump 1618.0: PIEMD Kovner, truncated
+ Total mass: 0.003505(cor) 0.003135 (10^12 M_sol)
+ rcut:0.35(") 1.60(kpc)
+ vdisp:42.55(km/s) b0:0.0783
+ rc:0.00(") 0.02(kpc)
+ rt:0.35(") 1.60(kpc)
+ r_ct:0.0000 r_cr:0.0000
+-------- Clump 1459.0: PIEMD Kovner, truncated
+ Total mass: 0.003479(cor) 0.003112 (10^12 M_sol)
+ rcut:0.35(") 1.59(kpc)
+ vdisp:42.47(km/s) b0:0.0780
+ rc:0.00(") 0.02(kpc)
+ rt:0.35(") 1.59(kpc)
+ r_ct:0.0000 r_cr:0.0000
+-------- Clump 1987.0: PIEMD Kovner, truncated
+ Total mass: 0.003475(cor) 0.003109 (10^12 M_sol)
+ rcut:0.35(") 1.59(kpc)
+ vdisp:42.46(km/s) b0:0.0780
+ rc:0.00(") 0.02(kpc)
+ rt:0.35(") 1.59(kpc)
+ r_ct:0.0000 r_cr:0.0000
+-------- Clump 1029.0: PIEMD Kovner, truncated
+ Total mass: 0.003426(cor) 0.003065 (10^12 M_sol)
+ rcut:0.35(") 1.58(kpc)
+ vdisp:42.31(km/s) b0:0.0774
+ rc:0.00(") 0.02(kpc)
+ rt:0.35(") 1.58(kpc)
+ r_ct:0.0000 r_cr:0.0000
+-------- Clump 2095.0: PIEMD Kovner, truncated
+ Total mass: 0.003280(cor) 0.002934 (10^12 M_sol)
+ rcut:0.34(") 1.55(kpc)
+ vdisp:41.85(km/s) b0:0.0758
+ rc:0.00(") 0.02(kpc)
+ rt:0.34(") 1.55(kpc)
+ r_ct:0.0000 r_cr:0.0000
+-------- Clump 2211.0: PIEMD Kovner, truncated
+ Total mass: 0.003256(cor) 0.002913 (10^12 M_sol)
+ rcut:0.34(") 1.54(kpc)
+ vdisp:41.77(km/s) b0:0.0755
+ rc:0.00(") 0.02(kpc)
+ rt:0.34(") 1.54(kpc)
+ r_ct:0.0000 r_cr:0.0000
+-------- Clump 1863.0: PIEMD Kovner, truncated
+ Total mass: 0.003235(cor) 0.002894 (10^12 M_sol)
+ rcut:0.34(") 1.54(kpc)
+ vdisp:41.70(km/s) b0:0.0752
+ rc:0.00(") 0.02(kpc)
+ rt:0.34(") 1.54(kpc)
+ r_ct:0.0000 r_cr:0.0000
+-------- Clump 1343.0: PIEMD Kovner, truncated
+ Total mass: 0.003206(cor) 0.002868 (10^12 M_sol)
+ rcut:0.34(") 1.53(kpc)
+ vdisp:41.61(km/s) b0:0.0749
+ rc:0.00(") 0.02(kpc)
+ rt:0.34(") 1.53(kpc)
+ r_ct:0.0000 r_cr:0.0000
+-------- Clump 1078.0: PIEMD Kovner, truncated
+ Total mass: 0.003200(cor) 0.002863 (10^12 M_sol)
+ rcut:0.34(") 1.53(kpc)
+ vdisp:41.59(km/s) b0:0.0748
+ rc:0.00(") 0.02(kpc)
+ rt:0.34(") 1.53(kpc)
+ r_ct:0.0000 r_cr:0.0000
+-------- Clump 2066.0: PIEMD Kovner, truncated
+ Total mass: 0.003184(cor) 0.002848 (10^12 M_sol)
+ rcut:0.34(") 1.52(kpc)
+ vdisp:41.54(km/s) b0:0.0746
+ rc:0.00(") 0.02(kpc)
+ rt:0.34(") 1.52(kpc)
+ r_ct:0.0000 r_cr:0.0000
+-------- Clump 1252.0: PIEMD Kovner, truncated
+ Total mass: 0.003176(cor) 0.002841 (10^12 M_sol)
+ rcut:0.34(") 1.52(kpc)
+ vdisp:41.51(km/s) b0:0.0745
+ rc:0.00(") 0.02(kpc)
+ rt:0.34(") 1.52(kpc)
+ r_ct:0.0000 r_cr:0.0000
+-------- Clump 1015.0: PIEMD Kovner, truncated
+ Total mass: 0.003128(cor) 0.002798 (10^12 M_sol)
+ rcut:0.33(") 1.51(kpc)
+ vdisp:41.35(km/s) b0:0.0740
+ rc:0.00(") 0.02(kpc)
+ rt:0.33(") 1.51(kpc)
+ r_ct:0.0000 r_cr:0.0000
+-------- Clump 1601.0: PIEMD Kovner, truncated
+ Total mass: 0.003115(cor) 0.002786 (10^12 M_sol)
+ rcut:0.33(") 1.51(kpc)
+ vdisp:41.31(km/s) b0:0.0738
+ rc:0.00(") 0.02(kpc)
+ rt:0.33(") 1.51(kpc)
+ r_ct:0.0000 r_cr:0.0000
+-------- Clump 1746.0: PIEMD Kovner, truncated
+ Total mass: 0.003108(cor) 0.002780 (10^12 M_sol)
+ rcut:0.33(") 1.51(kpc)
+ vdisp:41.29(km/s) b0:0.0737
+ rc:0.00(") 0.02(kpc)
+ rt:0.33(") 1.51(kpc)
+ r_ct:0.0000 r_cr:0.0000
+-------- Clump 1750.0: PIEMD Kovner, truncated
+ Total mass: 0.003105(cor) 0.002778 (10^12 M_sol)
+ rcut:0.33(") 1.50(kpc)
+ vdisp:41.28(km/s) b0:0.0737
+ rc:0.00(") 0.02(kpc)
+ rt:0.33(") 1.50(kpc)
+ r_ct:0.0000 r_cr:0.0000
+-------- Clump 955.0: PIEMD Kovner, truncated
+ Total mass: 0.003068(cor) 0.002745 (10^12 M_sol)
+ rcut:0.33(") 1.50(kpc)
+ vdisp:41.16(km/s) b0:0.0733
+ rc:0.00(") 0.02(kpc)
+ rt:0.33(") 1.50(kpc)
+ r_ct:0.0000 r_cr:0.0000
+-------- Clump 1180.0: PIEMD Kovner, truncated
+ Total mass: 0.002973(cor) 0.002660 (10^12 M_sol)
+ rcut:0.32(") 1.47(kpc)
+ vdisp:40.83(km/s) b0:0.0721
+ rc:0.00(") 0.02(kpc)
+ rt:0.32(") 1.47(kpc)
+ r_ct:0.0000 r_cr:0.0000
+-------- Clump 2099.0: PIEMD Kovner, truncated
+ Total mass: 0.002961(cor) 0.002649 (10^12 M_sol)
+ rcut:0.32(") 1.47(kpc)
+ vdisp:40.79(km/s) b0:0.0720
+ rc:0.00(") 0.02(kpc)
+ rt:0.32(") 1.47(kpc)
+ r_ct:0.0000 r_cr:0.0000
+-------- Clump 1996.0: PIEMD Kovner, truncated
+ Total mass: 0.002919(cor) 0.002611 (10^12 M_sol)
+ rcut:0.32(") 1.46(kpc)
+ vdisp:40.65(km/s) b0:0.0715
+ rc:0.00(") 0.02(kpc)
+ rt:0.32(") 1.46(kpc)
+ r_ct:0.0000 r_cr:0.0000
+-------- Clump 812.0: PIEMD Kovner, truncated
+ Total mass: 0.002915(cor) 0.002608 (10^12 M_sol)
+ rcut:0.32(") 1.46(kpc)
+ vdisp:40.63(km/s) b0:0.0714
+ rc:0.00(") 0.02(kpc)
+ rt:0.32(") 1.46(kpc)
+ r_ct:0.0000 r_cr:0.0000
+-------- Clump 1707.0: PIEMD Kovner, truncated
+ Total mass: 0.002844(cor) 0.002544 (10^12 M_sol)
+ rcut:0.32(") 1.44(kpc)
+ vdisp:40.38(km/s) b0:0.0705
+ rc:0.00(") 0.02(kpc)
+ rt:0.32(") 1.44(kpc)
+ r_ct:0.0000 r_cr:0.0000
+-------- Clump 1985.0: PIEMD Kovner, truncated
+ Total mass: 0.002776(cor) 0.002483 (10^12 M_sol)
+ rcut:0.31(") 1.42(kpc)
+ vdisp:40.14(km/s) b0:0.0697
+ rc:0.00(") 0.02(kpc)
+ rt:0.31(") 1.42(kpc)
+ r_ct:0.0000 r_cr:0.0000
+-------- Clump 1698.0: PIEMD Kovner, truncated
+ Total mass: 0.002762(cor) 0.002471 (10^12 M_sol)
+ rcut:0.31(") 1.42(kpc)
+ vdisp:40.09(km/s) b0:0.0695
+ rc:0.00(") 0.02(kpc)
+ rt:0.31(") 1.42(kpc)
+ r_ct:0.0000 r_cr:0.0000
+-------- Clump 946.0: PIEMD Kovner, truncated
+ Total mass: 0.002716(cor) 0.002429 (10^12 M_sol)
+ rcut:0.31(") 1.41(kpc)
+ vdisp:39.92(km/s) b0:0.0689
+ rc:0.00(") 0.02(kpc)
+ rt:0.31(") 1.41(kpc)
+ r_ct:0.0000 r_cr:0.0000
+-------- Clump 1169.0: PIEMD Kovner, truncated
+ Total mass: 0.002597(cor) 0.002323 (10^12 M_sol)
+ rcut:0.30(") 1.38(kpc)
+ vdisp:39.47(km/s) b0:0.0674
+ rc:0.00(") 0.02(kpc)
+ rt:0.30(") 1.38(kpc)
+ r_ct:0.0000 r_cr:0.0000
+-------- Clump 2079.0: PIEMD Kovner, truncated
+ Total mass: 0.002590(cor) 0.002317 (10^12 M_sol)
+ rcut:0.30(") 1.37(kpc)
+ vdisp:39.45(km/s) b0:0.0673
+ rc:0.00(") 0.02(kpc)
+ rt:0.30(") 1.37(kpc)
+ r_ct:0.0000 r_cr:0.0000
+-------- Clump 1743.0: PIEMD Kovner, truncated
+ Total mass: 0.002570(cor) 0.002299 (10^12 M_sol)
+ rcut:0.30(") 1.37(kpc)
+ vdisp:39.37(km/s) b0:0.0671
+ rc:0.00(") 0.02(kpc)
+ rt:0.30(") 1.37(kpc)
+ r_ct:0.0000 r_cr:0.0000
+-------- Clump 1426.0: PIEMD Kovner, truncated
+ Total mass: 0.002559(cor) 0.002289 (10^12 M_sol)
+ rcut:0.30(") 1.37(kpc)
+ vdisp:39.33(km/s) b0:0.0669
+ rc:0.00(") 0.02(kpc)
+ rt:0.30(") 1.37(kpc)
+ r_ct:0.0000 r_cr:0.0000
+-------- Clump 1402.0: PIEMD Kovner, truncated
+ Total mass: 0.002551(cor) 0.002282 (10^12 M_sol)
+ rcut:0.30(") 1.36(kpc)
+ vdisp:39.30(km/s) b0:0.0668
+ rc:0.00(") 0.02(kpc)
+ rt:0.30(") 1.36(kpc)
+ r_ct:0.0000 r_cr:0.0000
+-------- Clump 1109.0: PIEMD Kovner, truncated
+ Total mass: 0.002545(cor) 0.002277 (10^12 M_sol)
+ rcut:0.30(") 1.36(kpc)
+ vdisp:39.28(km/s) b0:0.0667
+ rc:0.00(") 0.02(kpc)
+ rt:0.30(") 1.36(kpc)
+ r_ct:0.0000 r_cr:0.0000
+-------- Clump 1747.0: PIEMD Kovner, truncated
+ Total mass: 0.002530(cor) 0.002264 (10^12 M_sol)
+ rcut:0.30(") 1.36(kpc)
+ vdisp:39.22(km/s) b0:0.0665
+ rc:0.00(") 0.02(kpc)
+ rt:0.30(") 1.36(kpc)
+ r_ct:0.0000 r_cr:0.0000
+-------- Clump 1351.0: PIEMD Kovner, truncated
+ Total mass: 0.002514(cor) 0.002249 (10^12 M_sol)
+ rcut:0.30(") 1.35(kpc)
+ vdisp:39.16(km/s) b0:0.0663
+ rc:0.00(") 0.02(kpc)
+ rt:0.30(") 1.35(kpc)
+ r_ct:0.0000 r_cr:0.0000
+-------- Clump 1493.0: PIEMD Kovner, truncated
+ Total mass: 0.002500(cor) 0.002236 (10^12 M_sol)
+ rcut:0.30(") 1.35(kpc)
+ vdisp:39.10(km/s) b0:0.0661
+ rc:0.00(") 0.02(kpc)
+ rt:0.30(") 1.35(kpc)
+ r_ct:0.0000 r_cr:0.0000
+-------- Clump 1338.0: PIEMD Kovner, truncated
+ Total mass: 0.002497(cor) 0.002234 (10^12 M_sol)
+ rcut:0.30(") 1.35(kpc)
+ vdisp:39.09(km/s) b0:0.0661
+ rc:0.00(") 0.02(kpc)
+ rt:0.30(") 1.35(kpc)
+ r_ct:0.0000 r_cr:0.0000
+-------- Clump 1467.0: PIEMD Kovner, truncated
+ Total mass: 0.002484(cor) 0.002222 (10^12 M_sol)
+ rcut:0.30(") 1.35(kpc)
+ vdisp:39.04(km/s) b0:0.0659
+ rc:0.00(") 0.02(kpc)
+ rt:0.30(") 1.35(kpc)
+ r_ct:0.0000 r_cr:0.0000
+-------- Clump 1549.0: PIEMD Kovner, truncated
+ Total mass: 0.002412(cor) 0.002157 (10^12 M_sol)
+ rcut:0.29(") 1.33(kpc)
+ vdisp:38.75(km/s) b0:0.0650
+ rc:0.00(") 0.02(kpc)
+ rt:0.29(") 1.33(kpc)
+ r_ct:0.0000 r_cr:0.0000
+-------- Clump 1611.0: PIEMD Kovner, truncated
+ Total mass: 0.002396(cor) 0.002143 (10^12 M_sol)
+ rcut:0.29(") 1.32(kpc)
+ vdisp:38.69(km/s) b0:0.0648
+ rc:0.00(") 0.02(kpc)
+ rt:0.29(") 1.32(kpc)
+ r_ct:0.0000 r_cr:0.0000
+-------- Clump 877.0: PIEMD Kovner, truncated
+ Total mass: 0.002366(cor) 0.002117 (10^12 M_sol)
+ rcut:0.29(") 1.31(kpc)
+ vdisp:38.57(km/s) b0:0.0643
+ rc:0.00(") 0.02(kpc)
+ rt:0.29(") 1.31(kpc)
+ r_ct:0.0000 r_cr:0.0000
+-------- Clump 1606.0: PIEMD Kovner, truncated
+ Total mass: 0.002365(cor) 0.002116 (10^12 M_sol)
+ rcut:0.29(") 1.31(kpc)
+ vdisp:38.56(km/s) b0:0.0643
+ rc:0.00(") 0.02(kpc)
+ rt:0.29(") 1.31(kpc)
+ r_ct:0.0000 r_cr:0.0000
+-------- Clump 1315.0: PIEMD Kovner, truncated
+ Total mass: 0.002317(cor) 0.002073 (10^12 M_sol)
+ rcut:0.29(") 1.30(kpc)
+ vdisp:38.36(km/s) b0:0.0637
+ rc:0.00(") 0.02(kpc)
+ rt:0.29(") 1.30(kpc)
+ r_ct:0.0000 r_cr:0.0000
+-------- Clump 1983.0: PIEMD Kovner, truncated
+ Total mass: 0.002302(cor) 0.002059 (10^12 M_sol)
+ rcut:0.29(") 1.30(kpc)
+ vdisp:38.30(km/s) b0:0.0635
+ rc:0.00(") 0.02(kpc)
+ rt:0.29(") 1.30(kpc)
+ r_ct:0.0000 r_cr:0.0000
+-------- Clump 1137.0: PIEMD Kovner, truncated
+ Total mass: 0.002282(cor) 0.002041 (10^12 M_sol)
+ rcut:0.28(") 1.29(kpc)
+ vdisp:38.22(km/s) b0:0.0632
+ rc:0.00(") 0.02(kpc)
+ rt:0.28(") 1.29(kpc)
+ r_ct:0.0000 r_cr:0.0000
+-------- Clump 1504.0: PIEMD Kovner, truncated
+ Total mass: 0.002274(cor) 0.002034 (10^12 M_sol)
+ rcut:0.28(") 1.29(kpc)
+ vdisp:38.19(km/s) b0:0.0631
+ rc:0.00(") 0.02(kpc)
+ rt:0.28(") 1.29(kpc)
+ r_ct:0.0000 r_cr:0.0000
+-------- Clump 2105.0: PIEMD Kovner, truncated
+ Total mass: 0.002273(cor) 0.002034 (10^12 M_sol)
+ rcut:0.28(") 1.29(kpc)
+ vdisp:38.18(km/s) b0:0.0631
+ rc:0.00(") 0.02(kpc)
+ rt:0.28(") 1.29(kpc)
+ r_ct:0.0000 r_cr:0.0000
+-------- Clump 1051.0: PIEMD Kovner, truncated
+ Total mass: 0.002231(cor) 0.001996 (10^12 M_sol)
+ rcut:0.28(") 1.28(kpc)
+ vdisp:38.00(km/s) b0:0.0625
+ rc:0.00(") 0.02(kpc)
+ rt:0.28(") 1.28(kpc)
+ r_ct:0.0000 r_cr:0.0000
+-------- Clump 2075.0: PIEMD Kovner, truncated
+ Total mass: 0.002218(cor) 0.001984 (10^12 M_sol)
+ rcut:0.28(") 1.27(kpc)
+ vdisp:37.95(km/s) b0:0.0623
+ rc:0.00(") 0.02(kpc)
+ rt:0.28(") 1.27(kpc)
+ r_ct:0.0000 r_cr:0.0000
+-------- Clump S4: PIEMD Kovner, truncated
+ Total mass: 12.523848(cor) 6.801506 (10^12 M_sol)
+ rcut:1736.72(") 7877.35(kpc)
+ vdisp:36.23(km/s) b0:0.0568
+ rc:1157.82(") 5251.57(kpc)
+ rt:1736.72(") 7877.35(kpc)
+ r_ct:0.0000 r_cr:0.0000
+-------- Clump S2: PIEMD Kovner, truncated
+ Total mass: 11.341932(cor) 6.159626 (10^12 M_sol)
+ rcut:1652.74(") 7496.43(kpc)
+ vdisp:35.35(km/s) b0:0.0540
+ rc:1101.83(") 4997.62(kpc)
+ rt:1652.74(") 7496.43(kpc)
+ r_ct:0.0000 r_cr:0.0000
+-------- Clump S1: PIEMD Kovner, truncated
+ Total mass: 8.436118(cor) 4.581524 (10^12 M_sol)
+ rcut:1425.39(") 6465.21(kpc)
+ vdisp:32.83(km/s) b0:0.0466
+ rc:950.26(") 4310.14(kpc)
+ rt:1425.39(") 6465.21(kpc)
+ r_ct:0.0000 r_cr:0.0000

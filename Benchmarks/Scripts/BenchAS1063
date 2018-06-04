@@ -1,0 +1,24 @@
+#!/bin/bash
+echo "Starting Bench AS1063"
+
+#if recompiling lenstool is needed
+#cd ../Libs/lenstool-6.8.1/
+#make
+
+#Recompile Lenstool-HPC code
+cd ../../src/
+make clean
+make
+
+#Recompile Maps code
+cd ../utils/maps
+make -f Makefile.GPU clean
+make -f Makefile.GPU
+
+#Run Test
+cd ../../Benchmarks/ConfigFiles/hff_slmodels/AS1063/cats_gold
+rm -r tmp
+rm -r Test
+../../../../../utils/maps/Bayesmap_GPU SMACS2248_HFF_NE.par Test
+
+echo "Finish AS1063 test"

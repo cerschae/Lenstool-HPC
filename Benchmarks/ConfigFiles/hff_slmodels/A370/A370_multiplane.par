@@ -1,0 +1,270 @@
+#Chi2tot: 573.782027
+#Chi2pos: 573.782027
+#Chi2_vel: 0.000000
+#Chi2_mass: 0.000000
+#Chi2formex: 0.000000
+#Chi2formey: 0.000000
+#Chi2l: 0.000000
+#log(Evidence): -402.073392
+runmode
+	reference     3 39.971340 -1.582260
+	image     1 mul_a370_specMosaic.cat
+	source    0 source.ext
+	inverse   0 0.050000 500
+	mass	4 200 0.3750 mass_4
+	end
+image
+	multfile    40 mul_a370_specMosaic.cat
+	forme       -2
+	z_m_limit  1 8.0 3 2.910169 0.345166 0.0100 
+	z_m_limit  2 11.0 3 7.268584 1.326135 0.0100 
+	z_m_limit  3 114.0 3 1.301170 0.055401 0.0100 
+	z_m_limit  4 122.0 1 0.5 4.0 0.0100 
+	z_m_limit  5 125.0 3 2.307232 0.224243 0.0100
+ 	z_m_limit  6 800.0 1 5.0 10.0 0.0100
+	mult_wcs    1
+	sigposArcsec   0.500000
+	end
+grille
+	nombre      128
+	polaire     0
+	nlentille   200
+	nlens_opt   10
+	end
+source
+	z_source     0.800000
+	end
+potentiel O1
+	profil       81
+	x_centre     1.432552
+	y_centre     1.994121
+	ellipticite     0.488851
+	angle_pos       -69.774647
+	core_radius_kpc     11.638833
+	cut_radius_kpc     800.000000
+	v_disp     402.397927
+	z_lens     0.3750
+	end
+limit O1
+	x_centre     3 1.967590 0.801648 0.010000
+	y_centre     3 2.194083 0.576750 0.010000
+	ellipticite     3 0.404225 0.101595 0.000000
+	angle_pos     3 -68.547312 7.901970 0.100000
+	core_radius_kpc     3 15.941402 7.418704 0.100000
+	v_disp    3 423.960355 25.957900 0.100000
+	end
+potentiel O2
+	profil       81
+	x_centre     1.550218
+	y_centre     11.128339
+	ellipticite     0.648102
+	angle_pos       -120.402335
+	core_radius_kpc     148.871393
+	cut_radius_kpc     800.000000
+	v_disp     1090.116884
+	z_lens     0.3750
+	end
+limit O2
+	x_centre     3 1.882473 1.278748 0.010000
+	y_centre     3 11.740158 2.642906 0.010000
+	ellipticite     3 0.667190 0.131615 0.000000
+	angle_pos     3 -121.368349 3.232541 0.002000
+	core_radius_kpc     3 151.864303 12.596157 0.100000
+	v_disp    3 1049.918750 80.323944 0.100000
+	end
+potentiel O3
+	profil       81
+	x_centre     -0.014000
+	y_centre     0.024000
+	ellipticite     0.296000
+	angle_pos       -81.900000
+	core_radius_kpc     0.138000
+	cut_radius_kpc     76.451906
+	v_disp     163.589721
+	mag		  18.490000
+	z_lens     0.3750
+	end
+limit O3
+	cut_radius_kpc     3 63.613608 27.926283 0.100000
+	v_disp    3 186.698484 61.675084 0.100000
+	end
+potentiel O4
+	profil       81
+	x_centre     7.924000
+	y_centre     -9.764000
+	ellipticite     0.260000
+	angle_pos       25.700000
+	core_radius_kpc     0.062000
+	cut_radius_kpc     1.726585
+	v_disp     160.294372
+	mag		  20.220000
+	z_lens     0.3750
+	end
+limit O4
+	cut_radius_kpc     3 1.410499 0.849242 0.100000
+	v_disp    3 182.848244 45.613196 0.100000
+	end
+potentiel O5
+	profil       81
+	x_centre     5.897000
+	y_centre     37.242000
+	ellipticite     0.200000
+	angle_pos       -63.900000
+	core_radius_kpc     0.147000
+	cut_radius_kpc     93.007359
+	v_disp     364.331522
+	mag		  18.350000
+	z_lens     0.3750
+	end
+limit O5
+	cut_radius_kpc     3 97.361890 13.034586 0.100000
+	v_disp    3 375.984318 18.765299 0.100000
+	end
+potentiel O6
+	profil       81
+	x_centre     -42.766201
+	y_centre     28.598959
+	ellipticite     0.649491
+	angle_pos       70.633859
+	core_radius_kpc     81.616632
+	cut_radius_kpc     800.000000
+	v_disp     552.795817
+	z_lens     0.3750
+	end
+limit O6
+	x_centre     3 -42.494731 1.888542 0.010000
+	y_centre     3 29.534744 1.652313 0.010000
+	ellipticite     3 0.681942 0.107377 0.000000
+	angle_pos     3 71.115402 3.020235 0.100000
+	core_radius_kpc     3 76.569689 10.879600 0.100000
+	v_disp    3 536.981203 32.190000 0.100000
+	end
+potentiel O7
+	profil       81
+	x_centre     -0.216689
+	y_centre     28.119061
+	ellipticite     0.768619
+	angle_pos       105.309985
+	core_radius_kpc     156.694012
+	cut_radius_kpc     800.000000
+	v_disp     956.081935
+	z_lens     0.3750
+	end
+limit O7
+	x_centre     3 -0.608835 1.508835 0.010000
+	y_centre     3 27.195369 5.000775 0.010000
+	ellipticite     3 0.749346 0.127866 0.000000
+	angle_pos     3 103.619001 3.562326 0.100000
+	core_radius_kpc     3 156.474626 9.178892 0.100000
+	v_disp    3 982.611458 36.802418 0.100000
+	end
+potentiel O8
+	profil       81
+	x_centre     2.663344
+	y_centre     46.842694
+	ellipticite     0.595276
+	angle_pos       -84.330000
+	core_radius_kpc     0.150956
+	cut_radius_kpc     3.156433
+	v_disp     220.594580
+	mag		  19.770000
+	z_lens     0.3750
+	end
+limit O8
+	cut_radius_kpc     3 4.683429 4.683429 0.100000
+	v_disp    3 215.342986 43.062096 0.100000
+	end
+potentiel O9
+	profil       81
+	x_centre     29.289229
+	y_centre     59.295006
+	ellipticite     0.571691
+	angle_pos       42.520000
+	core_radius_kpc     0.157344
+	cut_radius_kpc     8.795646
+	v_disp     140.854167
+	mag		  19.680000
+	z_lens     0.3750
+	end
+limit O9
+	cut_radius_kpc     3 6.922281 5.429604 0.100000
+	v_disp    3 148.354119 28.848840 0.100000
+	end
+potentiel O10
+	profil       81
+	x_centre     26.250188
+	y_centre     56.939185
+	ellipticite     0.100710
+	angle_pos       36.970000
+	core_radius_kpc     0.084889
+	cut_radius_kpc     0.708221
+	v_disp     88.240175
+	mag		  21.020000
+	z_lens     0.3750
+	end
+limit O10
+	cut_radius_kpc     3 3.760690 3.760690 0.100000
+	v_disp    3 74.716656 74.716656 0.100000
+	end
+potfile0
+	filein  1 galsortcutI_mosaicBright_noBCGsV2.5.cat
+	zlens   0.375000
+	type    81
+	corekpc 0.150000
+	mag0    19.783800
+	sigma   1 120.0 180.0
+	cutkpc  1 10.0 50.0
+	slope   0 4.000000 2.500000
+	vdslope 0 4.000000 0.000000
+	vdscatter 0 0.000000 0.000000
+	rcutscatter 0 0.000000 0.000000
+	end
+potfile1
+	filein  1 galsort_z1Group.cat
+	zlens   1.05000
+	type    81
+	corekpc 0.150000
+	mag0    21.4500
+	sigma   1 120.0 180.0
+	cutkpc  1 10.0 50.0
+	slope   0 4.000000 2.500000
+	vdslope 0 4.000000 0.000000
+	vdscatter 0 0.000000 0.000000
+	rcutscatter 0 0.000000 0.000000
+	end
+cline
+	nplan    0
+	dmax     160.000000
+	algorithm   MARCHINGSQUARES
+	limitHigh   10.0
+	limitLow    1.000000
+	end
+grande
+	iso         0 0 0.000000 0.000000 0.000000
+	name        best
+	profil      0 0
+	contour     1 0
+	large_dist  0.300000
+	end
+cosmologie
+	model       1
+	H0         70.000000
+	omegaM     0.300000
+	omegaX     0.700000
+	omegaK     0.
+	wX         -1.000000
+	wa         0.000000
+	end
+cosmolimit
+	omegaM		0 0.000000 0.000000
+	omegaX		0 0.000000 0.000000
+	wX		0 0.000000 0.000000
+	wa 	0 0.000000 0.000000
+	end
+champ
+	xmin     -80.000000
+	xmax     80.000000
+	ymin     -80.000000
+	ymax     80.000000
+	end
+fini

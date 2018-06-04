@@ -88,10 +88,10 @@ void module_readParameters_bayesmodels(double * bayespot, int nparam, int nvalue
 				fprintf(stderr, "ERROR: The bayes.dat file has an invalid line. please correct\nTypical problems: Whitespace on last bayes.dat line");
 				exit(-1);
 			}
-			std::cerr << bayespot[j * nparam + i] << " " ;
+			//std::cerr << bayespot[j * nparam + i] << " " ;
 		}
 		streamline.clear();
-		std::cerr << std::endl;
+		//std::cerr << std::endl;
 		j += 1;
 		}
 
@@ -125,58 +125,62 @@ void module_readParameters_setbayesmapmodels(const runmode_param* runmode, const
 
 	int param_index = 2;
 	int nhalo_index = 0;
+	int SOA_index = 0;
 	double DTR=acos(-1.)/180.;	/* 1 deg in rad  = pi/180 */
+
 	for(int i = 0; i < runmode->nhalos; i++){
+		//std::cerr << "Lenses SOA index: " << lenses->SOA_index[i] << std::endl;
+		SOA_index = lenses->SOA_index[i];
 		if(limit[i].position.x.block >= 1){
-			lenses->position_x[i] = bayespot[index*nparam+param_index];
-			std::cerr << " X : "<< index*nparam+param_index << " " << bayespot[index*nparam+param_index] << std::endl;
+			lenses->position_x[SOA_index] = bayespot[index*nparam+param_index];
+			//std::cerr << " X : "<< index*nparam+param_index << " " << bayespot[index*nparam+param_index] << std::endl;
 			param_index++;
 		}
 		if(limit[i].position.y.block >= 1){
-			lenses->position_y[i] = bayespot[index*nparam+param_index];
-			std::cerr << " Y : "<< index*nparam+param_index << " " << bayespot[index*nparam+param_index] << std::endl;
+			lenses->position_y[SOA_index] = bayespot[index*nparam+param_index];
+			//std::cerr << " Y : "<< index*nparam+param_index << " " << bayespot[index*nparam+param_index] << std::endl;
 			param_index++;
 		}
 		if(limit[i].ellipticity_potential.block >= 1){
-			lenses->ellipticity_potential[i] = bayespot[index*nparam+param_index];
+			lenses->ellipticity_potential[SOA_index] = bayespot[index*nparam+param_index];
 			//std::cerr << " X : "<< index*nparam+param_index << " " << bayespot[index*nparam+param_index] << std::endl;
 			param_index++;
 		}
 		if(limit[i].ellipticity.block >= 1){
-			lenses->ellipticity[i] = bayespot[index*nparam+param_index];
+			lenses->ellipticity[SOA_index] = bayespot[index*nparam+param_index];
 			//std::cerr << " X : "<< index*nparam+param_index << " " << bayespot[index*nparam+param_index] << std::endl;
 			param_index++;
 		}
 		if(limit[i].ellipticity_angle.block >= 1){
-			lenses->ellipticity_angle[i] = bayespot[index*nparam+param_index]* DTR;
+			lenses->ellipticity_angle[SOA_index] = bayespot[index*nparam+param_index]* DTR;
 			//std::cerr << " X : "<< index*nparam+param_index << " " << bayespot[index*nparam+param_index] << std::endl;
-			lenses->anglecos[i] = cos(lenses->ellipticity_angle[i]);
-			lenses->anglesin[i] = sin(lenses->ellipticity_angle[i]);
+			lenses->anglecos[SOA_index] = cos(lenses->ellipticity_angle[SOA_index]);
+			lenses->anglesin[SOA_index] = sin(lenses->ellipticity_angle[SOA_index]);
 			param_index++;
 		}
 		if(limit[i].rcore.block >= 1){
-			lenses->rcore[i] = bayespot[index*nparam+param_index];
+			lenses->rcore[SOA_index] = bayespot[index*nparam+param_index];
 			//std::cerr << " X : "<< index*nparam+param_index << " " << bayespot[index*nparam+param_index] << std::endl;
 			param_index++;
 		}
 		if(limit[i].vdisp.block >= 1){
-			lenses->vdisp[i] = bayespot[index*nparam+param_index];
+			lenses->vdisp[SOA_index] = bayespot[index*nparam+param_index];
 			//std::cerr << "VDISBLOC" << limit[i].vdisp.block <<" X : "<< index*nparam+param_index << " " << bayespot[index*nparam+param_index] << std::endl;
 			param_index++;
 		}
 		if(limit[i].rcut.block >= 1){
-			lenses->rcut[i] = bayespot[index*nparam+param_index];
+			lenses->rcut[SOA_index] = bayespot[index*nparam+param_index];
 			//std::cerr << " X : "<< index*nparam+param_index << " " << bayespot[index*nparam+param_index] << std::endl;
 			param_index++;
 		}
 		if(limit[i].z.block >= 1){
-			lenses->z[i] = bayespot[index*nparam+param_index];
+			lenses->z[SOA_index] = bayespot[index*nparam+param_index];
 			//std::cerr << " X : "<< index*nparam+param_index << " " << bayespot[index*nparam+param_index] << std::endl;
 			param_index++;
 		}
-		module_readParameters_calculatePotentialparameter_SOA(lenses, i);
+		module_readParameters_calculatePotentialparameter_SOA(lenses, SOA_index);
 	}
-	std::cerr << "Potfile! " << runmode->potfile << std::endl;
+	//std::cerr << "Potfile! " << runmode->potfile << std::endl;
 	if(runmode->potfile != 0){
 	//Skip redshift image optimisation
 		param_index += runmode->N_z_param;
@@ -225,8 +229,8 @@ void module_readParameters_lens_dslds_calculation(const runmode_param* runmode, 
 	lens->dlsds[0] = dl0s/dos;
 
 	for(int ii = 0;ii <runmode->n_tot_halos; ii++){
-		std::cerr << ii << std::endl;
-		std::cerr << lens->z[ii] << std::endl;
+		//std::cerr << ii << std::endl;
+		//std::cerr << lens->z[ii] << std::endl;
 		if(lens->z[ii] == lens_z){
 			lens->dlsds[ii] = dl0s/dos;
 		}
@@ -782,7 +786,7 @@ std::ifstream IN(infile.c_str(), std::ios::in);
     read_runmode_countpotfile(runmode);
 
 
-std::cerr <<"nsets: " <<runmode->nsets <<" nhalos: " << runmode->nhalos << " nimagestot: " << runmode->nimagestot << " npotfile 1: " << runmode->npotfile[0] << " npotfile 2: " << runmode->npotfile[1] <<  " multi: " << runmode->multi<< std::endl;
+//std::cerr <<"nsets: " <<runmode->nsets <<" nhalos: " << runmode->nhalos << " nimagestot: " << runmode->nimagestot << " npotfile 1: " << runmode->npotfile[0] << " npotfile 2: " << runmode->npotfile[1] <<  " multi: " << runmode->multi<< std::endl;
 
 }
 
@@ -1579,7 +1583,7 @@ void setScalingRelations(const runmode_param *runmode, const cosmo_param *cosmol
 
                 	 lenses->vdisp[i] = pot->sigma *
                                     pow(10., 0.4 * (pot->mag0 - lenses->mag[i]) / pot->vdslope);
-                	std::cerr << " "<< pot->sigma1 <<" "<< pot->vdslope << " "<< lenses->mag[i] << " "<< pot->mag0 << " "<< lenses->vdisp[i] << "  " << i << std::endl;
+                	//std::cerr << " "<< pot->sigma1 <<" "<< pot->vdslope << " "<< lenses->mag[i] << " "<< pot->mag0 << " "<< lenses->vdisp[i] << "  " << i << std::endl;
                      /* The factor of 2 so that with slope1 = 4, we have
                       * 2/slope1=1/2, then Brainerd, Blandford, Smail, 1996 */
                 	 lenses->rcut[i] = pot->cut *
@@ -2202,7 +2206,7 @@ void module_readParameters_PotentialSOA_direct(std::string infile, Potential_SOA
 
 	int N_type[100];
 	int Indice_type[100];
-	int ind;
+	int ind, initial_index;
 	Potential lens_temp;
 	//Init of lens_SOA
 	lens_SOA->name = 	new type_t[n_tot_halos];
@@ -2229,8 +2233,10 @@ void module_readParameters_PotentialSOA_direct(std::string infile, Potential_SOA
 	lens_SOA->alpha = 		new type_t[n_tot_halos];
 	lens_SOA->theta = 		new type_t[n_tot_halos];
 	lens_SOA->dlsds = 		new type_t[n_tot_halos];
+	lens_SOA->SOA_index = 		new int[n_tot_halos];
 
-
+	//Used to store the initial index of lenses
+	initial_index = 0;
 
 
 	//Init of N_types and Indice_type (Number of lenses of a certain type)
@@ -2258,9 +2264,10 @@ void module_readParameters_PotentialSOA_direct(std::string infile, Potential_SOA
 		first = "";
 	    std::istringstream read1(line1); // create a stream for the line
 	    read1 >> first;
-	    std::cerr << " 1: " << first << std::endl;
+	    //std::cerr << " 1: " << first << std::endl;
             if (!strncmp(first.c_str(), "potent", 6))  // Read in potential
 		{
+
 			lens_temp.position.x = lens_temp.position.y = 0.;
 			lens_temp.ellipticity = 0;
 			lens_temp.ellipticity_potential = 0.;
@@ -2285,7 +2292,7 @@ void module_readParameters_PotentialSOA_direct(std::string infile, Potential_SOA
 				std::istringstream read2(line2);
 				read2 >> second >> third;
 				//std::cerr << line2 << std::endl;
-				std::cerr << " 2: " << second << std::endl;
+				//std::cerr << " 2: " << second << std::endl;
 				if (strcmp(second.c_str(), "end") == 0)  // Move to next potential and initialize it
 				{
 					if ( lens_temp.z == 0. )  // Check if redshift from current halo was initialized
@@ -2426,6 +2433,10 @@ void module_readParameters_PotentialSOA_direct(std::string infile, Potential_SOA
 		lens_SOA->anglecos[ind] 	     = cos(lens_temp.ellipticity_angle);
 		lens_SOA->anglesin[ind] 	     = sin(lens_temp.ellipticity_angle);
 
+		//Store new index for bayes map purposes
+		lens_SOA->SOA_index[initial_index] = ind;
+
+		initial_index += 1;
 		Indice_type[lens_temp.type-1] += 1;
 	}
 }  // closes if loop
