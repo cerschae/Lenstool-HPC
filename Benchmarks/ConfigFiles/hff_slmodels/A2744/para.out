@@ -1,8 +1,8 @@
 runmode
 	reference	3 3.586259 -30.400174 3.586259 -30.400174
 	inverse	0 0
-	mass	4 200 0.308000 mass_4
-	ampli	5 200 1000.000000 ampli_5
+	mass	0 2000 0.308000 mass_1
+	ampli	6 2000 1000.000000 ampli_1
 	end
 image
 	multfile	100 img_mul_constraints.cat

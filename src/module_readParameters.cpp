@@ -143,12 +143,12 @@ void module_readParameters_setbayesmapmodels(const runmode_param* runmode, const
 		}
 		if(limit[i].ellipticity_potential.block >= 1){
 			lenses->ellipticity_potential[SOA_index] = bayespot[index*nparam+param_index];
-			//std::cerr << " X : "<< index*nparam+param_index << " " << bayespot[index*nparam+param_index] << std::endl;
+			//std::cerr << " epot : "<< index*nparam+param_index << " " << bayespot[index*nparam+param_index] << std::endl;
 			param_index++;
 		}
 		if(limit[i].ellipticity.block >= 1){
 			lenses->ellipticity[SOA_index] = bayespot[index*nparam+param_index];
-			//std::cerr << " X : "<< index*nparam+param_index << " " << bayespot[index*nparam+param_index] << std::endl;
+			//std::cerr << " emass : "<< index*nparam+param_index << " " << bayespot[index*nparam+param_index] << std::endl;
 			param_index++;
 		}
 		if(limit[i].ellipticity_angle.block >= 1){
@@ -165,7 +165,7 @@ void module_readParameters_setbayesmapmodels(const runmode_param* runmode, const
 		}
 		if(limit[i].vdisp.block >= 1){
 			lenses->vdisp[SOA_index] = bayespot[index*nparam+param_index];
-			//std::cerr << "VDISBLOC" << limit[i].vdisp.block <<" X : "<< index*nparam+param_index << " " << bayespot[index*nparam+param_index] << std::endl;
+			//std::cerr << "VDISBLOC" << limit[i].vdisp.block <<" X : "<< index*nparam+param_index << " " << bayespot[index*nparam+param_index] << " " << nparam <<std::endl;
 			param_index++;
 		}
 		if(limit[i].rcut.block >= 1){
@@ -241,7 +241,7 @@ void module_readParameters_lens_dslds_calculation(const runmode_param* runmode, 
 			dol = module_cosmodistances_observerObject(lens_z, *cosmo);
 			lens->dlsds[ii] = dl0s/dos;
 		}
-		printf("dlsds %f\n",lens->dlsds[ii]);
+		//printf("dlsds %f\n",lens->dlsds[ii]);
 	}
 }
 
@@ -1716,6 +1716,7 @@ for(int index=0; index<nhalos; index++)
 	host_potentialoptimization[index].weight.block=0;
 	host_potentialoptimization[index].ellipticity_angle.block=0;
 	host_potentialoptimization[index].ellipticity.block=0;
+	host_potentialoptimization[index].ellipticity_potential.block=0;
 	host_potentialoptimization[index].rcore.block=0;
 	host_potentialoptimization[index].rcut.block=0;
 	host_potentialoptimization[index].rscale.block=0;
@@ -1776,7 +1777,7 @@ std::ifstream IN(infile.c_str(), std::ios::in);
                         host_potentialoptimization[i].vdisp.max =(type_t)cast_max;
                         host_potentialoptimization[i].vdisp.sigma =(type_t)cast_sigma;
                     }
-                    else if ( !strcmp(second.c_str(), "ellip_pot")|| !strcmp(second.c_str(), "gamma") )  // Read in for ellipticity
+                    else if ( !strcmp(second.c_str(), "ellip_pot"))  // Read in for ellipticity
                     {
                         sscanf(line2.c_str(), "%*s%d%lf%lf%lf", &host_potentialoptimization[i].ellipticity_potential.block,
                         		&cast_min, &cast_max, &cast_sigma);
@@ -1784,7 +1785,7 @@ std::ifstream IN(infile.c_str(), std::ios::in);
                         host_potentialoptimization[i].ellipticity_potential.max =(type_t)cast_max;
                         host_potentialoptimization[i].ellipticity_potential.sigma =(type_t)cast_sigma;
                     }
-                    else if ( !strcmp(second.c_str(), "ellipticitymass") || !strcmp(second.c_str(), "ellipticity") || !strcmp(second.c_str(), "ellipticite") )  // Read in for ellipticity
+                    else if ( !strcmp(second.c_str(), "ellipticitymass") || !strcmp(second.c_str(), "ellipticity") || !strcmp(second.c_str(), "ellipticite") || !strcmp(second.c_str(), "gamma") )  // Read in for ellipticity
                     {
                         sscanf(line2.c_str(), "%*s%d%lf%lf%lf", &host_potentialoptimization[i].ellipticity.block,
                         		&cast_min, &cast_max, &cast_sigma);
@@ -2275,6 +2276,7 @@ void module_readParameters_PotentialSOA_direct(std::string infile, Potential_SOA
 			lens_temp.vdisp = 0.;
 			lens_temp.rcut = 0.;
 			lens_temp.rcore = 0;
+			lens_temp.b0 = 0;
 			core_radius_kpc = 0.;
 			cut_radius_kpc = 0;
 			lens_temp.weight = 0;
@@ -2643,11 +2645,12 @@ void module_readParameters_calculatePotentialparameter_SOA(Potential_SOA *lens, 
         break;
 
 	default:
-		if ( lens->ellipticity[ind] != 0. && lens->ellipticity_potential[ind] == 0. ){
-			lens->ellipticity_potential[ind] = lens->ellipticity[ind]/3 ;
+		if ( lens->ellipticity[ind] == 0. && lens->ellipticity_potential[ind] != 0. ){
+			lens->ellipticity[ind] = lens->ellipticity_potential[ind]*3;
 		}
 		else{
-			lens->ellipticity[ind] = lens->ellipticity_potential[ind]*3;
+			lens->ellipticity_potential[ind] = lens->ellipticity[ind]/3 ;
+
 		}
 		break;
     };

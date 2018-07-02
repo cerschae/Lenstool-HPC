@@ -7,7 +7,7 @@ echo "Starting Bench M1149"
 
 #Recompile Lenstool-HPC code
 cd ../../src/
-make clean
+#make clean
 make
 
 #Recompile Maps code

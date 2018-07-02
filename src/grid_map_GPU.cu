@@ -341,6 +341,8 @@ void map_grid_GPU(map_gpu_function_t mapfunction, type_t *map,const struct cosmo
 	cudaMemcpy(lens_kernel, lens_gpu, sizeof(Potential_SOA), cudaMemcpyHostToDevice);
 	//
 	type_t time = -myseconds();
+	//std::cerr << "DLS " << dl0s << " " << dos << " " << dol  << " " << lens->z[0] << " " << lens->z[1] << " " << z  << std::endl;
+	//std::cerr  <<"BLAAAAAAAAAAAA " << grid_grad2_a_gpu[0] << std::endl;
 	//
 	module_potentialDerivatives_totalGradient2_SOA_CPU_GPU(grid_grad2_a_gpu, grid_grad2_b_gpu, grid_grad2_c_gpu, grid_grad2_d_gpu, frame_gpu, lens_kernel, nhalos, dx, dy, nbgridcells_x, nbgridcells_y, istart, jstart);
 	//
@@ -410,6 +412,7 @@ void map_resizedgrid_GPU(map_gpu_function_t mapfunction, type_t *map,const struc
 
 	type_t dl0s = module_cosmodistances_objectObject(lens->z[0], z, *cosmo);
 	type_t dos = module_cosmodistances_observerObject(z, *cosmo);
+
 	//select_ratio_function(std::string mode, const struct runmode_param* runmode, type_t dls, type_t ds)
 
 	lens_gpu = (Potential_SOA *) malloc(sizeof(Potential_SOA));
@@ -464,6 +467,8 @@ void map_resizedgrid_GPU(map_gpu_function_t mapfunction, type_t *map,const struc
 	//
 	module_potentialDerivatives_totalGradient2_SOA_CPU_GPU(grid_grad2_a_gpu, grid_grad2_b_gpu, grid_grad2_c_gpu, grid_grad2_d_gpu, frame_gpu, lens_kernel, nhalos, dx, dy, nbgridcells_x, nbgridcells_y, istart, jstart);
 	//
+
+
 	//mapfunction(map_gpu,grid_grad2_a_gpu, grid_grad2_b_gpu, grid_grad2_c_gpu, grid_grad2_d_gpu,dl0s,dos,z,mode_amp,nhalos,nbgridcells_x,nbgridcells_y);
 	//amplif_grid_CPU_GPU(map_gpu,grid_grad2_a_gpu, grid_grad2_b_gpu, grid_grad2_c_gpu, grid_grad2_d_gpu,dl0s,z,mode_amp,nhalos,nbgridcells_x,nbgridcells_y);
 	//cudasafe(cudaGetLastError(), "module_potentialDerivative_totalGradient_SOA_CPU_GPU");
@@ -508,6 +513,8 @@ void amplif_1_grid_CPU_GPU(type_t *map,type_t *grid_grad2_a,type_t *grid_grad2_b
         //
         //printf("nhalos = %d, size of shared memory = %lf (split)\n", nhalos, (type_t) (8*nhalos + BLOCK_SIZE_X*BLOCK_SIZE_Y)*sizeof(type_t));
         //
+        //std::cerr << "Amplif 1 :"  <<dl0s<<" " <<ds<<" " << std::endl;
+        //
         cudaMemset(map, 0, nbgridcells_x*nbgridcells_y*sizeof(type_t));
         //
         amplif_1_grid_GPU<<<grid, threads>>> (map,grid_grad2_a, grid_grad2_b,grid_grad2_c, grid_grad2_d,dl0s,ds,z,nbgridcells_x);
@@ -528,12 +535,14 @@ __global__ void amplif_1_grid_GPU(type_t *ampli,type_t *grid_grad2_a,type_t *gri
     //
     if ((row < nbgridcells) && (col < nbgridcells))
     {
+
     	int index = row*nbgridcells + col;
         A = 1. - grid_grad2_a[index]*dlsds;   // 1 - DLS/DS * d2phixx
         B = - grid_grad2_b[index]*dlsds;   // - DLS/DS * d2phixy
         C = 1. - grid_grad2_c[index]*dlsds;   // 1 - DLS/DS * d2phiyy
         amp = formeli_HPC(A, B, C);
         ampli[index] = 1. / (amp.a * amp.b);
+        //if(col == 0 and row == 0)printf(" GPUUUU:  Grad  %f %f %f  ABC %f %f %f dlsds %f ab %f %f %f \n",grid_grad2_a[index]*dlsds,grid_grad2_b[index]*dlsds, grid_grad2_c[index]*dlsds,A,B,C,dlsds,amp.a,amp.b,(A - C)*(A - C) + 4*B*B);
     }
 }
 //Amplification NR 2
@@ -694,6 +703,7 @@ __global__ void amplif_5_grid_GPU(type_t *ampli,type_t *grid_grad2_a,type_t *gri
     	int index = row*nbgridcells + col;
         type_t kappa = (grid_grad2_a[index] + grid_grad2_c[index]) / 2.;
         ampli[index] = kappa;
+        //if(col == 0 and row == 0)printf(" GPUUUU:  Grad  %f %f %f ",grid_grad2_a[index], grid_grad2_b[index],grid_grad2_c[index]);
     }
 }
 //Amplification NR 6
@@ -833,8 +843,10 @@ __global__ void mass_grid_GPU(type_t *ampli,type_t *grid_grad2_a,type_t *grid_gr
     if ((row < nbgridcells) && (col < nbgridcells))
     {
     	int index = row*nbgridcells + col;
+    	//if(col == 0 and row == 0)printf(" MASS GPU %f %f\n",grid_grad2_a[index], grid_grad2_c[index]);
         type_t ga1 = (grid_grad2_a[index] + grid_grad2_c[index]) * 0.5 ;//* dlsds ;
         ampli[index] = ga1*mult;
+
     }
 }
 

@@ -339,7 +339,7 @@ int main(int argc, char *argv[])
 
 		// Set the lens parameters from <array>
 		setBayesModel( iVal, nVal, array );
-#if 1
+#if 0
 		for(int i = 0; i < G.nlens; i++){
 			printf("Lenstool Potential[%d]: x = %f, y = %f, vdisp = %f, type = %d \n \t ellipticity = %f, ellipticity_pot = %f, ellipticity angle (radians) = %f, rcore = %f, rcut = %f,\n z = %f\n", i,lens[i].C.x, lens[i].C.y, lens[i].sigma, lens[i].type, lens[i].emass, lens[i].epot, lens[i].theta, lens[i].rc, lens[i].rcut, lens[i].z);
 		}
@@ -419,7 +419,7 @@ int main(int argc, char *argv[])
 				////set bayes potential
 				module_readParameters_setbayesmapmodels(&runmode, &cosmology, host_potentialoptimization, potfile, &lenses_SOA,bayespot,nparam, ii);
 				//std::cerr << runmode.n_tot_halos << std::endl;
-				module_readParameters_debug_potential_SOA(1, lenses_SOA, runmode.n_tot_halos);
+				module_readParameters_debug_potential_SOA(0, lenses_SOA, runmode.n_tot_halos);
 				//Init
 				memset(mass_GPU, 0, (runmode.mass_gridcells) * (runmode.mass_gridcells) * sizeof(type_t));
 
@@ -459,7 +459,7 @@ int main(int argc, char *argv[])
 				map_gpu_func = select_map_function("ampli",&runmode);
 
 				//calculating map using defined function
-				map_grid_GPU(map_gpu_func,ampli_GPU,&cosmology, &frame, &lenses_SOA, runmode.n_tot_halos, runmode.amplif_gridcells ,runmode.amplif, runmode.z_mass);
+				map_grid_GPU(map_gpu_func,ampli_GPU,&cosmology, &frame, &lenses_SOA, runmode.n_tot_halos, runmode.amplif_gridcells ,runmode.amplif, runmode.z_amplif);
 
 				//writing
 				//std::cerr << runmode.amplif_name << std::endl;

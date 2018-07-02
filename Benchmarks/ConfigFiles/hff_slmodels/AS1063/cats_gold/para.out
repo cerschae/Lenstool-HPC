@@ -1,8 +1,8 @@
 runmode
 	reference	3 342.18322 -44.530889 342.183220 -44.530889
 	inverse	0 0
-	mass	4 200 0.347500 mass.fits
-	ampli	5 200 1000.000000 ampli.fits
+	mass	0 2000 0.347500 mass.fits
+	ampli	5 2000 1000.000000 ampli.fits
 	end
 image
 	multfile	1 mul_gold.cat

@@ -258,37 +258,41 @@ __device__ matrix module_potentialDerivatives_totalGradient2_14_SOA_GPU(const st
 
 	int col = blockIdx.x*blockDim.x + threadIdx.x;
 	int row = blockIdx.y*blockDim.y + threadIdx.y;
-	if(row == 0 && col == 0) printf("Start GPU Grad 14 %f %f\n",lens->anglecos[0],lens->anglesin[0]);
+	//if(row == 0 && col == 0) printf("Start GPU Grad 14 %f %f\n",lens->anglecos[0],lens->anglesin[0]);
 
-	struct matrix grad2, clump;
+	struct matrix grad2, grad2_temp, clump;
 	grad2.a =  0;
 	grad2.b =  0;
 	grad2.c =  0;
 	grad2.d =  0;
 
-
 	for(int i = shalos; i < shalos + nhalos; i++)
 	{
+		//if(col == 0 and row == 0)printf(" 14! :  I  %d %f %f %f ",i, lens->anglecos[i],lens->anglesin[i],lens->ellipticity_potential[i]);
+		grad2_temp.a =  0;
+		grad2_temp.b =  0;
+		grad2_temp.c =  0;
+		grad2_temp.d =  0;
+
 		type_t cose = lens->anglecos[i];
 		type_t sine = lens->anglesin[i];
 
-		grad2.a += lens->ellipticity_potential[i]*3;
-		grad2.c += -lens->ellipticity_potential[i]*3;
+		grad2_temp.a = lens->ellipticity_potential[i]*3;
+		grad2_temp.c = -lens->ellipticity_potential[i]*3;
 		//grad2.b = grad2.d = 0;
 
 		//rotation matrix  1
-		clump.a = grad2.a * cose + grad2.b * -sine;
-		clump.b = grad2.a * sine + grad2.b * cose;
-		clump.c = grad2.d * sine + grad2.c * cose;
-		clump.d = grad2.d * cose + grad2.c * -sine;
+		clump.a = grad2_temp.a * cose + grad2_temp.b * -sine;
+		clump.b = grad2_temp.a * sine + grad2_temp.b * cose;
+		clump.c = grad2_temp.d * sine + grad2_temp.c * cose;
+		clump.d = grad2_temp.d * cose + grad2_temp.c * -sine;
 		//if(blockIdx.x*blockDim.x + threadIdx.x == 0 && blockIdx.y*blockDim.y + threadIdx.y == 0) printmat_gpu(clumpcut);
 		//rotation matrix  2
-		grad2.a = cose * clump.a + -sine * clump.d;
-		grad2.b = cose * clump.b + -sine * clump.c;
-		grad2.c = sine * clump.b + cose * clump.c;
-		grad2.d = sine * clump.a + cose * clump.d;
+		grad2.a += cose * clump.a + -sine * clump.d;
+		grad2.b += cose * clump.b + -sine * clump.c;
+		grad2.c += sine * clump.b + cose * clump.c;
+		grad2.d += sine * clump.a + cose * clump.d;
 	}
-
 
 
 	return(grad2);
@@ -372,6 +376,8 @@ module_potentialDerivatives_totalGradient2_SOA_GPU(type_t *grid_grad2_a, type_t 
 		grid_grad2_b[index] = grad.b;
 		grid_grad2_c[index] = grad.c;
 		grid_grad2_d[index] = grad.d;
+
+		//if(row == 0 && col == 0) printf("point = %lf \n", grid_grad2_a[index] );
 
 	}
 }
@@ -482,6 +488,7 @@ module_potentialDerivatives_Kmap_SOA_GPU(type_t *grid_grad2_a, type_t *grid_grad
 			grad.b += clumpgrad.b*dlsds;
 			grad.c += clumpgrad.c*dlsds;
 			grad.d += clumpgrad.d*dlsds;
+			//if(row == 0 && col == 0) printf(" %f %f %f %f \n",grad.a,grad.b,grad.c,grad.d);
 #endif
 			dlsds = lens->dlsds[shalos];
 			shalos += count;
@@ -492,6 +499,7 @@ module_potentialDerivatives_Kmap_SOA_GPU(type_t *grid_grad2_a, type_t *grid_grad
 		grid_grad2_b[index] = grad.b;
 		grid_grad2_c[index] = grad.c;
 		grid_grad2_d[index] = grad.d;
+		if(row == 0 && col == 0) printf("point = %lf \n", grid_grad2_a[index] );
 
 	}
 

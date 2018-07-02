@@ -11,7 +11,7 @@ runmode
 	image     1 mul_a370_specMosaic.cat
 	source    0 source.ext
 	inverse   0 0.050000 500
-	mass	4 200 0.3750 mass_4
+	mass	4 2000 0.3750 mass_1
 	end
 image
 	multfile    40 mul_a370_specMosaic.cat
