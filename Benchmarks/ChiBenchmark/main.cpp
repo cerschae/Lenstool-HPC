@@ -250,10 +250,11 @@ int main(int argc, char *argv[])
 	// Input: input file
 	// Output: Potentials from potfiles and its parameters
 
-	if (runmode.potfile == 1 ){
+	if (runmode.potfile == 1 )
+	{
 		module_readParameters_readpotfiles_param(inputFile, &potfile,cosmology);
 		module_readParameters_debug_potfileparam(runmode.debug, &potfile);
-		module_readParameters_readpotfiles(&runmode,&potfile,lenses);
+		module_readParameters_readpotfiles_SOA(&runmode, &cosmology, &potfile, &lenses_SOA);
 		module_readParameters_debug_potential(runmode.debug, lenses, runmode.nhalos+runmode.npotfile);
 
 	}
@@ -369,7 +370,7 @@ int main(int argc, char *argv[])
 
 
 
-#if 0
+#if 1
 	{
 		//std::cout << "MylenstoolHPC chi Benchmark:\n "; 
 		if (verbose) printf("Calling lenstoolhpc at time %f s\n", myseconds() - wallclock);
