@@ -7,7 +7,7 @@ echo "Starting Mapping Test"
 #cd ../../lenstool-hpc
 
 cd ../../src/
-make clean
+#make clean
 make
 
 
@@ -18,7 +18,8 @@ rm -r tmp
 
 #./Bayesmap_GPU m1931.par T
 #./GridGradient_GPU ../ConfigFiles/TestResultParameter.par T
-./GridGradient_GPU ../ConfigFiles/90Pot81.par T
+#./GridGradient_GPU ../ConfigFiles/90Pot81.par T
+./GridGradient_GPU ../ConfigFiles/m1931.par T
 #./ChiBenchmark_GPU ../ConfigFiles/MarkusBenchmark.par T
 #./ChiBenchmark_GPU ../ConfigFiles/MarkusBenchmark1SIS.par T
 

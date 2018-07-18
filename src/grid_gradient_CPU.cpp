@@ -59,7 +59,7 @@ void gradient_grid_general_CPU(type_t *grid_grad_x, type_t *grid_grad_y, const s
 	//
 	grid_dim = nbgridcells_x*nbgridcells_y;
 	//
-//#pragma omp parallel
+#pragma omp parallel
 #pragma omp for private(Grad, image_point)
 	for (int jj = 0; jj < nbgridcells_y; ++jj)
 		for (int ii = 0; ii < nbgridcells_x; ++ii)

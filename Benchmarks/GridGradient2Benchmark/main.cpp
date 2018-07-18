@@ -202,12 +202,10 @@ int main(int argc, char *argv[])
 	struct grid_param frame;
 	struct galaxy images[runmode.nimagestot];
 	struct galaxy sources[runmode.nsets];
-	struct Potential lenses[runmode.nhalos + runmode.npotfile-1];
 	struct Potential_SOA lenses_SOA_table[NTYPES];
 	struct Potential_SOA lenses_SOA;
 	struct cline_param cline;
 	struct potfile_param potfile;
-	struct Potential potfilepotentials[runmode.npotfile];
 	struct potentialoptimization host_potentialoptimization[runmode.nhalos];
 	int nImagesSet[runmode.nsets]; // Contains the number of images in each set of images
 
@@ -216,7 +214,7 @@ int main(int argc, char *argv[])
 	// Output: Potentials and its parameters
 
 
-	module_readParameters_PotentialSOA_direct(inputFile, &lenses_SOA, runmode.nhalos, runmode.npotfile, cosmology);
+	module_readParameters_PotentialSOA_direct(inputFile, &lenses_SOA, runmode.nhalos, runmode.n_tot_halos, cosmology);
 	module_readParameters_debug_potential_SOA(1, lenses_SOA, runmode.nhalos);
 
 	//std::cerr <<"b0: "<< lenses_SOA.b0[0] << std::endl;
@@ -234,7 +232,7 @@ int main(int argc, char *argv[])
 		module_readParameters_readpotfiles_param(inputFile, &potfile, cosmology);
 		module_readParameters_debug_potfileparam(1, &potfile);
 		module_readParameters_readpotfiles_SOA(&runmode, &cosmology,&potfile,&lenses_SOA);
-		module_readParameters_debug_potential_SOA(1, lenses_SOA, runmode.nhalos + runmode.npotfile);
+		module_readParameters_debug_potential_SOA(1, lenses_SOA, runmode.n_tot_halos);
 
 	}
 	//
@@ -245,48 +243,6 @@ int main(int argc, char *argv[])
 	module_readParameters_Grid(inputFile, &frame);
 	//
 
-
-	if (runmode.image == 1 or runmode.inverse == 1 or runmode.time > 0)
-	{
-
-		// This module function reads in the strong lensing images
-		module_readParameters_readImages(&runmode, images, nImagesSet);
-		//runmode.nsets = runmode.nimagestot;
-		for(int i = 0; i < runmode.nimagestot; ++i)
-		{
-			images[i].dls = module_cosmodistances_objectObject(lenses[0].z, images[i].redshift, cosmology);
-			images[i].dos = module_cosmodistances_observerObject(images[i].redshift, cosmology);
-			images[i].dr  = module_cosmodistances_lensSourceToObserverSource(lenses[0].z, images[i].redshift, cosmology);
-		}
-		module_readParameters_debug_image(runmode.debug, images, nImagesSet, runmode.nsets);
-	}
-
-	//
-	if (runmode.inverse == 1)
-	{
-		// This module function reads in the potential optimisation limits
-		module_readParameters_limit(inputFile, host_potentialoptimization, runmode.nhalos);
-		module_readParameters_debug_limit(runmode.debug, host_potentialoptimization[0]);
-	}
-	//
-	if (runmode.source == 1)
-	{
-		//Initialisation to default values.(Setting sources to z = 1.5 default value)
-		for(int i = 0; i < runmode.nsets; ++i)
-		{
-			sources[i].redshift = 1.5;
-		}
-		// This module function reads in the strong lensing sources
-		module_readParameters_readSources(&runmode, sources);
-		//Calculating cosmoratios
-		for(int i = 0; i < runmode.nsets; ++i)
-		{
-			sources[i].dls = module_cosmodistances_objectObject(lenses[0].z, sources[i].redshift, cosmology);
-			sources[i].dos = module_cosmodistances_observerObject(sources[i].redshift, cosmology);
-			sources[i].dr  = module_cosmodistances_lensSourceToObserverSource(lenses[0].z, sources[i].redshift, cosmology);
-		}
-		module_readParameters_debug_source(runmode.debug, sources, runmode.nsets);
-	}
 	//
 	//
 	//
@@ -297,8 +253,8 @@ int main(int argc, char *argv[])
 	//
 	//
 #ifdef __WITH_LENSTOOL
-	printf("Setting up lenstool using %d lenses...", runmode.nhalos); fflush(stdout);
-	convert_to_LT(&lenses_SOA, runmode.nhalos);	
+	printf("Setting up lenstool using %d lenses...", runmode.n_tot_halos); fflush(stdout);
+	convert_to_LT(&lenses_SOA, runmode.n_tot_halos);
 	printf("ok\n");
 #endif
 	//
@@ -341,7 +297,7 @@ int main(int argc, char *argv[])
                         image_point.y = frame.ymin + jj*dy;
                         //std::cerr << "*" <<  image_point.x <<  " "<<image_point.y << std::endl;
 
-                        for (int lens = 0; lens < runmode.nhalos; ++lens)
+                        for (int lens = 0; lens < runmode.n_tot_halos; ++lens)
                         {
 
                         		Grad2 = e_grad2_pot(&image_point, lens);
@@ -372,7 +328,7 @@ int main(int argc, char *argv[])
 
 	int Nstat = 1;
 	for(int ii = 0; ii < Nstat; ++ii) {
-		gradient2_grid_CPU(grid_gradient2_cpu, &frame, &lenses_SOA, runmode.nhalos, grid_dim);
+		gradient2_grid_CPU(grid_gradient2_cpu, &frame, &lenses_SOA, runmode.n_tot_halos, grid_dim);
 		}
 	t_1 += myseconds();
 	//
@@ -398,9 +354,11 @@ int main(int argc, char *argv[])
 	grid_gradient_c_gpu = (type_t *) malloc((int) (runmode.nbgridcells) * (runmode.nbgridcells) * sizeof(type_t));
 	grid_gradient_d_gpu = (type_t *) malloc((int) (runmode.nbgridcells) * (runmode.nbgridcells) * sizeof(type_t));
 
+	gradient2_grid_GPU(grid_gradient_a_gpu, grid_gradient_b_gpu,grid_gradient_c_gpu, grid_gradient_d_gpu, &frame, &lenses_SOA, runmode.n_tot_halos, grid_dim);
+
 	t_2 = -myseconds();
 	for(int ii = 0; ii < Nstat; ++ii) {
-		gradient2_grid_GPU(grid_gradient_a_gpu, grid_gradient_b_gpu,grid_gradient_c_gpu, grid_gradient_d_gpu, &frame, &lenses_SOA, runmode.nhalos, grid_dim);
+		gradient2_grid_GPU(grid_gradient_a_gpu, grid_gradient_b_gpu,grid_gradient_c_gpu, grid_gradient_d_gpu, &frame, &lenses_SOA, runmode.n_tot_halos, grid_dim);
 	}
 	t_2 += myseconds();
 	std::cerr << "**" << grid_gradient_a_gpu[0] << grid_gradient_b_gpu[0] << grid_gradient_c_gpu[0] << grid_gradient_d_gpu[0] << std::endl;

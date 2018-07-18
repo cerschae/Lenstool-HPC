@@ -90,6 +90,7 @@ struct matrix module_potentialDerivatives_totalGradient2_81_SOA_v2(const struct 
         grad2.d = clump.d = 0;
         for(int i = shalos; i < shalos + nhalos; i++)
         {
+        	if(lens->ellipticity_potential[i] > 0.0001){
 			struct point true_coord, true_coord_rotation;
 			//True coord
 			true_coord.x = pImage->x - lens->position_x[i];
@@ -143,6 +144,39 @@ struct matrix module_potentialDerivatives_totalGradient2_81_SOA_v2(const struct 
             grad2.b += clump.b;
             grad2.c += clump.c;
             grad2.d += clump.d;
+        	}
+        	else if((RR = true_coord.x * true_coord.x + true_coord.y * true_coord.y) > 0.){
+        		// Circular dPIE Elliasdottir 2007 Eq A23 slighly modified for t05
+        		type_t X,Y,z,p,t05;
+        		X = lens->rcore[i];
+        		Y = lens->rcut[i];
+        		t05 = lens->b0[i] * Y / (Y - X); // 1/u because t05/sqrt(u) and normalised Q/sqrt(u)
+        		z  = sqrt(RR + X * X) - X - sqrt(RR + Y * Y) + Y;  // R*dphi/dR
+        		X = RR / X;
+        		Y = RR / Y;
+        		p  = (1. - 1. / sqrt(1. + X / lens->rcore[i])) / X - (1. - 1. / sqrt(1. + Y / lens->rcut[i])) / Y;  // d2phi/dR2
+        		X = true_coord.x * true_coord.x / RR;
+        		Y = true_coord.y * true_coord.y / RR;
+        		clump.a = t05 * (p * X + z * Y / RR);
+        		clump.c = t05 * (p * Y + z * X / RR);
+        		X = true_coord.x * true_coord.y / RR;
+        		clump.b = clump.d = t05 * (p * X - z * X / RR);
+
+        		grad2.a += clump.a;
+        		grad2.b += clump.b;
+        		grad2.c += clump.c;
+        		grad2.d += clump.d;
+        	}
+        	else
+        	{
+        		clump.a = clump.c = lens->b0[i] / lens->rcore[i]/ 2.;
+        		clump.b = clump.d = 0.;
+        		grad2.a += clump.a;
+        		grad2.b += clump.b;
+        		grad2.c += clump.c;
+        		grad2.d += clump.d;
+        	}
+
         }
         //
         return(grad2);
