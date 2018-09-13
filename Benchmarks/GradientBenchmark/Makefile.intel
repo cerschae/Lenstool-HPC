@@ -26,7 +26,7 @@ program_INCLUDE_LIBS += /users/fgilles/Projects/lenstool-6.8.1/src
 CPPFLAGS += $(foreach includedir,$(program_INCLUDE_DIRS),-I$(includedir))
 CPPFLAGS += $(foreach includelib,$(program_INCLUDE_LIBS),-L$(includelib) -lcfitsio)
 #CXXFLAGS += -march=core-avx2 -g -O3 -std=c++0x -Wall -pedantic 
-CPPFLAGS += -qopenmp -xMIC-AVX512 -g -O3 -std=c++0x -Wall -pedantic
+CPPFLAGS += -qopenmp -xMIC-AVX512 -g -O3 -std=c++0x -Wall -pedantic 
 #CPPFLAGS += -qopenmp -xHost -fma -g -O3 -std=c++0x -Wall -pedantic
 #CXXFLAGS += -g -O3 -std=c++0x -Wall 
 #

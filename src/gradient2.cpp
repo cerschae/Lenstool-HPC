@@ -83,7 +83,9 @@ struct matrix module_potentialDerivatives_totalGradient2_81_SOA_v2(const struct 
         // 6 DP loads, i.e. 48 Bytes: position_x, position_y, ellipticity_angle, ellipticity_potential, rcore, b0
         //
         type_t t05;
+        type_t RR;
         struct matrix grad2, clump, clumpcore, clumpcut;
+        struct point true_coord, true_coord_rotation;
         grad2.a = clump.a = 0;
         grad2.b = clump.b = 0;
         grad2.c = clump.c = 0;
@@ -91,7 +93,7 @@ struct matrix module_potentialDerivatives_totalGradient2_81_SOA_v2(const struct 
         for(int i = shalos; i < shalos + nhalos; i++)
         {
         	if(lens->ellipticity_potential[i] > 0.0001){
-			struct point true_coord, true_coord_rotation;
+
 			//True coord
 			true_coord.x = pImage->x - lens->position_x[i];
 			true_coord.y = pImage->y - lens->position_y[i];
