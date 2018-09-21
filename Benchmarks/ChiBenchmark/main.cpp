@@ -225,12 +225,12 @@ int main(int argc, char *argv[])
 	struct grid_param frame;
 	struct galaxy images[runmode.nimagestot];
 	struct galaxy sources[runmode.nsets];
-	struct Potential lenses[runmode.nhalos+runmode.npotfile-1];
+	//struct Potential lenses[runmode.nhalos+runmode.npotfile-1];
 	struct Potential_SOA lenses_SOA_table[NTYPES];
 	struct Potential_SOA lenses_SOA;
 	struct cline_param cline;
 	struct potfile_param potfile;
-	struct Potential potfilepotentials[runmode.npotfile];
+	//struct Potential potfilepotentials[runmode.npotfile];
 	struct potentialoptimization host_potentialoptimization[runmode.nhalos];
 	int nImagesSet[runmode.nsets]; // Contains the number of images in each set of imagesnano
 
@@ -238,28 +238,21 @@ int main(int argc, char *argv[])
 	// Input: input file
 	// Output: Potentials and its parameters
 
+	module_readParameters_PotentialSOA_direct(inputFile, &lenses_SOA, runmode.nhalos, runmode.n_tot_halos, cosmology);
+	module_readParameters_debug_potential_SOA(1, lenses_SOA, runmode.nhalos);
 
-	module_readParameters_Potential(inputFile, lenses, runmode.nhalos);
-	//Converts to SOA
-	//module_readParameters_PotentialSOA(inputFile, lenses, lenses_SOA, runmode.Nlens);
-	module_readParameters_PotentialSOA(inputFile, lenses, &lenses_SOA, runmode.nhalos);
-	//module_readParameters_PotentialSOA_nonsorted(inputFile, lenses, &lenses_SOA_nonsorted, runmode.nhalos);
-	//@@module_readParameters_debug_potential(runmode.debug, lenses, runmode.nhalos);
-	//std::cerr << lenses_SOA[1].b0[0] << " " << lenses[0].b0  << std::endl;
 	// This module function reads in the potfiles parameters
 	// Input: input file
 	// Output: Potentials from potfiles and its parameters
 
 	if (runmode.potfile == 1 )
 	{
-		module_readParameters_readpotfiles_param(inputFile, &potfile,cosmology);
-		module_readParameters_debug_potfileparam(runmode.debug, &potfile);
-		module_readParameters_readpotfiles_SOA(&runmode, &cosmology, &potfile, &lenses_SOA);
-		module_readParameters_debug_potential(runmode.debug, lenses, runmode.nhalos+runmode.npotfile);
+		module_readParameters_readpotfiles_param(inputFile, &potfile, cosmology);
+		module_readParameters_debug_potfileparam(1, &potfile);
+		module_readParameters_readpotfiles_SOA(&runmode, &cosmology,&potfile,&lenses_SOA);
+		module_readParameters_debug_potential_SOA(1, lenses_SOA, runmode.n_tot_halos);
 
 	}
-
-
 
 	// This module function reads in the grid form and its parameters
 	// Input: input file
@@ -274,21 +267,23 @@ int main(int argc, char *argv[])
 		//runmode.nsets = runmode.nimagestot;
 		for(int i = 0; i < runmode.nimagestot; ++i){
 
-			images[i].dls = module_cosmodistances_objectObject(lenses[0].z, images[i].redshift, cosmology);
+			images[i].dls = module_cosmodistances_objectObject(lenses_SOA.z[0], images[i].redshift, cosmology);
 			images[i].dos = module_cosmodistances_observerObject(images[i].redshift, cosmology);
-			images[i].dr = module_cosmodistances_lensSourceToObserverSource(lenses[0].z, images[i].redshift, cosmology);
+			images[i].dr = module_cosmodistances_lensSourceToObserverSource(lenses_SOA.z[0], images[i].redshift, cosmology);
 
 		}
 		//module_readParameters_debug_image(runmode.debug, images, nImagesSet,runmode.nsets);
 
 	}
 
+	/*
 	if (runmode.inverse == 1){
 
 		// This module function reads in the potential optimisation limits
 		module_readParameters_limit(inputFile,host_potentialoptimization,runmode.nhalos);
 		module_readParameters_debug_limit(runmode.debug, host_potentialoptimization[0]);
 	}
+	*/
 
 
 	if (runmode.source == 1)
@@ -303,9 +298,9 @@ int main(int argc, char *argv[])
 		//Calculating cosmoratios
 		for(int i = 0; i < runmode.nsets; ++i)
 		{
-			sources[i].dls = module_cosmodistances_objectObject(lenses[0].z, sources[i].redshift, cosmology);
+			sources[i].dls = module_cosmodistances_objectObject(lenses_SOA.z[0], sources[i].redshift, cosmology);
 			sources[i].dos = module_cosmodistances_observerObject(sources[i].redshift, cosmology);
-			sources[i].dr = module_cosmodistances_lensSourceToObserverSource(lenses[0].z, sources[i].redshift, cosmology);
+			sources[i].dr = module_cosmodistances_lensSourceToObserverSource(lenses_SOA.z[0], sources[i].redshift, cosmology);
 		}
 		module_readParameters_debug_source(runmode.debug, sources, runmode.nsets);
 	}
