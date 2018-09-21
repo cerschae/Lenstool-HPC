@@ -3,8 +3,7 @@ runmode
 	source 0 sources.cat										
 	image 1	../ConfigFiles/theoretical_images_time.txt
 	#inverse 0
-	nbgridcells 5
-	Debug   										# true activates debug mode
+	nbgridcells 1000				# true activates debug mode
 	end
 frame  
 	#dmax 45										#either dmax or x and y have to be declared when a grid is used
