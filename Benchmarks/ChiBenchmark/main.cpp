@@ -347,7 +347,7 @@ int main(int argc, char *argv[])
 
 	// Lenstool-GPU Bruteforce
 	//===========================================================================================================
-#if 0
+#if 1
 	{
 		printf("Calling lenstoolhpc orig at time %f s\n", myseconds() - wallclock);
 		std::cout << "LenstoolHPC dist chi Benchmark:\n ";
@@ -355,7 +355,7 @@ int main(int argc, char *argv[])
 		double time;
 		int error;
 		time = -myseconds();
-		mychi_bruteforce_SOA_CPU_grid_gradient_orig(&chi2, &error, &runmode, &lenses_SOA, &frame, nImagesSet, images);
+		chi_bruteforce_SOA_CPU_grid_gradient(&chi2, &error, &runmode, &lenses_SOA, &frame, nImagesSet, images);
 		time += myseconds();
 
 		std::cout << " Chi : " << std::setprecision(15) << chi2;
@@ -374,6 +374,24 @@ int main(int argc, char *argv[])
 		int error;
 		time = -myseconds();
 		mychi_bruteforce_SOA_CPU_grid_gradient(&chi2, &error, &runmode, &lenses_SOA, &frame, nImagesSet, images);
+		time += myseconds();
+		if (verbose)
+		{
+			std::cout << " Chi : " << std::setprecision(15) << chi2;
+			std::cout << " Time  " << std::setprecision(15) << time << std::endl;
+		}
+	}
+#endif
+
+#if 1
+	{
+		//std::cout << "MylenstoolHPC chi Benchmark:\n ";
+		if (verbose) printf("Calling lenstoolhpc with barycenter method at time %f s\n", myseconds() - wallclock);
+		double chi2;
+		double time;
+		int error;
+		time = -myseconds();
+		mychi_bruteforce_SOA_CPU_grid_gradient_barycentersource(&chi2, &error, &runmode, &lenses_SOA, &frame, nImagesSet, images);
 		time += myseconds();
 		if (verbose)
 		{

@@ -1,6 +1,8 @@
 #The user defines which mode of lenstool he wants to run here
 runmode										
 	image 0	../ConfigFiles/219Img.txt
+	#image 0 ../ConfigFiles/theoretical_images_time_1source.txt
+	#image 0 ../ConfigFiles/theoretical_images_time.txt
 	chi2 1
 	end
 image

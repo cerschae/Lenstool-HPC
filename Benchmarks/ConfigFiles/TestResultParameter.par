@@ -1,7 +1,7 @@
 #The user defines which mode of lenstool he wants to run here
 runmode
 	source 0 sources.cat										
-	image 1	../ConfigFiles/theoretical_images_time.txt
+	image 1	../ConfigFiles/theoretical_images_time_1source.txt
 	#inverse 0
 	nbgridcells 1000				# true activates debug mode
 	end

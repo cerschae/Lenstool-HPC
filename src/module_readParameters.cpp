@@ -855,6 +855,8 @@ for(int i=0; i<runmode->nimagestot; i++){
 	if ( IM )
     	{
 			int i = 0;
+			int old_j = 1;
+			int source_index = 0;
         	while( std::getline(IM,line1) )    // Read until we reach the end
         	{
                         // Read in the parameters, * means we read in a parameter but do not store it
@@ -869,7 +871,12 @@ for(int i=0; i<runmode->nimagestot; i++){
 			image[i].redshift =(type_t)cast_z;
 			image[i].mag =(type_t)cast_mag;
 			//Variables
-			nImagesSet[j-1]++;  // Increase the counter of the number of system for system with number j-1 by 1
+			int j=atoi(line1.c_str());
+			if(j != old_j){				//If a new set has been reached, increase the nset iterator and update old j
+				source_index +=1;
+				old_j = j;
+			}
+			nImagesSet[source_index]++;  // Increase the counter of the number of system for system with number j-1 by 1
             imageIndex++;
             i++;
 		}
