@@ -239,7 +239,7 @@ int main(int argc, char *argv[])
 	// Output: Potentials and its parameters
 
 	module_readParameters_PotentialSOA_direct(inputFile, &lenses_SOA, runmode.nhalos, runmode.n_tot_halos, cosmology);
-	module_readParameters_debug_potential_SOA(1, lenses_SOA, runmode.nhalos);
+	module_readParameters_debug_potential_SOA(0, lenses_SOA, runmode.nhalos);
 
 	// This module function reads in the potfiles parameters
 	// Input: input file
@@ -248,9 +248,9 @@ int main(int argc, char *argv[])
 	if (runmode.potfile == 1 )
 	{
 		module_readParameters_readpotfiles_param(inputFile, &potfile, cosmology);
-		module_readParameters_debug_potfileparam(1, &potfile);
+		module_readParameters_debug_potfileparam(0, &potfile);
 		module_readParameters_readpotfiles_SOA(&runmode, &cosmology,&potfile,&lenses_SOA);
-		module_readParameters_debug_potential_SOA(1, lenses_SOA, runmode.n_tot_halos);
+		module_readParameters_debug_potential_SOA(0, lenses_SOA, runmode.n_tot_halos);
 
 	}
 
@@ -308,7 +308,6 @@ int main(int argc, char *argv[])
 	MPI_Barrier(MPI_COMM_WORLD);
 #endif
 	//
-	if (verbose) std::cout << "--------------------------" << std::endl << std::endl;
 	//
 	// Lenstool Bruteforce
 	//===========================================================================================================
@@ -316,7 +315,7 @@ int main(int argc, char *argv[])
 	{
 #ifdef __WITH_LENSTOOL
 		{
-			printf("Calling lenstool at time %f s\n", myseconds() - wallclock);
+			printf("\n-------------------------- Calling lenstool at time %f s\n\n", myseconds() - wallclock);
 			setup_lenstool();
 			//
 			double chi2;
@@ -344,10 +343,13 @@ int main(int argc, char *argv[])
 		}
 #endif
 	}
+#ifdef __WITH_MPI
+	MPI_Barrier(MPI_COMM_WORLD);
+#endif
 
 	// Lenstool-GPU Bruteforce
 	//===========================================================================================================
-#if 1
+#if 0
 	{
 		printf("Calling lenstoolhpc orig at time %f s\n", myseconds() - wallclock);
 		std::cout << "LenstoolHPC dist chi Benchmark:\n ";
@@ -368,7 +370,7 @@ int main(int argc, char *argv[])
 #if 1
 	{
 		//std::cout << "MylenstoolHPC chi Benchmark:\n "; 
-		if (verbose) printf("Calling lenstoolhpc at time %f s\n", myseconds() - wallclock);
+		if (verbose) printf("\n-------------------------- Calling lenstoolhpc at time %f s\n\n", myseconds() - wallclock);
 		double chi2;
 		double time;
 		int error;
@@ -381,12 +383,15 @@ int main(int argc, char *argv[])
 			std::cout << " Time  " << std::setprecision(15) << time << std::endl;
 		}
 	}
+#ifdef __WITH_MPI
+	MPI_Barrier(MPI_COMM_WORLD);
+#endif
 #endif
 
 #if 1
 	{
 		//std::cout << "MylenstoolHPC chi Benchmark:\n ";
-		if (verbose) printf("Calling lenstoolhpc with barycenter method at time %f s\n", myseconds() - wallclock);
+		if (verbose) printf("\n-------------------------- Calling lenstoolhpc with barycenter method at time %f s\n\n", myseconds() - wallclock);
 		double chi2;
 		double time;
 		int error;
@@ -401,7 +406,7 @@ int main(int argc, char *argv[])
 	}
 #endif
 
-	if (verbose) printf("Ending execution at time %f s\n", myseconds() - wallclock);
+	if (verbose) printf("\n-------------------------- Ending execution at time %f s\n\n", myseconds() - wallclock);
 #ifdef __WITH_MPI
 	MPI_Finalize();
 #endif
