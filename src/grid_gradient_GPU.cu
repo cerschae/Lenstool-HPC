@@ -74,6 +74,7 @@ void gradient_grid_GPU(type_t *grid_grad_x, type_t *grid_grad_y, const struct gr
 
 	cudaGetDeviceProperties(&properties_gpu, 0); // Get properties of 0th GPU in use
 
+/*
 	if (properties_gpu.maxThreadsDim[0]<threadsPerBlock)
 	{
 		fprintf(stderr, "ERROR: The GPU has to support at least %u threads per block.\n", threadsPerBlock);
@@ -84,7 +85,7 @@ void gradient_grid_GPU(type_t *grid_grad_x, type_t *grid_grad_y, const struct gr
 		nBlocks_gpu = properties_gpu.maxGridSize[0] / threadsPerBlock;  // Get the maximum number of blocks with the chosen number of threads
 		// per Block that the GPU supports
 	}
-
+*/
 	grid_param *frame_gpu;
 	Potential_SOA *lens_gpu,*lens_kernel;
 	int *type_gpu;
