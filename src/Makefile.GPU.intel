@@ -38,7 +38,7 @@ program_INCLUDE_LIBS += $(WCSTOOL_ROOT)
 CXXFLAGS += $(foreach includedir,$(program_INCLUDE_DIRS),-I$(includedir))
 CXXFLAGS += $(foreach includelib,$(program_INCLUDE_LIBS),-L$(includelib))
 #CXXFLAGS += -D__WITH_LENSTOOL 
-CXXFLAGS += -qopenmp -xHost -g -O3 -std=c++0x -Wall -pedantic
+CXXFLAGS += -qopenmp -xHost -fma -g -Ofast -std=c++0x -Wall -pedantic
 CXXFLAGS += -fma -qopenmp -ftz
 CXXFLAGS += -xHost -pedantic  
 CXXFLAGS += -fPIC

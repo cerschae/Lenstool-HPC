@@ -30,15 +30,16 @@ program_INCLUDE_LIBS += $(LENSTOOL_ROOT)/src
 CPPFLAGS += $(foreach includedir,$(program_INCLUDE_DIRS),-I$(includedir))
 CPPFLAGS += $(foreach includelib,$(program_INCLUDE_LIBS),-L$(includelib) )
 #CXXFLAGS += -march=core-avx2 -g -O3 -std=c++0x -Wall -pedantic 
-CPPFLAGS += -fPIC -qopenmp -xHost -pedantic -lcfitsio
-CPPFLAGS += -fma -ftz
+CPPFLAGS += -fPIC -qopenmp -pedantic -lcfitsio
+CPPFLAGS += -xHost -fma -ftz
+CPPFLAGS += -Ofast -g
 #CPPFLAGS += -fp-model strict -fp-model extended
-CPPFLAGS += -no-vec -no-simd
+#CPPFLAGS += -no-vec -no-simd
 #CPPFLAGS += -qopt-prefetch-distance=64,8 -qopt-streaming-cache-evict=0 -fPIC -qopenmp -xMIC-AVX512 -fma -g -O3 -std=c++0x -Wall -pedantic
 #CPPFLAGS += -qopt-report=5 -S
-CXXFLAGS += -g -O3 -std=c++0x -Wall -D__WITH_MPI 
+#CXXFLAGS += -g -Ofast -std=c++0x -Wall -D__WITH_MPI 
 #CXXFLAGS += -fast-transcendentals
-CXXFLAGS += -Ofast #-fp-model fast=2
+#CXXFLAGS += -Ofast #-fp-model fast=2
 include ./precision.inc
 CXXFLAGS += $(PRECISION)
 #
@@ -52,8 +53,6 @@ $(info $$OBJECTS is [${OBJECTS}])
 all: $(PROGRAM_NAME) 
 #
 debug: CXXFLAGS = -g -O0 -fPIC -std=c++0x -Wall -pedantic -DDEBUG $(EXTRA_FLAGS)
-debug: NVFLAGS = -O0 $(GEN_SM35) -g -G  -Xcompiler $(CPPFLAGS)
-debug: NVFLAGS += $(foreach includedir,$(program_CU_INCLUDE_DIRS),-I$(includedir))
 debug: $(PROGRAM_NAME)
 
 # Rule for compilation of CUDA source (C++ source can be handled automatically)
