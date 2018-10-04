@@ -50,8 +50,6 @@ NVFLAGS := -O3 -ccbin icpc -Xcompiler '-Wall -fPIC' -D__WITH_LENSTOOL
 #NVFLAGS += -D_double
 NVFLAGS += -gencode arch=compute_60,code=sm_60
 NVFLAGS += -use_fast_math
-NVFLAGS += $(PRECISION)
-#NVFLAGS += -arch=sm_35
 NVFLAGS += $(foreach includedir,$(program_INCLUDE_DIRS),-I$(includedir))
 NVFLAGS += $(foreach includelib,$(program_INCLUDE_LIBS),-L$(includelib))
 #
