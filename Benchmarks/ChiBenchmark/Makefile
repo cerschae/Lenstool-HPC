@@ -1,4 +1,4 @@
-PROGRAM_NAME := ChiBenchmark
+PROGRAM_NAME := ChiBenchmark_CPU
 #CXX=g++ -lm -ffast-math -ftree-loop-vectorize 
 CXX=mpiicpc
 
