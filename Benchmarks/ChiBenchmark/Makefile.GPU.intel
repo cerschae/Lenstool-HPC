@@ -40,6 +40,7 @@ CXXFLAGS += $(foreach includelib,$(program_INCLUDE_LIBS),-L$(includelib))
 CPPFLAGS += -D__WITH_LENSTOOL
 CPPFLAGS += -D__WITH_MPI
 CPPFLAGS += -D__WITH_GPU
+CPPFLAGS += -D__UNIFIED_MEM
 include ./cppflags.inc
 include $(LENSTOOLHPC_ROOT)/src/precision.inc
 CPPFLAGS += $(PRECISION)

@@ -22,6 +22,8 @@
 #include "chi_CPU.hpp"
 #include "module_cosmodistances.hpp"
 #include "module_readParameters.hpp"
+//
+#include "allocation.hpp"
 
 
 #ifdef __WITH_MPI
@@ -176,7 +178,6 @@ int main(int argc, char *argv[])
 	int name_len;
 	MPI_Get_processor_name(processor_name, &name_len);
 	MPI_Barrier(MPI_COMM_WORLD);
-
 	// Print off a hello world message
 #endif
 	int numthreads = 1;
@@ -186,13 +187,14 @@ int main(int argc, char *argv[])
 	numthreads = omp_get_num_threads();
 #endif
 	//
+	int verbose = (world_rank == 0);
+	//
+	if (verbose) printf("\n\nLenstool-HPC\n\n"); fflush(stdout);
+	//
 	printf("Hello world from processor %s, rank %d out of %d processors and %d threads per rank\n", processor_name, world_rank, world_size, numthreads); fflush(stdout);
 #ifdef __WITH_MPI
 	MPI_Barrier(MPI_COMM_WORLD);
 #endif
-	int verbose = (world_rank == 0);
-	//
-	if (verbose) printf("Lenstool-HPC\n\n");
 	//
 	double wallclock = myseconds();
 	if (world_rank == 0) printf("Reading parameter file at time %f s...\n", myseconds() - wallclock);
@@ -223,11 +225,10 @@ int main(int argc, char *argv[])
 
 	//=== Declaring variables
 	struct grid_param frame;
-	struct galaxy images[runmode.nimagestot];
+	struct galaxy images [runmode.nimagestot];
 	struct galaxy sources[runmode.nsets];
 	//struct Potential lenses[runmode.nhalos+runmode.npotfile-1];
-	struct Potential_SOA lenses_SOA_table[NTYPES];
-	struct Potential_SOA lenses_SOA;
+	struct Potential_SOA* lenses_SOA;
 	struct cline_param cline;
 	struct potfile_param potfile;
 	//struct Potential potfilepotentials[runmode.npotfile];
@@ -237,9 +238,9 @@ int main(int argc, char *argv[])
 	// This module function reads in the potential form and its parameters (e.g. NFW)
 	// Input: input file
 	// Output: Potentials and its parameters
-
-	module_readParameters_PotentialSOA_direct(inputFile, &lenses_SOA, runmode.nhalos, runmode.n_tot_halos, cosmology);
-	module_readParameters_debug_potential_SOA(0, lenses_SOA, runmode.nhalos);
+	PotentialSOAAllocation(&lenses_SOA, runmode.nhalos);
+	module_readParameters_PotentialSOA_local(inputFile, lenses_SOA, runmode.nhalos, runmode.n_tot_halos, cosmology);
+	//module_readParameters_debug_potential_SOA(0, lenses_SOA, runmode.nhalos);
 
 	// This module function reads in the potfiles parameters
 	// Input: input file
@@ -247,10 +248,10 @@ int main(int argc, char *argv[])
 
 	if (runmode.potfile == 1 )
 	{
-		module_readParameters_readpotfiles_param(inputFile, &potfile, cosmology);
-		module_readParameters_debug_potfileparam(0, &potfile);
-		module_readParameters_readpotfiles_SOA(&runmode, &cosmology,&potfile,&lenses_SOA);
-		module_readParameters_debug_potential_SOA(0, lenses_SOA, runmode.n_tot_halos);
+		module_readParameters_readpotfiles_param (inputFile, &potfile, cosmology);
+		module_readParameters_debug_potfileparam (runmode.debug, &potfile);
+		module_readParameters_readpotfiles_SOA   (&runmode , &cosmology, &potfile, lenses_SOA);
+		//module_readParameters_debug_potential_SOA(runmode.debug, lenses_SOA, runmode.n_tot_halos);
 
 	}
 
@@ -267,9 +268,9 @@ int main(int argc, char *argv[])
 		//runmode.nsets = runmode.nimagestot;
 		for(int i = 0; i < runmode.nimagestot; ++i){
 
-			images[i].dls = module_cosmodistances_objectObject(lenses_SOA.z[0], images[i].redshift, cosmology);
+			images[i].dls = module_cosmodistances_objectObject(lenses_SOA->z[0], images[i].redshift, cosmology);
 			images[i].dos = module_cosmodistances_observerObject(images[i].redshift, cosmology);
-			images[i].dr = module_cosmodistances_lensSourceToObserverSource(lenses_SOA.z[0], images[i].redshift, cosmology);
+			images[i].dr = module_cosmodistances_lensSourceToObserverSource(lenses_SOA->z[0], images[i].redshift, cosmology);
 
 		}
 		//module_readParameters_debug_image(runmode.debug, images, nImagesSet,runmode.nsets);
@@ -298,9 +299,9 @@ int main(int argc, char *argv[])
 		//Calculating cosmoratios
 		for(int i = 0; i < runmode.nsets; ++i)
 		{
-			sources[i].dls = module_cosmodistances_objectObject(lenses_SOA.z[0], sources[i].redshift, cosmology);
+			sources[i].dls = module_cosmodistances_objectObject(lenses_SOA->z[0], sources[i].redshift, cosmology);
 			sources[i].dos = module_cosmodistances_observerObject(sources[i].redshift, cosmology);
-			sources[i].dr = module_cosmodistances_lensSourceToObserverSource(lenses_SOA.z[0], sources[i].redshift, cosmology);
+			sources[i].dr = module_cosmodistances_lensSourceToObserverSource(lenses_SOA->z[0], sources[i].redshift, cosmology);
 		}
 		module_readParameters_debug_source(runmode.debug, sources, runmode.nsets);
 	}
@@ -375,7 +376,7 @@ int main(int argc, char *argv[])
 		double time;
 		int error;
 		time = -myseconds();
-		mychi_bruteforce_SOA_CPU_grid_gradient(&chi2, &error, &runmode, &lenses_SOA, &frame, nImagesSet, images);
+		mychi_bruteforce_SOA_CPU_grid_gradient(&chi2, &error, &runmode, lenses_SOA, &frame, nImagesSet, images);
 		time += myseconds();
 		if (verbose)
 		{
@@ -396,7 +397,7 @@ int main(int argc, char *argv[])
 		double time;
 		int error;
 		time = -myseconds();
-		mychi_bruteforce_SOA_CPU_grid_gradient_barycentersource(&chi2, &error, &runmode, &lenses_SOA, &frame, nImagesSet, images);
+		mychi_bruteforce_SOA_CPU_grid_gradient_barycentersource(&chi2, &error, &runmode, lenses_SOA, &frame, nImagesSet, images);
 		time += myseconds();
 		if (verbose)
 		{

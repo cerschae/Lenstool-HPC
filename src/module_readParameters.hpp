@@ -41,6 +41,8 @@ void module_readParameters_Potential(std::string infile, Potential lens[], int n
 void module_readParameters_PotentialSOA_2(std::string infile, Potential *lens, Potential_SOA *lens_SOA, int Nset[]);
 void module_readParameters_PotentialSOA(std::string infile, Potential *lens, Potential_SOA *lens_SOA, int nhalos);
 void module_readParameters_PotentialSOA_direct(std::string infile, Potential_SOA *lens_SOA, int nhalos, int n_tot_halos, cosmo_param cosmology);
+//
+void read_potentialSOA_ntypes(std::string infile, int N_type[]);
 //void module_readParameters_PotentialSOA_nonsorted(std::string infile, Potential *lens, Potential_SOA *lens_SOA, int nhalos);
 void module_readParameters_calculatePotentialparameter(Potential *ilens);
 void module_readParameters_calculatePotentialparameter_SOA(Potential_SOA *lens, int ind);
@@ -79,7 +81,6 @@ void module_readParameters_debug_potential_SOA(int DEBUG, Potential_SOA lenses, 
 void module_readParameters_debug_potfileparam(int DEBUG, potfile_param *potfile);
 void module_readParameters_debug_criticcaustic(int DEBUG, cline_param cline);
 void module_readParameters_debug_limit(int DEBUG, struct potentialoptimization host_potentialoptimization);
-
 
 
 
