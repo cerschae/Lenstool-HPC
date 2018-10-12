@@ -30,8 +30,8 @@ program_INCLUDE_LIBS += $(LENSTOOL_ROOT)/src
 # Compiler flags
 CPPFLAGS += $(foreach includedir,$(program_INCLUDE_DIRS),-I$(includedir))
 CPPFLAGS += $(foreach includelib,$(program_INCLUDE_LIBS),-L$(includelib) )
-CXXFLAGS += -march=core-avx2 -g -Ofast -std=c++0x -Wall -pedantic 
-CXXFLAGS += -fPIC -qopenmp -pedantic -lcfitsio
+CPPFLAGS += -march=core-avx2 -g -Ofast -std=c++0x -Wall -pedantic 
+CPPFLAGS += -fPIC -qopenmp -pedantic -lcfitsio
 #CPPFLAGS += -xHost -fma -ftz
 CPPFLAGS += -Ofast -g
 #CPPFLAGS += -fp-model strict -fp-model extended
@@ -42,7 +42,7 @@ CPPFLAGS += -Ofast -g
 #CXXFLAGS += -fast-transcendentals
 #CXXFLAGS += -Ofast #-fp-model fast=2
 include ./precision.inc
-CXXFLAGS += $(PRECISION)
+CPPFLAGS += $(PRECISION)
 #
 #GEN_SM35 := -gencode=arch=compute_35,code=\"sm_35,compute_35\" #Target CC 3.5, for example
 
@@ -58,7 +58,7 @@ all: $(PROGRAM_NAME) $(STATIC_LIB)
 #	nvcc $(NVFLAGS)  -o $@ -dc $<
 
 %.o: %.cpp %.h 
-	$(CXX) $(CXXFLAGS) $(CPPFLAGS) -c -o $@ $< 
+	$(CXX) $(CPPFLAGS) -c -o $@ $< 
 
 # This is pretty ugly...details below
 # The program depends on both C++ and CUDA Objects, but storing CUDA objects as .o files results in circular dependency
