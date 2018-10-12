@@ -23,7 +23,7 @@ program_INCLUDE_DIRS += $(CFITSIO_ROOT)/include
 program_INCLUDE_DIRS += $(LENSTOOL_ROOT)/include
 program_INCLUDE_DIRS += $(GSL_ROOT)/include
 program_INCLUDE_DIRS += $(LENSTOOLHPC_ROOT)/src
-program_INCLUDE_DIRS += $(CUDAROOT)/include
+program_INCLUDE_DIRS += $(CUDA_ROOT)/include
 #
 # libs
 #
@@ -33,7 +33,7 @@ program_INCLUDE_LIBS += $(LENSTOOL_ROOT)/liblt
 program_INCLUDE_LIBS += $(LENSTOOLHPC_ROOT)/src
 program_INCLUDE_LIBS += $(GSL_ROOT)/lib
 program_INCLUDE_LIBS += $(WCSTOOL_ROOT)
-program_INCLUDE_LIBS += $(CUDAROOT)/lib64
+program_INCLUDE_LIBS += $(CUDA_ROOT)/lib64
 
 #
 #
