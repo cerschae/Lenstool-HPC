@@ -1,6 +1,8 @@
 #ifndef SIMD_MATH
 #define SIMD_MATH_
 //
+
+#ifdef __AVX512F__ 
 #include <immintrin.h>
 //
 //
@@ -18,6 +20,9 @@ inline __m512d operator - (__m512d a, __m512d b) {return _mm512_sub_pd(a, b);}
 inline __m512d operator * (__m512d a, __m512d b) {return _mm512_mul_pd(a, b);}
 inline __m512d operator / (__m512d a, __m512d b) {return _mm512_div_pd(a, b);}
 #endif
+
+
+
 
 #define __INV RCP_AVX512
 //#define __INV RCP_1NR_AVX512
@@ -69,6 +74,6 @@ inline __m512d RCP_2NR_AVX512(const __m512d d)
         return x0;
 }
 //
-//
+#endif
 //
 #endif
