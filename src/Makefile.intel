@@ -30,9 +30,9 @@ program_INCLUDE_LIBS += $(LENSTOOL_ROOT)/src
 # Compiler flags
 CPPFLAGS += $(foreach includedir,$(program_INCLUDE_DIRS),-I$(includedir))
 CPPFLAGS += $(foreach includelib,$(program_INCLUDE_LIBS),-L$(includelib) )
-CPPFLAGS += -march=core-avx2 -g -Ofast -std=c++0x -Wall -pedantic 
+#CXXFLAGS += -march=core-avx2 -g -O3 -std=c++0x -Wall -pedantic 
 CPPFLAGS += -fPIC -qopenmp -pedantic -lcfitsio
-#CPPFLAGS += -xHost -fma -ftz
+CPPFLAGS += -xHost -fma -ftz
 CPPFLAGS += -Ofast -g
 #CPPFLAGS += -fp-model strict -fp-model extended
 #CPPFLAGS += -no-vec -no-simd

@@ -1,6 +1,6 @@
-PROGRAM_NAME := ChiBenchmark
+PROGRAM_NAME := ChiBenchmark_CPU
 #CXX=g++ -lm -ffast-math -ftree-loop-vectorize 
-CXX ?= mpiicpc
+#CXX ?= mpiicpc
 
 
 program_CXX_SRCS := $(wildcard *.cpp)
@@ -62,7 +62,7 @@ debug: CXXFLAGS = -g -O0 -std=c++0x -Wall -pedantic -DDEBUG $(EXTRA_FLAGS)
 debug: $(PROGRAM_NAME)
 
 $(PROGRAM_NAME): $(OBJECTS) 
-	CC $(CPPFLAGS) -o $@ $(program_CXX_OBJS) $(program_C_OBJS) $(CUO_O_OBJECTS) $(LDFLAGS)
+	$(CXX) $(CPPFLAGS) -o $@ $(program_CXX_OBJS) $(program_C_OBJS) $(CUO_O_OBJECTS) $(LDFLAGS)
 
 clean:
 	@- $(RM) $(PROGRAM_NAME) $(OBJECTS) *~ *.o *.optrpt chi

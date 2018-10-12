@@ -71,8 +71,6 @@ NVLDFLAGS += $(LDFLAGS)
 #
 LDFLAGS   += -O3 -g -qopenmp 
 #LDFLAGS   += -qopenmp
-#
-#
 GPU_OBJECTS = $(program_CU_OBJS)
 CPU_OBJECTS = $(program_CXX_OBJS) $(program_C_OBJS)
 #

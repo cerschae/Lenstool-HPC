@@ -49,7 +49,7 @@ void calculate_cossin_values(type_t *theta_cos, type_t *theta_sin, type_t *angle
 
 
 
-#if 0
+#if 1
 
 __global__
 void
@@ -404,19 +404,19 @@ module_potentialDerivatives_totalGradient_8_SOA_GPU_SM4(type_t *grid_grad_x, typ
 	//asm volatile("# module_potentialDerivatives_totalGradient_SOA begins");
 	// 6 DP loads, i.e. 48 Bytes: position_x, position_y, ellipticity_angle, ellipticity_potential, rcore, b0
 	//
-	//type_t grad_x, grad_y;
-	//type_t clumpgrad_x, clumpgrad_y;
-	//type_t image_point_x, image_point_y;
+	type_t grad_x, grad_y;
+	type_t clumpgrad_x, clumpgrad_y;
+	type_t image_point_x, image_point_y;
 	//
 	//
-	//type_t* cosi       = &shared[0*nhalos];
-	//type_t* sinu       = &shared[1*nhalos];
-	//type_t* rc         = &shared[2*nhalos];
-	//type_t* b0         = &shared[3*nhalos];
-	//type_t* epsi       = &shared[4*nhalos];
-	//type_t* position_x = &shared[5*nhalos];
-	//type_t* position_y = &shared[6*nhalos];
-	//type_t* rsqe       = &shared[7*nhalos];
+	type_t* cosi       = &shared[0*nhalos];
+	type_t* sinu       = &shared[1*nhalos];
+	type_t* rc         = &shared[2*nhalos];
+	type_t* b0         = &shared[3*nhalos];
+	type_t* epsi       = &shared[4*nhalos];
+	type_t* position_x = &shared[5*nhalos];
+	type_t* position_y = &shared[6*nhalos];
+	type_t* rsqe       = &shared[7*nhalos];
 
 	//SHARED type_t sonepeps  [200];
 	//SHARED type_t sonemeps  [200];
@@ -657,7 +657,7 @@ module_potentialDerivatives_totalGradient_8_SOA_GPU_v2(type_t *grid_grad_x, type
 		//
 		struct point true_coord; //, result;
 		//type_t       R, angular_deviation;
-		//complex      zis;
+		complex      zis;
 		//
 		//result.x = result.y = 0.;
 		//
@@ -681,7 +681,7 @@ module_potentialDerivatives_totalGradient_8_SOA_GPU_v2(type_t *grid_grad_x, type
 		//
 		type_t rem2 = x*x/((1. + eps)*(1. + eps)) + y*y/((1. - eps)*(1. - eps));
 		//
-		//complex zci;
+		complex zci;
 		complex znum, zden, zres;
 		type_t norm;
 		//
