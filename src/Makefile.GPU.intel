@@ -18,11 +18,12 @@ program_CU_OBJS := ${program_CU_SRCS:.cu=.cu.o}
 #
 # include
 #
-program_INCLUDE_DIRS := . /usr/local/cuda/include/ #C++ Include directories
+program_INCLUDE_DIRS := ./
 program_INCLUDE_DIRS += $(CFITSIO_ROOT)/include
 program_INCLUDE_DIRS += $(LENSTOOL_ROOT)/include
 program_INCLUDE_DIRS += $(GSL_ROOT)/include
 program_INCLUDE_DIRS += $(LENSTOOLHPC_ROOT)/src
+program_INCLUDE_DIRS := $(CUDA_ROOT)/include/ #C++ Include directories
 #
 # libs
 #
@@ -32,13 +33,14 @@ program_INCLUDE_LIBS += $(LENSTOOL_ROOT)/liblt
 program_INCLUDE_LIBS += $(LENSTOOLHPC_ROOT)/src
 program_INCLUDE_LIBS += $(GSL_ROOT)/lib
 program_INCLUDE_LIBS += $(WCSTOOL_ROOT)
+program_INCLUDE_LIBS += $(CUDA_ROOT)/lib64
 #
 #
 # Compiler flags
 CXXFLAGS += $(foreach includedir,$(program_INCLUDE_DIRS),-I$(includedir))
 CXXFLAGS += $(foreach includelib,$(program_INCLUDE_LIBS),-L$(includelib))
 #CXXFLAGS += -D__WITH_LENSTOOL 
-CXXFLAGS += -qopenmp -xHost -g -O3 -std=c++0x -Wall -pedantic
+CXXFLAGS += -qopenmp -xHost -g -Ofast -std=c++0x -Wall -pedantic
 CXXFLAGS += -fma -qopenmp -ftz
 CXXFLAGS += -xHost -pedantic  
 CXXFLAGS += -fPIC
@@ -53,8 +55,9 @@ CXXFLAGS += $(PRECISION)
 #LDFLAGS := -llenstool -llenstoolhpc  -llt -lcfitsio -lwcs -lgsl -lgslcblas
 LDFLAGS := -llenstoolhpc  -llt -lcfitsio -lwcs -lgsl -lgslcblas
 #
-#NVFLAGS := -O3 -g -G -rdc=true -ccbin icpc -Xcompiler '-Wall -fPIC -qopenmp' -D__WITH_LENSTOOL 
-NVFLAGS := -O3 -ccbin icpc -Xcompiler '-Wall -fPIC' #-D__WITH_LENSTOOL
+#NVFLAGS := -O3 -rdc=true -ccbin icpc -Xcompiler '-Wall -fPIC -qopenmp' 
+#NVFLAGS += -D__WITH_LENSTOOL 
+NVFLAGS := -O3 -g -ccbin icpc -Xcompiler '-Wall -fPIC' #-D__WITH_LENSTOOL
 #NVFLAGS += -D_double
 NVFLAGS += -gencode arch=compute_60,code=sm_60
 NVFLAGS += -use_fast_math
@@ -62,6 +65,7 @@ NVFLAGS += $(PRECISION)
 #NVFLAGS += -arch=sm_35
 NVFLAGS += $(foreach includedir,$(program_INCLUDE_DIRS),-I$(includedir))
 NVFLAGS += $(foreach includelib,$(program_INCLUDE_LIBS),-L$(includelib))
+NVFLAGS += -I./
 #
 NVLDFLAGS += $(foreach includedir,$(program_INCLUDE_DIRS),-I$(includedir))
 NVLDFLAGS += $(foreach includelib,$(program_INCLUDE_LIBS),-L$(includelib))
@@ -71,7 +75,7 @@ LDFLAGS   += $(foreach includedir,$(program_INCLUDE_DIRS),-I$(includedir))
 LDFLAGS   += $(foreach includelib,$(program_INCLUDE_LIBS),-L$(includelib))
 NVLDFLAGS += $(LDFLAGS)
 #
-LDFLAGS   += -O3 -g -liomp5 
+#LDFLAGS   += -O3 -g -liomp5 
 #LDFLAGS   += -qopenmp
 #
 #
@@ -80,18 +84,14 @@ CPU_OBJECTS = $(program_CXX_OBJS) $(program_C_OBJS)
 #
 %.cu.o: %.cu %.cuh
 	nvcc $(NVFLAGS) -o $@ -c  $<
-	#nvcc $(NVFLAGS) -o $@ -rdc=true $<
-	#nvcc $(NVFLAGS) -Xptxas -dlcm=cg --ptxas-options=-v -o $@ -dc $<
 #
 %.cpp: %.cpp %.h
 	$(CXX) $(CXXFLAGS)  -o $@ $< $(CXXFLAGS)
 #
 $(PROGRAM_NAME): $(GPU_OBJECTS) 
-	nvcc -arch=sm_35 $(program_CU_OBJS) --shared -o liblenstoolhpc_GPU.so
+	nvcc $(program_CU_OBJS) --shared -o liblenstoolhpc_GPU.so
 
 
-#$(PROGRAM_NAME): $(CPU_OBJECTS) 
-#	icpc -o $@ $^ $(LDFLAGS) 
 
 clean:
 	@- $(RM) $(PROGRAM_NAME) $(OBJECTS) *~ *.o *.optrpt
