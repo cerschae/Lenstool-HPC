@@ -472,7 +472,8 @@ module_potentialDerivatives_Kmap_SOA_GPU(type_t *grid_grad2_a, type_t *grid_grad
 			type_t dlsds = lens->dlsds[shalos];
 			int count     = 1;
 
-			while (lens->type[shalos + count] == lens_type and shalos + count < nhalos and lens->dlsds[shalos + count] == dlsds){
+			while (lens->type[shalos + count] == lens_type and shalos + count < nhalos and lens->dlsds[shalos + count] == dlsds)
+			{
 				count++;
 			}
 #if 1
