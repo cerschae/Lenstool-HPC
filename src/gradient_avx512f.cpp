@@ -19,6 +19,7 @@
 //
 //
 //
+#ifdef __AVX_512F__
 struct point module_potentialDerivatives_totalGradient_8_SOA_AVX512(const struct point *pImage, const struct Potential_SOA *lens, const int nhalos)
 {
 	struct point grad, clumpgrad;
@@ -332,3 +333,4 @@ struct point module_potentialDerivatives_totalGradient_81_SOA_AVX512(const struc
 	//
 	return(grad);
 }
+#endif
