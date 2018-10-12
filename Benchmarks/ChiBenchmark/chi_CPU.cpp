@@ -23,8 +23,9 @@
 #include <omp.h>
 #endif
 #ifdef __WITH_MPI
-#include<mpi.h>
-#include"mpi_check.h"
+#warning "MPI enabled"
+#include <mpi.h>
+#include "mpi_check.h"
 #endif
 
 
@@ -129,7 +130,7 @@ void mychi_bruteforce_SOA_CPU_grid_gradient(double *chi, int *error, runmode_par
 	int images_found   = 0;
 	long int images_total   = 0;
 	//
-        printf("@@nsets = %d nx = %d ny = %d, xmin = %f, dx = %f, ymin = %f, dy = %f\n", runmode->nsets, runmode->nbgridcells, runmode->nbgridcells, frame->xmin, dx, frame->ymin, dy );
+    //////////////////    printf("@@nsets = %d nx = %d ny = %d, xmin = %f, dx = %f, ymin = %f, dy = %f\n", runmode->nsets, runmode->nbgridcells, runmode->nbgridcells, frame->xmin, dx, frame->ymin, dy );
 	//
 	int numsets = 0;
 	//
@@ -672,6 +673,7 @@ void mychi_bruteforce_SOA_CPU_grid_gradient_barycentersource(double *chi, int *e
 	double time = -myseconds();
 	//gradient_grid_CPU(grid_gradient_x, grid_gradient_y, frame, lens, runmode->nhalos, grid_dim);
 #ifdef __WITH_GPU
+#warning "Calling the GPUs..."
 	gradient_grid_GPU(grid_gradient_x, grid_gradient_y, frame, lens, runmode->nhalos, dx, dy, grid_size, y_bound, 0, y_pos_loc);
 	//gradient_grid_GPU(grid_gradient_x, grid_gradient_y, frame, lens, runmode->nhalos, grid_size);
 #else
@@ -758,8 +760,8 @@ void mychi_bruteforce_SOA_CPU_grid_gradient_barycentersource(double *chi, int *e
 			//
 		}
 		//________ Dividing by nimages for final barycenter result _________
-	    sources[source_id].center.x /= nimages;
-	    sources[source_id].center.y /= nimages;
+		sources[source_id].center.x /= nimages;
+		sources[source_id].center.y /= nimages;
 
 		sources[source_id].redshift = images[index].redshift;
 		sources[source_id].dr       = images[index].dr;
