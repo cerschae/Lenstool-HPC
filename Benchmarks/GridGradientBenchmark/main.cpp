@@ -333,7 +333,7 @@ int main(int argc, char *argv[])
 #warning "using GPUs..."
 	// GPU test
 
-	std::cout << " GPU Test... "; 
+	std::cout << " GPU Test... "; fflush(stdout);
 
 	type_t* grid_gradient_x_gpu = (type_t *) malloc((int) (runmode.nbgridcells) * (runmode.nbgridcells) * sizeof(type_t));
        type_t* grid_gradient_y_gpu = (type_t *) malloc((int) (runmode.nbgridcells) * (runmode.nbgridcells) * sizeof(type_t));
@@ -349,6 +349,7 @@ int main(int argc, char *argv[])
 	//gradient_grid_CPU(grid_gradient_x,grid_gradient_y, &frame, &lenses_SOA, runmode.nhalos, grid_dim);
 	//t_2 += myseconds();
 	//Some Sort of cache or initial overhead problem... alway takes 0.2 sec the first time
+	//printf("%d %d\n", runmode.nhalos, runmode.n_tot_halos);
 	gradient_grid_GPU(grid_gradient_x_gpu, grid_gradient_y_gpu, &frame, &lenses_SOA, runmode.nhalos, runmode.nbgridcells);
 
 	t_2 = -myseconds();
