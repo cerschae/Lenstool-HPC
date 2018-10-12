@@ -1,7 +1,7 @@
 
 #include <setup.hpp>
 
-
+#ifdef __WITH_LENSTOOL
 void setup_lenstool(){
 /*
 	extern  struct  g_mode    M;
@@ -78,7 +78,5 @@ void setup_lenstool(){
 		o_global();
 
 	tracepot();
-
-
-
 }
+#endif
