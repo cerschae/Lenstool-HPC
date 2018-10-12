@@ -917,7 +917,7 @@ module_potentialDerivatives_totalGradient_SOA_GPU(type_t *grid_grad_x, type_t *g
         int row = blockIdx.y*blockDim.y + threadIdx.y;
 
         //
-        if ((row + jstart < nbgridcells_y) && (col + istart < nbgridcells_x))
+        if ((row + 0*jstart < nbgridcells_y) && (col + 0*istart < nbgridcells_x))
         {
                 //
                 //double dx = (frame->xmax - frame->xmin)/(nbgridcells-1);
