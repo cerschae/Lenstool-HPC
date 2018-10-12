@@ -284,7 +284,7 @@ struct point module_potentialDerivatives_totalGradient_5_SOA_v2(const struct poi
         }
         return grad;
 }
-
+#if 0
 struct point module_potentialDerivatives_totalGradient_5_SOA_print(const struct point *pImage, const struct Potential_SOA *lens, int shalos, int nhalos, int index)
 {
         asm volatile("# module_potentialDerivatives_totalGradient_SIS_SOA_v2 begins");
@@ -389,6 +389,7 @@ struct point module_potentialDerivatives_totalGradient_5_SOA_print(const struct 
         }
         return grad;
 }
+#endif
 //
 //
 //
