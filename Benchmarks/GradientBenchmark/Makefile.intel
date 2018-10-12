@@ -1,10 +1,11 @@
 PROGRAM_NAME := GradientBenchmark
 #CXX=g++ -lm -ffast-math -ftree-loop-vectorize 
-CXX=icpc
+CXX=CC
 
 all: $(PROGRAM_NAME) 
 
-program_CXX_SRCS := gradient.cpp gradient_avx.cpp setup.cpp main.cpp 
+#program_CXX_SRCS := gradient.cpp gradient_avx.cpp setup.cpp main.cpp 
+program_CXX_SRCS := setup.cpp main.cpp 
 $(warning obj files are $(program_CXX_SRCS))
 #program_CXX_SRCS := $(wildcard *.cpp)
 #program_CXX_SRCS += $(wildcard ../../*.cpp) #Find C++ source files from additonal directories
@@ -25,8 +26,9 @@ program_INCLUDE_LIBS += /users/fgilles/Projects/lenstool-6.8.1/src
 # Compiler flags
 CPPFLAGS += $(foreach includedir,$(program_INCLUDE_DIRS),-I$(includedir))
 CPPFLAGS += $(foreach includelib,$(program_INCLUDE_LIBS),-L$(includelib) -lcfitsio)
-#CXXFLAGS += -march=core-avx2 -g -O3 -std=c++0x -Wall -pedantic 
-CPPFLAGS += -qopenmp -xMIC-AVX512 -g -O3 -std=c++0x -Wall -pedantic 
+CPPFLAGS += -march=xHost -fma -g -O3 -std=c++0x -Wall -pedantic 
+CPPFLAGS += -qopenmp 
+CPPFLAGS += -D__WITH_LENSTOOL
 #CPPFLAGS += -qopenmp -xHost -fma -g -O3 -std=c++0x -Wall -pedantic
 #CXXFLAGS += -g -O3 -std=c++0x -Wall 
 #
