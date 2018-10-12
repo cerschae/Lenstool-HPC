@@ -239,7 +239,7 @@ int main(int argc, char *argv[])
 	// Output: Potentials and its parameters
 
 	module_readParameters_PotentialSOA_direct(inputFile, &lenses_SOA, runmode.nhalos, runmode.n_tot_halos, cosmology);
-	module_readParameters_debug_potential_SOA(1, lenses_SOA, runmode.nhalos);
+	module_readParameters_debug_potential_SOA(0, lenses_SOA, runmode.nhalos);
 
 	// This module function reads in the potfiles parameters
 	// Input: input file
@@ -250,7 +250,7 @@ int main(int argc, char *argv[])
 		module_readParameters_readpotfiles_param(inputFile, &potfile, cosmology);
 		module_readParameters_debug_potfileparam(1, &potfile);
 		module_readParameters_readpotfiles_SOA(&runmode, &cosmology,&potfile,&lenses_SOA);
-		module_readParameters_debug_potential_SOA(1, lenses_SOA, runmode.n_tot_halos);
+		module_readParameters_debug_potential_SOA(0, lenses_SOA, runmode.n_tot_halos);
 
 	}
 
@@ -347,7 +347,7 @@ int main(int argc, char *argv[])
 
 	// Lenstool-GPU Bruteforce
 	//===========================================================================================================
-#if 1
+#if 0
 	{
 		printf("Calling lenstoolhpc orig at time %f s\n", myseconds() - wallclock);
 		std::cout << "LenstoolHPC dist chi Benchmark:\n ";
