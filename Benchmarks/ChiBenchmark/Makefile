@@ -1,6 +1,6 @@
 PROGRAM_NAME := ChiBenchmark
 #CXX=g++ -lm -ffast-math -ftree-loop-vectorize 
-CXX=mpiicpc
+CXX ?= mpiicpc
 
 
 program_CXX_SRCS := $(wildcard *.cpp)
@@ -41,10 +41,10 @@ program_INCLUDE_LIBS += $(GSL_ROOT)/lib/
 # Compiler flags
 CPPFLAGS += $(foreach includedir,$(program_INCLUDE_DIRS),-I$(includedir))
 CPPFLAGS += $(foreach includelib,$(program_INCLUDE_LIBS),-L$(includelib))
-CPPFLAGS += -D__WITH_LENSTOOL
+#CPPFLAGS += -D__WITH_LENSTOOL
 CPPFLAGS += -D__WITH_MPI
 CPPFLAGS += -D_double
-CPPFLAGS += -qopenmp -xHost -g -O3 -std=c++0x -Wall -pedantic
+CPPFLAGS += -fPIC -qopenmp -xHost -g -O3 -std=c++0x -Wall -pedantic
 #CPPFLAGS += -qopenmp -march=core-avx2 -g -O3 -std=c++0x -Wall -pedantic
 #CPPFLAGS += -llenstoolhpc -qopenmp -xHost -g -O3 -std=c++0x -Wall -pedantic
 #CPPFLAGS += -llenstoolhpc -qopenmp -axMIC-AVX512,CORE-AVX2 -g -O3 -std=c++0x -Wall -pedantic
@@ -62,7 +62,7 @@ debug: CXXFLAGS = -g -O0 -std=c++0x -Wall -pedantic -DDEBUG $(EXTRA_FLAGS)
 debug: $(PROGRAM_NAME)
 
 $(PROGRAM_NAME): $(OBJECTS) 
-	$(CXX) $(CPPFLAGS) -o $@ $(program_CXX_OBJS) $(program_C_OBJS) $(CUO_O_OBJECTS) $(LDFLAGS)
+	CC $(CPPFLAGS) -o $@ $(program_CXX_OBJS) $(program_C_OBJS) $(CUO_O_OBJECTS) $(LDFLAGS)
 
 clean:
 	@- $(RM) $(PROGRAM_NAME) $(OBJECTS) *~ *.o *.optrpt chi
