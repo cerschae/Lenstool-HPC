@@ -1,7 +1,7 @@
 PROGRAM_NAME := liblenstoolhpc.so
 STATIC_LIB := liblenstoolhpc.a
 #CXX=g++ -lm -ffast-math -ftree-loop-vectorize 
-#CXX=cc
+CXX=mpiicpc
 #
 program_CXX_SRCS := $(wildcard *.cpp)
 $(info $$program_CXX_SRCS is [${program_CXX_SRCS}])

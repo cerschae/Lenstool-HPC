@@ -228,7 +228,7 @@ int main(int argc, char *argv[])
 	// Output: Potentials and its parameters
 
 	module_readParameters_PotentialSOA_direct(inputFile, &lenses_SOA, runmode.nhalos, runmode.n_tot_halos, cosmology);
-	module_readParameters_debug_potential_SOA(1, lenses_SOA, runmode.nhalos);
+	module_readParameters_debug_potential_SOA(0, lenses_SOA, runmode.nhalos);
 	module_readParameters_limit(inputFile, host_potentialoptimization, runmode.nhalos );
 #if 0
 	for(int ii = 0; ii <runmode.nhalos ; ii++){
@@ -238,10 +238,10 @@ int main(int argc, char *argv[])
 	if (runmode.potfile == 1 )
 	{
 		module_readParameters_readpotfiles_param(inputFile, potfile, cosmology);
-		module_readParameters_debug_potfileparam(1, &potfile[0]);
-		module_readParameters_debug_potfileparam(1, &potfile[1]);
+		module_readParameters_debug_potfileparam(0, &potfile[0]);
+		module_readParameters_debug_potfileparam(0, &potfile[1]);
 		module_readParameters_readpotfiles_SOA(&runmode, &cosmology,potfile,&lenses_SOA);
-		module_readParameters_debug_potential_SOA(0, lenses_SOA, runmode.n_tot_halos);
+		module_readParameters_debug_potential_SOA(1, lenses_SOA, runmode.n_tot_halos);
 
 	}
 
@@ -300,17 +300,7 @@ int main(int argc, char *argv[])
 	// Switch to silent mode
 	M.verbose = 0;
 	printf("ok\n");
-	std::cerr << " Read Bayes models"  << std::endl;
-
-	// Read the bayes.dat file
-	array = readBayesModels(&nParam, &nVal);
-	if( array == NULL )
-	{
-		fprintf(stderr, "ERROR: bayes.dat file not found\n");
-		return -1;
-	}
-
-#if 0
+#if 1
 	for(int i = 0; i < G.nlens; i++){
 		printf("Lenstool Potential[%d]: x = %f, y = %f, vdisp = %f, type = %d \n \t ellipticity = %f, ellipticity_pot = %f, ellipticity angle (radians) = %f, rcore = %f, rcut = %f,\n z = %f\n", i,lens[i].C.x, lens[i].C.y, lens[i].sigma, lens[i].type, lens[i].emass, lens[i].epot, lens[i].theta, lens[i].rc, lens[i].rcut, lens[i].z);
 	}
@@ -325,157 +315,106 @@ int main(int argc, char *argv[])
 
 	std::cerr << " Finished setting up"  << std::endl;
 
-	//Defining maps
-	int ampli = 1;
-	t_lt_total = -myseconds();
-	// Loop over each line
-	for( i = 0; i < nVal && i < 2000; i++ )
-	{
-		// Randomly draw a line from index array
-		tmp = (int) floor(d_random(&seed) * (nVal - i));
-		iVal = index[i+tmp];
-		// and swap the indexes in the index list
-		index[i+tmp] = index[i];
+    /* antecedant d'une grille source ou d'une grille image */
+    if ( M.grille != 0 ){
+    	t_lt = -myseconds();
+        g_grid(M.grille, M.ngrille, M.zgrille);
+        t_lt += myseconds();}
 
-		// Set the lens parameters from <array>
-		setBayesModel( iVal, nVal, array );
-#if 0
-		for(int i = 0; i < G.nlens; i++){
-			printf("Lenstool Potential[%d]: x = %f, y = %f, vdisp = %f, type = %d \n \t ellipticity = %f, ellipticity_pot = %f, ellipticity angle (radians) = %f, rcore = %f, rcut = %f,\n z = %f\n", i,lens[i].C.x, lens[i].C.y, lens[i].sigma, lens[i].type, lens[i].emass, lens[i].epot, lens[i].theta, lens[i].rc, lens[i].rcut, lens[i].z);
-		}
-#endif
-		if( M.imass != 0 )
-		{
-			sprintf( fname, "tmp/%s%ld.fits",M.massfile, iVal );
-			printf("INFO: Compute file %d/%ld : %s [CTRL-C to interrupt]\n",i+1, nVal,fname);
-			fflush(stdout);
-			pFile = fopen( fname, "r" );
-			if( pFile == NULL )
-			{
-				pFile = fopen( fname, "w");
-				fprintf( pFile, "busy\n" );
-				fclose(pFile);
-				t_lt = -myseconds();
-				g_mass( M.imass, M.nmass, M.zmass, S.zs, fname );
-				t_lt += myseconds();
-				std::cout << " Time  = " << std::setprecision(15) << t_lt << " " << turn <<std::endl;
-				//std::cerr <<" para : " << M.zmass << " " << S.zs << " " <<  distcosmo2(M.zmass, S.zs) << distcosmo1(S.zs) << std::endl;
-			}
-			else
-				fclose(pFile);
-		}
+    /* grille du amplification (keyword ampli)*/
+    if ( M.iampli != 0 ){
+    	t_lt = -myseconds();
+        g_ampli(M.iampli, M.nampli, M.zampli, M.amplifile);
+        t_lt += myseconds();}
 
-		if( M.iampli != 0 )
-		{
-			sprintf( fname, "tmp/%s%ld.fits","Amplif_", iVal );
-			printf("INFO: Compute file %d/%ld : %s [CTRL-C to interrupt]\n",i+1, nVal,fname);
-			fflush(stdout);
-			pFile = fopen( fname, "r" );
-			if( pFile == NULL )
-			{
-				pFile = fopen( fname, "w");
-				fprintf( pFile, "busy\n" );
-				fclose(pFile);
-				//std::cerr <<  runmode.amplif<< runmode.amplif_gridcells<< runmode.z_amplif << std::endl;
-				t_lt = -myseconds();
-				g_ampli( M.iampli, M.nampli, M.zampli, fname );
-				//g_ampli( runmode.amplif, runmode.amplif_gridcells, runmode.z_amplif, fname );
-				t_lt += myseconds();
-				//
-				turn += 1;
-				std::cout << " Time  = " << std::setprecision(15) << t_lt << " " << turn <<std::endl;
-			}
-			else
-				fclose(pFile);
-		}
+    /* grille du potential */
+    if ( M.ipoten != 0 ){
+    	t_lt = -myseconds();
+        g_poten(M.ipoten, M.npoten, M.zpoten, M.potenfile);
+        t_lt += myseconds();}
 
-	}
-	t_lt_total += myseconds();
+    /* grille du mass */
+    if ( M.imass != 0 ){
+    	t_lt = -myseconds();
+        g_mass(M.imass, M.nmass, M.zmass, S.zs, M.massfile);
+        t_lt += myseconds();}
+
+    /* grille du dpl */
+    if ( M.idpl != 0 ){
+    	t_lt = -myseconds();
+        g_dpl(M.idpl, M.ndpl, M.zdpl, M.dplxfile, M.dplyfile);
+        t_lt += myseconds();}
+
+
 
 #endif
 
 #ifdef __WITH_GPU
 	double t_1, t_2;
-	//struct matrix *grid_gradient2_cpu;
-	//grid_gradient2_cpu = (struct matrix *) malloc((int) (runmode.amplif_gridcells) * (runmode.amplif_gridcells) * sizeof(struct matrix));
-	// Bayes Map specific functions
-	////read bayes lines
-	module_readParameters_preparebayes(nparam, nvalues);
-	std::cerr << nparam << "BLA" << nvalues << std::endl;
-	bayespot = (type_t *) malloc((int) (nparam) * (nvalues) * sizeof(type_t));
-	module_readParameters_bayesmodels(bayespot, nparam, nvalues);
-	////read bayes lines
-	//std::cerr <<  "BLA" << std::endl;
+
 	t_1 = -myseconds();
+	std::cerr << runmode.mass << " " << runmode.amplif << " "  << std::endl;
 
 		if (runmode.mass > 0){
 			//Allocation
 			type_t* mass_GPU = (type_t *) malloc((int) (runmode.mass_gridcells) * (runmode.mass_gridcells) * sizeof(type_t));
 
-			for(int ii = 0; ii < nvalues; ii++){
-				////calculate maps
-				std::cout << " GPU launching for map mass " << ii << std::endl;
-				t_2 = -myseconds();
-				////set bayes potential
-				module_readParameters_setbayesmapmodels(&runmode, &cosmology, host_potentialoptimization, potfile, &lenses_SOA,bayespot,nparam, ii);
-				//std::cerr << runmode.n_tot_halos << std::endl;
-				module_readParameters_debug_potential_SOA(0, lenses_SOA, runmode.n_tot_halos);
-				//Init
-				memset(mass_GPU, 0, (runmode.mass_gridcells) * (runmode.mass_gridcells) * sizeof(type_t));
 
-				//Choosing Function definition
-				map_gpu_function_t map_gpu_func;
-				map_gpu_func = select_map_function("mass",&runmode);
+			////calculate maps
+			std::cout << " GPU launching for map mass " << std::endl;
+			t_2 = -myseconds();
+			module_readParameters_debug_potential_SOA(0, lenses_SOA, runmode.n_tot_halos);
+			//Init
+			memset(mass_GPU, 0, (runmode.mass_gridcells) * (runmode.mass_gridcells) * sizeof(type_t));
 
-				//calculating map using defined function
-				map_mass_grid_GPU(map_gpu_func,mass_GPU,&cosmology, &frame, &lenses_SOA, runmode.n_tot_halos, runmode.mass_gridcells ,runmode.mass, runmode.z_mass, runmode.z_mass_s);
+			//Choosing Function definition
+			map_gpu_function_t map_gpu_func;
+			map_gpu_func = select_map_function("mass",&runmode);
 
-				std::cerr <<" para : " << runmode.z_mass << " " << runmode.z_mass_s << std::endl;
-				//writing
-				//std::cerr << runmode.amplif_name << std::endl;
-				module_writeFits(path,runmode.mass_name,ii,mass_GPU,&runmode,runmode.mass_gridcells,&frame, runmode.ref_ra, runmode.ref_dec );
-				t_2 += myseconds();
-				std::cout << " Time  " << std::setprecision(15) << t_2 << std::endl;
-				std::cerr << "**" << mass_GPU[0] << std::endl;
-			}
-			//std::cerr << "**" << ampli_GPU[0] << std::endl;
+			//calculating map using defined function
+			map_mass_grid_GPU(map_gpu_func,mass_GPU,&cosmology, &frame, &lenses_SOA, runmode.n_tot_halos, runmode.mass_gridcells ,runmode.mass, runmode.z_mass, runmode.z_mass_s);
+
+			//writing
+			module_writeFits(path,runmode.mass_name,mass_GPU,&runmode,runmode.mass_gridcells,&frame, runmode.ref_ra, runmode.ref_dec );
+			t_2 += myseconds();
+			std::cout << " Time  " << std::setprecision(15) << t_2 << std::endl;
+			std::cerr << "**" << mass_GPU[0] << std::endl;
+
 			free(mass_GPU);
 		}
 		if (runmode.amplif > 0){
 			//Allocation
 			type_t* ampli_GPU = (type_t *) malloc((int) (runmode.amplif_gridcells) * (runmode.amplif_gridcells) * sizeof(type_t));
-			for(int ii = 0; ii < nvalues; ii++){
-				////calculate maps
-				std::cout << " GPU launching for map amplif " << ii << std::endl;
-				t_2 = -myseconds();
-				////set bayes potential
-				module_readParameters_setbayesmapmodels(&runmode, &cosmology, host_potentialoptimization, potfile, &lenses_SOA,bayespot,nparam, ii);
-				module_readParameters_debug_potential_SOA(0, lenses_SOA, runmode.n_tot_halos);
-				//Init
-				memset(ampli_GPU, 0, (runmode.amplif_gridcells) * (runmode.amplif_gridcells) * sizeof(type_t));
 
-				//Choosing Function definition
-				map_gpu_function_t map_gpu_func;
-				map_gpu_func = select_map_function("ampli",&runmode);
+			////calculate maps
+			std::cout << " GPU launching for map amplif " << std::endl;
+			t_2 = -myseconds();
+			module_readParameters_debug_potential_SOA(0, lenses_SOA, runmode.n_tot_halos);
+			//Init
+			memset(ampli_GPU, 0, (runmode.amplif_gridcells) * (runmode.amplif_gridcells) * sizeof(type_t));
 
-				//calculating map using defined function
-				map_grid_GPU(map_gpu_func,ampli_GPU,&cosmology, &frame, &lenses_SOA, runmode.n_tot_halos, runmode.amplif_gridcells ,runmode.amplif, runmode.z_amplif);
+			//Choosing Function definition
+			map_gpu_function_t map_gpu_func;
+			map_gpu_func = select_map_function("ampli",&runmode);
 
-				//writing
-				//std::cerr << runmode.amplif_name << std::endl;
-				module_writeFits(path,runmode.amplif_name,ii,ampli_GPU,&runmode,runmode.amplif_gridcells,&frame, runmode.ref_ra, runmode.ref_dec );
-				t_2 += myseconds();
-				std::cout << " Time  " << std::setprecision(15) << t_2 << std::endl;
-				std::cerr << "**" << ampli_GPU[0] << std::endl;
-			}
+			//calculating map using defined function
+			map_grid_GPU(map_gpu_func,ampli_GPU,&cosmology, &frame, &lenses_SOA, runmode.n_tot_halos, runmode.amplif_gridcells ,runmode.amplif, runmode.z_amplif);
+
+			//writing
+			//std::cerr << runmode.amplif_name << std::endl;
+			module_writeFits(path,runmode.amplif_name,ampli_GPU,&runmode,runmode.amplif_gridcells,&frame, runmode.ref_ra, runmode.ref_dec );
+			t_2 += myseconds();
+			std::cout << " Time  " << std::setprecision(15) << t_2 << std::endl;
+			std::cerr << "**" << ampli_GPU[0] << std::endl;
+
 			//std::cerr << "**" << ampli_GPU[0] << std::endl;
 			free(ampli_GPU);
 		}
 		//
 
 	t_1 += myseconds();
-	std::cout << "Lenstool Total Time " << std::setprecision(15) << t_lt_total << std::endl;
-	std::cout << "HPC Total Time  " << std::setprecision(15) << t_1 << std::endl;
+	std::cout << "Lenstool 1 Map Time " << std::setprecision(15) << t_lt << std::endl;
+	//std::cout << "HPC Total Time  " << std::setprecision(15) << t_1 << std::endl;
 #endif
 
 }

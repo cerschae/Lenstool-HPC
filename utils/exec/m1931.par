@@ -1,0 +1,128 @@
+runmode
+	inverse          0 0.2 350
+	reference        3 292.95682    -26.575718
+	verbose	0
+	mass	4 200 0.35 mass_4
+	ampli	5 200 1000 ampli_5
+	end
+image
+	multfile         1 immul_ongoing.cat
+	mult_wcs         1
+	forme            -1
+	z_m_limit  1 2.0 1 1.00 6.0 0.10
+	z_m_limit  2 4.0 1 1.00 6.0 0.10
+	z_m_limit  3 6.0 1 1.00 8.0 0.10
+    z_m_limit  4 5.0 1 1.00 8.0 0.10
+	sigposArcsec     0.5
+	end
+grille
+	nombre           128
+	polaire          0
+	nlentille        201
+	nlens_opt        3
+	nlens_crit       3
+	end
+source
+	z_source         1.25
+	end
+potentiel 1 # halo A
+    profil           81
+    x_centre         0.
+    y_centre         0.
+    ellipticite      0.3
+    angle_pos        55.0
+    v_disp           1000.
+    #rcore 50
+    core_radius_kpc  50.
+    cut_radius_kpc   1000.
+    z_lens           0.35
+    end
+limit 1
+    x_centre         1 -5. 5. 0.1
+    y_centre         1 -5. 5. 0.1
+    ellipticite      1 0.0 0.7 0.1
+    angle_pos        1 0.0 180.0 0.1
+    core_radius  1 1. 35. 0.1
+    v_disp           1 800. 1300. 0.1
+    end
+potentiel 2 # halo B
+    profil           81
+    x_centre         -4.03
+    y_centre         -40.76
+    ellipticite      0.3
+    angle_pos        55.0
+    v_disp           1000.
+    core_radius_kpc  50.
+    cut_radius_kpc   1000.
+    z_lens           0.35
+    end
+limit 2
+    x_centre         1 -10. 0. 0.1
+    y_centre         1 -45. -35. 0.1
+    ellipticite      1 0.0 0.9 0.1
+    angle_pos        1 0.0 180.0 0.1
+    core_radius  1 1. 35. 0.1
+    v_disp           1 100. 800. 0.1
+    end
+potentiel 3 # BCG
+    profil           81
+    x_centre         0.
+    y_centre         0.
+    ellipticite      0.273
+    angle_pos        58.82
+    v_disp           100.
+    core_radius_kpc  0.115
+    cut_radius_kpc   100.
+    z_lens           0.35
+    end
+limit 3
+    cut_radius_kpc     1 0.000 200.000 0.100
+    v_disp    1 0.000 300.000 0.100
+    end
+potfile galaxies
+    filein           1 m1931_CM_zCLASH-MUSE.cat
+    zlens            0.35
+    profil           81
+    type             81
+    corekpc          0.15
+    mag0             19.65
+    sigma   3 158. 27.  250.
+    cutkpc  1 10.0 100. 0.1
+	slope   0 4.
+    vdslope 0 4.
+    end
+potfile
+	filein	1 potfile_cl_N-NW-S3.txt 
+	zlens	0.35
+	type	81 
+	corekpc	0 150.0 
+	mag0	27.0 
+	sigma	1 100.0 300.0 
+	 cutkpc  0 10.0 100. 0.1
+	slope	0 4.000000 4.200000 
+	vdslope	0 4.000000 0.000000 
+	vdscatter	0 0.000000 0.000000 
+	rcutscatter	0 0.000000 0.000000 
+	end	
+cline
+	nplan            0 1.49 1.894 2.497
+	dmax             150.0
+	pas              .1
+	algorithm	 marchingsquare
+	end
+grande
+	iso              0 0 0.0 0.0 0.0
+	name             best
+	profil           0 0
+	contour          1 0
+	large_dist       0.3
+	end
+cosmologie
+    H0               70.
+	omega            0.3
+	lambda           0.7
+	end
+champ
+	dmax 136.5
+	end
+fini

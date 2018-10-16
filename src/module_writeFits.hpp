@@ -35,6 +35,7 @@
 // Function declarations
 //===========================================================================================================
 void module_writeFits(std::string path, std::string filename, int ii, type_t *map, const struct runmode_param* runmode, int size, const struct grid_param* frame, type_t ra, type_t dec );
+void module_writeFits(std::string path, std::string filename, type_t *map, const struct runmode_param* runmode, int size, const struct grid_param* frame, type_t ra, type_t dec );
 
 // We are calling C functions here, but we are calling them with a cuda/c++ compiler, thus we need to declare them as extern "C"
 #ifdef __cplusplus
