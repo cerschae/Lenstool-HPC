@@ -31,7 +31,9 @@
 #include "module_writeFits.hpp"
 #ifdef __WITH_GPU
 #include "grid_gradient_GPU.cuh"
-#include "grid_map_GPU.cuh"
+#include "grid_map_ampli_GPU.cuh"
+#include "grid_map_shear_GPU.cuh"
+#include "grid_map_mass_GPU.cuh"
 #include "grid_gradient2_GPU.cuh"
 //#include "gradient_GPU.cuh"
 #endif
@@ -389,10 +391,10 @@ int main(int argc, char *argv[])
 
 			//Choosing Function definition
 			map_gpu_function_t map_gpu_func;
-			map_gpu_func = select_map_function("mass",&runmode);
+			map_gpu_func = select_map_mass_function(&runmode);
 
 			//calculating map using defined function
-			map_mass_grid_GPU(map_gpu_func,mass_GPU,&cosmology, &frame, &lenses_SOA, runmode.n_tot_halos, runmode.mass_gridcells ,runmode.mass, runmode.z_mass, runmode.z_mass_s);
+			map_grid_mass_GPU(map_gpu_func,mass_GPU,&cosmology, &frame, &lenses_SOA, runmode.n_tot_halos, runmode.mass_gridcells ,runmode.mass, runmode.z_mass, runmode.z_mass_s);
 
 			//writing
 			module_writeFits(path,runmode.mass_name,mass_GPU,&runmode,runmode.mass_gridcells,&frame, runmode.ref_ra, runmode.ref_dec );
@@ -415,10 +417,10 @@ int main(int argc, char *argv[])
 
 			//Choosing Function definition
 			map_gpu_function_t map_gpu_func;
-			map_gpu_func = select_map_function("ampli",&runmode);
+			map_gpu_func = select_map_ampli_function(&runmode);
 
 			//calculating map using defined function
-			map_grid_GPU(map_gpu_func,ampli_GPU,&cosmology, &frame, &lenses_SOA, runmode.n_tot_halos, runmode.amplif_gridcells ,runmode.amplif, runmode.z_amplif);
+			map_grid_ampli_GPU(map_gpu_func,ampli_GPU,&cosmology, &frame, &lenses_SOA, runmode.n_tot_halos, runmode.amplif_gridcells ,runmode.amplif, runmode.z_amplif);
 
 			//writing
 			//std::cerr << runmode.amplif_name << std::endl;
@@ -443,10 +445,10 @@ int main(int argc, char *argv[])
 
 			//Choosing Function definition
 			map_gpu_function_t map_gpu_func;
-			map_gpu_func = select_map_function("shear",&runmode);
+			map_gpu_func = select_map_shear_function(&runmode);
 
 			//calculating map using defined function
-			map_grid_GPU(map_gpu_func,shear_GPU,&cosmology, &frame, &lenses_SOA, runmode.n_tot_halos, runmode.shear_gridcells ,runmode.shear, runmode.z_shear);
+			map_grid_shear_GPU(map_gpu_func,shear_GPU,&cosmology, &frame, &lenses_SOA, runmode.n_tot_halos, runmode.shear_gridcells ,runmode.shear, runmode.z_shear);
 
 			//writing
 			//std::cerr << runmode.amplif_name << std::endl;
