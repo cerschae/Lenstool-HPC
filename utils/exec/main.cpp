@@ -345,6 +345,26 @@ int main(int argc, char *argv[])
         g_dpl(M.idpl, M.ndpl, M.zdpl, M.dplxfile, M.dplyfile);
         t_lt += myseconds();}
 
+    /* grille du curv */
+    if ( M.icurv != 0 )
+        g_curv(M.icurv, M.ncurv, M.zcurv, M.cxxfile, M.cxyfile, M.cyyfile);
+
+    /* grille du shear */
+    if ( M.ishear != 0 )
+        g_shear(M.ishear, M.nshear, M.zshear, M.shearfile);
+
+    /* grille du time-delay */
+    if ( M.itime != 0 )
+        g_time(M.itime, M.ntime, M.ztime, M.timefile);
+
+    /* grille du shear_field */
+    if ( M.ishearf != 0 )
+        g_shearf(M.ishearf, M.zshearf, M.shearffile, M.nshearf);
+
+    /* amplification field grid */
+    if ( M.iamplif != 0 )
+        g_amplif(M.iamplif, M.zamplif, M.ampliffile);
+
 
 
 #endif
@@ -409,6 +429,34 @@ int main(int argc, char *argv[])
 
 			//std::cerr << "**" << ampli_GPU[0] << std::endl;
 			free(ampli_GPU);
+		}
+		if (runmode.shear > 0){
+			//Allocation
+			type_t* shear_GPU = (type_t *) malloc((int) (runmode.shear_gridcells) * (runmode.shear_gridcells) * sizeof(type_t));
+
+			////calculate maps
+			std::cout << " GPU launching for map shear " << std::endl;
+			t_2 = -myseconds();
+			module_readParameters_debug_potential_SOA(0, lenses_SOA, runmode.n_tot_halos);
+			//Init
+			memset(shear_GPU, 0, (runmode.shear_gridcells) * (runmode.shear_gridcells) * sizeof(type_t));
+
+			//Choosing Function definition
+			map_gpu_function_t map_gpu_func;
+			map_gpu_func = select_map_function("shear",&runmode);
+
+			//calculating map using defined function
+			map_grid_GPU(map_gpu_func,shear_GPU,&cosmology, &frame, &lenses_SOA, runmode.n_tot_halos, runmode.shear_gridcells ,runmode.shear, runmode.z_shear);
+
+			//writing
+			//std::cerr << runmode.amplif_name << std::endl;
+			module_writeFits(path,runmode.shear_name,shear_GPU,&runmode,runmode.shear_gridcells,&frame, runmode.ref_ra, runmode.ref_dec );
+			t_2 += myseconds();
+			std::cout << " Time  " << std::setprecision(15) << t_2 << std::endl;
+			std::cerr << "**" << shear_GPU[0] << std::endl;
+
+			//std::cerr << "**" << ampli_GPU[0] << std::endl;
+			free(shear_GPU);
 		}
 		//
 

@@ -46,6 +46,10 @@ __global__ void amplif_3_grid_GPU(type_t *ampli,type_t *grid_grad2_a,type_t *gri
 __global__ void amplif_4_grid_GPU(type_t *ampli,type_t *grid_grad2_a,type_t *grid_grad2_b,type_t *grid_grad2_c,type_t *grid_grad2_d, type_t dl0s, type_t dos, type_t z,int nbgridcells);
 __global__ void amplif_5_grid_GPU(type_t *ampli,type_t *grid_grad2_a,type_t *grid_grad2_b,type_t *grid_grad2_c,type_t *grid_grad2_d, type_t dl0s, type_t dos, type_t z,int nbgridcells);
 __global__ void amplif_6_grid_GPU(type_t *ampli,type_t *grid_grad2_a,type_t *grid_grad2_b,type_t *grid_grad2_c,type_t *grid_grad2_d, type_t dl0s, type_t dos, type_t z,int nbgridcells);
+__global__ void shear_1_grid_GPU(type_t *ampli,type_t *grid_grad2_a,type_t *grid_grad2_b,type_t *grid_grad2_c,type_t *grid_grad2_d, type_t dl0s, type_t dos, type_t z,int nbgridcells);
+__global__ void shear_2_grid_GPU(type_t *ampli,type_t *grid_grad2_a,type_t *grid_grad2_b,type_t *grid_grad2_c,type_t *grid_grad2_d, type_t dl0s, type_t dos, type_t z,int nbgridcells);
+__global__ void shear_3_grid_GPU(type_t *ampli,type_t *grid_grad2_a,type_t *grid_grad2_b,type_t *grid_grad2_c,type_t *grid_grad2_d, type_t dl0s, type_t dos, type_t z,int nbgridcells);
+__global__ void shear_4_grid_GPU(type_t *ampli,type_t *grid_grad2_a,type_t *grid_grad2_b,type_t *grid_grad2_c,type_t *grid_grad2_d, type_t dl0s, type_t dos, type_t z,int nbgridcells);
 __global__ void mass_grid_GPU(type_t *ampli,type_t *grid_grad2_a,type_t *grid_grad2_b,type_t *grid_grad2_c,type_t *grid_grad2_d, type_t mult, type_t ds, type_t dl, type_t h, type_t z,int nbgridcells);
 
 
@@ -93,6 +97,28 @@ map_gpu_function_t select_map_function(std::string mode, const struct runmode_pa
 			exit(-1);
 		}
 	}
+	else if(mode == "shear"){
+		if(runmode->shear == 1){
+			return &shear_1_grid_CPU_GPU;
+		}
+		else if(runmode->shear == 2){
+			return &shear_2_grid_CPU_GPU;
+		}
+		else if(runmode->shear == 3){
+			return &shear_3_grid_CPU_GPU;
+		}
+		else if(runmode->shear == 4){
+			return &shear_4_grid_CPU_GPU;
+		}
+		else{
+			fprintf(stderr, "ERROR: Mass mode %d not supported yet \n",runmode->mass);
+			exit(-1);
+		}
+	}
+
+
+
+
 	else{
 		fprintf(stderr, "ERROR: No mode recognised \n");
 		exit(-1);
@@ -111,22 +137,6 @@ void map_mass_grid_GPU(map_gpu_function_t mapfunction, type_t *map, const struct
 //
 void map_mass_grid_GPU(map_gpu_function_t mapfunction, type_t *map,const struct cosmo_param *cosmo, const struct grid_param *frame, const struct Potential_SOA *lens, int nhalos, int mode_amp,  type_t zl, type_t zs, type_t dx, type_t dy, int nbgridcells_x, int nbgridcells_y, int istart, int jstart)
 {
-
-	int nBlocks_gpu = 0;
-	// Define the number of threads per block the GPU will use
-	cudaDeviceProp properties_gpu;
-	cudaGetDeviceProperties(&properties_gpu, 0); // Get properties of 0th GPU in use
-
-	if (properties_gpu.maxThreadsDim[0]<threadsPerBlock)
-	{
-		fprintf(stderr, "ERROR: The GPU has to support at least %u threads per block.\n", threadsPerBlock);
-		exit(-1);
-	}
-	else
-	{
-		nBlocks_gpu = properties_gpu.maxGridSize[0] / threadsPerBlock;  // Get the maximum number of blocks with the chosen number of threads
-		// per Block that the GPU supports
-	}
 
 	grid_param *frame_gpu;
 	Potential_SOA *lens_gpu,*lens_kernel;
@@ -265,22 +275,6 @@ void map_grid_GPU(map_gpu_function_t mapfunction, type_t *map, const struct cosm
 void map_grid_GPU(map_gpu_function_t mapfunction, type_t *map,const struct cosmo_param *cosmo, const struct grid_param *frame, const struct Potential_SOA *lens, int nhalos, int mode_amp, type_t z, type_t dx, type_t dy, int nbgridcells_x, int nbgridcells_y, int istart, int jstart)
 {
 
-	int nBlocks_gpu = 0;
-	// Define the number of threads per block the GPU will use
-	cudaDeviceProp properties_gpu;
-	cudaGetDeviceProperties(&properties_gpu, 0); // Get properties of 0th GPU in use
-
-	if (properties_gpu.maxThreadsDim[0]<threadsPerBlock)
-	{
-		fprintf(stderr, "ERROR: The GPU has to support at least %u threads per block.\n", threadsPerBlock);
-		exit(-1);
-	}
-	else
-	{
-		nBlocks_gpu = properties_gpu.maxGridSize[0] / threadsPerBlock;  // Get the maximum number of blocks with the chosen number of threads
-		// per Block that the GPU supports
-	}
-
 	grid_param *frame_gpu;
 	Potential_SOA *lens_gpu,*lens_kernel;
 	int *type_gpu;
@@ -341,8 +335,6 @@ void map_grid_GPU(map_gpu_function_t mapfunction, type_t *map,const struct cosmo
 	cudaMemcpy(lens_kernel, lens_gpu, sizeof(Potential_SOA), cudaMemcpyHostToDevice);
 	//
 	type_t time = -myseconds();
-	//std::cerr << "DLS " << dl0s << " " << dos << " " << dol  << " " << lens->z[0] << " " << lens->z[1] << " " << z  << std::endl;
-	//std::cerr  <<"BLAAAAAAAAAAAA " << grid_grad2_a_gpu[0] << std::endl;
 	//
 	module_potentialDerivatives_totalGradient2_SOA_CPU_GPU(grid_grad2_a_gpu, grid_grad2_b_gpu, grid_grad2_c_gpu, grid_grad2_d_gpu, frame_gpu, lens_kernel, nhalos, dx, dy, nbgridcells_x, nbgridcells_y, istart, jstart);
 	//
@@ -377,22 +369,6 @@ void map_grid_GPU(map_gpu_function_t mapfunction, type_t *map,const struct cosmo
 //allows for resizing of the source
 void map_resizedgrid_GPU(map_gpu_function_t mapfunction, type_t *map,const struct cosmo_param *cosmo, const struct grid_param *frame, const struct Potential_SOA *lens, int nhalos, int mode_amp, type_t z, type_t dx, type_t dy, int nbgridcells_x, int nbgridcells_y, int istart, int jstart)
 {
-
-	int nBlocks_gpu = 0;
-	// Define the number of threads per block the GPU will use
-	cudaDeviceProp properties_gpu;
-	cudaGetDeviceProperties(&properties_gpu, 0); // Get properties of 0th GPU in use
-
-	if (properties_gpu.maxThreadsDim[0]<threadsPerBlock)
-	{
-		fprintf(stderr, "ERROR: The GPU has to support at least %u threads per block.\n", threadsPerBlock);
-		exit(-1);
-	}
-	else
-	{
-		nBlocks_gpu = properties_gpu.maxGridSize[0] / threadsPerBlock;  // Get the maximum number of blocks with the chosen number of threads
-		// per Block that the GPU supports
-	}
 
 	//Create resized frame information for source amplification and the like
 	grid_param resized_frame;
@@ -743,6 +719,164 @@ __global__ void amplif_6_grid_GPU(type_t *ampli,type_t *grid_grad2_a,type_t *gri
         ampli[index] = gam;
     }
 }
+
+//Shear NR 1
+void shear_1_grid_CPU_GPU(type_t *map,type_t *grid_grad2_a,type_t *grid_grad2_b,type_t *grid_grad2_c,type_t *grid_grad2_d, type_t dl0s, type_t ds, type_t dl, type_t h, type_t z, int nbgridcells_x, int nbgridcells_y, const struct grid_param *frame)
+{
+        int GRID_SIZE_X = (nbgridcells_x + BLOCK_SIZE_X - 1)/BLOCK_SIZE_X; // number of blocks
+        int GRID_SIZE_Y = (nbgridcells_y + BLOCK_SIZE_Y - 1)/BLOCK_SIZE_Y;
+        //
+        //printf("grid_size_x = %d, grid_size_y = %d, nbgridcells_x = %d, nbgridcells_y = %d, istart = %d, jstart = %d (split)\n", GRID_SIZE_X, GRID_SIZE_Y, nbgridcells_x, nbgridcells_y, istart, jstart);
+        //
+        dim3 threads(BLOCK_SIZE_X, BLOCK_SIZE_Y/1);
+        dim3 grid   (GRID_SIZE_X , GRID_SIZE_Y);
+        //
+        cudaMemset(map, 0, nbgridcells_x*nbgridcells_y*sizeof(type_t));
+        //
+        shear_1_grid_GPU<<<grid, threads>>> (map,grid_grad2_a, grid_grad2_b,grid_grad2_c, grid_grad2_d,dl0s,ds,z,nbgridcells_x);
+        cudasafe(cudaGetLastError(), "amplif_grid_CPU_GPU");
+        //
+        cudaDeviceSynchronize();
+        printf("GPU kernel done...\n");
+}
+//
+__global__ void shear_1_grid_GPU(type_t *shear,type_t *grid_grad2_a,type_t *grid_grad2_b,type_t *grid_grad2_c,type_t *grid_grad2_d, type_t dl0s, type_t ds, type_t z,int nbgridcells)
+{
+	type_t A,B,C;
+	ellipse amp;
+	type_t dlsds= dl0s/ds;
+	////
+    int col = blockIdx.x*blockDim.x + threadIdx.x;
+    int row = blockIdx.y*blockDim.y + threadIdx.y;
+    //
+    if ((row < nbgridcells) && (col < nbgridcells))
+    {
+
+    	int index = row*nbgridcells + col;
+        A = 1. - grid_grad2_a[index]*dlsds;   // 1 - DLS/DS * d2phixx
+        B = - grid_grad2_b[index]*dlsds;   // - DLS/DS * d2phixy
+        C = 1. - grid_grad2_c[index]*dlsds;   // 1 - DLS/DS * d2phiyy
+        amp = formeli_HPC(A, B, C);
+        shear[index] = (amp.a - amp.b) /2. ;
+    }
+}
+//Shear NR 2
+void shear_2_grid_CPU_GPU(type_t *map,type_t *grid_grad2_a,type_t *grid_grad2_b,type_t *grid_grad2_c,type_t *grid_grad2_d, type_t dl0s, type_t ds, type_t dl, type_t h, type_t z, int nbgridcells_x, int nbgridcells_y, const struct grid_param *frame)
+{
+        int GRID_SIZE_X = (nbgridcells_x + BLOCK_SIZE_X - 1)/BLOCK_SIZE_X; // number of blocks
+        int GRID_SIZE_Y = (nbgridcells_y + BLOCK_SIZE_Y - 1)/BLOCK_SIZE_Y;
+        //
+        //printf("grid_size_x = %d, grid_size_y = %d, nbgridcells_x = %d, nbgridcells_y = %d, istart = %d, jstart = %d (split)\n", GRID_SIZE_X, GRID_SIZE_Y, nbgridcells_x, nbgridcells_y, istart, jstart);
+        //
+        dim3 threads(BLOCK_SIZE_X, BLOCK_SIZE_Y/1);
+        dim3 grid   (GRID_SIZE_X , GRID_SIZE_Y);
+        //
+        cudaMemset(map, 0, nbgridcells_x*nbgridcells_y*sizeof(type_t));
+        //
+        shear_2_grid_GPU<<<grid, threads>>> (map,grid_grad2_a, grid_grad2_b,grid_grad2_c, grid_grad2_d,dl0s,ds,z,nbgridcells_x);
+        cudasafe(cudaGetLastError(), "amplif_grid_CPU_GPU");
+        //
+        cudaDeviceSynchronize();
+        printf("GPU kernel done...\n");
+}
+//
+__global__ void shear_2_grid_GPU(type_t *shear,type_t *grid_grad2_a,type_t *grid_grad2_b,type_t *grid_grad2_c,type_t *grid_grad2_d, type_t dl0s, type_t ds, type_t z,int nbgridcells)
+{
+	type_t A,B,C;
+	ellipse amp;
+	type_t dlsds= dl0s/ds;
+	type_t q;
+	////
+    int col = blockIdx.x*blockDim.x + threadIdx.x;
+    int row = blockIdx.y*blockDim.y + threadIdx.y;
+    //
+    if ((row < nbgridcells) && (col < nbgridcells))
+    {
+
+    	int index = row*nbgridcells + col;
+        A = 1. - grid_grad2_a[index]*dlsds;   // 1 - DLS/DS * d2phixx
+        B = - grid_grad2_b[index]*dlsds;   // - DLS/DS * d2phixy
+        C = 1. - grid_grad2_c[index]*dlsds;   // 1 - DLS/DS * d2phiyy
+        amp = formeli_HPC(A, B, C);
+        q = amp.a / amp.b;
+        shear[index] = fabs((q * q - 1.) / (q * q + 1.));
+    }
+}
+//Shear NR 3
+void shear_3_grid_CPU_GPU(type_t *map,type_t *grid_grad2_a,type_t *grid_grad2_b,type_t *grid_grad2_c,type_t *grid_grad2_d, type_t dl0s, type_t ds, type_t dl, type_t h, type_t z, int nbgridcells_x, int nbgridcells_y, const struct grid_param *frame)
+{
+        int GRID_SIZE_X = (nbgridcells_x + BLOCK_SIZE_X - 1)/BLOCK_SIZE_X; // number of blocks
+        int GRID_SIZE_Y = (nbgridcells_y + BLOCK_SIZE_Y - 1)/BLOCK_SIZE_Y;
+        //
+        //printf("grid_size_x = %d, grid_size_y = %d, nbgridcells_x = %d, nbgridcells_y = %d, istart = %d, jstart = %d (split)\n", GRID_SIZE_X, GRID_SIZE_Y, nbgridcells_x, nbgridcells_y, istart, jstart);
+        //
+        dim3 threads(BLOCK_SIZE_X, BLOCK_SIZE_Y/1);
+        dim3 grid   (GRID_SIZE_X , GRID_SIZE_Y);
+        //
+        cudaMemset(map, 0, nbgridcells_x*nbgridcells_y*sizeof(type_t));
+        //
+        shear_3_grid_GPU<<<grid, threads>>> (map,grid_grad2_a, grid_grad2_b,grid_grad2_c, grid_grad2_d,dl0s,ds,z,nbgridcells_x);
+        cudasafe(cudaGetLastError(), "amplif_grid_CPU_GPU");
+        //
+        cudaDeviceSynchronize();
+        printf("GPU kernel done...\n");
+}
+//
+__global__ void shear_3_grid_GPU(type_t *shear,type_t *grid_grad2_a,type_t *grid_grad2_b,type_t *grid_grad2_c,type_t *grid_grad2_d, type_t dl0s, type_t ds, type_t z,int nbgridcells)
+{
+	type_t dlsds= dl0s/ds;
+	////
+    int col = blockIdx.x*blockDim.x + threadIdx.x;
+    int row = blockIdx.y*blockDim.y + threadIdx.y;
+    //
+    if ((row < nbgridcells) && (col < nbgridcells))
+    {
+
+    	int index = row*nbgridcells + col;
+        shear[index] = (grid_grad2_a[index] - grid_grad2_c[index])*dlsds / 2. ;
+        //if(col == 0 and row == 0)printf(" GPUUUU:  Grad  %f %f %f  ABC %f %f %f dlsds %f ab %f %f %f \n",grid_grad2_a[index]*dlsds,grid_grad2_b[index]*dlsds, grid_grad2_c[index]*dlsds,A,B,C,dlsds,amp.a,amp.b,(A - C)*(A - C) + 4*B*B);
+    }
+}
+//Shear NR 4
+void shear_4_grid_CPU_GPU(type_t *map,type_t *grid_grad2_a,type_t *grid_grad2_b,type_t *grid_grad2_c,type_t *grid_grad2_d, type_t dl0s, type_t ds, type_t dl, type_t h, type_t z, int nbgridcells_x, int nbgridcells_y, const struct grid_param *frame)
+{
+        int GRID_SIZE_X = (nbgridcells_x + BLOCK_SIZE_X - 1)/BLOCK_SIZE_X; // number of blocks
+        int GRID_SIZE_Y = (nbgridcells_y + BLOCK_SIZE_Y - 1)/BLOCK_SIZE_Y;
+        //
+        //printf("grid_size_x = %d, grid_size_y = %d, nbgridcells_x = %d, nbgridcells_y = %d, istart = %d, jstart = %d (split)\n", GRID_SIZE_X, GRID_SIZE_Y, nbgridcells_x, nbgridcells_y, istart, jstart);
+        //
+        dim3 threads(BLOCK_SIZE_X, BLOCK_SIZE_Y/1);
+        dim3 grid   (GRID_SIZE_X , GRID_SIZE_Y);
+        //
+        //printf("nhalos = %d, size of shared memory = %lf (split)\n", nhalos, (type_t) (8*nhalos + BLOCK_SIZE_X*BLOCK_SIZE_Y)*sizeof(type_t));
+        //
+        //std::cerr << "Amplif 1 :"  <<dl0s<<" " <<ds<<" " << std::endl;
+        //
+        cudaMemset(map, 0, nbgridcells_x*nbgridcells_y*sizeof(type_t));
+        //
+        shear_4_grid_GPU<<<grid, threads>>> (map,grid_grad2_a, grid_grad2_b,grid_grad2_c, grid_grad2_d,dl0s,ds,z,nbgridcells_x);
+        cudasafe(cudaGetLastError(), "amplif_grid_CPU_GPU");
+        //
+        cudaDeviceSynchronize();
+        printf("GPU kernel done...\n");
+}
+//
+__global__ void shear_4_grid_GPU(type_t *shear,type_t *grid_grad2_a,type_t *grid_grad2_b,type_t *grid_grad2_c,type_t *grid_grad2_d, type_t dl0s, type_t ds, type_t z,int nbgridcells)
+{
+	type_t dlsds= dl0s/ds;
+	////
+    int col = blockIdx.x*blockDim.x + threadIdx.x;
+    int row = blockIdx.y*blockDim.y + threadIdx.y;
+    //
+    if ((row < nbgridcells) && (col < nbgridcells))
+    {
+
+    	int index = row*nbgridcells + col;
+    	shear[index] = grid_grad2_b[index] * dlsds ;
+        //if(col == 0 and row == 0)printf(" GPUUUU:  Grad  %f %f %f  ABC %f %f %f dlsds %f ab %f %f %f \n",grid_grad2_a[index]*dlsds,grid_grad2_b[index]*dlsds, grid_grad2_c[index]*dlsds,A,B,C,dlsds,amp.a,amp.b,(A - C)*(A - C) + 4*B*B);
+    }
+}
+
 
 //Mass NR 1
 void mass_1_grid_CPU_GPU(type_t *map,type_t *grid_grad2_a,type_t *grid_grad2_b,type_t *grid_grad2_c,type_t *grid_grad2_d, type_t dl0s, type_t ds, type_t dl, type_t h, type_t z, int nbgridcells_x, int nbgridcells_y, const struct grid_param *frame)

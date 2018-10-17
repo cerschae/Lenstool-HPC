@@ -471,6 +471,34 @@ int main(int argc, char *argv[])
 			//std::cerr << "**" << ampli_GPU[0] << std::endl;
 			free(ampli_GPU);
 		}
+		if (runmode.shear > 0){
+			//Allocation
+			type_t* shear_GPU = (type_t *) malloc((int) (runmode.shear_gridcells) * (runmode.shear_gridcells) * sizeof(type_t));
+			for(int ii = 0; ii < nvalues; ii++){
+				////calculate maps
+				std::cout << " GPU launching for map amplif " << ii << std::endl;
+				t_2 = -myseconds();
+				////set bayes potential
+				module_readParameters_setbayesmapmodels(&runmode, &cosmology, host_potentialoptimization, potfile, &lenses_SOA,bayespot,nparam, ii);
+				module_readParameters_debug_potential_SOA(0, lenses_SOA, runmode.n_tot_halos);
+				//Init
+				memset(shear_GPU, 0, (runmode.shear_gridcells) * (runmode.shear_gridcells) * sizeof(type_t));
+
+				//Choosing Function definition
+				map_gpu_function_t map_gpu_func;
+				map_gpu_func = select_map_function("shear",&runmode);
+
+				//calculating map using defined function
+				map_grid_GPU(map_gpu_func,shear_GPU,&cosmology, &frame, &lenses_SOA, runmode.n_tot_halos, runmode.shear_gridcells ,runmode.shear, runmode.z_shear);
+
+				//writing
+				module_writeFits(path,runmode.shear_name,ii,shear_GPU,&runmode,runmode.shear_gridcells,&frame, runmode.ref_ra, runmode.ref_dec );
+				t_2 += myseconds();
+				std::cout << " Time  " << std::setprecision(15) << t_2 << std::endl;
+				std::cerr << "**" << shear_GPU[0] << std::endl;
+			}
+			free(shear_GPU);
+		}
 		//
 
 	t_1 += myseconds();

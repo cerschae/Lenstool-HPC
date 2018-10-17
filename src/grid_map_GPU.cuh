@@ -35,6 +35,11 @@ void mass_1_grid_CPU_GPU(type_t *,type_t *,type_t *,type_t *,type_t *, type_t , 
 void mass_2_grid_CPU_GPU(type_t *,type_t *,type_t *,type_t *,type_t *, type_t , type_t, type_t , type_t , type_t ,int ,int ,const struct grid_param*);
 void mass_3_grid_CPU_GPU(type_t *,type_t *,type_t *,type_t *,type_t *, type_t , type_t, type_t , type_t , type_t ,int ,int ,const struct grid_param*);
 void mass_4_grid_CPU_GPU(type_t *,type_t *,type_t *,type_t *,type_t *, type_t , type_t, type_t , type_t , type_t ,int ,int ,const struct grid_param*);
+//Shear
+void shear_1_grid_CPU_GPU(type_t *,type_t *,type_t *,type_t *,type_t *, type_t , type_t, type_t , type_t , type_t ,int ,int ,const struct grid_param*);
+void shear_2_grid_CPU_GPU(type_t *,type_t *,type_t *,type_t *,type_t *, type_t , type_t, type_t , type_t , type_t ,int ,int ,const struct grid_param*);
+void shear_3_grid_CPU_GPU(type_t *,type_t *,type_t *,type_t *,type_t *, type_t , type_t, type_t , type_t , type_t ,int ,int ,const struct grid_param*);
+void shear_4_grid_CPU_GPU(type_t *,type_t *,type_t *,type_t *,type_t *, type_t , type_t, type_t , type_t , type_t ,int ,int ,const struct grid_param*);
 
 ////General mapping function
 void map_grid_GPU(map_gpu_function_t mapfunction, type_t *amplif,const struct cosmo_param *cosmo, const struct grid_param *frame, const struct Potential_SOA *lens, int Nlens,int nbgridcells, int mode_amp, type_t z  );
