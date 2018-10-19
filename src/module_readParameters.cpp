@@ -1368,8 +1368,8 @@ void module_readParameters_readpotfiles(const runmode_param *runmode, potfile_pa
 
 }
 */
-void module_readParameters_readpotfiles_SOA(const runmode_param *runmode, const cosmo_param *cosmology, potfile_param potfile[], Potential_SOA *lens){
-
+void module_readParameters_readpotfiles_SOA(const runmode_param *runmode, const cosmo_param *cosmology, potfile_param potfile[], Potential_SOA *lens)
+{
 	std::string first, second, line1;
 	double cast_1, cast_2;
 	double aa,bb;
@@ -2461,7 +2461,7 @@ void module_readParameters_PotentialSOA_direct(std::string infile, Potential_SOA
 
 void module_readParameters_PotentialSOA(std::string infile, Potential *lens, Potential_SOA *lens_SOA, int nhalos)
 {
-#if (defined __WITH_GPU)  && (defined __UNIFIED_MEM) 
+#if (defined __WITH_GPU)  && (defined __WITH_UM) 
 #warning "Using unified memory"
 	cudaMallocManaged(&len_SOA->type		 , nhalos*sizeof(int));
 	cudaMallocManaged(&len_SOA->position_x		 , nhalos*sizeof(size_t));

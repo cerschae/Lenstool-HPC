@@ -73,27 +73,6 @@ void gradient_grid_GPU(type_t *grid_grad_x, type_t *grid_grad_y, const struct gr
 //
 void gradient_grid_GPU(type_t *grid_grad_x, type_t *grid_grad_y, const struct grid_param *frame, const struct Potential_SOA *lens, int nhalos, type_t dx, type_t dy, int nbgridcells_x, int nbgridcells_y, int istart, int jstart)
 {
-
-#if 0
-	int nBlocks_gpu = 0;
-	// Define the number of threads per block the GPU will use
-	cudaDeviceProp properties_gpu;
-
-	cudaGetDeviceProperties(&properties_gpu, 0); // Get properties of 0th GPU in use
-
-	if (properties_gpu.maxThreadsDim[0]<threadsPerBlock)
-	{
-		fprintf(stderr, "ERROR: The GPU has to support at least %u threads per block.\n", threadsPerBlock);
-		exit(-1);
-	}
-	else
-	{
-		nBlocks_gpu = properties_gpu.maxGridSize[0] / threadsPerBlock;  // Get the maximum number of blocks with the chosen number of threads
-		// per Block that the GPU supports
-	}
-#endif
-
-#if !defined( __UNIFIED_MEM)
 	grid_param *frame_gpu;
 	Potential_SOA *lens_gpu,*lens_kernel;
 	int *type_gpu;
@@ -114,8 +93,6 @@ void gradient_grid_GPU(type_t *grid_grad_x, type_t *grid_grad_y, const struct gr
 	cudasafe(cudaMalloc( (void**)&(anglecos_gpu), nhalos*sizeof(type_t)),"Gradientgpu.cu : Alloc anglecos_gpu: " );
 	cudasafe(cudaMalloc( (void**)&(anglesin_gpu), nhalos*sizeof(type_t)),"Gradientgpu.cu : Alloc anglesin_gpu: " );
 	cudasafe(cudaMalloc( (void**)&(frame_gpu), sizeof(grid_param)),"Gradientgpu.cu : Alloc frame_gpu: " );
-	cudasafe(cudaMalloc( (void**)&(grid_grad_x_gpu), (nbgridcells_x) * (nbgridcells_y) *sizeof(type_t)),"Gradientgpu.cu : Alloc source_x_gpu: " );
-	cudasafe(cudaMalloc( (void**)&(grid_grad_y_gpu), (nbgridcells_x) * (nbgridcells_y) *sizeof(type_t)),"Gradientgpu.cu : Alloc source_y_gpu: " );
 	//
 	// Copy values to the GPU
 	//
@@ -142,16 +119,12 @@ void gradient_grid_GPU(type_t *grid_grad_x, type_t *grid_grad_y, const struct gr
 	lens_gpu->anglecos 		= anglecos_gpu;
 	lens_gpu->anglesin 		= anglesin_gpu;
 	//
-	cudaMemcpy(lens_kernel, lens_gpu, sizeof(Potential_SOA), cudaMemcpyHostToDevice);
+	//cudaMemcpy(lens_kernel, lens_gpu, sizeof(Potential_SOA), cudaMemcpyHostToDevice);
 	//
-	grid_param *frame_gpu;
         cudasafe(cudaMalloc( (void**)&(frame_gpu), sizeof(grid_param)),"Gradientgpu.cu : Alloc frame_gpu: " );
         cudasafe(cudaMemcpy(frame_gpu, frame, sizeof(grid_param), cudaMemcpyHostToDevice),"Gradientgpu.cu : Copy fame_gpu: " );
         cudasafe(cudaMemcpy(lens_kernel, lens_gpu, sizeof(Potential_SOA), cudaMemcpyHostToDevice), "Gradientgpu.cu: Copy lens_kernel");
 	//
-#else
-	printf("Unified memory FTW\n");
-#endif
 	type_t *grid_grad_x_gpu, *grid_grad_y_gpu ;
 	cudasafe(cudaMalloc( (void**)&(grid_grad_x_gpu), (nbgridcells_x) * (nbgridcells_y) *sizeof(type_t)),"Gradientgpu.cu : Alloc source_x_gpu: " );
 	cudasafe(cudaMalloc( (void**)&(grid_grad_y_gpu), (nbgridcells_x) * (nbgridcells_y) *sizeof(type_t)),"Gradientgpu.cu : Alloc source_y_gpu: " );
@@ -159,12 +132,7 @@ void gradient_grid_GPU(type_t *grid_grad_x, type_t *grid_grad_y, const struct gr
 	type_t time = -myseconds();
 	//module_potentialDerivatives_totalGradient_SOA_CPU_GPU(grid_grad_x_gpu, grid_grad_y_gpu, frame_gpu, lens_kernel, nbgridcells_x, nhalos);
 	//@@module_potentialDerivatives_totalGradient_SOA_CPU_GPU(grid_grad_x_gpu, grid_grad_y_gpu, frame_gpu, lens_kernel, nhalos, dx, dy, nbgridcells_x, nbgridcells_y, istart, jstart);
-#if defined(__UNIFIED_MEM)
-	module_potentialDerivatives_totalGradient_SOA_CPU_GPU(grid_grad_x_gpu, grid_grad_y_gpu, frame, lens, nhalos, dx, dy, nbgridcells_x, nbgridcells_y, istart, jstart);
-#else
 	module_potentialDerivatives_totalGradient_SOA_CPU_GPU(grid_grad_x_gpu, grid_grad_y_gpu, frame_gpu, lens_kernel, nhalos, dx, dy, nbgridcells_x, nbgridcells_y, istart, jstart);
-#endif
-
 	//
 	//cudasafe(cudaGetLastError(), "module_potentialDerivative_totalGradient_SOA_CPU_GPU");
 	cudaDeviceSynchronize();
@@ -177,7 +145,6 @@ void gradient_grid_GPU(type_t *grid_grad_x, type_t *grid_grad_y, const struct gr
 	//
 	//printf("-----> %f %f \n",grid_grad_x[Nx], grid_grad_y[Ny]);
 	// Free GPU memory
-#if !defined(__UNIFIED_MEM) 
 	cudaFree(lens_kernel);
 	cudaFree(type_gpu);
 	cudaFree(lens_x_gpu);
@@ -192,9 +159,38 @@ void gradient_grid_GPU(type_t *grid_grad_x, type_t *grid_grad_y, const struct gr
 	cudaFree(frame_gpu);
 	cudaFree(grid_grad_x_gpu);
 	cudaFree(grid_grad_y_gpu);
-#endif
 }
 
+void gradient_grid_GPU_UM(type_t *grid_grad_x, type_t *grid_grad_y, const struct grid_param *frame, const struct Potential_SOA *lens, int nhalos, type_t dx, type_t dy, int nbgridcells_x, int nbgridcells_y, int istart, int jstart)
+{
+	type_t *grid_grad_x_gpu, *grid_grad_y_gpu ;
+	//
+        cudasafe(cudaMalloc( (void**)&(grid_grad_x_gpu), (nbgridcells_x) * (nbgridcells_y) *sizeof(type_t)),"Gradientgpu.cu : Alloc source_x_gpu: " );
+        cudasafe(cudaMalloc( (void**)&(grid_grad_y_gpu), (nbgridcells_x) * (nbgridcells_y) *sizeof(type_t)),"Gradientgpu.cu : Alloc source_y_gpu: " );
+	//
+	grid_param *frame_gpu;
+	cudasafe(cudaMalloc( (void**)&(frame_gpu), sizeof(grid_param)),"Gradientgpu.cu : Alloc frame_gpu: " );
+	cudasafe(cudaMemcpy(frame_gpu, frame, sizeof(grid_param), cudaMemcpyHostToDevice),"UM Gradientgpu.cu : Copy frame_gpu: " );
+        //
+        type_t time = -myseconds();
+        //module_potentialDerivatives_totalGradient_SOA_CPU_GPU(grid_grad_x_gpu, grid_grad_y_gpu, frame_gpu, lens_kernel, nbgridcells_x, nhalos);
+        //@@module_potentialDerivatives_totalGradient_SOA_CPU_GPU(grid_grad_x_gpu, grid_grad_y_gpu, frame_gpu, lens_kernel, nhalos, dx, dy, nbgridcells_x, nbgridcells_y, istart, jstart);
+        module_potentialDerivatives_totalGradient_SOA_CPU_GPU(grid_grad_x_gpu, grid_grad_y_gpu, frame_gpu, lens, nhalos, dx, dy, nbgridcells_x, nbgridcells_y, istart, jstart);
+
+        //
+        //cudasafe(cudaGetLastError(), "module_potentialDerivative_totalGradient_SOA_CPU_GPU");
+        cudaDeviceSynchronize();
+        time += myseconds();
+        std::cout << "        kernel time = " << time << " s." << std::endl; fflush(stdout);
+        //
+        cudasafe(cudaMemcpy( grid_grad_x, grid_grad_x_gpu, (nbgridcells_x)*(nbgridcells_y)*sizeof(type_t), cudaMemcpyDeviceToHost )," --- Gradientgpu.cu : Copy source_x_gpu: " );
+        cudasafe(cudaMemcpy( grid_grad_y, grid_grad_y_gpu, (nbgridcells_x)*(nbgridcells_y)*sizeof(type_t), cudaMemcpyDeviceToHost)," --- Gradientgpu.cu : Copy source_y_gpu: " );
+	//
+	cudaFree(grid_grad_x_gpu);
+	cudaFree(grid_grad_y_gpu);
+	cudaFree(frame_gpu);
+}
+//
 #if 0
 __global__
 void
@@ -332,7 +328,7 @@ module_potentialDerivatives_totalGradient_SOA_CPU_GPU(type_t *grid_grad_x, type_
 	//
         //module_potentialDerivatives_totalGradient_SOA_GPU<<<grid, threads>>> (grid_grad_x, grid_grad_y, lens, frame, nhalos, nbgridcells_x);
         module_potentialDerivatives_totalGradient_SOA_GPU<<<grid, threads>>> (grid_grad_x, grid_grad_y, lens_gpu, frame, nhalos, dx, dy, nbgridcells_x, nbgridcells_y, istart, jstart);
-        cudasafe(cudaGetLastError(), "module_potentialDerivative_totalGradient_SOA_CPU_GPU_8_SOA_GPU");
+        cudasafe(cudaGetLastError(), "module_potentialDerivative_totalGradient_SOA_CPU_GPU-1");
 	//
         cudaDeviceSynchronize();
         //@@printf("GPU kernel done...\n");
@@ -366,7 +362,7 @@ module_potentialDerivatives_totalGradient_SOA_CPU_GPU(type_t *grid_grad_x, type_
 	cudaMemset(grid_grad_y, 0, nbgridcells*nbgridcells*sizeof(type_t));
 		//
 	module_potentialDerivatives_totalGradient_SOA_GPU<<<grid, threads>>> (grid_grad_x, grid_grad_y, lens_gpu, frame, nbgridcells, nhalos);
-	cudasafe(cudaGetLastError(), "module_potentialDerivative_totalGradient_SOA_CPU_GPU_8_SOA_GPU");
+	cudasafe(cudaGetLastError(), "module_potentialDerivative_totalGradient_SOA_CPU_GPU-2");
 		
 	//}
 	cudaDeviceSynchronize();
