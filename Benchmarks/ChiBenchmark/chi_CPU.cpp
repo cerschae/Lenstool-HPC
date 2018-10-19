@@ -6,6 +6,7 @@
 #include <fstream>
 #include <unistd.h>
 #include <assert.h>
+#include <cuda_runtime.h>
 //
 #ifndef __xlC__
 #warning "gnu compilers"
@@ -93,8 +94,13 @@ void mychi_bruteforce_SOA_CPU_grid_gradient(double *chi, int *error, runmode_par
 	//
 	//grid_gradient_x   = (double *)malloc((int) grid_size*loc_grid_size*sizeof(double));
 	//grid_gradient_y   = (double *)malloc((int) grid_size*loc_grid_size*sizeof(double));
+#ifdef __WITH_GPU
+	cudaMallocHost(&grid_gradient_x, grid_size*y_bound*sizeof(double));
+	cudaMallocHost(&grid_gradient_y, grid_size*y_bound*sizeof(double));
+#else
 	grid_gradient_x   = (double *)malloc((int) grid_size*y_bound*sizeof(double));
 	grid_gradient_y   = (double *)malloc((int) grid_size*y_bound*sizeof(double));
+#endif
 	//
 	//uais
 	//if (verbose) printf("@@%d: nsets = %d nimagestot = %d maximgpersource = %d, grid_size = %d, loc_grid_size = %d, y_pos_loc = %d\n", world_rank, nsets, nimagestot, MAXIMPERSOURCE, grid_size, loc_grid_size, y_pos_loc);
@@ -106,8 +112,14 @@ void mychi_bruteforce_SOA_CPU_grid_gradient(double *chi, int *error, runmode_par
 	//gradient_grid_CPU(grid_gradient_x, grid_gradient_y, frame, lens, runmode->nhalos, grid_dim);
 	int zero = 0;
 #ifdef __WITH_GPU
+#warning "Using GPUs..."
+#ifdef __WITH_UM
+#warning "Using UNIFIED MEMORY"
 	//gradient_grid_CPU(grid_gradient_x, grid_gradient_y, frame, lens, runmode->nhalos, dx, dy, grid_size, y_bound, zero, y_pos_loc);
+	gradient_grid_GPU_UM(grid_gradient_x, grid_gradient_y, frame, lens, runmode->nhalos, dx, dy, grid_size, y_bound, zero, y_pos_loc);
+#else
 	gradient_grid_GPU(grid_gradient_x, grid_gradient_y, frame, lens, runmode->nhalos, dx, dy, grid_size, y_bound, zero, y_pos_loc);
+#endif
 	//gradient_grid_GPU(grid_gradient_x, grid_gradient_y, frame, lens, runmode->nhalos, grid_size);
 #else
 	gradient_grid_CPU(grid_gradient_x, grid_gradient_y, frame, lens, runmode->nhalos, dx, dy, grid_size, y_bound, zero, y_pos_loc);
@@ -626,285 +638,13 @@ void mychi_bruteforce_SOA_CPU_grid_gradient(double *chi, int *error, runmode_par
 		printf("	images found: %d out of %ld\n", images_found, images_total);
 	}
 	//
+#ifdef __WITH_GPU
+	cudaFree(grid_gradient_x);
+	cudaFree(grid_gradient_y);
+#else
 	free(grid_gradient_x);
 	free(grid_gradient_y);
-}
-
-
-void mychi_bruteforce_SOA_CPU_grid_gradient_barycentersource(double *chi, int *error, runmode_param *runmode, const struct Potential_SOA *lens, const struct grid_param *frame, const int *nimages_strongLensing, galaxy *images)
-{
-	//
-	//double dx, dy; //, x_pos, y_pos;        //pixelsize
-	//
-	//	double im_dist[MAXIMPERSOURCE]; // distance to a real image for an "theoretical" image found from a theoretical source
-	//	int im_index;       		// index of the closest real image for an image found from a theoretical source
-	//	int second_closest_id;   	// index of the second closest real image for an image found from a theoretical source
-	//	int thread_found_image = 0;   	// at each iteration in the lens plane, turn to 1 whether the thread find an image
-	// 	struct point im_position, temp; // position of the image found from a theoretical source + temp variable for comparison
-	//	struct triplet Tsup, Tinf, Tsupsource, Tinfsource;// triangles for the computation of the images created by the theoretical sources
-	struct galaxy sources[runmode->nsets]; // theoretical sources (common for a set)
-	int    nimagesfound  [runmode->nsets][MAXIMPERSOURCE]; // number of images found from the theoretical sources
-	int    locimagesfound[runmode->nsets];
-	struct point image_pos [runmode->nsets][MAXIMPERSOURCE];
-	//double image_dist    [runmode->nsets][runmode->nimagestot][MAXIMPERSOURCE];
-	struct point tim     [MAXIMPERSOURCE]; // theoretical images (computed from sources)
-	//
-	int world_size = 1;
-	int world_rank = 0;
-#ifdef __WITH_MPI
-	MPI_Comm_size(MPI_COMM_WORLD, &world_size);
-	MPI_Comm_rank(MPI_COMM_WORLD, &world_rank);
-	MPI_Barrier(MPI_COMM_WORLD);
 #endif
-	unsigned int verbose = (world_rank == 0);
-	//
-	int grid_size     = runmode->nbgridcells;
-	int loc_grid_size = runmode->nbgridcells/world_size;
-	//
-	double y_len      = fabs(frame->ymax - frame->ymin);
-	int    y_len_loc  = runmode->nbgridcells/world_size;
-	int    y_pos_loc  = (int) world_rank*y_len_loc;
-	int    y_bound    = y_len_loc;
-	if ((world_rank + 1) != world_size) y_bound++;
-	//
-	//
-	const double dx   = (frame->xmax - frame->xmin)/(runmode->nbgridcells - 1);
-	const double dy   = (frame->ymax - frame->ymin)/(runmode->nbgridcells - 1);
-	//
-	double *grid_gradient_x, *grid_gradient_y;
-	//
-	//grid_gradient_x   = (double *)malloc((int) grid_size*loc_grid_size*sizeof(double));
-	//grid_gradient_y   = (double *)malloc((int) grid_size*loc_grid_size*sizeof(double));
-	grid_gradient_x   = (double *)malloc((int) grid_size*y_bound*sizeof(double));
-	grid_gradient_y   = (double *)malloc((int) grid_size*y_bound*sizeof(double));
-	//
-	//uais
-	//if (verbose) printf("@@%d: nsets = %d nimagestot = %d maximgpersource = %d, grid_size = %d, loc_grid_size = %d, y_pos_loc = %d\n", world_rank, runmode->nsets, runmode->nimagestot, MAXIMPERSOURCE, grid_size, loc_grid_size, y_pos_loc);
-	//
-	const int grid_dim = runmode->nbgridcells;
-	//Packaging the image to sourceplane conversion
-	double time = -myseconds();
-	double grad_time = -myseconds();
-	//gradient_grid_CPU(grid_gradient_x, grid_gradient_y, frame, lens, runmode->nhalos, grid_dim);
-#ifdef __WITH_GPU
-#warning "Calling the GPUs..."
-	gradient_grid_GPU(grid_gradient_x, grid_gradient_y, frame, lens, runmode->nhalos, dx, dy, grid_size, y_bound, 0, y_pos_loc);
-	//gradient_grid_GPU(grid_gradient_x, grid_gradient_y, frame, lens, runmode->nhalos, grid_size);
-#else
-	int zero = 0;
-	gradient_grid_CPU(grid_gradient_x, grid_gradient_y, frame, lens, runmode->nhalos, dx, dy, grid_size, y_bound, zero, y_pos_loc);
-#endif
-
-#if 0
-/** @brief Tranform a point from image to source plane. Result stored in sourcepoint argument
- *
- * Tranform a point from image to source plane using lensequation
- *
- * @param image_point	 image position
- * @param dlsds		 dls/ds
- * @param nhalos	 number of halos
- * @param potential_param	 gravitational potential information
- * @param source_point	 address where source information will be stored
- *
- *
- */
-void mychi_transformImageToSourcePlane(const runmode_param *runmode, const struct point *image_point, double dlsds, const struct Potential *lens, struct point *source_point)
-{   // dlsds is the distance between lens and source divided by the distance observer-source
-	struct point Grad;  // gradient
-
-	Grad = module_potentialDerivatives_totalGradient(runmode->nhalos, image_point, lens);
-	//Grad = module_potentialDerivatives_totalGradient_SOA(image_point, lens, runmode->Nlens);
-
-	source_point->x = image_point->x - dlsds*Grad.x;
-	source_point->y = image_point->y - dlsds*Grad.y;
-	//printf("dlsds %f", dlsds);
 }
 
-
-void mychi_transformImageToSourcePlane_SOA(const int Nlens, const struct point *image_point, double dlsds, const struct Potential_SOA *lens, struct point *source_point)
-{   // dlsds is the distance between lens and source divided by the distance observer-source
-	struct point Grad;  // gradient
-	Grad = module_potentialDerivatives_totalGradient_SOA(image_point, lens, Nlens);
-	//
-	source_point->x = image_point->x - dlsds*Grad.x;
-	source_point->y = image_point->y - dlsds*Grad.y;
-	//printf("dlsds %f", dlsds);
-}
-//
-//
-//
-	inline
-void mychi_transformImageToSourcePlane_SOA_Packed( const struct point *image_point, double dlsds, struct point *source_point, double *grad_x, double * grad_y, int grad_id)
-{
-
-	source_point->x = image_point->x - dlsds*grad_x[grad_id];
-	source_point->y = image_point->y - dlsds*grad_y[grad_id];
-	//int world_rank;
-	//MPI_Comm_rank(MPI_COMM_WORLD, &world_rank);
-	//if (world_rank == 1) 
-	//printf("	%d: %f %f = %f %f - dlsds = %f grad id = %d grad = (%f %f)\n", world_rank, source_point->x, source_point->y, image_point->x, image_point->y, dlsds, grad_id, grad_x[grad_id], grad_y[grad_id]);
-	//printf("dlsds %f", dlsds);
-}
-
-
-/** @brief Tranform a triangle from image to source plane. Result stored in S triangle argument
- *
- * Return a triplet of points in the source plane corresponding to the triplet
- * of images. dlsds is the lens efficiency at the source redshift.
- * I is the triangle in the image plane (input), S is the same triangle in the source plane (output)
- *
- * @param I	 triangle in image plane
- * @param dlsds	 dls/ds
- * @param nhalos	 number of halos
- * @param potential_param	 gravitational potential information
- * @param S	 address where triangle source information will be stored
- *
- *
- */
-
-inline
-void mychi_transformtriangleImageToSourcePlane_SOA_grid_gradient_upper( struct triplet *I, double dlsds, struct triplet *S, double *grad_x, double * grad_y, int grad_id, int nbgridcell)
-{
-	mychi_transformImageToSourcePlane_SOA_Packed( &I->a, dlsds,   &S->a, grad_x, grad_y, grad_id             );
-	mychi_transformImageToSourcePlane_SOA_Packed( &I->b, dlsds,   &S->b, grad_x, grad_y, grad_id + nbgridcell);
-	mychi_transformImageToSourcePlane_SOA_Packed( &I->c, dlsds,   &S->c, grad_x, grad_y, grad_id +          1);
-}
-
-inline
-void mychi_transformtriangleImageToSourcePlane_SOA_grid_gradient_lower( struct triplet *I, double dlsds, struct triplet *S, double *grad_x, double * grad_y, int grad_id, int nbgridcell)
-{
-	mychi_transformImageToSourcePlane_SOA_Packed( &I->a, dlsds,   &S->a, grad_x, grad_y, grad_id + nbgridcell + 1);
-	mychi_transformImageToSourcePlane_SOA_Packed( &I->b, dlsds,   &S->b, grad_x, grad_y, grad_id +              1);
-	mychi_transformImageToSourcePlane_SOA_Packed( &I->c, dlsds,   &S->c, grad_x, grad_y, grad_id + nbgridcell    );
-}
-
-
-
-/** @brief Return the scalar triple product (a*b).c of the 3 vectors A[x,y,1], B[x,y,1], C[x,y,1].
- * If 2 of the 3 vectors are equal, colinear or form an orthogonal basis,
- * the triple product is 0.
- * This is also the determinant of the matrix
- *   | Ax  Bx  Cx |
- *   | Ay  By  Cy |
- *   |  1   1   1 |
- */
-//inline
-double mychi_determinant(const struct point *A,
-		const struct point *B,
-		const struct point *C)
-{
-	return( B->x*C->y - B->y*C->x +
-			A->x*B->y - A->y*B->x +
-			A->y*C->x - A->x*C->y );
-}
-
-
-/** @brief Return 1 if P is inside the triangle T, 0 otherwise.
- * Return 1 if P is inside the triangle T, 0 otherwise.
- * @param P  a point
- * @param T  a triplet of points.
- *
- *
- */
-	inline
-int mychi_inside(const struct point *P, struct triplet *T)
-{
-	double  s, s1, s2, d;
-
-	d  = mychi_determinant(&T->a, &T->b, &T->c);
-	s  = mychi_determinant(&T->a, &T->b, P)*d;
-	if (s < 0.) return 0;
-	s1 = mychi_determinant(&T->b, &T->c, P)*d;
-	if (s1 < 0.) return 0;
-	s2 = mychi_determinant(&T->c, &T->a, P)*d;
-	if (s2 < 0.) return 0;
-	return 1;
-
-	return((s > 0.) && (s1 > 0.) && (s2 > 0.));  // If all determinants are positive,
-	// the point must be inside the triangle
-}
-
-
-/*
-   int
-   mychi_inside2(const struct point *A, const struct point *B, const struct point *C)
-   {
-
-// Compute vectors        
-v0 = C - A;
-v1 = B - A;
-v2 = P - A;
-
-// Compute dot products
-dot00 = dot(v0, v0);
-dot01 = dot(v0, v1);
-dot02 = dot(v0, v2);
-dot11 = dot(v1, v1);
-dot12 = dot(v1, v2);
-
-// Compute barycentric coordinates
-invDenom = 1 / (dot00 * dot11 - dot01 * dot01);
-u = (dot11 * dot02 - dot01 * dot12) * invDenom;
-v = (dot00 * dot12 - dot01 * dot02) * invDenom;
-
-// Check if point is in triangle
-return (u >= 0) && (v >= 0) && (u + v < 1);
-}
-*/
-
-/** @brief Return 1 if P is inside the triangle T or on its border, 0 otherwise.
- *
- * Return 1 if P is inside the triangle T or on its border, 0 otherwise.
- * @param  P  a point
- * @param  T  a triplet of points.
- *
- *
- */
-	inline
-int mychi_insideborder(const struct point *P, struct triplet *T)
-{
-	double  s, s1, s2, d;
-
-	d  = mychi_determinant(&T->a, &T->b, &T->c);
-	s  = mychi_determinant(&T->a, &T->b, P)*d;
-	if (s < 0.) return 0;
-	s1 = mychi_determinant(&T->b, &T->c, P)*d;
-	if (s1 < 0.) return 0;
-	s2 = mychi_determinant(&T->c, &T->a, P)*d;
-	if (s2 < 0.) return 0;
-	return 1;
-	return((s >= 0.) && (s1 >= 0.) && (s2 >= 0.));  // If all determinants are positive or 0,
-	// the point must be inside the triangle or on its border
-
-}
-
-/** @brief Barycentre of a triplet/triangle
- *
- * A is a structure triplet that contains 3 structures point a,b and c
- * Return value B is a point
- *
- *
- */
-struct  point   mychi_barycenter(struct triplet *A)
-{
-	struct  point   B;
-
-	B.x = (A->a.x + A->b.x + A->c.x) / 3.;
-	B.y = (A->a.y + A->b.y + A->c.y) / 3.;
-	return(B);
-}
-
-/** @brief Euclidean distance between 2 points
- *
- * Euclidean distance between 2 points
- *
- */
-double mychi_dist(struct point A, struct point B)
-{
-	double  x, y;
-	x = A.x - B.x;
-	y = A.y - B.y;
-	return(sqrt(x*x + y*y));
-}
-#endif
 
