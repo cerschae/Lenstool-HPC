@@ -4,6 +4,7 @@
 // 
 #include <math.h>
 #include <cuda_runtime.h>
+#include <cuda.h>
 #include "module_cosmodistances.hpp"
 #include "module_readParameters.hpp"
 
@@ -13,8 +14,9 @@ void PotentialSOAAllocation(Potential_SOA **lens_SOA, const int nhalos)
 {
 	
 	Potential_SOA* p;
-#if (defined __WITH_GPU)  && (defined __UNIFIED_MEM) 
-#warning "Using unified memory"
+#if (defined __WITH_GPU)  && (defined __WITH_UM) 
+#warning "Allocation Using unified memory"
+	printf("--- Unified memory Allocation FTW\n");
 	cudaError error = cudaMallocManaged(lens_SOA, sizeof(Potential_SOA));
 	//if (error == 0) printf("Allocation error\n");
 	p = *lens_SOA;
@@ -71,8 +73,9 @@ void PotentialSOAAllocation(Potential_SOA **lens_SOA, const int nhalos)
 
 void PotentialSOADeallocation(Potential_SOA *lens_SOA)
 {
-#if (defined __WITH_GPU)  && (defined __UNIFIED_MEM) 
+#if (defined __WITH_GPU)  && (defined __WITH_UM)
 #warning "Using unified memory"
+	printf("--- Unified memory Deallocation FTW\n");
 	cudaFree(lens_SOA->type);
 	cudaFree(lens_SOA->position_x);
 	cudaFree(lens_SOA->position_y);

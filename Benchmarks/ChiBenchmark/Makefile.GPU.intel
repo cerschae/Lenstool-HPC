@@ -38,11 +38,11 @@ program_INCLUDE_LIBS += $(CUDA_ROOT)/lib64
 CXXFLAGS += $(foreach includedir,$(program_INCLUDE_DIRS),-I$(includedir))
 CXXFLAGS += $(foreach includelib,$(program_INCLUDE_LIBS),-L$(includelib))
 #CXXFLAGS += -D__WITH_LENSTOOL 
-CPPFLAGS += -D__WITH_LENSTOOL
-CPPFLAGS += -D__WITH_MPI
-CPPFLAGS += -D__WITH_GPU
-CPPFLAGS += -D__UNIFIED_MEM
-include ./cppflags.inc
+#CXXFLAGS += -D__WITH_LENSTOOL
+CXXFLAGS += -D__WITH_MPI
+CXXFLAGS += -D__WITH_UM
+CXXFLAGS += -D__WITH_GPU
+include ../../src/cpuflags.inc
 include $(LENSTOOLHPC_ROOT)/src/precision.inc
 CXXFLAGS += $(PRECISION)
 #CXXFLAGS += -no-vec
@@ -54,9 +54,10 @@ LDFLAGS := -llenstoolhpc  -llenstoolhpc -llenstoolhpc_GPU -llt -lcfitsio -lwcs -
 #
 #NVFLAGS := -O3 -g -G -rdc=true -ccbin icpc -Xcompiler '-Wall -fPIC -qopenmp' -D__WITH_LENSTOOL 
 NVFLAGS := -O3 -ccbin icpc -Xcompiler '-Wall -fPIC -qopenmp' -D__WITH_LENSTOOL
+include ../../src/gpuflags.inc
 #NVFLAGS += -D_double
 #NVFLAGS += -gencode arch=compute_60,code=sm_60
-NVFLAGS += -use_fast_math
+#NVFLAGS += -use_fast_math
 NVFLAGS += $(foreach includedir,$(program_INCLUDE_DIRS),-I$(includedir))
 NVFLAGS += $(foreach includelib,$(program_INCLUDE_LIBS),-L$(includelib))
 #

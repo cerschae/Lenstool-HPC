@@ -189,7 +189,7 @@ int main(int argc, char *argv[])
 	//
 	int verbose = (world_rank == 0);
 	//
-	if (verbose) printf("\n\nLenstool-HPC\n\n"); fflush(stdout);
+	if (verbose) printf("\nLenstool-HPC\n\n"); fflush(stdout);
 	//
 	printf("Hello world from processor %s, rank %d out of %d processors and %d threads per rank\n", processor_name, world_rank, world_size, numthreads); fflush(stdout);
 #ifdef __WITH_MPI
@@ -410,6 +410,9 @@ int main(int argc, char *argv[])
 	if (verbose) printf("\n-------------------------- Ending execution at time %f s\n\n", myseconds() - wallclock);
 #ifdef __WITH_MPI
 	MPI_Finalize();
+#endif
+#ifdef __WTH_GPU
+	cudaDeviceReset();
 #endif
 
 }
