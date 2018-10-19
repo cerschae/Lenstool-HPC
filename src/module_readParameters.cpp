@@ -420,8 +420,15 @@ void read_runmode(std::istream &IN, struct runmode_param *runmode){
 		        		}
 		        		if ( !strcmp(second.c_str(), "dpl") )
 		        		{
-							sscanf(line2.c_str(), " %*s %d %d %lf", &runmode->dpl, &runmode->dpl_gridcells, &in1);
+		        			char filename1[FILENAME_SIZE];
+		        			char filename2[FILENAME_SIZE];
+							sscanf(line2.c_str(), " %*s %d %d %lf %s %s", &runmode->dpl, &runmode->dpl_gridcells, &in1, &filename1, &filename2);
 							runmode->z_dpl = (type_t)in1;
+							runmode->dpl_name1 = filename1;
+							runmode->dpl_name2 = filename2;
+							std::cerr<<runmode->dpl_name1 << std::endl;
+							std::cerr<<runmode->dpl_name2 << std::endl;
+
 		        		}
 		        		if ( !strcmp(second.c_str(), "grid") )
 		        		{

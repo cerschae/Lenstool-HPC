@@ -378,6 +378,8 @@ struct runmode_param
 	int		dpl;
 	int		dpl_gridcells;
 	type_t	z_dpl;
+	std::string dpl_name1;
+	std::string dpl_name2;
 	//Inverse Mode
 	int     inverse; 
 	//Arclet Mode

@@ -34,6 +34,7 @@
 #include "grid_map_ampli_GPU.cuh"
 #include "grid_map_shear_GPU.cuh"
 #include "grid_map_mass_GPU.cuh"
+#include "grid_map_dpl_GPU.cuh"
 #include "grid_gradient2_GPU.cuh"
 //#include "gradient_GPU.cuh"
 #endif
@@ -344,6 +345,7 @@ int main(int argc, char *argv[])
     /* grille du dpl */
     if ( M.idpl != 0 ){
     	t_lt = -myseconds();
+    	//std::cerr << " PRINT " << M.idpl << M.ndpl << M.zdpl << M.dplxfile <<  M.dplyfile << std::endl;
         g_dpl(M.idpl, M.ndpl, M.zdpl, M.dplxfile, M.dplyfile);
         t_lt += myseconds();}
 
@@ -459,6 +461,43 @@ int main(int argc, char *argv[])
 
 			//std::cerr << "**" << ampli_GPU[0] << std::endl;
 			free(shear_GPU);
+		}
+		if (runmode.dpl > 0){
+			//Allocation
+			type_t* dpl_x = (type_t *) malloc((int) (runmode.dpl_gridcells) * (runmode.dpl_gridcells) * sizeof(type_t));
+			type_t* dpl_y = (type_t *) malloc((int) (runmode.dpl_gridcells) * (runmode.dpl_gridcells) * sizeof(type_t));
+
+			////calculate maps
+			std::cout << " GPU launching for map dpl " << runmode.dpl_gridcells << runmode.dpl << runmode.z_dpl <<std::endl;
+			t_2 = -myseconds();
+			module_readParameters_debug_potential_SOA(0, lenses_SOA, runmode.n_tot_halos);
+			//Init
+			memset(dpl_x, 0, (runmode.dpl_gridcells) * (runmode.dpl_gridcells) * sizeof(type_t));
+			memset(dpl_y, 0, (runmode.dpl_gridcells) * (runmode.dpl_gridcells) * sizeof(type_t));
+
+			//Choosing Function definition
+			map_gpu_function_t map_gpu_func;
+			//map_gpu_func = select_map_shear_function(&runmode);
+
+			//calculating map using defined function
+			map_grid_dpl_GPU(map_gpu_func, dpl_x, dpl_y, &cosmology, &frame, &lenses_SOA, runmode.n_tot_halos, runmode.dpl_gridcells ,runmode.dpl, runmode.z_dpl);
+
+			std::string file_x, file_y;
+			file_x = runmode.dpl_name1;
+			file_x.append("_x");
+			file_y = runmode.dpl_name2;
+			file_y.append("_y");
+
+			//writing
+			module_writeFits(path,file_x,dpl_x,&runmode,runmode.dpl_gridcells,&frame, runmode.ref_ra, runmode.ref_dec );
+			module_writeFits(path,file_y,dpl_y,&runmode,runmode.dpl_gridcells,&frame, runmode.ref_ra, runmode.ref_dec );
+			t_2 += myseconds();
+			std::cout << " Time  " << std::setprecision(15) << t_2 << std::endl;
+			std::cerr << "**" << dpl_x[0] << std::endl;
+
+			//std::cerr << "**" << ampli_GPU[0] << std::endl;
+			free(dpl_x);
+			free(dpl_y);
 		}
 		//
 

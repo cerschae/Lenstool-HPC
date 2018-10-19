@@ -4,7 +4,8 @@ runmode
 	verbose	0
 	mass	0 200 0.35 mass_4
 	ampli	0 200 1000 ampli_5
-	shear	4 200 5 shear_1
+	shear	3 200 5 shear_1
+	dpl		1 200 5 dpl_x.fits dpl_y.fits
 	end
 image
 	multfile         1 immul_ongoing.cat
