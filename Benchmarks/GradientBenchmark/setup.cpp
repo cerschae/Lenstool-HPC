@@ -247,7 +247,7 @@ setup_jauzac(Potential** lens, int* nlenses, type_t* x, type_t* y, type_t* sol_g
 }
 
 #if defined(__WITH_LENSTOOL) && !defined(_single)
-extern struct pot lens[NLMAX];
+//struct pot lens[NLMAX];
 void
 //setup_jauzac_LT(struct pot** lens, int* nlenses, type_t* x, type_t* y, type_t* sol_grad_x, type_t* sol_grad_y)
 setup_jauzac_LT( int* nlenses, double* x, double* y, double* sol_grad_x, double* sol_grad_y)
@@ -259,7 +259,7 @@ setup_jauzac_LT( int* nlenses, double* x, double* y, double* sol_grad_x, double*
         *x          = x_c;
         *y          = y_c;
         //
-        //*lens = (struct pot*) malloc(sizeof(struct pot)*(*nlenses));
+        struct pot* lens = (struct pot*) malloc(sizeof(struct pot)*(*nlenses));
         //
         for (int i = 0; i < *nlenses; ++i)
         {

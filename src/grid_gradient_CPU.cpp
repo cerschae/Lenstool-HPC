@@ -23,11 +23,12 @@ void gradient_grid_CPU(type_t *grid_grad_x, type_t *grid_grad_y, const struct gr
 	gradient_grid_general_CPU(grid_grad_x, grid_grad_y, frame, lens, nhalos, dx, dy, nbgridcells, nbgridcells, 0, 0);
 }
 
+#if 0
 void gradient_grid_CPU_print(type_t *grid_grad_x, type_t *grid_grad_y, const struct grid_param *frame, const struct Potential_SOA *lens, int nhalos, int nbgridcells, int istart, int jstart)
 {
 	gradient_grid_print_CPU(grid_grad_x, grid_grad_y, frame, nhalos, nbgridcells, lens, istart, jstart);
 }
-
+#endif
 
 void gradient_grid_CPU(type_t *grid_grad_x, type_t *grid_grad_y, const struct grid_param *frame, const struct Potential_SOA *lens, int nhalos, int nbgridcells_x, int nbgridcells_y, int istart, int jstart)
 {
@@ -87,6 +88,7 @@ void gradient_grid_general_CPU(type_t *grid_grad_x, type_t *grid_grad_y, const s
 	//std::cout << std::endl;
 }
 
+#if 0
 void gradient_grid_print_CPU(type_t *grid_grad_x, type_t *grid_grad_y, const struct grid_param *frame, int Nlens, int nbgridcells, const struct Potential_SOA *lens, int istart, int jstart)
 {
 	int bid = 0; // index of the block (and of the set of images)
@@ -115,7 +117,7 @@ void gradient_grid_print_CPU(type_t *grid_grad_x, type_t *grid_grad_y, const str
 			image_point.x = frame->xmin + ii*dx;
 			image_point.y = frame->ymin + jj*dy;
 
-			Grad = module_potentialDerivatives_totalGradient_5_SOA_print(&image_point, lens, 0, 1, index);
+			//Grad = module_potentialDerivatives_totalGradient_5_SOA_print(&image_point, lens, 0, 1, index);
 			//
 			grid_grad_x[index] = Grad.x;
 			grid_grad_y[index] = Grad.y;
@@ -126,3 +128,4 @@ void gradient_grid_print_CPU(type_t *grid_grad_x, type_t *grid_grad_y, const str
 			//index = bid * 1 + tid;
 		}
 }
+#endif

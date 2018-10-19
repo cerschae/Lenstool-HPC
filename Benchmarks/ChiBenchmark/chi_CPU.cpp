@@ -630,6 +630,71 @@ void mychi_bruteforce_SOA_CPU_grid_gradient(double *chi, int *error, runmode_par
 	free(grid_gradient_y);
 }
 
+
+void mychi_bruteforce_SOA_CPU_grid_gradient_barycentersource(double *chi, int *error, runmode_param *runmode, const struct Potential_SOA *lens, const struct grid_param *frame, const int *nimages_strongLensing, galaxy *images)
+{
+	//
+	//double dx, dy; //, x_pos, y_pos;        //pixelsize
+	//
+	//	double im_dist[MAXIMPERSOURCE]; // distance to a real image for an "theoretical" image found from a theoretical source
+	//	int im_index;       		// index of the closest real image for an image found from a theoretical source
+	//	int second_closest_id;   	// index of the second closest real image for an image found from a theoretical source
+	//	int thread_found_image = 0;   	// at each iteration in the lens plane, turn to 1 whether the thread find an image
+	// 	struct point im_position, temp; // position of the image found from a theoretical source + temp variable for comparison
+	//	struct triplet Tsup, Tinf, Tsupsource, Tinfsource;// triangles for the computation of the images created by the theoretical sources
+	struct galaxy sources[runmode->nsets]; // theoretical sources (common for a set)
+	int    nimagesfound  [runmode->nsets][MAXIMPERSOURCE]; // number of images found from the theoretical sources
+	int    locimagesfound[runmode->nsets];
+	struct point image_pos [runmode->nsets][MAXIMPERSOURCE];
+	//double image_dist    [runmode->nsets][runmode->nimagestot][MAXIMPERSOURCE];
+	struct point tim     [MAXIMPERSOURCE]; // theoretical images (computed from sources)
+	//
+	int world_size = 1;
+	int world_rank = 0;
+#ifdef __WITH_MPI
+	MPI_Comm_size(MPI_COMM_WORLD, &world_size);
+	MPI_Comm_rank(MPI_COMM_WORLD, &world_rank);
+	MPI_Barrier(MPI_COMM_WORLD);
+#endif
+	unsigned int verbose = (world_rank == 0);
+	//
+	int grid_size     = runmode->nbgridcells;
+	int loc_grid_size = runmode->nbgridcells/world_size;
+	//
+	double y_len      = fabs(frame->ymax - frame->ymin);
+	int    y_len_loc  = runmode->nbgridcells/world_size;
+	int    y_pos_loc  = (int) world_rank*y_len_loc;
+	int    y_bound    = y_len_loc;
+	if ((world_rank + 1) != world_size) y_bound++;
+	//
+	//
+	const double dx   = (frame->xmax - frame->xmin)/(runmode->nbgridcells - 1);
+	const double dy   = (frame->ymax - frame->ymin)/(runmode->nbgridcells - 1);
+	//
+	double *grid_gradient_x, *grid_gradient_y;
+	//
+	//grid_gradient_x   = (double *)malloc((int) grid_size*loc_grid_size*sizeof(double));
+	//grid_gradient_y   = (double *)malloc((int) grid_size*loc_grid_size*sizeof(double));
+	grid_gradient_x   = (double *)malloc((int) grid_size*y_bound*sizeof(double));
+	grid_gradient_y   = (double *)malloc((int) grid_size*y_bound*sizeof(double));
+	//
+	//uais
+	//if (verbose) printf("@@%d: nsets = %d nimagestot = %d maximgpersource = %d, grid_size = %d, loc_grid_size = %d, y_pos_loc = %d\n", world_rank, runmode->nsets, runmode->nimagestot, MAXIMPERSOURCE, grid_size, loc_grid_size, y_pos_loc);
+	//
+	const int grid_dim = runmode->nbgridcells;
+	//Packaging the image to sourceplane conversion
+	double time = -myseconds();
+	double grad_time = -myseconds();
+	//gradient_grid_CPU(grid_gradient_x, grid_gradient_y, frame, lens, runmode->nhalos, grid_dim);
+#ifdef __WITH_GPU
+#warning "Calling the GPUs..."
+	gradient_grid_GPU(grid_gradient_x, grid_gradient_y, frame, lens, runmode->nhalos, dx, dy, grid_size, y_bound, 0, y_pos_loc);
+	//gradient_grid_GPU(grid_gradient_x, grid_gradient_y, frame, lens, runmode->nhalos, grid_size);
+#else
+	int zero = 0;
+	gradient_grid_CPU(grid_gradient_x, grid_gradient_y, frame, lens, runmode->nhalos, dx, dy, grid_size, y_bound, zero, y_pos_loc);
+#endif
+
 #if 0
 /** @brief Tranform a point from image to source plane. Result stored in sourcepoint argument
  *

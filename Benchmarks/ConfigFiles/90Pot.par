@@ -11,7 +11,7 @@ runmode
 	dpl 1 1000 1.5
 	amplif 1 1000 1.5
 	nbgridcells 6000
-	Debug   										# true activates debug mode
+	#Debug   										# true activates debug mode
 	end
 frame  
 	#dmax 45										#either dmax or x and y have to be declared when a grid is used

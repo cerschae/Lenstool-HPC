@@ -1,6 +1,7 @@
 PROGRAM_NAME := liblenstoolhpc.so
+STATIC_LIB := liblenstoolhpc.a
 #CXX=g++ -lm -ffast-math -ftree-loop-vectorize 
-CXX=mpiicpc
+#CXX=cc
 #
 program_CXX_SRCS := $(wildcard *.cpp)
 $(info $$program_CXX_SRCS is [${program_CXX_SRCS}])
@@ -41,7 +42,7 @@ CPPFLAGS += -Ofast -g
 #CXXFLAGS += -fast-transcendentals
 #CXXFLAGS += -Ofast #-fp-model fast=2
 include ./precision.inc
-CXXFLAGS += $(PRECISION)
+CPPFLAGS += $(PRECISION)
 #
 #GEN_SM35 := -gencode=arch=compute_35,code=\"sm_35,compute_35\" #Target CC 3.5, for example
 
@@ -50,17 +51,14 @@ $(info $$OBJECTS is [${OBJECTS}])
 #
 .PHONY: all clean distclean
 #
-all: $(PROGRAM_NAME) 
+all: $(PROGRAM_NAME) $(STATIC_LIB)
 #
-debug: CXXFLAGS = -g -O0 -fPIC -std=c++0x -Wall -pedantic -DDEBUG $(EXTRA_FLAGS)
-debug: $(PROGRAM_NAME)
-
 # Rule for compilation of CUDA source (C++ source can be handled automatically)
 #%.cuo: %.cu %.cuh
 #	nvcc $(NVFLAGS)  -o $@ -dc $<
 
 %.o: %.cpp %.h 
-	$(CXX) $(CXXFLAGS) $(CPPFLAGS) -c -o $@ $< 
+	$(CXX) $(CPPFLAGS) -c -o $@ $< 
 
 # This is pretty ugly...details below
 # The program depends on both C++ and CUDA Objects, but storing CUDA objects as .o files results in circular dependency
@@ -78,6 +76,9 @@ $(PROGRAM_NAME): $(OBJECTS)
 	#$(CXX) $(CPPFLAGS) -shared -o $@ $(program_CXX_OBJS) $(program_C_OBJS) -llenstool 
 	#$(CXX) $(CPPFLAGS) -shared -o $@ $(program_CXX_OBJS) $(program_C_OBJS)
 	$(CXX) $(CPPFLAGS) -shared -o $@ $(program_CXX_OBJS) $(program_C_OBJS) 
+
+$(STATIC_LIB): $(OBJECTS)
+	ar rcs -o $@ $(program_CXX_OBJS) $(program_C_OBJS)
 
 
 
