@@ -350,7 +350,7 @@ int main(int argc, char *argv[])
 	//t_2 += myseconds();
 	//Some Sort of cache or initial overhead problem... alway takes 0.2 sec the first time
 	//printf("%d %d\n", runmode.nhalos, runmode.n_tot_halos);
-	gradient_grid_GPU(grid_gradient_x_gpu, grid_gradient_y_gpu, &frame, &lenses_SOA, runmode.nhalos, runmode.nbgridcells);
+	//gradient_grid_GPU(grid_gradient_x_gpu, grid_gradient_y_gpu, &frame, &lenses_SOA, runmode.nhalos, runmode.nbgridcells);
 
 	t_2 = -myseconds();
 	//test();
