@@ -152,7 +152,7 @@ void map_grid_shear_GPU(map_gpu_function_t mapfunction, type_t *map,const struct
 	time += myseconds();
 	std::cout << "	kernel time = " << time << " s." << std::endl;
 	// Free GPU memory
-	cudaFree(lens_gpu);
+	cudaFree(lens_kernel);
 	cudaFree(type_gpu);
 	cudaFree(lens_x_gpu);
 	cudaFree(lens_y_gpu);

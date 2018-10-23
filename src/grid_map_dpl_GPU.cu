@@ -7,7 +7,8 @@
 
 #include <fstream>
 #include "grid_map_dpl_GPU.cuh"
-//#include "gradient2_GPU.cuh"
+#include "gradient_GPU.cuh"
+//#include "gradient_GPU.cu"
 #include <structure_hpc.hpp>
 
 #define BLOCK_SIZE_X 16
@@ -74,6 +75,7 @@ void map_grid_dpl_GPU(map_gpu_function_t mapfunction, type_t *grid_grad_x, type_
 
 	lens_gpu = (Potential_SOA *) malloc(sizeof(Potential_SOA));
 	lens_gpu->type = (int *) malloc(sizeof(int));
+
 	// Allocate variables on the GPU
 	cudasafe(cudaMalloc( (void**)&(lens_kernel), sizeof(Potential_SOA)),"Gradientgpu.cu : Alloc Potential_SOA: " );
 	cudasafe(cudaMalloc( (void**)&(type_gpu), nhalos*sizeof(int)),"Gradientgpu.cu : Alloc type_gpu: " );

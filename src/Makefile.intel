@@ -95,7 +95,7 @@ $(STATIC_LIB): $(OBJECTS)
 #	done				#remove the .o for make
 
 clean:
-	@- $(RM) $(PROGRAM_NAME) $(OBJECTS) *~ *.o *.optrpt *.so
+	@- $(RM) $(PROGRAM_NAME) $(OBJECTS) *~ *.o *.optrpt *.so *.lo
 
 distclean: clean
 

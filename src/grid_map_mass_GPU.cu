@@ -182,7 +182,7 @@ void map_grid_mass_GPU(map_gpu_function_t mapfunction, type_t *map,const struct 
 	std::cout << "	kernel time = " << time << " s." << std::endl;
 	//printf("-----> %f %f \n",grid_grad_x[Nx], grid_grad_y[Ny]);
 	// Free GPU memory
-	cudaFree(lens_gpu);
+	cudaFree(lens_kernel);
 	cudaFree(type_gpu);
 	cudaFree(lens_x_gpu);
 	cudaFree(lens_y_gpu);

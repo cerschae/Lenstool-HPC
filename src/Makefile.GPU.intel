@@ -94,7 +94,7 @@ $(PROGRAM_NAME): $(GPU_OBJECTS)
 
 
 clean:
-	@- $(RM) $(PROGRAM_NAME) $(OBJECTS) *~ *.o *.optrpt
+	@- $(RM) $(PROGRAM_NAME) $(OBJECTS) *~ *.o *.optrpt *.lo
 
 distclean: clean
 

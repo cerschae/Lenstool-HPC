@@ -149,7 +149,7 @@ void gradient2_grid_GPU(type_t *grid_grad2_a, type_t *grid_grad2_b, type_t *grid
 	//
 	//printf("-----> %f %f \n",grid_grad_x[Nx], grid_grad_y[Ny]);
 	// Free GPU memory
-	cudaFree(lens_gpu);
+	cudaFree(lens_kernel);
 	cudaFree(type_gpu);
 	cudaFree(lens_x_gpu);
 	cudaFree(lens_y_gpu);

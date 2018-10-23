@@ -159,7 +159,7 @@ void map_grid_ampli_GPU(map_gpu_function_t mapfunction, type_t *map,const struct
 	time += myseconds();
 	std::cout << "	kernel time = " << time << " s." << std::endl;
 	// Free GPU memory
-	cudaFree(lens_gpu);
+	cudaFree(lens_kernel);
 	cudaFree(type_gpu);
 	cudaFree(lens_x_gpu);
 	cudaFree(lens_y_gpu);
@@ -268,7 +268,7 @@ void map_resizedgrid_GPU(map_gpu_function_t mapfunction, type_t *map,const struc
 	std::cout << "	kernel time = " << time << " s." << std::endl;
 	//printf("-----> %f %f \n",grid_grad_x[Nx], grid_grad_y[Ny]);
 	// Free GPU memory
-	cudaFree(lens_gpu);
+	cudaFree(lens_kernel);
 	cudaFree(type_gpu);
 	cudaFree(lens_x_gpu);
 	cudaFree(lens_y_gpu);
