@@ -65,21 +65,8 @@ void potential_grid_GPU(type_t *grid_potential, const struct grid_param *frame, 
 	int nBlocks_gpu = 0;
 	// Define the number of threads per block the GPU will use
 	cudaDeviceProp properties_gpu;
-
 	cudaGetDeviceProperties(&properties_gpu, 0); // Get properties of 0th GPU in use
 
-/*
-	if (properties_gpu.maxThreadsDim[0]<threadsPerBlock)
-	{
-		fprintf(stderr, "ERROR: The GPU has to support at least %u threads per block.\n", threadsPerBlock);
-		exit(-1);
-	}
-	else
-	{
-		nBlocks_gpu = properties_gpu.maxGridSize[0] / threadsPerBlock;  // Get the maximum number of blocks with the chosen number of threads
-		// per Block that the GPU supports
-	}
-*/
 	grid_param *frame_gpu;
 	Potential_SOA *lens_gpu,*lens_kernel;
 	int *type_gpu;
@@ -131,7 +118,7 @@ void potential_grid_GPU(type_t *grid_potential, const struct grid_param *frame, 
 	cudaMemcpy(lens_kernel, lens_gpu, sizeof(Potential_SOA), cudaMemcpyHostToDevice);
 	//
 	type_t time = -myseconds();
-	//module_potentialDerivatives_totalGradient_SOA_CPU_GPU(grid_grad_x_gpu, grid_grad_y_gpu, frame_gpu, lens_kernel, nbgridcells_x, nhalos);
+	//
 	module_potential_SOA_CPU_GPU(grid_potential_gpu, frame_gpu, lens_kernel, nhalos, dx, dy, nbgridcells_x, nbgridcells_y, istart, jstart);
 	//
 	//cudasafe(cudaGetLastError(), "module_potentialDerivative_totalGradient_SOA_CPU_GPU");

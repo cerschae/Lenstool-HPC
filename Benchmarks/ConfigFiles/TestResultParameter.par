@@ -31,4 +31,14 @@ potentiel 1
 	rcore 	5										#Core radius (PIEMD distribution)
 	z_lens     0.4									#Redshift of lens
 	end
+potentiel 1
+	profil	81									#Profile: 5 SIS, 8 PIEMD
+	x_centre     13.000								#X Position [arcsec]
+	y_centre     3.000								#Y Position [arcsec]
+	ellipticity     0.11					#Ellipticity
+	v_disp     600.									#Dispersion Velocity [km/s]
+	rcut	500										#Cut radius (PIEMD distribution)
+	rcore 	5										#Core radius (PIEMD distribution)
+	z_lens     0.4									#Redshift of lens
+	end
 finish

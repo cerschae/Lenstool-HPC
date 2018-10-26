@@ -4,6 +4,7 @@ runmode
 	verbose	0
 	mass	4 200 0.350000 mass_4
 	ampli	5 200 1000.000000 ampli_5
+	shear	1 200 0.300000 shear_1
 	end
 image
 	multfile	1 immul_ongoing.cat

@@ -32,6 +32,7 @@
 #ifdef __WITH_GPU
 #include "grid_gradient_GPU.cuh"
 #include "grid_map_ampli_GPU.cuh"
+#include "grid_map_pot_GPU.cuh"
 #include "grid_map_shear_GPU.cuh"
 #include "grid_map_dpl_GPU.cuh"
 #include "grid_map_mass_GPU.cuh"
@@ -545,7 +546,7 @@ int main(int argc, char *argv[])
 		}
 		if (runmode.potential > 0){
 			//Allocation
-			type_t* shear_GPU = (type_t *) malloc((int) (runmode.shear_gridcells) * (runmode.shear_gridcells) * sizeof(type_t));
+			type_t* pot_GPU = (type_t *) malloc((int) (runmode.pot_gridcells) * (runmode.pot_gridcells) * sizeof(type_t));
 			for(int ii = 0; ii < nvalues; ii++){
 				////calculate maps
 				std::cout << " GPU launching for map potential " << ii << std::endl;
@@ -554,7 +555,7 @@ int main(int argc, char *argv[])
 				module_readParameters_setbayesmapmodels(&runmode, &cosmology, host_potentialoptimization, potfile, &lenses_SOA,bayespot,nparam, ii);
 				module_readParameters_debug_potential_SOA(0, lenses_SOA, runmode.n_tot_halos);
 				//Init
-				memset(shear_GPU, 0, (runmode.shear_gridcells) * (runmode.shear_gridcells) * sizeof(type_t));
+				memset(pot_GPU, 0, (runmode.pot_gridcells) * (runmode.pot_gridcells) * sizeof(type_t));
 
 				//Choosing Function definition
 				map_pot_function_t map_pot_function;
@@ -569,7 +570,7 @@ int main(int argc, char *argv[])
 				std::cout << " Time  " << std::setprecision(15) << t_2 << std::endl;
 				//std::cerr << "**" << pot_GPU[0] << std::endl;
 			}
-			free(shear_GPU);
+			free(pot_GPU);
 		}
 		//
 
