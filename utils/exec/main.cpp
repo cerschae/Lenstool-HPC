@@ -262,8 +262,7 @@ int main(int argc, char *argv[])
 	//
 	double t_lt, t_lt_total;
 	int turn = 0;
-#if 1
-//#ifdef __WITH_LENSTOOL
+#ifdef __WITH_LENSTOOL
 	double **array; // contains the bayes.dat data
 	int nParam;
     long int iVal, nVal;  // size of array
