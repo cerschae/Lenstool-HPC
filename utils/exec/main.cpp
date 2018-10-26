@@ -32,6 +32,7 @@
 #ifdef __WITH_GPU
 #include "grid_gradient_GPU.cuh"
 #include "grid_map_ampli_GPU.cuh"
+#include "grid_map_pot_GPU.cuh"
 #include "grid_map_shear_GPU.cuh"
 #include "grid_map_mass_GPU.cuh"
 #include "grid_map_dpl_GPU.cuh"
@@ -333,6 +334,7 @@ int main(int argc, char *argv[])
     /* grille du potential */
     if ( M.ipoten != 0 ){
     	t_lt = -myseconds();
+    	std::cerr << " PRINT " << M.ipoten << M.npoten << M.zpoten << M.potenfile << std::endl;
         g_poten(M.ipoten, M.npoten, M.zpoten, M.potenfile);
         t_lt += myseconds();}
 
@@ -484,9 +486,9 @@ int main(int argc, char *argv[])
 
 			std::string file_x, file_y;
 			file_x = runmode.dpl_name1;
-			file_x.append("_x");
+			//file_x.append("_x");
 			file_y = runmode.dpl_name2;
-			file_y.append("_y");
+			//file_y.append("_y");
 
 			//writing
 			module_writeFits(path,file_x,dpl_x,&runmode,runmode.dpl_gridcells,&frame, runmode.ref_ra, runmode.ref_dec );
@@ -498,6 +500,35 @@ int main(int argc, char *argv[])
 			//std::cerr << "**" << ampli_GPU[0] << std::endl;
 			free(dpl_x);
 			free(dpl_y);
+		}
+		if (runmode.potential > 0){
+			//Allocation
+			type_t* pot_GPU = (type_t *) malloc((int) (runmode.pot_gridcells) * (runmode.pot_gridcells) * sizeof(type_t));
+
+			////calculate maps
+			std::cout << " GPU launching for map potential ATT: If pot ellip = 0, NAN are imminent " << std::endl;
+			t_2 = -myseconds();
+			module_readParameters_debug_potential_SOA(0, lenses_SOA, runmode.n_tot_halos);
+			//Init
+			memset(pot_GPU, 0, (runmode.pot_gridcells) * (runmode.pot_gridcells) * sizeof(type_t));
+
+			//Choosing Function definition
+			map_pot_function_t map_pot_function;
+			map_pot_function = select_map_potential_function(&runmode);
+
+			//calculating map using defined function
+			map_grid_potential_GPU(map_pot_function, pot_GPU, &cosmology, &frame, &lenses_SOA, runmode.n_tot_halos, runmode.pot_gridcells ,runmode.potential, runmode.z_pot);
+
+			std::string file;
+			file = runmode.pot_name;
+			//writing
+			module_writeFits(path,file,pot_GPU,&runmode,runmode.pot_gridcells,&frame, runmode.ref_ra, runmode.ref_dec );
+			t_2 += myseconds();
+			std::cout << " Time  " << std::setprecision(15) << t_2 << std::endl;
+			std::cerr << "**" << pot_GPU[0] << std::endl;
+
+			//std::cerr << "**" << ampli_GPU[0] << std::endl;
+			free(pot_GPU);
 		}
 		//
 

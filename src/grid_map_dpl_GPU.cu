@@ -38,8 +38,9 @@ extern "C"
 }
 
 
-//GPU mapping function declaration to change when figured out linkage problems
 
+//GPU mapping function declaration to change when figured out linkage problems
+__global__ void dpl_grid_GPU(type_t *dpl, type_t dl0s, type_t ds, type_t z,int nbgridcells);
 ////Map function selection
 #if 0
 map_gpu_function_t select_map_dpl_function(const struct runmode_param* runmode){
@@ -72,6 +73,10 @@ void map_grid_dpl_GPU(map_gpu_function_t mapfunction, type_t *grid_grad_x, type_
 	int *type_gpu;
 	type_t *lens_x_gpu, *lens_y_gpu, *b0_gpu, *angle_gpu, *epot_gpu, *rcore_gpu, *rcut_gpu, *anglecos_gpu, *anglesin_gpu;
 	type_t *grid_grad_x_gpu, *grid_grad_y_gpu ;
+
+	type_t dl0s = module_cosmodistances_objectObject(lens->z[0], z, *cosmo);
+	type_t dos = module_cosmodistances_observerObject(z, *cosmo);
+	type_t dol = module_cosmodistances_observerObject(lens->z[0], *cosmo);
 
 	lens_gpu = (Potential_SOA *) malloc(sizeof(Potential_SOA));
 	lens_gpu->type = (int *) malloc(sizeof(int));
@@ -120,9 +125,10 @@ void map_grid_dpl_GPU(map_gpu_function_t mapfunction, type_t *grid_grad_x, type_
 	cudasafe(cudaMemcpy(lens_kernel, lens_gpu, sizeof(Potential_SOA), cudaMemcpyHostToDevice), "Gradientgpu.cu: Copy lens_kernel");
 	//
 	type_t time = -myseconds();
-	//module_potentialDerivatives_totalGradient_SOA_CPU_GPU(grid_grad_x_gpu, grid_grad_y_gpu, frame_gpu, lens_kernel, nbgridcells_x, nhalos);
 	module_potentialDerivatives_totalGradient_SOA_CPU_GPU(grid_grad_x_gpu, grid_grad_y_gpu, frame_gpu, lens_kernel, nhalos, dx, dy, nbgridcells_x, nbgridcells_y, istart, jstart);
 	//
+	dpl_grid_CPU_GPU(grid_grad_x_gpu,dl0s,dos,dol,cosmo->h,z,nbgridcells_x,nbgridcells_y,frame);
+	dpl_grid_CPU_GPU(grid_grad_y_gpu,dl0s,dos,dol,cosmo->h,z,nbgridcells_x,nbgridcells_y,frame);
 	//cudasafe(cudaGetLastError(), "module_potentialDerivative_totalGradient_SOA_CPU_GPU");
 	cudaDeviceSynchronize();
 	time += myseconds();
@@ -148,6 +154,44 @@ void map_grid_dpl_GPU(map_gpu_function_t mapfunction, type_t *grid_grad_x, type_
 	cudaFree(frame_gpu);
 	cudaFree(grid_grad_x_gpu);
 	cudaFree(grid_grad_y_gpu);
+}
+
+////Map functions
+//DPL NR 1
+void dpl_grid_CPU_GPU(type_t *map, type_t dl0s, type_t ds, type_t dl, type_t h, type_t z, int nbgridcells_x, int nbgridcells_y, const struct grid_param *frame)
+{
+        int GRID_SIZE_X = (nbgridcells_x + BLOCK_SIZE_X - 1)/BLOCK_SIZE_X; // number of blocks
+        int GRID_SIZE_Y = (nbgridcells_y + BLOCK_SIZE_Y - 1)/BLOCK_SIZE_Y;
+        //
+        //printf("grid_size_x = %d, grid_size_y = %d, nbgridcells_x = %d, nbgridcells_y = %d, istart = %d, jstart = %d (split)\n", GRID_SIZE_X, GRID_SIZE_Y, nbgridcells_x, nbgridcells_y, istart, jstart);
+        //
+        dim3 threads(BLOCK_SIZE_X, BLOCK_SIZE_Y/1);
+        dim3 grid   (GRID_SIZE_X , GRID_SIZE_Y);
+        //
+        //cudaMemset(map, 0, nbgridcells_x*nbgridcells_y*sizeof(type_t));
+        //
+        dpl_grid_GPU<<<grid, threads>>> (map,dl0s,ds,z,nbgridcells_x);
+        cudasafe(cudaGetLastError(), "dpl_grid_CPU_GPU");
+        //
+        cudaDeviceSynchronize();
+        printf("GPU kernel done...\n");
+}
+//
+__global__ void dpl_grid_GPU(type_t *dpl, type_t dl0s, type_t ds, type_t z,int nbgridcells)
+{
+	ellipse amp;
+	type_t dlsds= dl0s/ds;
+	////
+    int col = blockIdx.x*blockDim.x + threadIdx.x;
+    int row = blockIdx.y*blockDim.y + threadIdx.y;
+    //
+    if ((row < nbgridcells) && (col < nbgridcells))
+    {
+
+    	int index = row*nbgridcells + col;
+        dpl[index] = dpl[index] * dlsds;
+        //if(col == 0 and row == 0)printf(" GPUUUU:  Grad  %f %f %f  ABC %f %f %f dlsds %f ab %f %f %f \n",grid_grad2_a[index]*dlsds,grid_grad2_b[index]*dlsds, grid_grad2_c[index]*dlsds,A,B,C,dlsds,amp.a,amp.b,(A - C)*(A - C) + 4*B*B);
+    }
 }
 
 

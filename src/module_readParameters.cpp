@@ -415,8 +415,12 @@ void read_runmode(std::istream &IN, struct runmode_param *runmode){
 		        		}
 		        		if ( !strcmp(second.c_str(), "poten") )
 		        		{
-							sscanf(line2.c_str(), " %*s %d %d %lf", &runmode->potential, &runmode->pot_gridcells, &in1);
+		        			char filename[FILENAME_SIZE];
+							sscanf(line2.c_str(), " %*s %d %d %lf %s", &runmode->potential, &runmode->pot_gridcells, &in1, &filename);
 							runmode->z_pot = (type_t)in1;
+							runmode->pot_name = filename;
+							//std::cerr<< runmode->pot_name << std::endl;
+							//std::cerr<< line2.c_str() << std::endl;
 		        		}
 		        		if ( !strcmp(second.c_str(), "dpl") )
 		        		{
@@ -426,8 +430,8 @@ void read_runmode(std::istream &IN, struct runmode_param *runmode){
 							runmode->z_dpl = (type_t)in1;
 							runmode->dpl_name1 = filename1;
 							runmode->dpl_name2 = filename2;
-							std::cerr<<runmode->dpl_name1 << std::endl;
-							std::cerr<<runmode->dpl_name2 << std::endl;
+							//std::cerr<<runmode->dpl_name1 << std::endl;
+							//std::cerr<<runmode->dpl_name2 << std::endl;
 
 		        		}
 		        		if ( !strcmp(second.c_str(), "grid") )

@@ -439,7 +439,7 @@ int main(int argc, char *argv[])
 				module_writeFits(path,runmode.mass_name,ii,mass_GPU,&runmode,runmode.mass_gridcells,&frame, runmode.ref_ra, runmode.ref_dec );
 				t_2 += myseconds();
 				std::cout << " Time  " << std::setprecision(15) << t_2 << std::endl;
-				std::cerr << "**" << mass_GPU[0] << std::endl;
+				//std::cerr << "**" << mass_GPU[0] << std::endl;
 			}
 			//std::cerr << "**" << ampli_GPU[0] << std::endl;
 			free(mass_GPU);
@@ -469,7 +469,7 @@ int main(int argc, char *argv[])
 				module_writeFits(path,runmode.amplif_name,ii,ampli_GPU,&runmode,runmode.amplif_gridcells,&frame, runmode.ref_ra, runmode.ref_dec );
 				t_2 += myseconds();
 				std::cout << " Time  " << std::setprecision(15) << t_2 << std::endl;
-				std::cerr << "**" << ampli_GPU[0] << std::endl;
+				//std::cerr << "**" << ampli_GPU[0] << std::endl;
 			}
 			//std::cerr << "**" << ampli_GPU[0] << std::endl;
 			free(ampli_GPU);
@@ -498,7 +498,7 @@ int main(int argc, char *argv[])
 				module_writeFits(path,runmode.shear_name,ii,shear_GPU,&runmode,runmode.shear_gridcells,&frame, runmode.ref_ra, runmode.ref_dec );
 				t_2 += myseconds();
 				std::cout << " Time  " << std::setprecision(15) << t_2 << std::endl;
-				std::cerr << "**" << shear_GPU[0] << std::endl;
+				//std::cerr << "**" << shear_GPU[0] << std::endl;
 			}
 			free(shear_GPU);
 		}
@@ -536,12 +536,40 @@ int main(int argc, char *argv[])
 				module_writeFits(path,file_y,dpl_y,&runmode,runmode.dpl_gridcells,&frame, runmode.ref_ra, runmode.ref_dec );
 				t_2 += myseconds();
 				std::cout << " Time  " << std::setprecision(15) << t_2 << std::endl;
-				std::cerr << "**" << dpl_x[0] << std::endl;
+				//std::cerr << "**" << dpl_x[0] << std::endl;
 			}
 
 			//std::cerr << "**" << ampli_GPU[0] << std::endl;
 			free(dpl_x);
 			free(dpl_y);
+		}
+		if (runmode.potential > 0){
+			//Allocation
+			type_t* shear_GPU = (type_t *) malloc((int) (runmode.shear_gridcells) * (runmode.shear_gridcells) * sizeof(type_t));
+			for(int ii = 0; ii < nvalues; ii++){
+				////calculate maps
+				std::cout << " GPU launching for map potential " << ii << std::endl;
+				t_2 = -myseconds();
+				////set bayes potential
+				module_readParameters_setbayesmapmodels(&runmode, &cosmology, host_potentialoptimization, potfile, &lenses_SOA,bayespot,nparam, ii);
+				module_readParameters_debug_potential_SOA(0, lenses_SOA, runmode.n_tot_halos);
+				//Init
+				memset(shear_GPU, 0, (runmode.shear_gridcells) * (runmode.shear_gridcells) * sizeof(type_t));
+
+				//Choosing Function definition
+				map_pot_function_t map_pot_function;
+				map_pot_function = select_map_potential_function(&runmode);
+
+				//calculating map using defined function
+				map_grid_potential_GPU(map_pot_function, pot_GPU, &cosmology, &frame, &lenses_SOA, runmode.n_tot_halos, runmode.pot_gridcells ,runmode.potential, runmode.z_pot);
+
+				//writing
+				module_writeFits(path,runmode.pot_name,ii,pot_GPU,&runmode,runmode.pot_gridcells,&frame, runmode.ref_ra, runmode.ref_dec );
+				t_2 += myseconds();
+				std::cout << " Time  " << std::setprecision(15) << t_2 << std::endl;
+				//std::cerr << "**" << pot_GPU[0] << std::endl;
+			}
+			free(shear_GPU);
 		}
 		//
 

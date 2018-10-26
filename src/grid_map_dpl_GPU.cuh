@@ -23,7 +23,7 @@ typedef void (*map_gpu_function_t) (type_t *map,type_t *grid_grad2_a,type_t *gri
 map_gpu_function_t select_map_dpl_function(const struct runmode_param* runmode);
 
 ////Map functions
-
+void dpl_grid_CPU_GPU(type_t *map, type_t dl0s, type_t ds, type_t dl, type_t h, type_t z, int nbgridcells_x, int nbgridcells_y, const struct grid_param *frame);
 ////General mapping function
 void map_grid_dpl_GPU(map_gpu_function_t mapfunction, type_t *dplx, type_t *dply, const struct cosmo_param *cosmo, const struct grid_param *frame, const struct Potential_SOA *lens, int Nlens,int nbgridcells, int mode_amp, type_t z  );
 void map_grid_dpl_GPU(map_gpu_function_t mapfunction, type_t *dplx, type_t *dply, const struct cosmo_param *cosmo, const struct grid_param *frame, const struct Potential_SOA *lens, int Nlens, int mode_amp, type_t z, type_t dx, type_t dy, int nbgridcells_x, int nbgridcells_y, int istart = 0, int jstart = 0);

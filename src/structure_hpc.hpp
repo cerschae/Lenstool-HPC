@@ -367,6 +367,7 @@ struct runmode_param
 	int		potential;
 	int		pot_gridcells;
 	type_t	z_pot;
+	std::string pot_name;
 	int 	nhalos;
 	int 	n_tot_halos;
 	//Potfile Mode
