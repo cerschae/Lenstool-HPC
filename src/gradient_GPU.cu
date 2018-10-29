@@ -49,7 +49,7 @@ void calculate_cossin_values(type_t *theta_cos, type_t *theta_sin, type_t *angle
 
 
 
-#if 1
+#if 0
 
 __global__
 void

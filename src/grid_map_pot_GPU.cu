@@ -79,7 +79,7 @@ void map_grid_potential_GPU(map_pot_function_t mapfunction, type_t *map, const s
 	Potential_SOA *lens_gpu,*lens_kernel;
 	int *type_gpu;
 	type_t *lens_x_gpu, *lens_y_gpu, *b0_gpu, *angle_gpu, *epot_gpu, *rcore_gpu, *rcut_gpu, *anglecos_gpu, *anglesin_gpu;
-	type_t *potential_gpu, *map_gpu;
+	type_t *potential_gpu;
 
 	type_t dl0s = module_cosmodistances_objectObject(lens->z[0], z, *cosmo);
 	type_t dos = module_cosmodistances_observerObject(z, *cosmo);
@@ -202,15 +202,13 @@ void potential_2_grid_CPU_GPU(type_t *potential,  type_t dl0s, type_t ds, type_t
         int GRID_SIZE_X = (nbgridcells_x + BLOCK_SIZE_X - 1)/BLOCK_SIZE_X; // number of blocks
         int GRID_SIZE_Y = (nbgridcells_y + BLOCK_SIZE_Y - 1)/BLOCK_SIZE_Y;
         //
-    	type_t dx = (frame->xmax - frame->xmin)/(nbgridcells_x - 1);
-        type_t dy = (frame->ymax - frame->ymin)/(nbgridcells_y - 1);        //
+    	//type_t dx = (frame->xmax - frame->xmin)/(nbgridcells_x - 1);
+        //type_t dy = (frame->ymax - frame->ymin)/(nbgridcells_y - 1);        //
         dim3 threads(BLOCK_SIZE_X, BLOCK_SIZE_Y/1);
         dim3 grid   (GRID_SIZE_X , GRID_SIZE_Y);
         //
-        //std::cerr << "CONV :" <<  dy << std::endl;
        // type_t dlsds= dl0s/ds;
         type_t dcrit = cH2piG * h  / dl;  // in  10^12 M_sol/pixel
-        //std::cerr << "CONV : " << conv << std::endl;
         //printf("nhalos = %d, size of shared memory = %lf (split) %f \n", nhalos, (type_t) (8*nhalos + BLOCK_SIZE_X*BLOCK_SIZE_Y)*sizeof(type_t),conv);
         //
         //cudaMemset(map, 0, nbgridcells_x*nbgridcells_y*sizeof(type_t));

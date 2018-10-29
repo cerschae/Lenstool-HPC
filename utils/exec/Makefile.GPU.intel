@@ -37,14 +37,17 @@ program_INCLUDE_LIBS += $(CUDAROOT)/lib64
 # Compiler flags
 CPPFLAGS += $(foreach includedir,$(program_INCLUDE_DIRS),-I$(includedir))
 CPPFLAGS += $(foreach includelib,$(program_INCLUDE_LIBS),-L$(includelib))
+ifeq ($(LENSTOOL_DEBUG),true)
+    CPPFLAGS += -D__WITH_LENSTOOL 
+endif
 #CPPFLAGS += -D__WITH_LENSTOOL 
 CPPFLAGS += -D__WITH_GPU 
 CPPFLAGS += -qopenmp -g -O3 -Wall -pedantic
 CPPFLAGS += -fPIC
 CPPFLAGS += -D_double
 #
-#LDFLAGS := -llenstool -llenstoolhpc -llenstoolhpc_GPU -llt -lcfitsio -lwcs -lgsl -lgslcblas #Do not keep lenstool for the float calculation, it creates conflictinthe structure.h file
-LDFLAGS := -llenstoolhpc -llenstoolhpc_GPU -llt -lcfitsio -lwcs -lgsl -lgslcblas 
+
+LDFLAGS := -llenstool -llenstoolhpc -llenstoolhpc_GPU -llt -lcfitsio -lwcs -lgsl -lgslcblas #Do not keep lenstool for the float calculation, it creates conflictinthe structure.h file
 LDFLAGS   += $(foreach includedir,$(program_INCLUDE_DIRS),-I$(includedir))
 LDFLAGS   += $(foreach includelib,$(program_INCLUDE_LIBS),-L$(includelib))
 LDFLAGS   += -qopenmp 

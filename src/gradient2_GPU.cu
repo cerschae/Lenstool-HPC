@@ -256,8 +256,8 @@ return(grad2);
 
 __device__ matrix module_potentialDerivatives_totalGradient2_14_SOA_GPU(const struct point *pImage, const struct Potential_SOA *lens, int shalos, int nhalos){
 
-	int col = blockIdx.x*blockDim.x + threadIdx.x;
-	int row = blockIdx.y*blockDim.y + threadIdx.y;
+	//int col = blockIdx.x*blockDim.x + threadIdx.x;
+	//int row = blockIdx.y*blockDim.y + threadIdx.y;
 	//if(row == 0 && col == 0) printf("Start GPU Grad 14 %f %f\n",lens->anglecos[0],lens->anglesin[0]);
 
 	struct matrix grad2, grad2_temp, clump;

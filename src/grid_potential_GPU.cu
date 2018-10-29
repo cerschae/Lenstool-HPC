@@ -62,7 +62,7 @@ void potential_grid_GPU(type_t *grid_potential, const struct grid_param *frame, 
 void potential_grid_GPU(type_t *grid_potential, const struct grid_param *frame, const struct Potential_SOA *lens, int nhalos, type_t dx, type_t dy, int nbgridcells_x, int nbgridcells_y, int istart, int jstart)
 {
 
-	int nBlocks_gpu = 0;
+	//int nBlocks_gpu = 0;
 	// Define the number of threads per block the GPU will use
 	cudaDeviceProp properties_gpu;
 	cudaGetDeviceProperties(&properties_gpu, 0); // Get properties of 0th GPU in use

@@ -1,7 +1,5 @@
-
 #
-#
-PROGRAM_NAME := ChiBenchmark_GPU
+PROGRAM_NAME := liblenstoolhpc_GPU.so
 #all: $(PROGRAM_NAME_GPU) $(PROGRAM_NAME)
 all: $(PROGRAM_NAME) $(PROGRAM_NAME_GPU)
 #CXX=g++ -lm -ffast-math -ftree-loop-vectorize 

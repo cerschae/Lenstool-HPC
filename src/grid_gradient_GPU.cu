@@ -32,7 +32,7 @@ extern __shared__ type_t shared[];
 //#define cudasafe 
 
 
-void cudasafe( cudaError_t error, char* message)
+void cudasafe( cudaError_t error, const char* message)
   {
      if(error!=cudaSuccess) { fprintf(stderr,"ERROR: %s : %i\n",message,error); exit(-1); }
   }
@@ -329,7 +329,7 @@ module_potentialDerivatives_totalGradient_SOA_CPU_GPU(type_t *grid_grad_x, type_
 	//printf("grid_size_x = %d, grid_size_y = %d\n", GRID_SIZE_X, GRID_SIZE_Y);
 	//
 	type_t* timer = (type_t *) malloc((int) nbgridcells*nbgridcells*sizeof(type_t));
-	type_t* dtimer;
+	//type_t* dtimer;
 	//cudasafe(cudaMalloc( (void**)&(dtimer), (int) nbgridcells*nbgridcells*sizeof(type_t)),"Gradientgpu.cu : totalGradient_SOA_CPU_GPU: " );
 	//
 	//{

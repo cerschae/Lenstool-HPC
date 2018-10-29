@@ -179,7 +179,7 @@ void dpl_grid_CPU_GPU(type_t *map, type_t dl0s, type_t ds, type_t dl, type_t h, 
 //
 __global__ void dpl_grid_GPU(type_t *dpl, type_t dl0s, type_t ds, type_t z,int nbgridcells)
 {
-	ellipse amp;
+	//ellipse amp;
 	type_t dlsds= dl0s/ds;
 	////
     int col = blockIdx.x*blockDim.x + threadIdx.x;

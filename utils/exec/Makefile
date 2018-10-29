@@ -21,6 +21,7 @@ all: compile
 
 compile:
 	#@make -f Makefile.$(arch)
+	#echo $(LENSTOOL_DEBUG)
 	if which nvcc > /dev/null; then \
 		echo "nvcc detected, compiling the GPU lib"; \
                 make --silent -f Makefile.GPU.$(arch); \
