@@ -1,31 +1,23 @@
 /**
-* @file   module_writeFits.c
-* @Author Markus Rexroth, EPFL
-* @date   July 2015
-* @version 0,1
-* @brief  Write fits files
-*
-* Markus Rexroth, EPFL (changes to function names, variables names, a few function calls etc. to comply with
-		modular construction of new LENSTOOL). Main function coding etc. was done by:
+Lenstool-HPC: HPC based massmodeling software and Lens-map generation
+Copyright (C) 2017  Christoph Schaefer, EPFL (christophernstrerne.schaefer@epfl.ch), Gilles Fourestey (gilles.fourestey@epfl.ch)
 
-		Author: JPK
-		Date: April 2001
-		Write a double array:
-		wrf_fits(filename,ima,nx,ny,xmin,xmax,ymin,ymax)
-		wrf_fits_abs(filename,ima,nx,ny,xmin,xmax,ymin,ymax,ra,dec)
-		Write a int array:
-		wri_fits(filename,ima,nx,ny,xmin,xmax,ymin,ymax)
-		wri_fits_abs(filename,ima,nx,ny,xmin,xmax,ymin,ymax,ra,dec)
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
 
-		Update: Johan Richard
-		Date: 15 May 2013
-		Write a double 3D array in a datacube:
-		wrf_cube_fits(filename,cube,nx,ny,nz,xmin,xmax,ymin,ymax,lmin,lmax)
-		wrf_cube_fits_abs(filename,cube,nx,ny,nz,xmin,xmax,ymin,ymax,lmin,lmax,ra,dec)
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+@brief: Function for writing fitsfiles
+
 */
-
-
-
 
 
 
