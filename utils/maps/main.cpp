@@ -404,7 +404,7 @@ int main(int argc, char *argv[])
 	// Bayes Map specific functions
 	////read bayes lines
 	module_readParameters_preparebayes(nparam, nvalues);
-	std::cerr << nparam << "BLA" << nvalues << std::endl;
+	//std::cerr << nparam << "BLA" << nvalues << std::endl;
 	bayespot = (type_t *) malloc((int) (nparam) * (nvalues) * sizeof(type_t));
 	module_readParameters_bayesmodels(bayespot, nparam, nvalues);
 	////read bayes lines
@@ -479,7 +479,7 @@ int main(int argc, char *argv[])
 			type_t* shear_GPU = (type_t *) malloc((int) (runmode.shear_gridcells) * (runmode.shear_gridcells) * sizeof(type_t));
 			for(int ii = 0; ii < nvalues; ii++){
 				////calculate maps
-				std::cout << " GPU launching for map amplif " << ii << std::endl;
+				std::cout << " GPU launching for map shear " << ii << std::endl;
 				t_2 = -myseconds();
 				////set bayes potential
 				module_readParameters_setbayesmapmodels(&runmode, &cosmology, host_potentialoptimization, potfile, &lenses_SOA,bayespot,nparam, ii);
@@ -509,7 +509,7 @@ int main(int argc, char *argv[])
 			for(int ii = 0; ii < nvalues; ii++){
 
 				////calculate maps
-				std::cout << " GPU launching for map shear " << ii << std::endl;
+				std::cout << " GPU launching for map dpl " << ii << std::endl;
 				t_2 = -myseconds();
 				////set bayes potential
 				module_readParameters_setbayesmapmodels(&runmode, &cosmology, host_potentialoptimization, potfile, &lenses_SOA,bayespot,nparam, ii);

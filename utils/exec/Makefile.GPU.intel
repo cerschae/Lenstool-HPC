@@ -47,7 +47,8 @@ CPPFLAGS += -fPIC
 CPPFLAGS += -D_double
 #
 
-LDFLAGS := -llenstool -llenstoolhpc -llenstoolhpc_GPU -llt -lcfitsio -lwcs -lgsl -lgslcblas #Do not keep lenstool for the float calculation, it creates conflictinthe structure.h file
+#LDFLAGS := -llenstool -llenstoolhpc -llenstoolhpc_GPU -llt -lcfitsio -lwcs -lgsl -lgslcblas #Do not keep lenstool for the float calculation, it creates conflictinthe structure.h file
+LDFLAGS := -llenstoolhpc -llenstoolhpc_GPU -llt -lcfitsio -lwcs -lgsl -lgslcblas #Do not keep lenstool for the float calculation, it creates conflictinthe structure.h file
 LDFLAGS   += $(foreach includedir,$(program_INCLUDE_DIRS),-I$(includedir))
 LDFLAGS   += $(foreach includelib,$(program_INCLUDE_LIBS),-L$(includelib))
 LDFLAGS   += -qopenmp 

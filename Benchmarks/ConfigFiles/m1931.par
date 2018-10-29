@@ -2,7 +2,7 @@ runmode
 	inverse          0 0.2 350
 	reference        3 292.95682    -26.575718
 	verbose	0
-	ampli 5 4200 1000 kappa.fits
+	ampli 5 4200 1000 kappa1
 	nbgridcells 4000 
 	end
 image
@@ -79,7 +79,7 @@ limit 3
     v_disp    1 0.000 300.000 0.100
     end
 potfile galaxies
-    filein           1 ../../Benchmarks/ConfigFiles/m1931_CM_zCLASH-MUSE.cat
+    filein           1 ../../Benchmarks/ConfigFiles/m1931.cat
     zlens            0.35
     profil           81
     type             81

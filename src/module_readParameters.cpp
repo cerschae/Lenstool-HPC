@@ -719,6 +719,7 @@ void module_readParameters_readRunmode(std::string infile, struct runmode_param 
 	runmode->debug = 0;
 	runmode->nimagestot = 0;
 	runmode->nsets = 0;
+	runmode->shear = 0;
 	runmode->gridcells = 1000;
 	//std::cerr << sizeof(*runmode) << std::endl;
 	runmode->cline = 0;
