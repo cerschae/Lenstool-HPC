@@ -1,6 +1,6 @@
 PROGRAM_NAME := GradientBenchmark
 #CXX=g++ -lm -ffast-math -ftree-loop-vectorize 
-#CXX=icpc
+CXX=icpc
 
 program_CXX_SRCS := $(wildcard *.cpp)
 #program_CXX_SRCS += $(wildcard ../../*.cpp) #Find C++ source files from additonal directories
