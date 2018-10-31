@@ -915,7 +915,6 @@ module_potentialDerivatives_totalGradient_SOA_GPU(type_t *grid_grad_x, type_t *g
         //
         int col = blockIdx.x*blockDim.x + threadIdx.x;
         int row = blockIdx.y*blockDim.y + threadIdx.y;
-
         //
         if ((row + 0*jstart < nbgridcells_y) && (col + 0*istart < nbgridcells_x))
         {
@@ -932,11 +931,13 @@ module_potentialDerivatives_totalGradient_SOA_GPU(type_t *grid_grad_x, type_t *g
                 image_point.y = frame->ymin + (row + jstart)*dy;
                 //
                 int shalos = 0;
+#if 0
                 while (shalos < nhalos)
                 {
                         int lens_type = lens->type[shalos];
                         int count     = 1;
-                        while (lens->type[shalos + count] == lens_type) count++;
+                        //if ((!row) && (!col)) printf("shalos = %d count = %d nhalos = %d\n", shalos, count, nhalos);
+                        while ((lens->type[shalos + count] == lens_type))  count++;
                         //
                         //if(row == 0 && col == 0) printf("type = %d, count %d , shalos %d \n", lens_type,count,shalos );
                         //
@@ -946,8 +947,24 @@ module_potentialDerivatives_totalGradient_SOA_GPU(type_t *grid_grad_x, type_t *g
                         grad.y += clumpgrad.y;
                         shalos += count;
                 }
-                // Write to global memory
-                grid_grad_x[index] = grad.x;
+#else
+		//if ((!row) && (!col)) printf("shalos = %d, nhalos = %d\n", shalos, nhalos);
+		for (int ii = 0; ii < 100; ++ii)
+		{
+			nhalos = lens->N_types[ii];
+			//
+			if (nhalos != 0)
+			{
+				//if ((!row) && (!col)) printf("shalos = %d, nhalos = %d\n", shalos, nhalos);
+				clumpgrad = (*halo_func_GPU[ii])(&image_point, lens, shalos, nhalos);
+				shalos   += nhalos;
+				grad.x   += clumpgrad.x;
+				grad.y   += clumpgrad.y;
+			} 
+		}
+#endif
+		// Write to global memory
+		grid_grad_x[index] = grad.x;
                 grid_grad_y[index] = grad.y;
                 //if ((row == 0) && (col == 9))
                 //printf("%f %f: %f %f\n",  image_point.x, image_point.y, grid_grad_x[index], grid_grad_y[index]);
@@ -979,10 +996,12 @@ module_potentialDerivatives_totalGradient_SOA_GPU(type_t *grid_grad_x, type_t *g
 		image_point.y = frame->ymin + row*dy;
 		//
 		int shalos = 0;
+#if 1
 		while (shalos < nhalos)
 		{
 			int lens_type = lens->type[shalos];
 			int count     = 1;
+			//if ((!row) && (!col)) printf("shalos = %d count = %d nhalos = %d\n", shalos, count, nhalos);
 			while (lens->type[shalos + count] == lens_type) count++;
 			//
 			//if(row == 0 && col == 0) printf("type = %d, count %d , shalos %d \n", lens_type,count,shalos );
@@ -991,8 +1010,21 @@ module_potentialDerivatives_totalGradient_SOA_GPU(type_t *grid_grad_x, type_t *g
 			//
 			grad.x += clumpgrad.x;
 			grad.y += clumpgrad.y;
+			//
 			shalos += count;
+			if (shalos == nhalos) break;
 		}
+#else
+		for (int ii = 0; ii < 100; ++ii)
+		{
+			nhalos = lens->N_types[ii];
+			if (nhalos != 0)
+			{
+				clumpgrad = (*halo_func_GPU[ii])(&image_point, lens, shalos, nhalos);
+				shalos += nhalos;
+			} 
+		}
+#endif
 		// Write to global memory
 		grid_grad_x[index] = grad.x;
 		grid_grad_y[index] = grad.y;

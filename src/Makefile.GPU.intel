@@ -54,7 +54,7 @@ LDFLAGS := -llenstoolhpc  -llt -lcfitsio -lwcs -lgsl -lgslcblas
 #NVFLAGS := -O3 -rdc=true -ccbin icpc -Xcompiler '-Wall -fPIC -qopenmp' 
 #NVFLAGS += -D__WITH_LENSTOOL 
 include ./cpuflags.inc 
-#NVFLAGS := -O3 -g -ccbin icpc -Xcompiler '-Wall -fPIC' #-D__WITH_LENSTOOL
+#NVFLAGS := -ccbin icpc -Xcompiler '-xHost -Wall -fPIC' #-D__WITH_LENSTOOL
 NVFLAGS := -ccbin icpc -Xcompiler '$(CXXFLAGS)'
 include ./gpuflags.inc
 #NVFLAGS += -D_double

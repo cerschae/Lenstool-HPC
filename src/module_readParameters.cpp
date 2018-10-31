@@ -843,7 +843,7 @@ for(int i=0; i<runmode->nimagestot; i++){
 	
 	/* Initialise here the variables of the images*/
 	image[i].center.x = image[i].center.y = 0;
-	image[i].shape.a = image[i].shape.b = image[i].shape.theta = 0;
+	image[i].shape.a = image[i].shape.b = image[i].shape.theta = (type_t) 0.;
 	image[i].redshift = 0; 
 
     }
@@ -936,7 +936,7 @@ for(int i=0; i<runmode->nsets; i++){
 	
 	/* Initialise here the variables of the images*/
 	source[i].center.x = source[i].center.y = 0;
-	source[i].shape.a = source[i].shape.b = source[i].shape.theta = 0;
+	source[i].shape.a = source[i].shape.b = source[i].shape.theta = (type_t) 0.;
 	source[i].redshift = 0; 
 	source[i].mag = 0; 
 
@@ -2242,6 +2242,7 @@ void module_readParameters_PotentialSOA_direct(std::string infile, Potential_SOA
 	lens_SOA->theta = 		  new type_t[n_tot_halos];
 	lens_SOA->dlsds = 		  new type_t[n_tot_halos];
 	lens_SOA->SOA_index = 		  new int[n_tot_halos];
+	lens_SOA->N_types = 		  new int[100];
 
 	//Used to store the initial index of lenses
 	initial_index = 0;
@@ -2255,12 +2256,13 @@ void module_readParameters_PotentialSOA_direct(std::string infile, Potential_SOA
 
 
 	//First sweep through the runmode file to find N_type (number of types)
-	read_potentialSOA_ntypes(infile,N_type);
+	read_potentialSOA_ntypes(infile, N_type);
 
 	//Calcuting starting points for each type in lens array
-	for(int i=1;i < 100; ++i){
+	for(int i = 1; i < 100; ++i){
 		Indice_type[i] = N_type[i]+Indice_type[i-1];
-		//printf("%d %d \n ",N_type[i], Indice_type[i]);
+		lens_SOA->N_types[i] = N_type[i];
+		//printf("-> %d %d \n ", N_type[i], Indice_type[i]);
 	}
 
 	std::string first, second, third, line1, line2;
@@ -2475,6 +2477,7 @@ void module_readParameters_PotentialSOA(std::string infile, Potential *lens, Pot
 	cudaMallocManaged(&len_SOA->z			 , nhalos*sizeof(size_t));
 	cudaMallocManaged(&len_SOA->anglecos		 , nhalos*sizeof(size_t));
 	cudaMallocManaged(&len_SOA->anglesin		 , nhalos*sizeof(size_t));
+	cudaMallocManaged(&len_SOA->N_types		 , 100*sizeof(int));
 #else
 	lens_SOA->type 			= new int[nhalos];
 	lens_SOA->position_x  		= new type_t[nhalos];
@@ -2488,6 +2491,7 @@ void module_readParameters_PotentialSOA(std::string infile, Potential *lens, Pot
 	lens_SOA->z 			= new type_t[nhalos];
 	lens_SOA->anglecos 		= new type_t[nhalos];
 	lens_SOA->anglesin 		= new type_t[nhalos];
+	lens_SOA->N_types		= new int[100];
 #endif
 
 	int N_type     [100];
@@ -2500,11 +2504,14 @@ void module_readParameters_PotentialSOA(std::string infile, Potential *lens, Pot
 		Indice_type[i] = 0;
 	}
 
-	for (int i = 0; i < nhalos; ++i) N_type[lens[i].type] += 1;
-	for(int i=1;i < 100; ++i) Indice_type[i] = N_type[i]+Indice_type[i-1];
-		//printf("%d %d \n ",N_type[i], Indice_type[i]);
-
-
+	for(int i = 0; i < nhalos; ++i) N_type[lens[i].type] += 1;
+	for(int i = 1; i < 100   ; ++i) 
+	{
+		Indice_type[i] = N_type[i]+Indice_type[i-1];
+		lens_SOA->N_types[i] = N_type[i];
+		//printf("%d %d\n", i, lens_SOA->N_types[i]);
+	}
+	//printf("%d %d \n ",N_type[i], Indice_type[i]);
 	for (int i = 0; i < nhalos; ++i)
 	{
 		if(Indice_type[lens[i].type-1] <nhalos)
@@ -2524,7 +2531,7 @@ void module_readParameters_PotentialSOA(std::string infile, Potential *lens, Pot
 			lens_SOA->z[ind] 		     = lens[i].z;
 			lens_SOA->anglecos[ind] 	     = cos(lens[i].ellipticity_angle);
 			lens_SOA->anglesin[ind] 	     = sin(lens[i].ellipticity_angle);
-
+			//
 			Indice_type[lens[i].type-1] += 1;
 		}
 	}
@@ -2830,15 +2837,16 @@ void module_readParameters_debug_image(int DEBUG, galaxy image[], int nImagesSet
 	if (DEBUG == 1)  // If we are in debug mode
 	{
 		int index = 0;
-		for ( int i = 0; i < nsets; ++i){
-			for( int j = 0; j < nImagesSet[i]; ++j){
+		for ( int i = 0; i < nsets; ++i)
+		{
+			for( int j = 0; j < nImagesSet[i]; ++j)
+			{
 				printf("Image [%d]: x = %lf, y = %lf, shape: a = %f, b = %f, theta = %lf, redshift = %lf,  nImagesSet = %d,\n",index , image[index].center.x, image[index].center.y,  image[index].shape.a, image[index].shape.b, image[index].shape.theta, image[index].redshift,  nImagesSet[i]);
 				index +=1;
 				//printf( "%d \n", index );
 			}
 		}
 	}
-
 }
 /** @brief Prints out source
 */

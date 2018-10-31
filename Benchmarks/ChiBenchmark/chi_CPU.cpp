@@ -15,8 +15,10 @@
 //
 //#include "simd_math.h"
 #include "chi_CPU.hpp"
-//#ifdef __WITH_GPU
+#ifdef __WITH_GPU
+#include "cudafunctions.cuh"
 #include "grid_gradient_GPU.cuh"
+#endif
 ////#endif
 //#include "gradient_GPU.cuh"
 #ifdef _OPENMP
@@ -95,8 +97,8 @@ void mychi_bruteforce_SOA_CPU_grid_gradient(double *chi, int *error, runmode_par
 	//grid_gradient_x   = (double *)malloc((int) grid_size*loc_grid_size*sizeof(double));
 	//grid_gradient_y   = (double *)malloc((int) grid_size*loc_grid_size*sizeof(double));
 #ifdef __WITH_GPU
-	cudaMallocHost(&grid_gradient_x, grid_size*y_bound*sizeof(double));
-	cudaMallocHost(&grid_gradient_y, grid_size*y_bound*sizeof(double));
+	cudasafe(cudaMallocHost(&grid_gradient_x, grid_size*y_bound*sizeof(double)), "mychi_bruteforce_SOA_CPU_grid_gradient: allocating grid_gradient_x");
+	cudasafe(cudaMallocHost(&grid_gradient_y, grid_size*y_bound*sizeof(double)), "mychi_bruteforce_SOA_CPU_grid_gradient: allocating grid_gradient_x");
 #else
 	grid_gradient_x   = (double *)malloc((int) grid_size*y_bound*sizeof(double));
 	grid_gradient_y   = (double *)malloc((int) grid_size*y_bound*sizeof(double));
@@ -114,25 +116,18 @@ void mychi_bruteforce_SOA_CPU_grid_gradient(double *chi, int *error, runmode_par
 #ifdef __WITH_GPU
 #warning "Using GPUs..."
 #ifdef __WITH_UM
-#warning "Using UNIFIED MEMORY"
+#warning "Chi computation using UNIFIED MEMORY"
 	//gradient_grid_CPU(grid_gradient_x, grid_gradient_y, frame, lens, runmode->nhalos, dx, dy, grid_size, y_bound, zero, y_pos_loc);
 	gradient_grid_GPU_UM(grid_gradient_x, grid_gradient_y, frame, lens, runmode->nhalos, dx, dy, grid_size, y_bound, zero, y_pos_loc);
 #else
 	gradient_grid_GPU(grid_gradient_x, grid_gradient_y, frame, lens, runmode->nhalos, dx, dy, grid_size, y_bound, zero, y_pos_loc);
 #endif
+	cudasafe(cudaGetLastError(), "after gradient_grid_GPU");
 	//gradient_grid_GPU(grid_gradient_x, grid_gradient_y, frame, lens, runmode->nhalos, grid_size);
 #else
 	gradient_grid_CPU(grid_gradient_x, grid_gradient_y, frame, lens, runmode->nhalos, dx, dy, grid_size, y_bound, zero, y_pos_loc);
 #endif
-
-#if 0
-	if (world_rank == 0)
-		for (int jj = 0; jj < loc_grid_size; ++jj)
-			for (int ii = 0; ii < runmode->nbgridcells; ++ii)
-				printf("%d %d: %f %f\n", ii, jj, grid_gradient_x[jj*grid_size + ii], grid_gradient_y[jj*grid_size + ii]);
-#endif
-
-	//gradient_grid_CPU(grid_gradient_x, grid_gradient_y, frame, lens, runmode->nhalos, grid_size, loc_grid_size);
+	//
 #ifdef __WITH_MPI
 	MPI_Barrier(MPI_COMM_WORLD);
 #endif
@@ -155,7 +150,7 @@ void mychi_bruteforce_SOA_CPU_grid_gradient(double *chi, int *error, runmode_par
 	//
 	for( int  source_id = 0; source_id < nsets; source_id ++)
 		numsets += nimages_strongLensing[source_id];
-	//printf("@@Total numsets = %d\n", numsets);
+	printf("@@Total numsets = %d\n", numsets);
 	//
 	//
 	// nsets     : number of images in the source plane
@@ -220,115 +215,8 @@ void mychi_bruteforce_SOA_CPU_grid_gradient(double *chi, int *error, runmode_par
 	index 	      = 0;
 	int numimg    = 0;
 	//
-#if 1
 	delense(/*nsets, nimagestot,*/ &image_pos[0][0][0], &locimagesfound[0][0], &numimg, runmode, lens, frame, nimages_strongLensing, &sources[0][0], grid_gradient_x, grid_gradient_y);
 	printf("%d: numimg = %d\n", world_rank, numimg);
-#else
-	for( int  source_id = 0; source_id < nsets; source_id ++)
-	{
-		// number of images in the image plane for the specific image (1,3,5...)
-		unsigned short int nimages = nimages_strongLensing[source_id];
-		//printf("@@ source_id = %d, nimages = %d\n",  source_id, nimages_strongLensing[source_id]);
-		//____________________________ image (constrains) loop ________________________________
-		for(unsigned short int image_id = 0; image_id < nimages; image_id++)
-		{
-//#endif
-			//
-			//struct point image_pos [MAXIMPERSOURCE];
-			//
-			//MPI_Barrier(MPI_COMM_WORLD);
-			//if (verbose) printf("source = %d, image = %d\n", source_id, image_id);
-			//if (verbose) fflush(stdout);	
-			int loc_images_found = 0;
-			//#ifdef __WITH_MPI
-			//			MPI_Barrier(MPI_COMM_WORLD);
-			//#endif	
-#pragma omp parallel 
-#pragma omp for reduction(+: images_total) 
-			//for (int y_id = 0; y_id < (runmode->nbgridcells - 1); ++y_id )
-			//for (int y_id = 0; y_id < (y_len_loc - 1); ++y_id)
-			for (int y_id = 0; y_id < (y_bound - 1); ++y_id)
-				//for (int y_id = world_rank*y_pos_loc; y_id < (world_rank*y_pos_loc + y_len_loc - 1); ++y_id)
-			{
-				//for (int y_id = 0; (y_id < runmode->nbgridcells - 1) /*&& (loc_images_found != nimages)*/; ++y_id )
-				for (int x_id = 0; x_id < runmode->nbgridcells - 1 ; ++x_id)
-				{
-					//int yy_pos = MIN(y_pos_loc + y_id, runmode->nbgridcells - 1);
-					images_total++;
-					//
-					double x_pos = frame->xmin + (            x_id)*dx;
-					double y_pos = frame->ymin + (y_pos_loc + y_id)*dy;
-					//printf("%d: x_id = %d xpos = %f, y_id = %d ypos = %f\n", world_rank, x_id, x_pos, y_pos_loc + y_id, y_pos);
-					//
-					// Define the upper + lower triangle, both together = square = pixel
-					// 
-					struct triplet Tsup, Tinf;
-					//
-					Tsup.a.x = x_pos;
-					Tsup.b.x = x_pos;
-					Tsup.c.x = x_pos + dx;
-					Tinf.a.x = x_pos + dx;
-					Tinf.b.x = x_pos + dx;
-					Tinf.c.x = x_pos;
-					//
-					Tsup.a.y = y_pos;
-					Tsup.b.y = y_pos + dy;
-					Tsup.c.y = y_pos;
-					Tinf.a.y = y_pos + dy;
-					Tinf.b.y = y_pos;
-					Tinf.c.y = y_pos + dy;
-					//
-					// Lens to Sourceplane conversion of triangles
-					// 
-					// double time = -myseconds();
-					//
-					struct triplet Timage;
-					struct triplet Tsource;
-					//
-					//printf("	- Tsup = %f %f\n", Tsup.a.x, Tsup.a.y);
-					mychi_transformtriangleImageToSourcePlane_SOA_grid_gradient_upper(&Tsup, sources[source_id][image_id].dr, &Tsource, grid_gradient_x, grid_gradient_y, y_id*grid_dim + x_id, grid_dim);
-					//mychi_transformtriangleImageToSourcePlane_SOA_grid_gradient_upper(&Tsup, sources[source_id][image_id].dr, &Tsource, grid_gradient_x, grid_gradient_y, (y_pos_loc + y_id)*grid_dim + x_id, grid_dim);
-					//@@if (world_rank == 1)
-					//
-					int thread_found_image = 0;
-					//
-					if (mychi_insideborder(&sources[source_id][image_id].center, &Tsource) == 1)
-					{
-						//printf("	-> %d found: source_id = %d, y_id = %d, x_id = %d : pixel %f %f -> %f %f\n", world_rank, source_id, y_pos_loc + y_id, x_id, Tsup.a.x, Tsup.a.y, Tsource.a.x, Tsource.a.y);
-						thread_found_image = 1;
-						Timage = Tsup;
-					}
-					else 
-					{
-						//printf("	- Tinf = %f %f\n", Tinf.a.x, Tinf.a.y);
-						mychi_transformtriangleImageToSourcePlane_SOA_grid_gradient_lower(&Tinf, sources[source_id][image_id].dr, &Tsource, grid_gradient_x, grid_gradient_y, y_id*grid_dim + x_id, grid_dim);
-						//mychi_transformtriangleImageToSourcePlane_SOA_grid_gradient_lower(&Tinf, sources[source_id][image_id].dr, &Tsource, grid_gradient_x, grid_gradient_y, (y_id + y_pos_loc)*grid_dim + x_id, grid_dim);
-						//@@if (world_rank == 1)
-						if (mychi_inside(&sources[source_id][image_id].center, &Tsource) == 1)
-						{
-							//printf("	-> %d found: source_id = %d, y_id = %d, x_id = %d : pixel %f %f -> %f %f\n", world_rank, source_id, y_pos_loc + y_id, x_id, Tinf.a.x, Tinf.a.y, Tsource.a.x, Tsource.a.y);
-							thread_found_image = 1;
-							Timage = Tinf;
-						}
-					}
-#if 1
-					if (thread_found_image)
-					{
-#pragma omp critical
-						{
-							image_pos[source_id][image_id][loc_images_found] = mychi_barycenter(&Timage); // get the barycenter of the triangle
-							locimagesfound[source_id][image_id]++;
-							loc_images_found++;
-							numimg ++;
-						}
-					}
-#endif
-				}
-			}
-		}
-		index += nimages_strongLensing[source_id];
-	}
-#endif
 //
 // local delensing done, moving on to the reduction
 //
@@ -349,19 +237,7 @@ void mychi_bruteforce_SOA_CPU_grid_gradient(double *chi, int *error, runmode_par
 	//
 	memset(numimagesfound_tmp, 0, nsets*nimagestot*sizeof(int));
 	memset(imagesposition_tmp, 0, nsets*nimagestot*sizeof(int));
-	/*
-	//if (verbose)
-	{	
-	int image_sum = 0;
-	for (int ii = 0; ii < nsets; ++ii)
-	for (int jj = 0; jj < nimagestot; ++jj)
-	{
-	image_sum += locimagesfound[ii][jj];	
-	}
-	printf("%d: num images found = %d\n", world_rank, image_sum); 
-	}
-	MPI_Barrier(MPI_COMM_WORLD);
-	*/
+	//
 #ifdef __WITH_MPI
 	int total = 0;
 	//MPI_Reduce(&locimagesfound, &imagesfound, nsets*nimagestot, MPI_INT, MPI_SUM, 0, MPI_COMM_WORLD);
@@ -639,8 +515,10 @@ void mychi_bruteforce_SOA_CPU_grid_gradient(double *chi, int *error, runmode_par
 	}
 	//
 #ifdef __WITH_GPU
-	cudaFree(grid_gradient_x);
-	cudaFree(grid_gradient_y);
+#ifndef __WITH_UM
+	cudasafe(cudaFree(grid_gradient_x), "deallocating grid_gradient_x");
+	cudasafe(cudaFree(grid_gradient_y), "deallocating grid_gradient_y");
+#endif
 #else
 	free(grid_gradient_x);
 	free(grid_gradient_y);

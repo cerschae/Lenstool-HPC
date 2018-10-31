@@ -34,6 +34,7 @@ void PotentialSOAAllocation(Potential_SOA **lens_SOA, const int nhalos)
         cudaMallocManaged(&p->anglecos             , nhalos*sizeof(size_t));
         cudaMallocManaged(&p->anglesin             , nhalos*sizeof(size_t));
 	cudaMallocManaged(&p->SOA_index            , nhalos*sizeof(int));
+	cudaMallocManaged(&p->N_types              , 100*sizeof(int));
 	//printf("Unified memory: %p\n", p->type); fflush(stdout);
 #else
 	//p = *lens_SOA;
@@ -55,6 +56,7 @@ void PotentialSOAAllocation(Potential_SOA **lens_SOA, const int nhalos)
 	p->anglecos 		 = (double*) malloc(sizeof(double)*nhalos);
 	p->anglesin 		 = (double*) malloc(sizeof(double)*nhalos);
 	p->SOA_index 		 = (int*) malloc(sizeof(int)*nhalos);
+	p->N_types 		 = (int*) malloc(sizeof(int)*100);
         //lens_SOA->position_x            = new type_t[nhalos];
         //lens_SOA->position_y            = new type_t[nhalos];
         //lens_SOA->b0                    = new type_t[nhalos];
@@ -219,12 +221,14 @@ void module_readParameters_PotentialSOA_local(std::string infile, Potential_SOA 
         initial_index = 0;
 
         //Init of N_types and Indice_type (Number of lenses of a certain type)
-        for(int i=0;i < 100; ++i){
+        for(int i=0;i < 100; ++i)
+	{
                 N_type[i] = 0;
                 Indice_type[i] = 0;
         }
         //First sweep through the runmode file to find N_type (number of types)
         read_potentialSOA_ntypes(infile, N_type);
+	for (int ii = 0; ii < 100; ++ii) lens_SOA->N_types[ii] = N_type[ii];
 
         //Calcuting starting points for each type in lens array
         for(int i=1;i < 100; ++i)
@@ -400,7 +404,7 @@ void module_readParameters_PotentialSOA_local(std::string infile, Potential_SOA 
                                 //assign value to SOA
                                 //std::cerr << "Type + indice :" << lens_temp.type << Indice_type[lens_temp.type-1] << std::endl;
                                 //printf("%p %p\n", lens_SOA, lens_SOA->type[0]);
-                                if(Indice_type[lens_temp.type-1] <nhalos)
+                                if(Indice_type[lens_temp.type - 1] < nhalos)
 				{
                                         ind = Indice_type[lens_temp.type-1];
                                         //std::cerr<< ind << std::endl;
@@ -412,7 +416,7 @@ void module_readParameters_PotentialSOA_local(std::string infile, Potential_SOA 
                                         lens_SOA->ellipticity_angle[ind]     = lens_temp.ellipticity_angle;
                                         lens_SOA->ellipticity[ind]           = lens_temp.ellipticity;
                                         lens_SOA->ellipticity_potential[ind] = lens_temp.ellipticity_potential;
-					lens_SOA->vdisp[ind]                 =          lens_temp.vdisp;
+					lens_SOA->vdisp[ind]                 = lens_temp.vdisp;
                                         lens_SOA->rcore[ind]                 = lens_temp.rcore;
                                         lens_SOA->rcut[ind]                  = lens_temp.rcut;
                                         lens_SOA->z[ind]                     = lens_temp.z;
@@ -422,12 +426,13 @@ void module_readParameters_PotentialSOA_local(std::string infile, Potential_SOA 
                                         lens_SOA->SOA_index[initial_index] = ind;
 					//
                                         initial_index += 1;
-                                        Indice_type[lens_temp.type-1] += 1;
+                                        Indice_type[lens_temp.type - 1] += 1;
                                 }
                         }  // closes if loop
-
                 }  // closes while loop
         }
         IN.close();
+	//for (int ii = 0; ii < 100; ++ii)
+	//	printf("%d %d %d\n", ii, Indice_type[ii], lens_SOA->N_types[ii]);
 }
 

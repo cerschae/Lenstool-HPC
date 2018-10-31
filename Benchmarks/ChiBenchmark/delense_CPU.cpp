@@ -34,9 +34,11 @@ void delense_barycenter(struct point* image_pos, int* locimagesfound, int* numim
 	int images_total  = 0;
 	int index         = 0;
 	//
-	for( int  source_id = 0; source_id < nsets; source_id ++)
-	{
-		locimagesfound[source_id] = 0;
+	int lif[nsets][16];
+	memset(&lif,0,  nsets*16*sizeof(int));	
+	//
+		//locimagesfound[source_id] = 0;
+		//lif[source_id] = 0;
 		// number of images in the image plane for the specific image (1,3,5...)
 		//unsigned short int nimages = nimages_strongLensing[source_id];
 		//printf("@@ source_id = %d, nimages = %d\n",  source_id, nimages_strongLensing[source_id]);
@@ -47,12 +49,14 @@ void delense_barycenter(struct point* image_pos, int* locimagesfound, int* numim
 		//MPI_Barrier(MPI_COMM_WORLD);
 		//if (verbose) printf("source = %d, image = %d\n", source_id, image_id);
 		//if (verbose) fflush(stdout);
+	for( int  source_id = 0; source_id < nsets; source_id ++)
+	{
 		int loc_images_found = 0;
-		//#ifdef __WITH_MPI
+		
 		//                      MPI_Barrier(MPI_COMM_WORLD);
 		//#endif
 #pragma omp parallel
-#pragma omp for reduction(+: images_total)
+#pragma omp for reduction(+: images_total) 
 		for (int y_id = 0; y_id < (y_bound - 1); ++y_id)
 		{
 			for (int x_id = 0; x_id < runmode->nbgridcells - 1 ; ++x_id)
@@ -112,18 +116,25 @@ void delense_barycenter(struct point* image_pos, int* locimagesfound, int* numim
 					{
 						// get the barycenter of the triangle
 						image_pos[INDEX2D_BAR(source_id, loc_images_found)] = mychi_barycenter(&Timage);
-						locimagesfound[source_id]++;
-						loc_images_found++;
-						*numimg = *numimg + 1;
+                                                //locimagesfound[source_id]++;
+                                                loc_images_found++;
+                                                *numimg = *numimg + 1;
+						//locimagesfound[source_id]++;
+						lif[source_id][0]++;
+						//loc_images_found++;
+						//*numimg = *numimg + 1;
 					}
 				}
 #endif
 			}
 		}
-
 		index += nimages_strongLensing[source_id];
 
+
 	}
+#pragma omp parallel for
+	for (int ii = 0; ii < nsets; ++ii)
+		locimagesfound[ii] = lif[ii][0];
 }
 #endif
 

@@ -51,7 +51,8 @@ $(info $$OBJECTS is [${OBJECTS}])
 #
 .PHONY: all clean distclean
 #
-all: $(PROGRAM_NAME) $(STATIC_LIB)
+#all: $(PROGRAM_NAME) $(STATIC_LIB)
+all: $(PROGRAM_NAME) 
 #
 # Rule for compilation of CUDA source (C++ source can be handled automatically)
 #%.cuo: %.cu %.cuh

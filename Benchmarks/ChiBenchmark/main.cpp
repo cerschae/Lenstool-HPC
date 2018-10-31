@@ -34,6 +34,9 @@
 #include<omp.h>
 #endif
 
+#ifdef __WITH_GPU
+#include "cudafunctions.cuh"
+#endif
 
 //#define __WITH_LENSTOOL 0
 #ifdef __WITH_LENSTOOL
@@ -197,7 +200,7 @@ int main(int argc, char *argv[])
 #endif
 	//
 	double wallclock = myseconds();
-	if (world_rank == 0) printf("Reading parameter file at time %f s...\n", myseconds() - wallclock);
+	if (world_rank == 0) printf("Reading parameter file at time %f s... ", myseconds() - wallclock);
 	// Setting Up the problem
 	//===========================================================================================================
 
@@ -240,6 +243,7 @@ int main(int argc, char *argv[])
 	// Output: Potentials and its parameters
 	PotentialSOAAllocation(&lenses_SOA, runmode.nhalos);
 	module_readParameters_PotentialSOA_local(inputFile, lenses_SOA, runmode.nhalos, runmode.n_tot_halos, cosmology);
+	//
 	//module_readParameters_debug_potential_SOA(0, lenses_SOA, runmode.nhalos);
 
 	// This module function reads in the potfiles parameters
@@ -251,7 +255,7 @@ int main(int argc, char *argv[])
 		module_readParameters_readpotfiles_param (inputFile, &potfile, cosmology);
 		module_readParameters_debug_potfileparam (runmode.debug, &potfile);
 		module_readParameters_readpotfiles_SOA   (&runmode , &cosmology, &potfile, lenses_SOA);
-		//module_readParameters_debug_potential_SOA(runmode.debug, lenses_SOA, runmode.n_tot_halos);
+		//module_readParameters_debug_potential_SOA(runmode.debug, *lenses_SOA, runmode.n_tot_halos);
 
 	}
 
@@ -261,22 +265,23 @@ int main(int argc, char *argv[])
 
 	module_readParameters_Grid(inputFile, &frame);
 
-	if (runmode.image == 1 or runmode.inverse == 1 or runmode.time > 0){
-
+	if (runmode.image == 1 or runmode.inverse == 1 or runmode.time > 0)
+	{
+		printf("Initialization of the images..."); fflush(stdout);
 		// This module function reads in the strong lensing images
 		module_readParameters_readImages(&runmode, images, nImagesSet);
 		//runmode.nsets = runmode.nimagestot;
-		for(int i = 0; i < runmode.nimagestot; ++i){
-
+		for(int i = 0; i < runmode.nimagestot; ++i)
+		{
 			images[i].dls = module_cosmodistances_objectObject(lenses_SOA->z[0], images[i].redshift, cosmology);
 			images[i].dos = module_cosmodistances_observerObject(images[i].redshift, cosmology);
-			images[i].dr = module_cosmodistances_lensSourceToObserverSource(lenses_SOA->z[0], images[i].redshift, cosmology);
-
+			images[i].dr  = module_cosmodistances_lensSourceToObserverSource(lenses_SOA->z[0], images[i].redshift, cosmology);
 		}
-		//module_readParameters_debug_image(runmode.debug, images, nImagesSet,runmode.nsets);
+		printf("end.\n"); fflush(stdout);
+		module_readParameters_debug_image(runmode.debug, images, nImagesSet, runmode.nsets);
 
 	}
-
+	printf("done.\n");fflush(stdout);
 	/*
 	if (runmode.inverse == 1){
 
@@ -285,13 +290,13 @@ int main(int argc, char *argv[])
 		module_readParameters_debug_limit(runmode.debug, host_potentialoptimization[0]);
 	}
 	*/
-
-
 	if (runmode.source == 1)
 	{
+		printf("Initialization of the sources..."); fflush(stdout);
 		//Initialisation to default values.(Setting sources to z = 1.5 default value)
 		for(int i = 0; i < runmode.nsets; ++i)
 		{
+			sources[i].shape.a = sources[i].shape.b = sources[i].shape.theta = (type_t) 0.;
 			sources[i].redshift = 1.5;
 		}
 		// This module function reads in the strong lensing sources
@@ -304,7 +309,9 @@ int main(int argc, char *argv[])
 			sources[i].dr = module_cosmodistances_lensSourceToObserverSource(lenses_SOA->z[0], sources[i].redshift, cosmology);
 		}
 		module_readParameters_debug_source(runmode.debug, sources, runmode.nsets);
+		printf("end.\n"); fflush(stdout);
 	}
+	//
 #ifdef __WITH_MPI
 	MPI_Barrier(MPI_COMM_WORLD);
 #endif
@@ -401,7 +408,7 @@ int main(int argc, char *argv[])
 		time += myseconds();
 		if (verbose)
 		{
-			std::cout << " Chi : " << std::setprecision(15) << chi2;
+			std::cout << " Chi barycenter : " << std::setprecision(15) << chi2;
 			std::cout << " Time  " << std::setprecision(15) << time << std::endl;
 		}
 	}
