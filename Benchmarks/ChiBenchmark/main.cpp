@@ -375,7 +375,7 @@ int main(int argc, char *argv[])
 
 
 
-#if 1
+#if 0
 	{
 		//std::cout << "MylenstoolHPC chi Benchmark:\n "; 
 		if (verbose) printf("\n-------------------------- Calling lenstoolhpc at time %f s\n\n", myseconds() - wallclock);
