@@ -172,6 +172,7 @@ void delense_barycenter_GPU(struct point* image_pos, int* locimagesfound, int* n
 	dim3 threads(block_size_y);
 	dim3 grid   (GRID_SIZE_Y );
 	//
+	double alloc_time = -myseconds();
 	struct galaxy* sources_gpu;
 	moveToGPU((void**) &sources_gpu, (void*) sources, sizeof(galaxy)*nsets); 
 	//
@@ -190,6 +191,8 @@ void delense_barycenter_GPU(struct point* image_pos, int* locimagesfound, int* n
 	//
 	cudaDeviceSynchronize();
 	cudasafe(cudaGetLastError(), "before image_pos_gpu allocation ");
+	alloc_time += myseconds();
+	//printf("Allocation time = %f\n", alloc_time);
 	//
 #endif
 	//
@@ -227,10 +230,10 @@ void delense_barycenter_GPU(struct point* image_pos, int* locimagesfound, int* n
 						locimagesfound[source_id]++;
 						numimg_cpu++;
 					}
-					//image_pos_gpu[ii].x = image_pos_gpu[ii].y = 0.;
+					image_pos_gpu[ii].x = image_pos_gpu[ii].y = 0.;
 				}
 		}
-		memset(image_pos_gpu, 0, nbgridcells*MAXIMPERSOURCE*sizeof(struct point));
+		//memset(image_pos_gpu, 0, nbgridcells*MAXIMPERSOURCE*sizeof(struct point));
 		//memset(image_pos_gpu, 0, loc_grid_size*MAXIMPERSOURCE*sizeof(struct point));
 		*numimg = *numimg + numimg_cpu; 
 		time_cpu += myseconds();
