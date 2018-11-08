@@ -76,7 +76,8 @@ int main()
                   << "        Clock rate:         " << prop.clockRate * 1.0e-6 << " GHz" << std::endl // KHz -> GHz
                   << "        Memory:             " << memory * 1e-9 << " GB" << std::endl
                   << "        Ratio 32 vs. 64:    " << prop.singleToDoublePrecisionPerfRatio << ":1" << std::endl
-                  << "        maxThreads	  " << prop.maxThreadsDim[0] << " " << prop.maxThreadsDim[1] << " " << prop.maxThreadsDim[2] << std::endl; 
+                  << "        maxThreads:	  " << prop.maxThreadsDim[0] << " " << prop.maxThreadsDim[1] << " " << prop.maxThreadsDim[2] << std::endl
+		  << "        PCI Bus ID: 	  " << prop.pciBusID << std::endl;
     }
 
     // display driver version and application runtime version
