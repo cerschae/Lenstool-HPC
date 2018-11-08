@@ -278,7 +278,7 @@ int main(int argc, char *argv[])
 			images[i].dr  = module_cosmodistances_lensSourceToObserverSource(lenses_SOA->z[0], images[i].redshift, cosmology);
 		}
 		printf("end.\n"); fflush(stdout);
-		module_readParameters_debug_image(runmode.debug, images, nImagesSet, runmode.nsets);
+		if (verbose) module_readParameters_debug_image(runmode.debug, images, nImagesSet, runmode.nsets);
 
 	}
 	printf("done.\n");fflush(stdout);
