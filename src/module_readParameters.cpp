@@ -2841,7 +2841,7 @@ void module_readParameters_debug_image(int DEBUG, galaxy image[], int nImagesSet
 		{
 			for( int j = 0; j < nImagesSet[i]; ++j)
 			{
-				printf("Image [%d]: x = %lf, y = %lf, shape: a = %f, b = %f, theta = %lf, redshift = %lf,  nImagesSet = %d,\n",index , image[index].center.x, image[index].center.y,  image[index].shape.a, image[index].shape.b, image[index].shape.theta, image[index].redshift,  nImagesSet[i]);
+				printf("image %d, set = %d, imageset = %d: x = %lf, y = %lf, shape: a = %f, b = %f, theta = %lf, redshift = %lf,  nImagesSet = %d,\n", index, i, j, image[index].center.x, image[index].center.y,  image[index].shape.a, image[index].shape.b, image[index].shape.theta, image[index].redshift,  nImagesSet[i]);
 				index +=1;
 				//printf( "%d \n", index );
 			}
