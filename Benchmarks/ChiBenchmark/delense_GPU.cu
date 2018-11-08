@@ -11,8 +11,12 @@
 
 extern double myseconds();
 
-#define BLOCK_SIZE_X 16
-#define BLOCK_SIZE_Y 16
+#define BLOCK_SIZE_X 32
+#define BLOCK_SIZE_Y 4
+
+
+#define MIN(X, Y) (((X) < (Y)) ? (X) : (Y))
+
 
 inline
 void
@@ -51,16 +55,27 @@ delense_GPU(struct point* image_pos, const runmode_param *runmode, const struct 
 	int nbgridcells_y = runmode->nbgridcells;
 	//
         int col = blockIdx.x*blockDim.x + threadIdx.x;
-        if (col > nbgridcells_x - 1) return;
+        if (col > nbgridcells_x - 2) return;
 	//
+	int num_blocks_y  = blockDim.y;
+	int row_y	  = threadIdx.y;
+        int block_size_y  = y_bound/num_blocks_y;
         //
-        const double dx = (frame->xmax - frame->xmin)/(runmode->nbgridcells - 1);
-        const double dy = (frame->ymax - frame->ymin)/(runmode->nbgridcells - 1);
+        const double dx   = (frame->xmax - frame->xmin)/(runmode->nbgridcells - 1);
+        const double dy   = (frame->ymax - frame->ymin)/(runmode->nbgridcells - 1);
 	//
-	int img_pos = 0;
+	int img_pos       = 0;
+	//
+	int row_s  =     (row_y + 0)*block_size_y;
+        int row_e  = MIN((row_y + 1)*block_size_y, nbgridcells_y);
+	//
         //
 	//for (int row = y_pos_loc; row < y_pos_loc + y_bound - 1; ++row)
-	for (int row = 0; row < y_bound - 1; ++row)
+	int yp = y_pos_loc + row_s; 
+	//
+	//printf("block id = %d, from %d to %d\n", row_y, yp, yp + block_size_y);
+	//
+	for (int row = 0; row < block_size_y - 0; ++row)
 	{
 		//
 		int y_id = row;
@@ -68,8 +83,8 @@ delense_GPU(struct point* image_pos, const runmode_param *runmode, const struct 
 		//
 		// int images_total;
 		//
-		double x_pos = frame->xmin + x_id*dx;
-		double y_pos = frame->ymin +( y_id + y_pos_loc)*dy;
+		double x_pos = frame->xmin + ( x_id +  0 )*dx;
+		double y_pos = frame->ymin + ( y_id + yp )*dy;
 		//
 		// Define the upper + lower triangle, both together = square = pixel
 		//
@@ -96,25 +111,114 @@ delense_GPU(struct point* image_pos, const runmode_param *runmode, const struct 
 		struct triplet Timage;
 		struct triplet Tsource;
 		//
-		mychi_transformtriangleImageToSourcePlane_SOA_grid_gradient_upper_GPU(&Tsup, sources[source_id].dr, &Tsource, grid_gradient_x, grid_gradient_y, y_id*runmode->nbgridcells + x_id, runmode->nbgridcells);
+		int g_loc = (y_id + row_s)*nbgridcells_x + x_id;
 		//
-		int thread_found_image = 0;
+		mychi_transformtriangleImageToSourcePlane_SOA_grid_gradient_upper_GPU(&Tsup, sources[source_id].dr, &Tsource, grid_gradient_x, grid_gradient_y, g_loc, nbgridcells_x);
+		//
+		//int thread_found_image = 0;
 		//
 		if (mychi_insideborder_GPU(&sources[source_id].center, &Tsource) == 1)
 		{
-			image_pos[col*MAXIMPERSOURCE + img_pos + 0] = mychi_barycenter_GPU(&Tsup);
+//			printf("col = %d, %d, row = %d, %d, img_pos = %d\n", col, col*num_blocks_y*MAXIMPERSOURCE, row_y, row_y*MAXIMPERSOURCE, img_pos);
+			//printf("found source = %d, row = %d, index 1 = %d, index 2 = %d, img_pos = %d\n", source_id, row + yp, col*num_blocks_y*MAXIMPERSOURCE, row_y*MAXIMPERSOURCE, img_pos);
+			image_pos[col*num_blocks_y*MAXIMPERSOURCE + row_y*MAXIMPERSOURCE + img_pos + 0] = mychi_barycenter_GPU(&Tsup);
 			img_pos++;
 		}
 		else
 		{
-			mychi_transformtriangleImageToSourcePlane_SOA_grid_gradient_lower_GPU(&Tinf, sources[source_id].dr, &Tsource, grid_gradient_x, grid_gradient_y, y_id*runmode->nbgridcells + x_id, runmode->nbgridcells);
+			mychi_transformtriangleImageToSourcePlane_SOA_grid_gradient_lower_GPU(&Tinf, sources[source_id].dr, &Tsource, grid_gradient_x, grid_gradient_y, g_loc, nbgridcells_x);
 			if (mychi_inside_GPU(&sources[source_id].center, &Tsource) == 1)
 			{
-				image_pos[col*MAXIMPERSOURCE + img_pos + 0] = mychi_barycenter_GPU(&Tinf);
+//				printf("col = %d, %d, row = %d, %d, img_pos = %d\n", col, col*num_blocks_y*MAXIMPERSOURCE, row_y, row_y*MAXIMPERSOURCE, img_pos);
+				//printf("found source = %d, row = %d, index 1 = %d, index 2 = %d, img_pos = %d\n", source_id, row, col*num_blocks_y*MAXIMPERSOURCE, row_y*MAXIMPERSOURCE, img_pos);
+				image_pos[col*num_blocks_y*MAXIMPERSOURCE + row_y*MAXIMPERSOURCE + img_pos + 0] = mychi_barycenter_GPU(&Tinf);
 				img_pos++;
 			}
 		}
 	}
+}
+//
+//
+//
+__global__
+void
+delense_GPU_old(struct point* image_pos, const runmode_param *runmode, const struct Potential_SOA *lens, const struct grid_param *frame, const struct galaxy* sources, const int y_pos_loc, const int y_bound, const int source_id, double* grid_gradient_x, double* grid_gradient_y)
+{
+#define INDEX2D_BAR(y, x)         (MAXIMPERSOURCE*y + x)
+        //
+        int nbgridcells_x = runmode->nbgridcells;
+        int nbgridcells_y = runmode->nbgridcells;
+        int row = blockIdx.x*blockDim.x + threadIdx.x;
+        if (row > y_bound) return;
+        int num_blocks_y = gridDim.y;
+        int block_size_y = nbgridcells_y/num_blocks_y;
+        int x_pos_loc    = threadIdx.y*block_size_y;
+        //
+        //int col = blockIdx.y*blockDim.y + threadIdx.y;
+        //if (col > runmode->nbgridcells) return;
+        //
+        const double dx = (frame->xmax - frame->xmin)/(runmode->nbgridcells - 1);
+        const double dy = (frame->ymax - frame->ymin)/(runmode->nbgridcells - 1);
+        //
+        int img_pos = 0;
+        //
+        for (int col = 0; col < runmode->nbgridcells; ++col)
+        {
+                //
+                int y_id = row;
+                int x_id = col;
+                //
+                //int images_total;
+                //
+                double x_pos = frame->xmin + (x_pos_loc + x_id)*dx;
+                double y_pos = frame->ymin + (y_pos_loc + y_id)*dy;
+                //
+                // Define the upper + lower triangle, both together = square = pixel
+                //
+                struct triplet Tsup, Tinf;
+                //
+                Tsup.a.x = x_pos;
+                Tsup.b.x = x_pos;
+                Tsup.c.x = x_pos + dx;
+                Tinf.a.x = x_pos + dx;
+                Tinf.b.x = x_pos + dx;
+                Tinf.c.x = x_pos;
+                //
+                Tsup.a.y = y_pos;
+                Tsup.b.y = y_pos + dy;
+                Tsup.c.y = y_pos;
+                Tinf.a.y = y_pos + dy;
+                Tinf.b.y = y_pos;
+                Tinf.c.y = y_pos + dy;
+                //
+                // Lens to Sourceplane conversion of triangles
+                //
+                // double time = -myseconds();
+                //
+                struct triplet Timage;
+                struct triplet Tsource;
+                //
+                mychi_transformtriangleImageToSourcePlane_SOA_grid_gradient_upper_GPU(&Tsup, sources[source_id].dr, &Tsource, grid_gradient_x, grid_gradient_y, y_id*runmode->nbgridcells + x_id, runmode->nbgridcells);
+                //
+                int thread_found_image = 0;
+                //
+                if (mychi_insideborder_GPU(&sources[source_id].center, &Tsource) == 1)
+                {
+                        image_pos[row*MAXIMPERSOURCE + img_pos + 0] = mychi_barycenter_GPU(&Tsup);
+                        //printf("%d %d: T = %f %f\n", row, img_pos, image_pos[row*MAXIMPERSOURCE + img_pos + 0].x, image_pos[row*MAXIMPERSOURCE + img_pos + 0].y);
+                        img_pos++;
+                }
+                else
+                {
+                        mychi_transformtriangleImageToSourcePlane_SOA_grid_gradient_lower_GPU(&Tinf, sources[source_id].dr, &Tsource, grid_gradient_x, grid_gradient_y, y_id*runmode->nbgridcells + x_id, runmode->nbgridcells);
+                        if (mychi_inside_GPU(&sources[source_id].center, &Tsource) == 1)
+                        {
+                                image_pos[row*MAXIMPERSOURCE + img_pos + 0] = mychi_barycenter_GPU(&Tinf);
+                                //printf("%d %d: T = %f %f\n", row, img_pos, image_pos[row*MAXIMPERSOURCE + img_pos + 0].x, image_pos[row*MAXIMPERSOURCE + img_pos + 0].y);
+                                img_pos++;
+                        }
+                }
+        }
 }
 //
 //
@@ -153,9 +257,9 @@ void delense_barycenter_GPU(struct point* image_pos, int* locimagesfound, int* n
 	int    y_pos_loc  = (int) world_rank*y_len_loc;
 	int    y_bound    = y_len_loc;
 	//
-	if ((world_rank + 1) != world_size) y_bound++;
+	if ((world_rank + 1) != world_size) y_bound += 1;
 	//
-	printf("%d: numimg_loc = %d, y_len = %f, y_len_loc = %d, y_pos_loc = %d, y_bound = %d\n", world_rank, numimg_loc, y_len, y_len_loc, y_pos_loc, y_bound);
+	printf("%d: numimg_loc = %d, y_len_loc = %d, y_pos_loc = %d, y_bound = %d\n", world_rank, numimg_loc, y_len_loc, y_pos_loc, y_bound);
 	//
 	const double dx   = (frame->xmax - frame->xmin)/(nbgridcells - 1);
 	const double dy   = (frame->ymax - frame->ymin)/(nbgridcells - 1);
@@ -163,14 +267,14 @@ void delense_barycenter_GPU(struct point* image_pos, int* locimagesfound, int* n
 	int images_total  = 0;
 	int index         = 0;
 	//
-	int block_size_y  = 32;
-	int block_size_x  = 1;
+	int block_size_x  = BLOCK_SIZE_X;
+	int block_size_y  = BLOCK_SIZE_Y;
 	//
-	int GRID_SIZE_Y   = (nbgridcells_y + block_size_y - 1)/block_size_y; // number of blocks
-	int GRID_SIZE_X   = 1; 
+	int GRID_SIZE_X   = (nbgridcells_y + block_size_y - 1)/block_size_y; // number of blocks
+	int GRID_SIZE_Y   = 1; 
 	//
-	dim3 threads(block_size_y);
-	dim3 grid   (GRID_SIZE_Y );
+	dim3 threads(block_size_x, block_size_y);
+	dim3 grid   (GRID_SIZE_X , GRID_SIZE_Y);
 	//
 	double alloc_time = -myseconds();
 	struct galaxy* sources_gpu;
@@ -183,7 +287,9 @@ void delense_barycenter_GPU(struct point* image_pos, int* locimagesfound, int* n
 	moveToGPU((void**) &runmode_gpu, (void*) runmode, sizeof(runmode_param));
 	//
 	struct point* image_pos_gpu;
-	cudaMallocManaged((void**) &image_pos_gpu, grid_size*MAXIMPERSOURCE*sizeof(struct point));
+	cudaMallocManaged((void**) &image_pos_gpu, grid_size*block_size_y*MAXIMPERSOURCE*sizeof(struct point));
+	//
+	//printf("image_pos size = %d\n", grid_size*block_size_y*MAXIMPERSOURCE);
 	//
 #if 1
 	//
@@ -192,17 +298,16 @@ void delense_barycenter_GPU(struct point* image_pos, int* locimagesfound, int* n
 	cudaDeviceSynchronize();
 	cudasafe(cudaGetLastError(), "before image_pos_gpu allocation ");
 	alloc_time += myseconds();
-	//printf("Allocation time = %f\n", alloc_time);
 	//
 #endif
 	//
 	double time_gpu, time_cpu;
+	//
 	time_gpu = 0.;
 	time_cpu = 0.;
 	//
 	for( int  source_id = 0; source_id < nsets; source_id ++)
 	{
-		
 		int loc_images_found = 0;
 		//
 		int x_pos_loc = 0;
@@ -219,7 +324,7 @@ void delense_barycenter_GPU(struct point* image_pos, int* locimagesfound, int* n
 		time_cpu -= myseconds();
 		int numimg_cpu = 0;
 #pragma omp parallel for reduction(+ : numimg_cpu)
-		for (int ii = 0; ii < nbgridcells*MAXIMPERSOURCE; ++ii)
+		for (int ii = 0; ii < block_size_y*nbgridcells_x*MAXIMPERSOURCE; ++ii)
 		{
 				struct point T = image_pos_gpu[ii];
 				if((T.x != 0.) || (T.y != 0.))
