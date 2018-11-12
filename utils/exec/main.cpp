@@ -195,13 +195,9 @@ int module_readCheckInput_readInput(int argc, char *argv[], std::string *outdir)
 //
 int main(int argc, char *argv[])
 {
-	//
-	// Setting Up the problem
-	//
 
-	// This module function reads the terminal input when calling LENSTOOL and checks that it is correct
-	// Otherwise it exits LENSTOOL
-	// 
+	// Checks the terminal input parameters and if the mentioned folder exist.
+	// Otherwise it exits LENSTOOL.
 	char cwd[1024];
 	if (getcwd(cwd, sizeof(cwd)) != NULL)
 		fprintf(stdout, "Current working dir: %s\n", cwd);
@@ -210,49 +206,39 @@ int main(int argc, char *argv[])
 	module_readCheckInput_readInput(argc, argv, &path);
 	//
 
-	// This module function reads the cosmology parameters from the parameter file
-	// Input: struct cosmologicalparameters cosmology, parameter file
-	// Output: Initialized cosmology struct
-	cosmo_param cosmology;  // Cosmology struct to store the cosmology data from the file
-	std::string inputFile = argv[1];   // Input file
+	// Reading cosmology parameters from the parameter file
+	// 		Input: struct cosmologicalparameters cosmology, parameter file
+	// 		Output: Initialized cosmology struct
+	cosmo_param cosmology;  				// Cosmology struct to store the cosmology data from the file
+	std::string inputFile = argv[1];   		// Input file
 	module_readParameters_readCosmology(inputFile, cosmology);
 	//
-	// This module function reads the runmode paragraph and the number of sources, arclets, etc. in the parameter file.
+	// Reading the runmode paragraph and the number of sources, arclets, etc. in the parameter file.
 	// The runmode_param stores the information of what exactly the user wants to do with lenstool.
 	struct runmode_param runmode;
 	module_readParameters_readRunmode(inputFile, &runmode);
 	module_readParameters_debug_cosmology(runmode.debug, cosmology);
 	module_readParameters_debug_runmode(1, runmode);
 	//
-	//=== Declaring variables
-	//
+	// Variable Declaration
 	struct grid_param frame;
 	struct galaxy images[runmode.nimagestot];
 	struct galaxy sources[runmode.nsets];
-	//struct Potential lenses[runmode.n_tot_halos];
 	struct Potential_SOA lenses_SOA_table[NTYPES];
 	struct Potential_SOA lenses_SOA;
 	struct cline_param cline;
 	struct potfile_param potfile[runmode.Nb_potfile];
-	//struct Potential potfilepotentials[runmode.npotfile];
 	struct potentialoptimization host_potentialoptimization[runmode.nhalos];
-	int nImagesSet[runmode.nsets]; // Contains the number of images in each set of images
+	int nImagesSet[runmode.nsets]; 							// Contains the number of images in each set of images
 	//Bayesmap specific variables
 	type_t* bayespot;
 	int nparam, nvalues;
 
-	// This module function reads in the potential form and its parameters (e.g. NFW)
-	// Input: input file
-	// Output: Potentials and its parameters
-
+	// Reading major potential Information for the .par file and minor potentials from the potfiles
 	module_readParameters_PotentialSOA_direct(inputFile, &lenses_SOA, runmode.nhalos, runmode.n_tot_halos, cosmology);
 	module_readParameters_debug_potential_SOA(0, lenses_SOA, runmode.nhalos);
 	module_readParameters_limit(inputFile, host_potentialoptimization, runmode.nhalos );
-#if 0
-	for(int ii = 0; ii <runmode.nhalos ; ii++){
-		module_readParameters_debug_limit(1, host_potentialoptimization[ii]);
-	}
-#endif
+
 	if (runmode.potfile == 1 )
 	{
 		module_readParameters_readpotfiles_param(inputFile, potfile, cosmology);
@@ -262,18 +248,33 @@ int main(int argc, char *argv[])
 		module_readParameters_debug_potential_SOA(1, lenses_SOA, runmode.n_tot_halos);
 
 	}
-
+	//Updating cosmological calculation of the potential
 	module_readParameters_lens_dslds_calculation(&runmode,&cosmology,&lenses_SOA);
 
-	// This module function reads in the grid form and its parameters
-	// Input: input file
-	// Output: grid and its parameters
-	//
+	//Reading in image information and calculating cosmological distance information
+	if (runmode.image == 1 or runmode.inverse == 1 or runmode.time > 0){
+
+		// This module function reads in the strong lensing images
+		module_readParameters_readImages(&runmode, images, nImagesSet);
+		//runmode.nsets = runmode.nimagestot;
+		for(int i = 0; i < runmode.nimagestot; ++i){
+
+			images[i].dls = module_cosmodistances_objectObject(lenses_SOA.z[0], images[i].redshift, cosmology);
+			images[i].dos = module_cosmodistances_observerObject(images[i].redshift, cosmology);
+			images[i].dr = module_cosmodistances_lensSourceToObserverSource(lenses_SOA.z[0], images[i].redshift, cosmology);
+
+		}
+		module_readParameters_debug_image(0, images, nImagesSet,runmode.nsets);
+
+	}
+
+	// Reading in the grid type and its parameters
 	module_readParameters_Grid(inputFile, &frame);
-	//std::cerr <<frame.xmin <<std::endl;
 	//
 	std::cout << "--------------------------" << std::endl << std::endl; fflush(stdout);
-	//
+
+	//This is the lenstool computation area. Only compiled when linked to the lenstool library
+	//It is essentialy used to compute correspond lenstool result for benchmarks and tests
 	double t_lt, t_lt_total;
 	int turn = 0;
 #ifdef __WITH_LENSTOOL
@@ -388,16 +389,17 @@ int main(int argc, char *argv[])
 
 #endif
 
+	//This is the lenstool-HPC computation area. The following computes the maps for
+    //every mode using GPUs.
 #ifdef __WITH_GPU
 	double t_1, t_2;
 
 	t_1 = -myseconds();
-	std::cerr << runmode.mass << " " << runmode.amplif << " "  << std::endl;
-
+	//std::cerr << runmode.mass << " " << runmode.amplif << " "  << std::endl;
+		//Mode: Mass map computation
 		if (runmode.mass > 0){
 			//Allocation
 			type_t* mass_GPU = (type_t *) malloc((int) (runmode.mass_gridcells) * (runmode.mass_gridcells) * sizeof(type_t));
-
 
 			////calculate maps
 			std::cout << " GPU launching for map mass " << std::endl;
@@ -421,6 +423,7 @@ int main(int argc, char *argv[])
 
 			free(mass_GPU);
 		}
+		//Mode: Amplification map computation
 		if (runmode.amplif > 0){
 			//Allocation
 			type_t* ampli_GPU = (type_t *) malloc((int) (runmode.amplif_gridcells) * (runmode.amplif_gridcells) * sizeof(type_t));
@@ -449,6 +452,7 @@ int main(int argc, char *argv[])
 			//std::cerr << "**" << ampli_GPU[0] << std::endl;
 			free(ampli_GPU);
 		}
+		//Mode: Shear map computation
 		if (runmode.shear > 0){
 			//Allocation
 			type_t* shear_GPU = (type_t *) malloc((int) (runmode.shear_gridcells) * (runmode.shear_gridcells) * sizeof(type_t));
@@ -477,6 +481,7 @@ int main(int argc, char *argv[])
 			//std::cerr << "**" << ampli_GPU[0] << std::endl;
 			free(shear_GPU);
 		}
+		//Mode: Displacement map computation
 		if (runmode.dpl > 0){
 			//Allocation
 			type_t* dpl_x = (type_t *) malloc((int) (runmode.dpl_gridcells) * (runmode.dpl_gridcells) * sizeof(type_t));
