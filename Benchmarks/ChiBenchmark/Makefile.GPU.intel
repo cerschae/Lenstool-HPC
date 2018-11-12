@@ -59,6 +59,7 @@ include ../../src/gpusm.inc
 NVFLAGS += -ccbin $(CXX) -Xcompiler '-Wall -fPIC -qopenmp -Ofast $(PRECISION)'
 #NVFLAGS += -ccbin $(CXX) -Xcompiler '$(CXXFLAGS)'
 NVFLAGS += $(GENCODE) $(PRECISION) -D__WITH_MPI
+#NVFLAGS += --maxrregcount=64
 #NVFLAGS += -G
 #NVFLAGS += -D__WITH_UM
 #NVFLAGS += -D_double
