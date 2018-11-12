@@ -11,8 +11,8 @@
 
 extern double myseconds();
 
-#define BLOCK_SIZE_X 32
-#define BLOCK_SIZE_Y 4
+#define BLOCK_SIZE_X 16
+#define BLOCK_SIZE_Y 16
 
 
 #define MIN(X, Y) (((X) < (Y)) ? (X) : (Y))
