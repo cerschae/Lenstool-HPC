@@ -36,6 +36,7 @@
 
 #ifdef __WITH_GPU
 #include "cudafunctions.cuh"
+#include "allocation_GPU.cuh"
 #endif
 
 //#define __WITH_LENSTOOL 0
@@ -117,6 +118,7 @@ double **map_ayy;
 
 
 void chi_bruteforce_SOA_CPU_grid_gradient(double *chi, int *error, runmode_param *runmode, const struct Potential_SOA *lens, const struct grid_param *frame, const int *nimages_strongLensing, galaxy *images);
+
 
 
 int module_readCheckInput_readInput(int argc, char *argv[])
@@ -241,8 +243,12 @@ int main(int argc, char *argv[])
 	// This module function reads in the potential form and its parameters (e.g. NFW)
 	// Input: input file
 	// Output: Potentials and its parameters
+#ifdef __WITH_GPU
+	PotentialSOAAllocation_GPU(&lenses_SOA, runmode.nhalos);
+#else
 	PotentialSOAAllocation(&lenses_SOA, runmode.nhalos);
-	module_readParameters_PotentialSOA_local(inputFile, lenses_SOA, runmode.nhalos, runmode.n_tot_halos, cosmology);
+#endif
+	module_readParameters_PotentialSOA_noalloc(inputFile, lenses_SOA, runmode.nhalos, runmode.n_tot_halos, cosmology);
 	//
 	//module_readParameters_debug_potential_SOA(0, lenses_SOA, runmode.nhalos);
 
