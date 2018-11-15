@@ -1,6 +1,8 @@
 #pragma once
 
-#include <structure_hpc.hpp>
+#include <cmath>
+
+#include "structure_hpc.hpp"
 #include "gradient.hpp"
 
 #define GET_INDEX2D(y, LDY, x, LDX)         (LDX*y + x)
