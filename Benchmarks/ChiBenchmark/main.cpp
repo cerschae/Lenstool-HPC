@@ -19,7 +19,7 @@
 #include <structure_hpc.hpp>
 #include "timer.h"
 #include "gradient.hpp"
-#include "chi_CPU.hpp"
+#include "chi_CPU_barycenter.hpp"
 #include "module_cosmodistances.hpp"
 #include "module_readParameters.hpp"
 //
@@ -37,6 +37,7 @@
 #ifdef __WITH_GPU
 #include "cudafunctions.cuh"
 #include "allocation_GPU.cuh"
+#include "chi_barycenter_GPU.cuh"
 #endif
 
 //#define __WITH_LENSTOOL 0
@@ -410,7 +411,11 @@ int main(int argc, char *argv[])
 		double time;
 		int error;
 		time = -myseconds();
+#ifdef __WITH_GPU
+		mychi_bruteforce_SOA_GPU_grid_gradient_barycentersource(&chi2, &error, &runmode, lenses_SOA, &frame, nImagesSet, images);
+#else
 		mychi_bruteforce_SOA_CPU_grid_gradient_barycentersource(&chi2, &error, &runmode, lenses_SOA, &frame, nImagesSet, images);
+#endif
 		time += myseconds();
 		if (verbose)
 		{
