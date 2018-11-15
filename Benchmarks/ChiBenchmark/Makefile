@@ -41,7 +41,7 @@ program_INCLUDE_LIBS += $(GSL_ROOT)/lib/
 # Compiler flags
 CXXFLAGS += $(foreach includedir,$(program_INCLUDE_DIRS),-I$(includedir))
 CXXFLAGS += $(foreach includelib,$(program_INCLUDE_LIBS),-L$(includelib))
-#CXXFLAGS += -D__WITH_LENSTOOL
+CXXFLAGS += -D__WITH_LENSTOOL
 CXXFLAGS += -D__WITH_MPI
 CXXFLAGS += -D_double
 include ../../src/cpuflags.inc
