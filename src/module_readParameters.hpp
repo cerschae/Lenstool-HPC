@@ -41,6 +41,7 @@ void module_readParameters_Potential(std::string infile, Potential lens[], int n
 void module_readParameters_PotentialSOA_2(std::string infile, Potential *lens, Potential_SOA *lens_SOA, int Nset[]);
 void module_readParameters_PotentialSOA(std::string infile, Potential *lens, Potential_SOA *lens_SOA, int nhalos);
 void module_readParameters_PotentialSOA_direct(std::string infile, Potential_SOA *lens_SOA, int nhalos, int n_tot_halos, cosmo_param cosmology);
+void module_readParameters_PotentialSOA_noalloc(std::string infile, Potential_SOA *lens_SOA, int nhalos, int n_tot_halos, cosmo_param cosmology);
 //
 void read_potentialSOA_ntypes(std::string infile, int N_type[]);
 //void module_readParameters_PotentialSOA_nonsorted(std::string infile, Potential *lens, Potential_SOA *lens_SOA, int nhalos);
