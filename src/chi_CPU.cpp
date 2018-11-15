@@ -302,8 +302,8 @@ void mychi_bruteforce_SOA_CPU_grid_gradient(double *chi, int *error, runmode_par
 		}
 	}
 	//MPI_Barrier(MPI_COMM_WORLD);
-	comm_time += myseconds();
 #endif
+	comm_time += myseconds();
 	//
 	// image extraction to compute 
 	//
