@@ -43,6 +43,7 @@ CXXFLAGS += $(foreach includelib,$(program_INCLUDE_LIBS),-L$(includelib) )
 include ./cpuflags.inc
 include ./precision.inc
 CXXFLAGS += $(PRECISION)
+CXXFLAGS += -D__WITH_MPI
 #
 #GEN_SM35 := -gencode=arch=compute_35,code=\"sm_35,compute_35\" #Target CC 3.5, for example
 

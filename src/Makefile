@@ -6,7 +6,7 @@ SHELL:=/bin/bash
 
 arch = intel
 prec = double
-all: utils precision compile
+all: precision compile
 
 #cd ../utils/
 #make
@@ -26,6 +26,8 @@ precision:
 compile:
 	@make -f Makefile.$(arch)
 	if which nvcc > /dev/null; then \
+		make -C ../utils; \
+		sh ../utils/gpu.sh > ./gpusm.inc; \
 		echo "nvcc detected, compiling the GPU lib"; \
                 make -f Makefile.GPU.$(arch); \
 	fi  

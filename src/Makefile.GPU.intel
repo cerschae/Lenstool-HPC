@@ -42,6 +42,7 @@ CXXFLAGS += $(foreach includelib,$(program_INCLUDE_LIBS),-L$(includelib))
 include ./precision.inc
 include ./gpusm.inc
 CXXFLAGS += $(PRECISION)
+CXXFLAGS += -D__WITH_MPI
 #CXXFLAGS += -D_double
 #CXXFLAGS += -no-vec
 #CXXFLAGS += -qopenmp -march=core-avx2 -g -O3 -std=c++0x -Wall -pedantic
@@ -55,7 +56,7 @@ LDFLAGS := -llenstoolhpc  -llt -lcfitsio -lwcs -lgsl -lgslcblas
 #NVFLAGS += -D__WITH_LENSTOOL 
 include ./cpuflags.inc 
 #NVFLAGS := -ccbin icpc -Xcompiler '-xHost -Wall -fPIC' #-D__WITH_LENSTOOL
-NVFLAGS := -ccbin icpc -Xcompiler '$(CXXFLAGS)'
+NVFLAGS := -ccbin $(CXX) -Xcompiler '$(CXXFLAGS)'
 include ./gpuflags.inc
 #NVFLAGS += -D_double
 #NVFLAGS   += -gencode arch=compute_60,code=sm_60
