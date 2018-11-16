@@ -1,7 +1,7 @@
 #!/bin/bash
 echo "Starting Float test"
 
-cd src/
+cd ../../src/
 make prec=single clean
 make prec=single
 cd -
