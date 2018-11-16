@@ -389,7 +389,14 @@ int main(int argc, char *argv[])
 
 #endif
 
-	//This is the lenstool-HPC computation area. The following computes the maps for
+	//This is the lenstool-HPC image computation area.
+	if (runmode.image == 1){
+		galaxy predicted_images[runmode.nimagestot*MAXIMPERSOURCE];
+		//predicting_images_bruteforce_barycentersource(&predicted_images, &runmode, &lenses_SOA, &frame, nImagesSet, images);
+
+	}
+
+	//This is the lenstool-HPC map computation area. The following computes the maps for
     //every mode using GPUs.
 #ifdef __WITH_GPU
 	double t_1, t_2;

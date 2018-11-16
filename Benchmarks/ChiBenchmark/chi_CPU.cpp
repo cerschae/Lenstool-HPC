@@ -101,9 +101,7 @@ void mychi_bruteforce_SOA_CPU_grid_gradient(double *chi, int *error, runmode_par
 	//gradient_grid_CPU(grid_gradient_x, grid_gradient_y, frame, lens, runmode->nhalos, grid_dim);
 	int zero = 0;
 #ifdef __WITH_GPU
-	//gradient_grid_CPU(grid_gradient_x, grid_gradient_y, frame, lens, runmode->nhalos, dx, dy, grid_size, y_bound, zero, y_pos_loc);
 	gradient_grid_GPU(grid_gradient_x, grid_gradient_y, frame, lens, runmode->nhalos, dx, dy, grid_size, y_bound, zero, y_pos_loc);
-	//gradient_grid_GPU(grid_gradient_x, grid_gradient_y, frame, lens, runmode->nhalos, grid_size);
 #else
 	gradient_grid_CPU(grid_gradient_x, grid_gradient_y, frame, lens, runmode->nhalos, dx, dy, grid_size, y_bound, zero, y_pos_loc);
 #endif
@@ -1207,6 +1205,255 @@ void mychi_bruteforce_SOA_CPU_grid_gradient_barycentersource(double *chi, int *e
 		printf("		- delense time = %f s.\n", delense_time);
 		printf("		- comm    time = %f s.\n", comm_time);
 		printf("		- chi2    time = %f s.\n", chi2_time);
+		//
+		printf("	images found: %d out of %ld\n", images_found, images_total);
+	}
+	//
+	free(grid_gradient_x);
+	free(grid_gradient_y);
+}
+
+void predicting_images_bruteforce_barycentersource(galaxy *predicted_images, runmode_param *runmode, const struct Potential_SOA *lens, const struct grid_param *frame, const int *nimages_strongLensing, galaxy *images)
+{
+
+	struct galaxy sources[runmode->nsets]; // theoretical sources (common for a set)
+	int    nimagesfound  [runmode->nsets][MAXIMPERSOURCE]; // number of images found from the theoretical sources
+	int    locimagesfound[runmode->nsets];
+	struct point image_pos [runmode->nsets][MAXIMPERSOURCE];
+	struct point tim     [MAXIMPERSOURCE]; // theoretical images (computed from sources)
+	//
+	int world_size = 1;
+	int world_rank = 0;
+#ifdef __WITH_MPI
+	MPI_Comm_size(MPI_COMM_WORLD, &world_size);
+	MPI_Comm_rank(MPI_COMM_WORLD, &world_rank);
+	MPI_Barrier(MPI_COMM_WORLD);
+#endif
+	unsigned int verbose = (world_rank == 0);
+	//
+	int grid_size     = runmode->nbgridcells;
+	int loc_grid_size = runmode->nbgridcells/world_size;
+	//
+	double y_len      = fabs(frame->ymax - frame->ymin);
+	int    y_len_loc  = runmode->nbgridcells/world_size;
+	int    y_pos_loc  = (int) world_rank*y_len_loc;
+	int    y_bound    = y_len_loc;
+	if ((world_rank + 1) != world_size) y_bound++;
+	//
+	//
+	const double dx   = (frame->xmax - frame->xmin)/(runmode->nbgridcells - 1);
+	const double dy   = (frame->ymax - frame->ymin)/(runmode->nbgridcells - 1);
+	//
+	double *grid_gradient_x, *grid_gradient_y;
+	//
+	grid_gradient_x   = (double *)malloc((int) grid_size*y_bound*sizeof(double));
+	grid_gradient_y   = (double *)malloc((int) grid_size*y_bound*sizeof(double));
+	//
+	const int grid_dim = runmode->nbgridcells;
+	//Packaging the image to sourceplane conversion
+	double time = -myseconds();
+	double grad_time = -myseconds();
+	//gradient_grid_CPU(grid_gradient_x, grid_gradient_y, frame, lens, runmode->nhalos, grid_dim);
+#ifdef __WITH_GPU
+#warning "Calling the GPUs..."
+	gradient_grid_GPU(grid_gradient_x, grid_gradient_y, frame, lens, runmode->nhalos, dx, dy, grid_size, y_bound, 0, y_pos_loc);
+	//gradient_grid_GPU(grid_gradient_x, grid_gradient_y, frame, lens, runmode->nhalos, grid_size);
+#else
+	int zero = 0;
+	gradient_grid_CPU(grid_gradient_x, grid_gradient_y, frame, lens, runmode->nhalos, dx, dy, grid_size, y_bound, zero, y_pos_loc);
+#endif
+
+#if 0
+	if (world_rank == 0)
+		for (int jj = 0; jj < loc_grid_size; ++jj)
+			for (int ii = 0; ii < runmode->nbgridcells; ++ii)
+				printf("%d %d: %f %f\n", ii, jj, grid_gradient_x[jj*grid_size + ii], grid_gradient_y[jj*grid_size + ii]);
+#endif
+
+	//gradient_grid_CPU(grid_gradient_x, grid_gradient_y, frame, lens, runmode->nhalos, grid_size, loc_grid_size);
+#ifdef __WITH_MPI
+	MPI_Barrier(MPI_COMM_WORLD);
+#endif
+	grad_time += myseconds();
+	//
+	int index          = 0;       // index tracks the image within the total image array in the image plane
+	*chi  		   = 0;
+	//
+	double chi2_time   = 0.;
+	double delense_time   = 0.;
+	double image_time  = 0.;
+	//
+	int images_found   = 0;
+	long int images_total   = 0;
+	//
+	int numsets = 0;
+	//
+	for( int  source_id = 0; source_id < runmode->nsets; source_id ++)
+		numsets += nimages_strongLensing[source_id];
+	//printf("@@Total numsets = %d\n", numsets);
+	//
+	time = -myseconds();
+	//
+	// nsets     : number of images in the source plane
+	// nimagestot: number of images in the image plane
+	//
+	image_time -= myseconds();
+	//
+	unsigned int nsets = runmode->nsets;
+	for( int  source_id = 0; source_id < runmode->nsets; source_id ++)
+	{
+		// number of images in the image plane for the specific image (1,3,5...)
+		unsigned short int nimages = nimages_strongLensing[source_id];
+		//@@printf("@@ source_id = %d, nimages = %d\n",  source_id, nimages_strongLensing[source_id]);
+		//Init sources
+		sources[source_id].center.x = sources[source_id].center.y = 0.;
+		//____________________________ image (constraint) loop ________________________________
+		for(unsigned short int image_id = 0; image_id < nimages; image_id++)
+		{
+			//________ computation of theoretical sources _________
+			struct galaxy sources_temp;
+			struct point Grad = module_potentialDerivatives_totalGradient_SOA(&images[index + image_id].center, lens, runmode->nhalos);
+			// find the position of the constrain in the source plane
+			sources_temp.center.x = images[index + image_id].center.x - images[index + image_id].dr*Grad.x;
+			sources_temp.center.y = images[index + image_id].center.y - images[index + image_id].dr*Grad.y;
+			//printf("	image %d, %d (%d) = (%.15f, %.15f) -> (%.15f, %.15f)\n", source_id, image_id, nimages, images[index + image_id].center.x, images[index + image_id].center.y, sources_temp.center.x, sources_temp.center.y );
+
+			//________ Adding up for barycenter comp _________
+			sources[source_id].center.x += sources_temp.center.x;
+			sources[source_id].center.y += sources_temp.center.y;
+			//time += myseconds();
+			//
+		}
+		//________ Dividing by nimages for final barycenter result _________
+		sources[source_id].center.x /= nimages;
+		sources[source_id].center.y /= nimages;
+
+		sources[source_id].redshift = images[index].redshift;
+		sources[source_id].dr       = images[index].dr;
+		sources[source_id].dls      = images[index].dls;
+		sources[source_id].dos      = images[index].dos;
+
+		//printf("		source %d   (%d) = (%.15f, %.15f, %.15f, %.15f, %.15f, %.15f)\n", source_id, nimages, sources[source_id].center.x, sources[source_id].center.y, sources[source_id].redshift, sources[source_id].dr, sources[source_id].dls , sources[source_id].dos);
+
+		index += nimages;
+	}
+#ifdef __WITH_MPI
+	MPI_Barrier(MPI_COMM_WORLD);
+#endif
+	image_time += myseconds();
+	//
+	delense_time    -= myseconds();
+	index 	      = 0;
+	int numimg    = 0;
+	//
+	for( int  source_id = 0; source_id < runmode->nsets; source_id ++)
+	{
+		locimagesfound[source_id] = 0;
+		int loc_images_found = 0;
+#pragma omp parallel
+#pragma omp for reduction(+: images_total)
+		for (int y_id = 0; y_id < (y_bound - 1); ++y_id)
+		{
+			for (int x_id = 0; x_id < runmode->nbgridcells - 1 ; ++x_id)
+			{
+				images_total++;
+				//
+				double x_pos = frame->xmin + (            x_id)*dx;
+				double y_pos = frame->ymin + (y_pos_loc + y_id)*dy;
+				//printf("%d: x_id = %d xpos = %f, y_id = %d ypos = %f\n", world_rank, x_id, x_pos, y_pos_loc + y_id, y_pos);
+				//
+				// Define the upper + lower triangle, both together = square = pixel
+				//
+				struct triplet Tsup, Tinf;
+				//
+				Tsup.a.x = x_pos;
+				Tsup.b.x = x_pos;
+				Tsup.c.x = x_pos + dx;
+				Tinf.a.x = x_pos + dx;
+				Tinf.b.x = x_pos + dx;
+				Tinf.c.x = x_pos;
+				//
+				Tsup.a.y = y_pos;
+				Tsup.b.y = y_pos + dy;
+				Tsup.c.y = y_pos;
+				Tinf.a.y = y_pos + dy;
+				Tinf.b.y = y_pos;
+				Tinf.c.y = y_pos + dy;
+				//
+				// Lens to Sourceplane conversion of triangles
+				//
+				// double time = -myseconds();
+				//
+				struct triplet Timage;
+				struct triplet Tsource;
+				//
+				//printf("	- Tsup = %f %f\n", Tsup.a.x, Tsup.a.y);
+				mychi_transformtriangleImageToSourcePlane_SOA_grid_gradient_upper(&Tsup, sources[source_id].dr, &Tsource, grid_gradient_x, grid_gradient_y, y_id*grid_dim + x_id, grid_dim);
+				//mychi_transformtriangleImageToSourcePlane_SOA_grid_gradient_upper(&Tsup, sources[source_id][image_id].dr, &Tsource, grid_gradient_x, grid_gradient_y, (y_pos_loc + y_id)*grid_dim + x_id, grid_dim);
+				//@@if (world_rank == 1)
+				//printf("	- Tsup = %f %f -> (%f, %f)\n", Tsup.a.x, Tsup.a.y, Tsource.a.x,Tsource.a.y);
+				//
+				int thread_found_image = 0;
+				//
+				if (mychi_insideborder(&sources[source_id].center, &Tsource) == 1)
+				{
+					//printf("	-> %d found: source_id = %d, y_id = %d, x_id = %d : pixel %f %f -> %f %f\n", world_rank, source_id, y_pos_loc + y_id, x_id, Tsup.a.x, Tsup.a.y, Tsource.a.x, Tsource.a.y);
+					thread_found_image = 1;
+					Timage = Tsup;
+				}
+				else
+				{
+					//printf("	- Tinf = %f %f\n", Tinf.a.x, Tinf.a.y);
+					mychi_transformtriangleImageToSourcePlane_SOA_grid_gradient_lower(&Tinf, sources[source_id].dr, &Tsource, grid_gradient_x, grid_gradient_y, y_id*grid_dim + x_id, grid_dim);
+					//mychi_transformtriangleImageToSourcePlane_SOA_grid_gradient_lower(&Tinf, sources[source_id][image_id].dr, &Tsource, grid_gradient_x, grid_gradient_y, (y_id + y_pos_loc)*grid_dim + x_id, grid_dim);
+					//@@if (world_rank == 1)
+					if (mychi_inside(&sources[source_id].center, &Tsource) == 1)
+					{
+						//printf("	-> %d found:  source_id = %d, y_id = %d, x_id = %d : pixel %f %f -> %f %f\n", world_rank, source_id, y_pos_loc + y_id, x_id, Tinf.a.x, Tinf.a.y, Tsource.a.x, Tsource.a.y);
+						thread_found_image = 1;
+						Timage = Tinf;
+					}
+				}
+#if 1
+				if (thread_found_image)
+				{
+#pragma omp critical
+					{
+						predicted_images.center[source_id][loc_images_found] = mychi_barycenter(&Timage); // get the barycenter of the triangle
+						locimagesfound[source_id]++;
+						loc_images_found++;
+						numimg ++;
+					}
+				}
+#endif
+			}
+		}
+
+
+#if 1
+		//}
+		index += nimages_strongLensing[source_id];
+		//printf("	-> %d found:  source_id = %d, locimagesfound = %d \n", world_rank, source_id, loc_images_found);
+
+	}
+#ifdef __WITH_MPI
+	MPI_Barrier(MPI_COMM_WORLD);
+#endif
+	delense_time += myseconds();
+	time      += myseconds();
+	//
+	if (verbose)
+	{
+		//
+		//		int nthreads = 1;
+		//
+		//#pragma omp parallel
+		//		nthreads = omp_get_num_threads();
+		//
+		printf("	overall time  = %f s.\n", time);
+		printf("		- grad    time = %f s.\n", grad_time);
+		printf("		- image   time = %f s.\n", image_time);
+		printf("		- delense time = %f s.\n", delense_time);
 		//
 		printf("	images found: %d out of %ld\n", images_found, images_total);
 	}
