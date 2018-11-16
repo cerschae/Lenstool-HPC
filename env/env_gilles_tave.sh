@@ -2,7 +2,7 @@
 #echo "$PWD/${BASH_SOURCE[@]}"
 #echo dirname "$PWD/${BASH_SOURCE[@]}"
 #echo $(realpath "$(dirname "$PWD/${BASH_SOURCE[@]}")")
-MYPATH=$(realpath "$(dirname "$PWD/${BASH_SOURCE[@]}")")
+MYPATH=$(realpath "$(dirname "$PWD/../${BASH_SOURCE[@]}")")
 #echo $MYPATH
 export LENSTOOL_ROOT=/users/fgilles/Projects-local/lenstool-6.8.1/
 #export LENSTOOL_ROOT=/users/fgilles/Projects/lenstool-6.8.1/src/
