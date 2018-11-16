@@ -19,9 +19,11 @@
 #include <structure_hpc.hpp>
 #include "timer.h"
 #include "gradient.hpp"
-#include "chi_CPU.hpp"
+#include "chi_CPU_barycenter.hpp"
 #include "module_cosmodistances.hpp"
 #include "module_readParameters.hpp"
+//
+#include "allocation.hpp"
 
 
 #ifdef __WITH_MPI
@@ -32,6 +34,11 @@
 #include<omp.h>
 #endif
 
+#ifdef __WITH_GPU
+#include "cudafunctions.cuh"
+#include "allocation_GPU.cuh"
+#include "chi_barycenter_GPU.cuh"
+#endif
 
 //#define __WITH_LENSTOOL 0
 #ifdef __WITH_LENSTOOL
@@ -114,6 +121,7 @@ double **map_ayy;
 void chi_bruteforce_SOA_CPU_grid_gradient(double *chi, int *error, runmode_param *runmode, const struct Potential_SOA *lens, const struct grid_param *frame, const int *nimages_strongLensing, galaxy *images);
 
 
+
 int module_readCheckInput_readInput(int argc, char *argv[])
 {
 /// check if there is a correct number of arguments, and store the name of the input file in infile
@@ -176,7 +184,6 @@ int main(int argc, char *argv[])
 	int name_len;
 	MPI_Get_processor_name(processor_name, &name_len);
 	MPI_Barrier(MPI_COMM_WORLD);
-
 	// Print off a hello world message
 #endif
 	int numthreads = 1;
@@ -186,16 +193,17 @@ int main(int argc, char *argv[])
 	numthreads = omp_get_num_threads();
 #endif
 	//
+	int verbose = (world_rank == 0);
+	//
+	if (verbose) printf("\nLenstool-HPC\n\n"); fflush(stdout);
+	//
 	printf("Hello world from processor %s, rank %d out of %d processors and %d threads per rank\n", processor_name, world_rank, world_size, numthreads); fflush(stdout);
 #ifdef __WITH_MPI
 	MPI_Barrier(MPI_COMM_WORLD);
 #endif
-	int verbose = (world_rank == 0);
-	//
-	if (verbose) printf("Lenstool-HPC\n\n");
 	//
 	double wallclock = myseconds();
-	if (world_rank == 0) printf("Reading parameter file at time %f s...\n", myseconds() - wallclock);
+	if (world_rank == 0) printf("Reading parameter file at time %f s... ", myseconds() - wallclock);
 	// Setting Up the problem
 	//===========================================================================================================
 
@@ -223,11 +231,10 @@ int main(int argc, char *argv[])
 
 	//=== Declaring variables
 	struct grid_param frame;
-	struct galaxy images[runmode.nimagestot];
+	struct galaxy images [runmode.nimagestot];
 	struct galaxy sources[runmode.nsets];
 	//struct Potential lenses[runmode.nhalos+runmode.npotfile-1];
-	struct Potential_SOA lenses_SOA_table[NTYPES];
-	struct Potential_SOA lenses_SOA;
+	struct Potential_SOA* lenses_SOA;
 	struct cline_param cline;
 	struct potfile_param potfile;
 	//struct Potential potfilepotentials[runmode.npotfile];
@@ -237,9 +244,14 @@ int main(int argc, char *argv[])
 	// This module function reads in the potential form and its parameters (e.g. NFW)
 	// Input: input file
 	// Output: Potentials and its parameters
-
-	module_readParameters_PotentialSOA_direct(inputFile, &lenses_SOA, runmode.nhalos, runmode.n_tot_halos, cosmology);
-	module_readParameters_debug_potential_SOA(0, lenses_SOA, runmode.nhalos);
+#ifdef __WITH_GPU
+	PotentialSOAAllocation_GPU(&lenses_SOA, runmode.nhalos);
+#else
+	PotentialSOAAllocation(&lenses_SOA, runmode.nhalos);
+#endif
+	module_readParameters_PotentialSOA_noalloc(inputFile, lenses_SOA, runmode.nhalos, runmode.n_tot_halos, cosmology);
+	//
+	//module_readParameters_debug_potential_SOA(0, lenses_SOA, runmode.nhalos);
 
 	// This module function reads in the potfiles parameters
 	// Input: input file
@@ -247,10 +259,10 @@ int main(int argc, char *argv[])
 
 	if (runmode.potfile == 1 )
 	{
-		module_readParameters_readpotfiles_param(inputFile, &potfile, cosmology);
-		module_readParameters_debug_potfileparam(0, &potfile);
-		module_readParameters_readpotfiles_SOA(&runmode, &cosmology,&potfile,&lenses_SOA);
-		module_readParameters_debug_potential_SOA(0, lenses_SOA, runmode.n_tot_halos);
+		module_readParameters_readpotfiles_param (inputFile, &potfile, cosmology);
+		module_readParameters_debug_potfileparam (runmode.debug, &potfile);
+		module_readParameters_readpotfiles_SOA   (&runmode , &cosmology, &potfile, lenses_SOA);
+		//module_readParameters_debug_potential_SOA(runmode.debug, *lenses_SOA, runmode.n_tot_halos);
 
 	}
 
@@ -260,22 +272,23 @@ int main(int argc, char *argv[])
 
 	module_readParameters_Grid(inputFile, &frame);
 
-	if (runmode.image == 1 or runmode.inverse == 1 or runmode.time > 0){
-
+	if (runmode.image == 1 or runmode.inverse == 1 or runmode.time > 0)
+	{
+		printf("Initialization of the images..."); fflush(stdout);
 		// This module function reads in the strong lensing images
 		module_readParameters_readImages(&runmode, images, nImagesSet);
 		//runmode.nsets = runmode.nimagestot;
-		for(int i = 0; i < runmode.nimagestot; ++i){
-
-			images[i].dls = module_cosmodistances_objectObject(lenses_SOA.z[0], images[i].redshift, cosmology);
+		for(int i = 0; i < runmode.nimagestot; ++i)
+		{
+			images[i].dls = module_cosmodistances_objectObject(lenses_SOA->z[0], images[i].redshift, cosmology);
 			images[i].dos = module_cosmodistances_observerObject(images[i].redshift, cosmology);
-			images[i].dr = module_cosmodistances_lensSourceToObserverSource(lenses_SOA.z[0], images[i].redshift, cosmology);
-
+			images[i].dr  = module_cosmodistances_lensSourceToObserverSource(lenses_SOA->z[0], images[i].redshift, cosmology);
 		}
-		//module_readParameters_debug_image(runmode.debug, images, nImagesSet,runmode.nsets);
+		printf("end.\n"); fflush(stdout);
+		if (verbose) module_readParameters_debug_image(runmode.debug, images, nImagesSet, runmode.nsets);
 
 	}
-
+	printf("done.\n");fflush(stdout);
 	/*
 	if (runmode.inverse == 1){
 
@@ -284,13 +297,13 @@ int main(int argc, char *argv[])
 		module_readParameters_debug_limit(runmode.debug, host_potentialoptimization[0]);
 	}
 	*/
-
-
 	if (runmode.source == 1)
 	{
+		printf("Initialization of the sources..."); fflush(stdout);
 		//Initialisation to default values.(Setting sources to z = 1.5 default value)
 		for(int i = 0; i < runmode.nsets; ++i)
 		{
+			sources[i].shape.a = sources[i].shape.b = sources[i].shape.theta = (type_t) 0.;
 			sources[i].redshift = 1.5;
 		}
 		// This module function reads in the strong lensing sources
@@ -298,12 +311,14 @@ int main(int argc, char *argv[])
 		//Calculating cosmoratios
 		for(int i = 0; i < runmode.nsets; ++i)
 		{
-			sources[i].dls = module_cosmodistances_objectObject(lenses_SOA.z[0], sources[i].redshift, cosmology);
+			sources[i].dls = module_cosmodistances_objectObject(lenses_SOA->z[0], sources[i].redshift, cosmology);
 			sources[i].dos = module_cosmodistances_observerObject(sources[i].redshift, cosmology);
-			sources[i].dr = module_cosmodistances_lensSourceToObserverSource(lenses_SOA.z[0], sources[i].redshift, cosmology);
+			sources[i].dr = module_cosmodistances_lensSourceToObserverSource(lenses_SOA->z[0], sources[i].redshift, cosmology);
 		}
 		module_readParameters_debug_source(runmode.debug, sources, runmode.nsets);
+		printf("end.\n"); fflush(stdout);
 	}
+	//
 #ifdef __WITH_MPI
 	MPI_Barrier(MPI_COMM_WORLD);
 #endif
@@ -367,7 +382,7 @@ int main(int argc, char *argv[])
 
 
 
-#if 1
+#if 0
 	{
 		//std::cout << "MylenstoolHPC chi Benchmark:\n "; 
 		if (verbose) printf("\n-------------------------- Calling lenstoolhpc at time %f s\n\n", myseconds() - wallclock);
@@ -375,7 +390,7 @@ int main(int argc, char *argv[])
 		double time;
 		int error;
 		time = -myseconds();
-		mychi_bruteforce_SOA_CPU_grid_gradient(&chi2, &error, &runmode, &lenses_SOA, &frame, nImagesSet, images);
+		mychi_bruteforce_SOA_CPU_grid_gradient(&chi2, &error, &runmode, lenses_SOA, &frame, nImagesSet, images);
 		time += myseconds();
 		if (verbose)
 		{
@@ -396,11 +411,15 @@ int main(int argc, char *argv[])
 		double time;
 		int error;
 		time = -myseconds();
-		mychi_bruteforce_SOA_CPU_grid_gradient_barycentersource(&chi2, &error, &runmode, &lenses_SOA, &frame, nImagesSet, images);
+#ifdef __WITH_GPU
+		mychi_bruteforce_SOA_GPU_grid_gradient_barycentersource(&chi2, &error, &runmode, lenses_SOA, &frame, nImagesSet, images);
+#else
+		mychi_bruteforce_SOA_CPU_grid_gradient_barycentersource(&chi2, &error, &runmode, lenses_SOA, &frame, nImagesSet, images);
+#endif
 		time += myseconds();
 		if (verbose)
 		{
-			std::cout << " Chi : " << std::setprecision(15) << chi2;
+			std::cout << " Chi barycenter : " << std::setprecision(15) << chi2;
 			std::cout << " Time  " << std::setprecision(15) << time << std::endl;
 		}
 	}
@@ -409,6 +428,9 @@ int main(int argc, char *argv[])
 	if (verbose) printf("\n-------------------------- Ending execution at time %f s\n\n", myseconds() - wallclock);
 #ifdef __WITH_MPI
 	MPI_Finalize();
+#endif
+#ifdef __WTH_GPU
+	cudaDeviceReset();
 #endif
 
 }

@@ -38,11 +38,11 @@ program_INCLUDE_LIBS += $(CUDA_ROOT)/lib64
 CXXFLAGS += $(foreach includedir,$(program_INCLUDE_DIRS),-I$(includedir))
 CXXFLAGS += $(foreach includelib,$(program_INCLUDE_LIBS),-L$(includelib))
 #CXXFLAGS += -D__WITH_LENSTOOL 
-#CPPFLAGS += -D__WITH_LENSTOOL
+CXXFLAGS += -D__WITH_LENSTOOL
 CXXFLAGS += -D__WITH_MPI
+CXXFLAGS += -D__WITH_UM
 CXXFLAGS += -D__WITH_GPU
-CXXFLAGS += -qopenmp -g -O3 -Wall -pedantic
-CXXFLAGS += -fPIC
+include ../../src/cpuflags.inc
 include $(LENSTOOLHPC_ROOT)/src/precision.inc
 CXXFLAGS += $(PRECISION)
 #CXXFLAGS += -no-vec
@@ -53,11 +53,18 @@ CXXFLAGS += $(PRECISION)
 LDFLAGS := -llenstoolhpc  -llenstoolhpc -llenstoolhpc_GPU -llt -lcfitsio -lwcs -lgsl -lgslcblas -llenstool #Do not keep lenstool for the float calculation, it creates conflictinthe structure.h file
 #
 #NVFLAGS := -O3 -g -G -rdc=true -ccbin icpc -Xcompiler '-Wall -fPIC -qopenmp' -D__WITH_LENSTOOL 
-NVFLAGS := -O3 -ccbin icpc -Xcompiler '-Wall -fPIC -qopenmp' -D__WITH_LENSTOOL
+#NVFLAGS := -O3 -ccbin icpc -Xcompiler '-Wall -fPIC -qopenmp' -D__WITH_LENSTOOL
+include ../../src/gpuflags.inc
+include ../../src/gpusm.inc
+NVFLAGS += -ccbin $(CXX) -Xcompiler '-Wall -fPIC -qopenmp -Ofast $(PRECISION)'
+#NVFLAGS += -ccbin $(CXX) -Xcompiler '$(CXXFLAGS)'
+NVFLAGS += $(GENCODE) $(PRECISION) -D__WITH_MPI
+#NVFLAGS += --maxrregcount=64
+#NVFLAGS += -G
+#NVFLAGS += -D__WITH_UM
 #NVFLAGS += -D_double
 #NVFLAGS += -gencode arch=compute_60,code=sm_60
-NVFLAGS += -use_fast_math
-#NVFLAGS += -arch=sm_35
+#NVFLAGS += -use_fast_math
 NVFLAGS += $(foreach includedir,$(program_INCLUDE_DIRS),-I$(includedir))
 NVFLAGS += $(foreach includelib,$(program_INCLUDE_LIBS),-L$(includelib))
 #
@@ -74,7 +81,7 @@ LDFLAGS   += -O3 -g -qopenmp
 GPU_OBJECTS = $(program_CU_OBJS)
 CPU_OBJECTS = $(program_CXX_OBJS) $(program_C_OBJS)
 #
-%.cu.o: %.cu #%.cuh
+%.cu.o: %.cu %.cuh
 	nvcc $(NVFLAGS) -o $@ -c  $<
 	#nvcc $(NVFLAGS) -o $@ -rdc=true $<
 	#nvcc $(NVFLAGS) -Xptxas -dlcm=cg --ptxas-options=-v -o $@ -dc $<
@@ -82,8 +89,8 @@ CPU_OBJECTS = $(program_CXX_OBJS) $(program_C_OBJS)
 %.cpp: %.cpp %.h
 	$(CXX) $(CXXFLAGS) -o $@ $< $(CXXFLAGS)
 #
-$(PROGRAM_NAME):  $(CPU_OBJECTS)
-	$(CXX) -o $@ $(program_CXX_OBJS) $(program_C_OBJS)  $(LDFLAGS) $(NVLDFLAGS) 
+$(PROGRAM_NAME):  $(CPU_OBJECTS) $(GPU_OBJECTS)
+	$(CXX) -o $@ $(program_CU_OBJS) $(program_CXX_OBJS) $(program_C_OBJS)  $(LDFLAGS) $(NVLDFLAGS) 
 
 
 #$(PROGRAM_NAME): $(CPU_OBJECTS) 

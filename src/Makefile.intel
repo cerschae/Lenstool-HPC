@@ -17,7 +17,7 @@ program_C_OBJS := ${program_C_SRCS:.c=.o}
 #program_CU_HEADERS += $(wildcard ../../*.cuh) #Find .cuh files from additional directories
 #program_CU_OBJS := ${program_CU_SRCS:.cu=.cuo}
 #
-program_INCLUDE_DIRS := . /usr/local/cuda-7.5/include/ #C++ Include directories
+program_INCLUDE_DIRS := ./ 
 program_INCLUDE_DIRS += $(CFITSIO_ROOT)/include
 program_INCLUDE_DIRS += $(LENSTOOL_ROOT)/include
 program_INCLUDE_DIRS += $(GSL_ROOT)/include
@@ -28,21 +28,22 @@ program_INCLUDE_LIBS += $(LENSTOOL_ROOT)/src
 
 # defined variables
 # Compiler flags
-CPPFLAGS += $(foreach includedir,$(program_INCLUDE_DIRS),-I$(includedir))
-CPPFLAGS += $(foreach includelib,$(program_INCLUDE_LIBS),-L$(includelib) )
-#CXXFLAGS += -march=core-avx2 -g -O3 -std=c++0x -Wall -pedantic 
-CPPFLAGS += -fPIC -qopenmp -pedantic -lcfitsio
-CPPFLAGS += -xHost -fma -ftz
-CPPFLAGS += -Ofast -g
-#CPPFLAGS += -fp-model strict -fp-model extended
-#CPPFLAGS += -no-vec -no-simd
-#CPPFLAGS += -qopt-prefetch-distance=64,8 -qopt-streaming-cache-evict=0 -fPIC -qopenmp -xMIC-AVX512 -fma -g -O3 -std=c++0x -Wall -pedantic
-#CPPFLAGS += -qopt-report=5 -S
+CXXFLAGS += $(foreach includedir,$(program_INCLUDE_DIRS),-I$(includedir))
+CXXFLAGS += $(foreach includelib,$(program_INCLUDE_LIBS),-L$(includelib) )
+#CXXFLAGS += -fPIC -qopenmp -pedantic -lcfitsio
+#CXXFLAGS += -xHost -fma -ftz
+#CXXFLAGS += -Ofast -g
+#CXXFLAGS += -fp-model strict -fp-model extended
+#CXXFLAGS += -no-vec -no-simd
+#CXXFLAGS += -qopt-prefetch-distance=64,8 -qopt-streaming-cache-evict=0 -fPIC -qopenmp -xMIC-AVX512 -fma -g -O3 -std=c++0x -Wall -pedantic
+#CXXFLAGS += -qopt-report=5 -S
 #CXXFLAGS += -g -Ofast -std=c++0x -Wall -D__WITH_MPI 
 #CXXFLAGS += -fast-transcendentals
 #CXXFLAGS += -Ofast #-fp-model fast=2
+include ./cpuflags.inc
 include ./precision.inc
-CPPFLAGS += $(PRECISION)
+CXXFLAGS += $(PRECISION)
+CXXFLAGS += -D__WITH_MPI
 #
 #GEN_SM35 := -gencode=arch=compute_35,code=\"sm_35,compute_35\" #Target CC 3.5, for example
 
@@ -51,14 +52,15 @@ $(info $$OBJECTS is [${OBJECTS}])
 #
 .PHONY: all clean distclean
 #
-all: $(PROGRAM_NAME) $(STATIC_LIB)
+#all: $(PROGRAM_NAME) $(STATIC_LIB)
+all: $(PROGRAM_NAME) 
 #
 # Rule for compilation of CUDA source (C++ source can be handled automatically)
 #%.cuo: %.cu %.cuh
 #	nvcc $(NVFLAGS)  -o $@ -dc $<
 
 %.o: %.cpp %.h 
-	$(CXX) $(CPPFLAGS) -c -o $@ $< 
+	$(CXX) $(CXXFLAGS) -c -o $@ $< 
 
 # This is pretty ugly...details below
 # The program depends on both C++ and CUDA Objects, but storing CUDA objects as .o files results in circular dependency
@@ -73,9 +75,9 @@ all: $(PROGRAM_NAME) $(STATIC_LIB)
 # compilation.
 
 $(PROGRAM_NAME): $(OBJECTS) 
-	#$(CXX) $(CPPFLAGS) -shared -o $@ $(program_CXX_OBJS) $(program_C_OBJS) -llenstool 
-	#$(CXX) $(CPPFLAGS) -shared -o $@ $(program_CXX_OBJS) $(program_C_OBJS)
-	$(CXX) $(CPPFLAGS) -shared -o $@ $(program_CXX_OBJS) $(program_C_OBJS) 
+	#$(CXX) $(CXXFLAGS) -shared -o $@ $(program_CXX_OBJS) $(program_C_OBJS) -llenstool 
+	#$(CXX) $(CXXFLAGS) -shared -o $@ $(program_CXX_OBJS) $(program_C_OBJS)
+	$(CXX) $(CXXFLAGS) -shared -o $@ $(program_CXX_OBJS) $(program_C_OBJS) 
 
 $(STATIC_LIB): $(OBJECTS)
 	ar rcs -o $@ $(program_CXX_OBJS) $(program_C_OBJS)
@@ -88,7 +90,7 @@ $(STATIC_LIB): $(OBJECTS)
 #	do				\
 #		mv $$cu_obj $$cu_obj.o; \
 #	done				#append a .o suffix for nvcc
-#	$(CXX) $(CPPFLAGS) -shared -o  $@ $(program_CXX_OBJS) $(program_C_OBJS) $(CUO_O_OBJECTS)
+#	$(CXX) $(CXXFLAGS) -shared -o  $@ $(program_CXX_OBJS) $(program_C_OBJS) $(CUO_O_OBJECTS)
 #	@ for cu_obj in $(CUO_O_OBJECTS); 	\
 #	do					\
 #		mv $$cu_obj $${cu_obj%.*};	\
