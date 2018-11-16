@@ -382,11 +382,7 @@ module_potentialDerivatives_totalGradient_SOA_CPU_GPU(type_t *grid_grad_x, type_
 	//
         //module_potentialDerivatives_totalGradient_SOA_GPU<<<grid, threads>>> (grid_grad_x, grid_grad_y, lens, frame, nhalos, nbgridcells_x);
         module_potentialDerivatives_totalGradient_SOA_GPU<<<grid, threads>>> (grid_grad_x, grid_grad_y, lens_gpu, frame, nhalos, dx, dy, nbgridcells_x, nbgridcells_y, istart, jstart);
-<<<<<<< HEAD
-        cudasafe(cudaGetLastError(), "module_potentialDerivatives_totalGradient_SOA_CPU_GPU");
-=======
         cudasafe(cudaGetLastError(), "module_potentialDerivative_totalGradient_SOA_CPU_GPU-1");
->>>>>>> develop
 	//
         cudaDeviceSynchronize();
         //@@printf("GPU kernel done...\n");
