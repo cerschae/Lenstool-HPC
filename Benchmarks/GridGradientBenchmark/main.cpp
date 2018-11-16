@@ -28,6 +28,7 @@
 #warning "GPU support enabled"
 #include "grid_gradient_GPU.cuh"
 #endif
+#include "grid_gradient_CPU.hpp"
 
 #ifdef __WITH_LENSTOOL
 #include "setup.hpp"
@@ -266,39 +267,39 @@ int main(int argc, char *argv[])
 	//
 
 #ifdef __WITH_LENSTOOL
-        std::cout << " CPU Test Lenstool    ... ";
-        struct point Grad;
-        double *grid_grad_x, *grid_grad_y;
-        grid_grad_x = (double *) malloc((int) (runmode.nbgridcells) * (runmode.nbgridcells) * sizeof(type_t));
-        grid_grad_y = (double *) malloc((int) (runmode.nbgridcells) * (runmode.nbgridcells) * sizeof(type_t));
-        double t_lt = -myseconds();
+	std::cout << " CPU Test Lenstool    ... ";
+	struct point Grad;
+	double *grid_grad_x, *grid_grad_y;
+	grid_grad_x = (double *) malloc((int) (runmode.nbgridcells) * (runmode.nbgridcells) * sizeof(type_t));
+	grid_grad_y = (double *) malloc((int) (runmode.nbgridcells) * (runmode.nbgridcells) * sizeof(type_t));
+	double t_lt = -myseconds();
 #pragma omp parallel for
-        for (int jj = 0; jj < runmode.nbgridcells; ++jj)
-                for (int ii = 0; ii < runmode.nbgridcells; ++ii)
-                {
-                        //  (index < grid_dim*grid_dim)
+	for (int jj = 0; jj < runmode.nbgridcells; ++jj)
+		for (int ii = 0; ii < runmode.nbgridcells; ++ii)
+		{
+			//  (index < grid_dim*grid_dim)
 
-                        int index = jj*runmode.nbgridcells + ii;
+			int index = jj*runmode.nbgridcells + ii;
 
-                        struct point image_point;
-                        image_point.x = frame.xmin + ii*dx;
-                        image_point.y = frame.ymin + jj*dy;
+			struct point image_point;
+			image_point.x = frame.xmin + ii*dx;
+			image_point.y = frame.ymin + jj*dy;
 #if 1
-                        G.nlens = runmode.n_tot_halos;
-                        Grad = e_grad(&image_point);
-                        grid_grad_x[index] = Grad.x;
-                        grid_grad_y[index] = Grad.y;
+			G.nlens = runmode.n_tot_halos;
+			Grad = e_grad(&image_point);
+			grid_grad_x[index] = Grad.x;
+			grid_grad_y[index] = Grad.y;
 
 #else
-                        for (int lens = 0; lens < runmode.n_tot_halos; ++lens)
-                        {
+			for (int lens = 0; lens < runmode.n_tot_halos; ++lens)
+			{
 
-                                struct point Grad = e_grad_pot(&image_point, lens);
-                                //printf("%f %f\n", Grad.x, Grad.y);
-                                //
-                                grid_grad_x[index] += Grad.x;
-                                grid_grad_y[index] += Grad.y;
-                        }
+				struct point Grad = e_grad_pot(&image_point, lens);
+				//printf("%f %f\n", Grad.x, Grad.y);
+				//
+				grid_grad_x[index] += Grad.x;
+				grid_grad_y[index] += Grad.y;
+			}
 #endif
 		}
 	t_lt += myseconds();
@@ -308,18 +309,18 @@ int main(int argc, char *argv[])
 	//
 
 	type_t* grid_gradient_x_cpu = (type_t *) malloc((int) (runmode.nbgridcells) * (runmode.nbgridcells) * sizeof(type_t));
-    type_t* grid_gradient_y_cpu = (type_t *) malloc((int) (runmode.nbgridcells) * (runmode.nbgridcells) * sizeof(type_t));
+	type_t* grid_gradient_y_cpu = (type_t *) malloc((int) (runmode.nbgridcells) * (runmode.nbgridcells) * sizeof(type_t));
 
 	memset(grid_gradient_x_cpu, 0, (runmode.nbgridcells) * (runmode.nbgridcells) * sizeof(type_t));
 	memset(grid_gradient_y_cpu, 0, (runmode.nbgridcells) * (runmode.nbgridcells) * sizeof(type_t));
-	
+
 	std::cout << " CPU Test lenstool_hpc... "; 
 	//
 	t_1 = -myseconds();
 	int Nstat = 1;
 	//for(int ii = 0; ii < Nstat; ++ii) {
-		gradient_grid_CPU(grid_gradient_x_cpu, grid_gradient_y_cpu, &frame, &lenses_SOA, runmode.n_tot_halos, runmode.nbgridcells);
-		//gradient_grid_CPU_print(grid_gradient_x_cpu, grid_gradient_y_cpu, &frame, &lenses_SOA, runmode.nhalos, grid_dim);
+	gradient_grid_CPU(grid_gradient_x_cpu, grid_gradient_y_cpu, &frame, &lenses_SOA, runmode.n_tot_halos, runmode.nbgridcells);
+	//gradient_grid_CPU_print(grid_gradient_x_cpu, grid_gradient_y_cpu, &frame, &lenses_SOA, runmode.nhalos, grid_dim);
 	//	}
 	t_1 += myseconds();
 	//
@@ -336,7 +337,7 @@ int main(int argc, char *argv[])
 	std::cout << " GPU Test... "; fflush(stdout);
 
 	type_t* grid_gradient_x_gpu = (type_t *) malloc((int) (runmode.nbgridcells) * (runmode.nbgridcells) * sizeof(type_t));
-       type_t* grid_gradient_y_gpu = (type_t *) malloc((int) (runmode.nbgridcells) * (runmode.nbgridcells) * sizeof(type_t));
+	type_t* grid_gradient_y_gpu = (type_t *) malloc((int) (runmode.nbgridcells) * (runmode.nbgridcells) * sizeof(type_t));
 	//
 	memset(grid_gradient_x_gpu, 0, (runmode.nbgridcells) * (runmode.nbgridcells) * sizeof(type_t));
 	memset(grid_gradient_y_gpu, 0, (runmode.nbgridcells) * (runmode.nbgridcells) * sizeof(type_t));
@@ -350,7 +351,7 @@ int main(int argc, char *argv[])
 	//t_2 += myseconds();
 	//Some Sort of cache or initial overhead problem... alway takes 0.2 sec the first time
 	//printf("%d %d\n", runmode.nhalos, runmode.n_tot_halos);
-	gradient_grid_GPU(grid_gradient_x_gpu, grid_gradient_y_gpu, &frame, &lenses_SOA, runmode.nhalos, runmode.nbgridcells);
+	//gradient_grid_GPU(grid_gradient_x_gpu, grid_gradient_y_gpu, &frame, &lenses_SOA, runmode.nhalos, runmode.nbgridcells);
 
 	t_2 = -myseconds();
 	//test();
@@ -364,16 +365,16 @@ int main(int argc, char *argv[])
 
 	std::cout << " Time  " << std::setprecision(15) << t_2 << std::endl;
 
-/*
-	std::cout << " gradient_grid_CPU Brute Force Benchmark " << std::endl;
-	std::cout << " Test 1: " << std::endl;
-	std::cout << " Point 1 : " << std::setprecision(5) << test_point1_1.x << " "<< test_point1_1.y <<  std::endl;
-	std::cout << " Gradient  " << std::setprecision(5) << grid_gradient_x_gpu[0] << " "<< grid_gradient_y[0] <<  std::endl;
-	std::cout << " Test 2: " << std::endl;
-	std::cout << " Point 2 : " << std::setprecision(5) << test_point2_2.x << " "<< test_point2_2.y <<  std::endl;
-	std::cout << " Gradient  " << std::setprecision(5) << grid_gradient_x_gpu[runmode.nbgridcells+1] << " "<< grid_gradient_y[runmode.nbgridcells+1] <<  std::endl;
-	std::cout << " Time  " << std::setprecision(15) << t_2 << std::endl;
-*/
+	/*
+	   std::cout << " gradient_grid_CPU Brute Force Benchmark " << std::endl;
+	   std::cout << " Test 1: " << std::endl;
+	   std::cout << " Point 1 : " << std::setprecision(5) << test_point1_1.x << " "<< test_point1_1.y <<  std::endl;
+	   std::cout << " Gradient  " << std::setprecision(5) << grid_gradient_x_gpu[0] << " "<< grid_gradient_y[0] <<  std::endl;
+	   std::cout << " Test 2: " << std::endl;
+	   std::cout << " Point 2 : " << std::setprecision(5) << test_point2_2.x << " "<< test_point2_2.y <<  std::endl;
+	   std::cout << " Gradient  " << std::setprecision(5) << grid_gradient_x_gpu[runmode.nbgridcells+1] << " "<< grid_gradient_y[runmode.nbgridcells+1] <<  std::endl;
+	   std::cout << " Time  " << std::setprecision(15) << t_2 << std::endl;
+	   */
 #endif
 	std::ofstream myfile;
 #ifdef __WITH_LENSTOOL 

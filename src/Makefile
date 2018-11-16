@@ -8,6 +8,13 @@ arch = intel
 prec = double
 all: precision compile
 
+#cd ../utils/
+#make
+
+utils:
+	make -C ../utils
+	sh ../utils/gpu.sh > ./gpusm.inc
+	
 
 precision:
 	echo "PRECISION := -D_double" > precision.inc   
@@ -19,10 +26,15 @@ precision:
 compile:
 	@make -f Makefile.$(arch)
 	if which nvcc > /dev/null; then \
+		make -C ../utils; \
+		sh ../utils/gpu.sh > ./gpusm.inc; \
 		echo "nvcc detected, compiling the GPU lib"; \
-                make --silent -f Makefile.GPU.$(arch); \
-        fi  
+                make -f Makefile.GPU.$(arch); \
+	fi  
 	
 
 clean:
+	make -C ../utils clean
 	make -f Makefile.$(arch) clean
+                
+#make --silent -f Makefile.GPU.$(arch); 

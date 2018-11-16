@@ -283,6 +283,7 @@ struct Potential_SOA
 	type_t* sigma; // sigma
 	type_t* dlsds; // dls/dos (for Kmapping purposes
 	int* SOA_index; //for bayes map purposes, it contains at the ith position the position in the SOA list of potential[i]
+	int* N_types;
 };
 
 

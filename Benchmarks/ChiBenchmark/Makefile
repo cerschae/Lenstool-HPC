@@ -39,16 +39,17 @@ program_INCLUDE_LIBS += $(CFITSIO_ROOT)
 program_INCLUDE_LIBS += $(GSL_ROOT)/lib/ 
 #
 # Compiler flags
-CPPFLAGS += $(foreach includedir,$(program_INCLUDE_DIRS),-I$(includedir))
-CPPFLAGS += $(foreach includelib,$(program_INCLUDE_LIBS),-L$(includelib))
-#CPPFLAGS += -D__WITH_LENSTOOL
-CPPFLAGS += -D__WITH_MPI
-CPPFLAGS += -D_double
-CPPFLAGS += -fPIC -qopenmp -xHost -g -O3 -std=c++0x -Wall -pedantic
-#CPPFLAGS += -qopenmp -march=core-avx2 -g -O3 -std=c++0x -Wall -pedantic
-#CPPFLAGS += -llenstoolhpc -qopenmp -xHost -g -O3 -std=c++0x -Wall -pedantic
-#CPPFLAGS += -llenstoolhpc -qopenmp -axMIC-AVX512,CORE-AVX2 -g -O3 -std=c++0x -Wall -pedantic
-#CPPFLAGS += -qopt-prefetch-distance=64,8 -qopt-streaming-cache-evict=0 -llenstoolhpc -qopenmp -xMIC-AVX512 -g -O3 -std=c++0x -Wall -pedantic
+CXXFLAGS += $(foreach includedir,$(program_INCLUDE_DIRS),-I$(includedir))
+CXXFLAGS += $(foreach includelib,$(program_INCLUDE_LIBS),-L$(includelib))
+CXXFLAGS += -D__WITH_LENSTOOL
+CXXFLAGS += -D__WITH_MPI
+CXXFLAGS += -D_double
+include ../../src/cpuflags.inc
+#CXXFLAGS += -fPIC -qopenmp -xHost -g -O3 -std=c++0x -Wall -pedantic
+#CXXFLAGS += -qopenmp -march=core-avx2 -g -O3 -std=c++0x -Wall -pedantic
+#CXXFLAGS += -llenstoolhpc -qopenmp -xHost -g -O3 -std=c++0x -Wall -pedantic
+#CXXFLAGS += -llenstoolhpc -qopenmp -axMIC-AVX512,CORE-AVX2 -g -O3 -std=c++0x -Wall -pedantic
+#CXXFLAGS += -qopt-prefetch-distance=64,8 -qopt-streaming-cache-evict=0 -llenstoolhpc -qopenmp -xMIC-AVX512 -g -O3 -std=c++0x -Wall -pedantic
 LDFLAGS := -llenstoolhpc -llenstool -llt -lgsl -lgslcblas -lm -lwcs -lcfitsio
 
 
@@ -62,7 +63,7 @@ debug: CXXFLAGS = -g -O0 -std=c++0x -Wall -pedantic -DDEBUG $(EXTRA_FLAGS)
 debug: $(PROGRAM_NAME)
 
 $(PROGRAM_NAME): $(OBJECTS) 
-	$(CXX) $(CPPFLAGS) -o $@ $(program_CXX_OBJS) $(program_C_OBJS) $(CUO_O_OBJECTS) $(LDFLAGS)
+	$(CXX) $(CXXFLAGS) -o $@ $(program_CXX_OBJS) $(program_C_OBJS) $(CUO_O_OBJECTS) $(LDFLAGS)
 
 clean:
 	@- $(RM) $(PROGRAM_NAME) $(OBJECTS) *~ *.o *.optrpt chi
