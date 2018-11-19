@@ -28,6 +28,7 @@
 #warning "GPU support enabled"
 #include "grid_gradient_GPU.cuh"
 #endif
+#include "grid_gradient_CPU.hpp"
 
 #ifdef __WITH_LENSTOOL
 #include "setup.hpp"

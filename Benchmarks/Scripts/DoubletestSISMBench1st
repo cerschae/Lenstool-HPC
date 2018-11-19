@@ -2,9 +2,10 @@
 echo "Starting Double test"
 
 set -x
-cd src/
+cd ../../src/
 make prec=double clean
 make prec=double
+cd -
 
 cd ../Benchmarks/GridGradientBenchmark
 make -f Makefile.intel clean

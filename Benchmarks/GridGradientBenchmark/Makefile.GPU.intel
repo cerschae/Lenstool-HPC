@@ -33,7 +33,7 @@ program_INCLUDE_LIBS += $(LENSTOOL_ROOT)/liblt
 program_INCLUDE_LIBS += $(LENSTOOLHPC_ROOT)/src
 program_INCLUDE_LIBS += $(GSL_ROOT)/lib
 program_INCLUDE_LIBS += $(WCSTOOL_ROOT)
-program_INCLUDE_LIBS += $(CUDAROOT)/lib64
+program_INCLUDE_LIBS += $(CUDA_ROOT)/lib64
 
 #
 #
@@ -89,7 +89,7 @@ CPU_OBJECTS = $(program_CXX_OBJS) $(program_C_OBJS)
 	$(CXX) $(CPPFLAGS) -o $@ $< $(CPPFLAGS)
 #
 $(PROGRAM_NAME):  $(CPU_OBJECTS)
-	icpc -o $@ $(program_CXX_OBJS) $(program_C_OBJS)  $(LDFLAGS) $(NVLDFLAGS)
+	$(CXX) -o $@ $(program_CXX_OBJS) $(program_C_OBJS)  $(LDFLAGS) $(NVLDFLAGS)
 
 
 #$(PROGRAM_NAME): $(CPU_OBJECTS) 

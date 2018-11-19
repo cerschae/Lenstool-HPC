@@ -6,9 +6,10 @@ cd ../Libs/lenstool-6.8.1/
 make
 cd ../../lenstool-hpc
 
-cd src/
+cd ../../src/
 make  clean
 make
+cd -
 
 #cd ../Benchmarks/GridGradient2Benchmark
 #cd ../Benchmarks/MappingBenchmark
