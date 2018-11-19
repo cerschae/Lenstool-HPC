@@ -43,6 +43,17 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "grid_gradient2_CPU.hpp"
 #include "grid_amplif_CPU.hpp"
 #include "module_writeFits.hpp"
+#include "delense_CPU.hpp"
+#include "allocation.hpp"
+
+#ifdef __WITH_MPI
+#include<mpi.h>
+#endif
+
+#ifdef _OPENMP
+#include<omp.h>
+#endif
+
 #ifdef __WITH_GPU
 #include "grid_gradient_GPU.cuh"
 #include "grid_map_ampli_GPU.cuh"
@@ -51,6 +62,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "grid_map_mass_GPU.cuh"
 #include "grid_map_dpl_GPU.cuh"
 #include "grid_gradient2_GPU.cuh"
+#include "allocation_GPU.cuh"
 //#include "gradient_GPU.cuh"
 #endif
 
@@ -196,80 +208,157 @@ int module_readCheckInput_readInput(int argc, char *argv[], std::string *outdir)
 int main(int argc, char *argv[])
 {
 
-	// Checks the terminal input parameters and if the mentioned folder exist.
-	// Otherwise it exits LENSTOOL.
-	char cwd[1024];
-	if (getcwd(cwd, sizeof(cwd)) != NULL)
-		fprintf(stdout, "Current working dir: %s\n", cwd);
+	int world_size = 1;
+	int world_rank = 0;
+#ifdef __WITH_MPI
+	MPI_Init(NULL, NULL);
+	MPI_Comm_size(MPI_COMM_WORLD, &world_size);
+	MPI_Comm_rank(MPI_COMM_WORLD, &world_rank);
+	char processor_name[MPI_MAX_PROCESSOR_NAME];
+	int name_len;
+	MPI_Get_processor_name(processor_name, &name_len);
+	MPI_Barrier(MPI_COMM_WORLD);
+	// Print off a hello world message
+#endif
+	int numthreads = 1;
+#ifdef _OPENMP
+#warning "using openmp"
+#pragma omp parallel
+	numthreads = omp_get_num_threads();
+#endif
 	//
-	std::string path;
-	module_readCheckInput_readInput(argc, argv, &path);
+	int verbose = (world_rank == 0);
 	//
+	if (verbose) printf("\nLenstool-HPC\n\n"); fflush(stdout);
+	//
+#ifdef __WITH_MPI
+	printf("Hello world from processor %s, rank %d out of %d processors and %d threads per rank\n", processor_name, world_rank, world_size, numthreads); fflush(stdout);
+	MPI_Barrier(MPI_COMM_WORLD);
+#endif
+	//
+	double wallclock = myseconds();
+	if (world_rank == 0) printf("Reading parameter file at time %f s... ", myseconds() - wallclock);
+	// Setting Up the problem
+	//===========================================================================================================
 
-	// Reading cosmology parameters from the parameter file
-	// 		Input: struct cosmologicalparameters cosmology, parameter file
-	// 		Output: Initialized cosmology struct
-	cosmo_param cosmology;  				// Cosmology struct to store the cosmology data from the file
-	std::string inputFile = argv[1];   		// Input file
+	// This module function reads the terminal input when calling LENSTOOL and checks that it is correct
+	// Otherwise it exits LENSTOOL
+	std::string path;
+	if (world_rank == 0) module_readCheckInput_readInput(argc, argv, &path);
+
+	// This module function reads the cosmology parameters from the parameter file
+	// Input: struct cosmologicalparameters cosmology, parameter file
+	// Output: Initialized cosmology struct
+	cosmo_param cosmology;  // Cosmology struct to store the cosmology data from the file
+	std::string inputFile = argv[1];   // Input file
 	module_readParameters_readCosmology(inputFile, cosmology);
-	//
-	// Reading the runmode paragraph and the number of sources, arclets, etc. in the parameter file.
+
+	// This module function reads the runmode paragraph and the number of sources, arclets, etc. in the parameter file.
 	// The runmode_param stores the information of what exactly the user wants to do with lenstool.
 	struct runmode_param runmode;
 	module_readParameters_readRunmode(inputFile, &runmode);
-	module_readParameters_debug_cosmology(runmode.debug, cosmology);
-	module_readParameters_debug_runmode(1, runmode);
-	//
-	// Variable Declaration
-	struct grid_param frame;
-	struct galaxy images[runmode.nimagestot];
-	struct galaxy sources[runmode.nsets];
-	struct Potential_SOA lenses_SOA_table[NTYPES];
-	struct Potential_SOA lenses_SOA;
-	struct cline_param cline;
-	struct potfile_param potfile[runmode.Nb_potfile];
-	struct potentialoptimization host_potentialoptimization[runmode.nhalos];
-	int nImagesSet[runmode.nsets]; 							// Contains the number of images in each set of images
-	//Bayesmap specific variables
-	type_t* bayespot;
-	int nparam, nvalues;
 
-	// Reading major potential Information for the .par file and minor potentials from the potfiles
-	module_readParameters_PotentialSOA_direct(inputFile, &lenses_SOA, runmode.nhalos, runmode.n_tot_halos, cosmology);
-	module_readParameters_debug_potential_SOA(0, lenses_SOA, runmode.nhalos);
-	module_readParameters_limit(inputFile, host_potentialoptimization, runmode.nhalos );
+	if (world_rank == 0)
+	{
+		module_readParameters_debug_cosmology(runmode.debug, cosmology);
+		module_readParameters_debug_runmode(runmode.debug, runmode);
+	}
+
+	//=== Declaring variables
+	struct grid_param frame;
+	struct galaxy images [runmode.nimagestot];
+	struct galaxy sources[runmode.nsets];
+	//struct Potential lenses[runmode.nhalos+runmode.npotfile-1];
+	struct Potential_SOA* lenses_SOA;
+	struct cline_param cline;
+	struct potfile_param potfile;
+	//struct Potential potfilepotentials[runmode.npotfile];
+	struct potentialoptimization host_potentialoptimization[runmode.nhalos];
+	int nImagesSet[runmode.nsets]; // Contains the number of images in each set of imagesnano
+
+	// This module function reads in the potential form and its parameters (e.g. NFW)
+	// Input: input file
+	// Output: Potentials and its parameters
+#ifdef __WITH_GPU
+	PotentialSOAAllocation_GPU(&lenses_SOA, runmode.nhalos);
+#else
+	PotentialSOAAllocation(&lenses_SOA, runmode.nhalos);
+#endif
+	module_readParameters_PotentialSOA_noalloc(inputFile, lenses_SOA, runmode.nhalos, runmode.n_tot_halos, cosmology);
+	//
+	//module_readParameters_debug_potential_SOA(0, lenses_SOA, runmode.nhalos);
+
+	// This module function reads in the potfiles parameters
+	// Input: input file
+	// Output: Potentials from potfiles and its parameters
 
 	if (runmode.potfile == 1 )
 	{
-		module_readParameters_readpotfiles_param(inputFile, potfile, cosmology);
-		module_readParameters_debug_potfileparam(0, &potfile[0]);
-		module_readParameters_debug_potfileparam(0, &potfile[1]);
-		module_readParameters_readpotfiles_SOA(&runmode, &cosmology,potfile,&lenses_SOA);
-		module_readParameters_debug_potential_SOA(1, lenses_SOA, runmode.n_tot_halos);
+		module_readParameters_readpotfiles_param (inputFile, &potfile, cosmology);
+		module_readParameters_debug_potfileparam (runmode.debug, &potfile);
+		module_readParameters_readpotfiles_SOA   (&runmode , &cosmology, &potfile, lenses_SOA);
+		//module_readParameters_debug_potential_SOA(runmode.debug, *lenses_SOA, runmode.n_tot_halos);
 
 	}
-	//Updating cosmological calculation of the potential
-	module_readParameters_lens_dslds_calculation(&runmode,&cosmology,&lenses_SOA);
 
-	//Reading in image information and calculating cosmological distance information
-	if (runmode.image == 1 or runmode.inverse == 1 or runmode.time > 0){
+	// This module function reads in the grid form and its parameters
+	// Input: input file
+	// Output: grid and its parameters
 
+	module_readParameters_Grid(inputFile, &frame);
+
+	if (runmode.image == 1 or runmode.inverse == 1 or runmode.time > 0)
+	{
+		printf("Initialization of the images..."); fflush(stdout);
 		// This module function reads in the strong lensing images
 		module_readParameters_readImages(&runmode, images, nImagesSet);
 		//runmode.nsets = runmode.nimagestot;
-		for(int i = 0; i < runmode.nimagestot; ++i){
-
-			images[i].dls = module_cosmodistances_objectObject(lenses_SOA.z[0], images[i].redshift, cosmology);
+		for(int i = 0; i < runmode.nimagestot; ++i)
+		{
+			images[i].dls = module_cosmodistances_objectObject(lenses_SOA->z[0], images[i].redshift, cosmology);
 			images[i].dos = module_cosmodistances_observerObject(images[i].redshift, cosmology);
-			images[i].dr = module_cosmodistances_lensSourceToObserverSource(lenses_SOA.z[0], images[i].redshift, cosmology);
-
+			images[i].dr  = module_cosmodistances_lensSourceToObserverSource(lenses_SOA->z[0], images[i].redshift, cosmology);
 		}
-		module_readParameters_debug_image(0, images, nImagesSet,runmode.nsets);
+		printf("end.\n"); fflush(stdout);
+		if (verbose) module_readParameters_debug_image(runmode.debug, images, nImagesSet, runmode.nsets);
 
 	}
+	printf("done.\n");fflush(stdout);
+	/*
+	if (runmode.inverse == 1){
 
-	// Reading in the grid type and its parameters
-	module_readParameters_Grid(inputFile, &frame);
+		// This module function reads in the potential optimisation limits
+		module_readParameters_limit(inputFile,host_potentialoptimization,runmode.nhalos);
+		module_readParameters_debug_limit(runmode.debug, host_potentialoptimization[0]);
+	}
+	*/
+	if (runmode.source == 1)
+	{
+		printf("Initialization of the sources..."); fflush(stdout);
+		//Initialisation to default values.(Setting sources to z = 1.5 default value)
+		for(int i = 0; i < runmode.nsets; ++i)
+		{
+			sources[i].shape.a = sources[i].shape.b = sources[i].shape.theta = (type_t) 0.;
+			sources[i].redshift = 1.5;
+		}
+		// This module function reads in the strong lensing sources
+		module_readParameters_readSources(&runmode, sources);
+		//Calculating cosmoratios
+		for(int i = 0; i < runmode.nsets; ++i)
+		{
+			sources[i].dls = module_cosmodistances_objectObject(lenses_SOA->z[0], sources[i].redshift, cosmology);
+			sources[i].dos = module_cosmodistances_observerObject(sources[i].redshift, cosmology);
+			sources[i].dr = module_cosmodistances_lensSourceToObserverSource(lenses_SOA->z[0], sources[i].redshift, cosmology);
+		}
+		module_readParameters_debug_source(runmode.debug, sources, runmode.nsets);
+		printf("end.\n"); fflush(stdout);
+	}
+	//
+#ifdef __WITH_MPI
+	MPI_Barrier(MPI_COMM_WORLD);
+#endif
+	//
+	//
 	//
 	std::cout << "--------------------------" << std::endl << std::endl; fflush(stdout);
 
@@ -392,7 +481,72 @@ int main(int argc, char *argv[])
 	//This is the lenstool-HPC image computation area.
 	if (runmode.image == 1){
 		galaxy predicted_images[runmode.nimagestot*MAXIMPERSOURCE];
-		//predicting_images_bruteforce_barycentersource(&predicted_images, &runmode, &lenses_SOA, &frame, nImagesSet, images);
+		point predicted_images_pos[runmode.nsets][MAXIMPERSOURCE];
+
+		double *grid_gradient_x, *grid_gradient_y;
+		int grid_size     = runmode.nbgridcells;
+		int index             = 0;
+        grid_gradient_x   = (double *)malloc((int) grid_size*grid_size*sizeof(double));
+        grid_gradient_y   = (double *)malloc((int) grid_size*grid_size*sizeof(double));
+
+		gradient_grid_CPU(grid_gradient_x, grid_gradient_y, &frame, lenses_SOA, runmode.nhalos, runmode.nbgridcells);
+
+		int numsets = 0;
+		//
+		for( int  source_id = 0; source_id < runmode.nsets; source_id ++)
+			numsets += nImagesSet[source_id];
+		//
+		for( int  source_id = 0; source_id < runmode.nsets; source_id ++)
+		{
+			// number of images in the image plane for the specific image (1,3,5...)
+			unsigned short int nimages = nImagesSet[source_id];
+			//@@printf("@@ source_id = %d, nimages = %d\n",  source_id, nimages_strongLensing[source_id]);
+			//Init sources
+			sources[source_id].center.x = sources[source_id].center.y = 0.;
+			//____________________________ image (constrains) loop ________________________________
+			for(unsigned short int image_id = 0; image_id < nimages; image_id++)
+			{
+				//
+				struct galaxy sources_temp;
+				struct point Grad = module_potentialDerivatives_totalGradient_SOA(&images[index + image_id].center, lenses_SOA, runmode.nhalos);
+				//
+				// find the position of the constrain in the source plane
+				sources_temp.center.x = images[index + image_id].center.x - images[index + image_id].dr*Grad.x;
+				sources_temp.center.y = images[index + image_id].center.y - images[index + image_id].dr*Grad.y;
+
+				//________ Adding up for barycenter comp _________
+				sources[source_id].center.x += sources_temp.center.x;
+				sources[source_id].center.y += sources_temp.center.y;
+				//time += myseconds();
+				sources[source_id].redshift = 0.;
+				sources[source_id].shape.a = sources[source_id].shape.b = sources[source_id].shape.theta = (type_t) 0.;
+				sources[source_id].mag = 0.;
+				//
+			}
+			//________ Dividing by nimages for final barycenter result _________
+			sources[source_id].center.x /= nimages;
+			sources[source_id].center.y /= nimages;
+
+			sources[source_id].redshift = images[index].redshift;
+			sources[source_id].dr       = images[index].dr;
+			sources[source_id].dls      = images[index].dls;
+			sources[source_id].dos      = images[index].dos;
+			index += nimages;
+		}
+
+		int locimagesfound[runmode.nsets];
+		int numimg    = 0;
+		delense_barycenter(&predicted_images_pos[0][0], &locimagesfound[0], &numimg, &runmode, lenses_SOA, &frame, nImagesSet, sources, grid_gradient_x, grid_gradient_y);
+
+		std::cout << "Images:" << std::endl;
+		for(int  source_id = 0; source_id < runmode.nsets; source_id){
+			std::cout << "Sources:" << source_id << " " << std::endl;
+			unsigned short int nimages = nImagesSet[source_id];
+			for(unsigned short int image_id = 0; image_id < nimages; image_id++){
+				std::cout << "Images:" << predicted_images_pos[nimages][image_id].x << " " << predicted_images_pos[nimages][image_id].y << " " <<  std::endl;
+			}
+		}
+
 
 	}
 
@@ -420,7 +574,7 @@ int main(int argc, char *argv[])
 			map_gpu_func = select_map_mass_function(&runmode);
 
 			//calculating map using defined function
-			map_grid_mass_GPU(map_gpu_func,mass_GPU,&cosmology, &frame, &lenses_SOA, runmode.n_tot_halos, runmode.mass_gridcells ,runmode.mass, runmode.z_mass, runmode.z_mass_s);
+			map_grid_mass_GPU(map_gpu_func,mass_GPU,&cosmology, &frame, lenses_SOA, runmode.n_tot_halos, runmode.mass_gridcells ,runmode.mass, runmode.z_mass, runmode.z_mass_s);
 
 			//writing
 			module_writeFits(path,runmode.mass_name,mass_GPU,&runmode,runmode.mass_gridcells,&frame, runmode.ref_ra, runmode.ref_dec );
@@ -447,7 +601,7 @@ int main(int argc, char *argv[])
 			map_gpu_func = select_map_ampli_function(&runmode);
 
 			//calculating map using defined function
-			map_grid_ampli_GPU(map_gpu_func,ampli_GPU,&cosmology, &frame, &lenses_SOA, runmode.n_tot_halos, runmode.amplif_gridcells ,runmode.amplif, runmode.z_amplif);
+			map_grid_ampli_GPU(map_gpu_func,ampli_GPU,&cosmology, &frame, lenses_SOA, runmode.n_tot_halos, runmode.amplif_gridcells ,runmode.amplif, runmode.z_amplif);
 
 			//writing
 			//std::cerr << runmode.amplif_name << std::endl;
@@ -476,7 +630,7 @@ int main(int argc, char *argv[])
 			map_gpu_func = select_map_shear_function(&runmode);
 
 			//calculating map using defined function
-			map_grid_shear_GPU(map_gpu_func,shear_GPU,&cosmology, &frame, &lenses_SOA, runmode.n_tot_halos, runmode.shear_gridcells ,runmode.shear, runmode.z_shear);
+			map_grid_shear_GPU(map_gpu_func,shear_GPU,&cosmology, &frame, lenses_SOA, runmode.n_tot_halos, runmode.shear_gridcells ,runmode.shear, runmode.z_shear);
 
 			//writing
 			//std::cerr << runmode.amplif_name << std::endl;
@@ -507,7 +661,7 @@ int main(int argc, char *argv[])
 			//map_gpu_func = select_map_shear_function(&runmode);
 
 			//calculating map using defined function
-			map_grid_dpl_GPU(map_gpu_func, dpl_x, dpl_y, &cosmology, &frame, &lenses_SOA, runmode.n_tot_halos, runmode.dpl_gridcells ,runmode.dpl, runmode.z_dpl);
+			map_grid_dpl_GPU(map_gpu_func, dpl_x, dpl_y, &cosmology, &frame, lenses_SOA, runmode.n_tot_halos, runmode.dpl_gridcells ,runmode.dpl, runmode.z_dpl);
 
 			std::string file_x, file_y;
 			file_x = runmode.dpl_name1;
@@ -542,7 +696,7 @@ int main(int argc, char *argv[])
 			map_pot_function = select_map_potential_function(&runmode);
 
 			//calculating map using defined function
-			map_grid_potential_GPU(map_pot_function, pot_GPU, &cosmology, &frame, &lenses_SOA, runmode.n_tot_halos, runmode.pot_gridcells ,runmode.potential, runmode.z_pot);
+			map_grid_potential_GPU(map_pot_function, pot_GPU, &cosmology, &frame, lenses_SOA, runmode.n_tot_halos, runmode.pot_gridcells ,runmode.potential, runmode.z_pot);
 
 			std::string file;
 			file = runmode.pot_name;

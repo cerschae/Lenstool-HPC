@@ -3135,12 +3135,12 @@ void module_readParameters_debug_potential(int DEBUG, Potential lenses[], int nh
 
 }
 
-void module_readParameters_debug_potential_SOA(int DEBUG, Potential_SOA lenses, int nhalos)
+void module_readParameters_debug_potential_SOA(int DEBUG, Potential_SOA* lenses, int nhalos)
 {
 	if (DEBUG == 1)  // If we are in debug mode
 	{
 		for ( int i = 0; i < nhalos; ++i){
-			printf("Potential[%d]: x = %f, y = %f, b0 = %f, vdisp = %f, type = %d, \n \t ellipticity = %f, ellipticity_pot = %f, ellipticity angle (radians) = %f, rcore = %f, rcut = %f,\n \t z = %f\n, angle cos %f, sin %f \n", i,lenses.position_x[i], lenses.position_y[i], lenses.b0[i],lenses.vdisp[i], lenses.type[i], lenses.ellipticity[i], lenses.ellipticity_potential[i], lenses.ellipticity_angle[i], lenses.rcore[i], lenses.rcut[i], lenses.z[i], lenses.anglecos[i], lenses.anglesin[i]);
+			printf("Potential[%d]: x = %f, y = %f, b0 = %f, vdisp = %f, type = %d, \n \t ellipticity = %f, ellipticity_pot = %f, ellipticity angle (radians) = %f, rcore = %f, rcut = %f,\n \t z = %f\n, angle cos %f, sin %f \n", i,lenses->position_x[i], lenses->position_y[i], lenses->b0[i],lenses->vdisp[i], lenses->type[i], lenses->ellipticity[i], lenses->ellipticity_potential[i], lenses->ellipticity_angle[i], lenses->rcore[i], lenses->rcut[i], lenses->z[i], lenses->anglecos[i], lenses->anglesin[i]);
 		}
 	}
 

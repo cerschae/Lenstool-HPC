@@ -87,7 +87,7 @@ void module_readParameters_debug_runmode(int DEBUG, runmode_param runmode);
 void module_readParameters_debug_image(int DEBUG, galaxy image[],int nImagesSet[],int nsets);
 void module_readParameters_debug_source(int DEBUG, galaxy source[], int nsets);
 void module_readParameters_debug_potential(int DEBUG, Potential potential[], int nhalos);
-void module_readParameters_debug_potential_SOA(int DEBUG, Potential_SOA lenses, int nhalos);
+void module_readParameters_debug_potential_SOA(int DEBUG, Potential_SOA* lenses, int nhalos);
 void module_readParameters_debug_potfileparam(int DEBUG, potfile_param *potfile);
 void module_readParameters_debug_criticcaustic(int DEBUG, cline_param cline);
 void module_readParameters_debug_limit(int DEBUG, struct potentialoptimization host_potentialoptimization);
