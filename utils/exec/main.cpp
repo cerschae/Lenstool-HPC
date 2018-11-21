@@ -56,6 +56,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endif
 
 #ifdef __WITH_GPU
+#include "image_prediction_GPU.cuh"
 #include "grid_gradient_GPU.cuh"
 #include "grid_map_ampli_GPU.cuh"
 #include "grid_map_pot_GPU.cuh"
@@ -486,78 +487,9 @@ int main(int argc, char *argv[])
 	//This is the lenstool-HPC image computation area.
 	if (runmode.image == 1){
 		galaxy predicted_images[runmode.nsets*MAXIMPERSOURCE];
-		point predicted_images_pos[runmode.nsets][MAXIMPERSOURCE];
 
-		double *grid_gradient_x, *grid_gradient_y;
-		int grid_size     = runmode.nbgridcells;
-		int index             = 0;
-        grid_gradient_x   = (double *)malloc((int) grid_size*grid_size*sizeof(double));
-        grid_gradient_y   = (double *)malloc((int) grid_size*grid_size*sizeof(double));
+		image_prediction(predicted_images, &runmode, lenses_SOA, &frame, nImagesSet, images);
 
-		gradient_grid_CPU(grid_gradient_x, grid_gradient_y, &frame, lenses_SOA, runmode.nhalos, runmode.nbgridcells);
-
-		int numsets = 0;
-		//
-		for( int  source_id = 0; source_id < runmode.nsets; source_id ++)
-			numsets += nImagesSet[source_id];
-		//
-		for( int  source_id = 0; source_id < runmode.nsets; source_id ++)
-		{
-			// number of images in the image plane for the specific image (1,3,5...)
-			unsigned short int nimages = nImagesSet[source_id];
-			//@@printf("@@ source_id = %d, nimages = %d\n",  source_id, nimages_strongLensing[source_id]);
-			//Init sources
-			sources[source_id].center.x = sources[source_id].center.y = 0.;
-			//____________________________ image (constrains) loop ________________________________
-			for(unsigned short int image_id = 0; image_id < nimages; image_id++)
-			{
-				//
-				struct galaxy sources_temp;
-				struct point Grad = module_potentialDerivatives_totalGradient_SOA(&images[index + image_id].center, lenses_SOA, runmode.nhalos);
-				//
-				// find the position of the constrain in the source plane
-				sources_temp.center.x = images[index + image_id].center.x - images[index + image_id].dr*Grad.x;
-				sources_temp.center.y = images[index + image_id].center.y - images[index + image_id].dr*Grad.y;
-
-				//________ Adding up for barycenter comp _________
-				sources[source_id].center.x += sources_temp.center.x;
-				sources[source_id].center.y += sources_temp.center.y;
-				//time += myseconds();
-				sources[source_id].redshift = 0.;
-				sources[source_id].shape.a = sources[source_id].shape.b = sources[source_id].shape.theta = (type_t) 0.;
-				sources[source_id].mag = 0.;
-				//
-			}
-			//________ Dividing by nimages for final barycenter result _________
-			sources[source_id].center.x /= nimages;
-			sources[source_id].center.y /= nimages;
-
-			sources[source_id].redshift = images[index].redshift;
-			sources[source_id].dr       = images[index].dr;
-			sources[source_id].dls      = images[index].dls;
-			sources[source_id].dos      = images[index].dos;
-			index += nimages;
-		}
-
-		int locimagesfound[runmode.nsets];
-		int numimg    = 0;
-		delense_barycenter(&predicted_images_pos[0][0], &locimagesfound[0], &numimg, &runmode, lenses_SOA, &frame, nImagesSet, sources, grid_gradient_x, grid_gradient_y);
-
-
-		std::cout << "Images:" << std::endl;
-		for(int  source_id = 0; source_id < runmode.nsets; source_id++){
-			std::cout << "Sources:" << source_id << ": " << sources[source_id].center.x << " " << sources[source_id].center.y << std::endl;
-			unsigned short int nimages = nImagesSet[source_id];
-			for(unsigned short int image_id = 0; image_id < nimages; image_id++){
-				std::cout << "Images:" << predicted_images_pos[source_id][image_id].x << " " << predicted_images_pos[source_id][image_id].y << " " <<  std::endl;
-				predicted_images[source_id * MAXIMPERSOURCE + image_id].center.x = predicted_images_pos[source_id][image_id].x;
-				predicted_images[source_id * MAXIMPERSOURCE + image_id].center.y = predicted_images_pos[source_id][image_id].y;
-				predicted_images[source_id * MAXIMPERSOURCE + image_id].redshift = sources[source_id].redshift;
-				predicted_images[source_id * MAXIMPERSOURCE + image_id].shape.a = predicted_images[source_id * MAXIMPERSOURCE + image_id].shape.b = predicted_images[source_id * MAXIMPERSOURCE + image_id].shape.theta = (type_t) 0.;
-				predicted_images[source_id * MAXIMPERSOURCE + image_id].mag = 0.;
-
-			}
-		}
 		write_output_images(path, &runmode, nImagesSet, predicted_images);
 
 
