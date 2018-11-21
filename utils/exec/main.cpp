@@ -486,12 +486,14 @@ int main(int argc, char *argv[])
 
 	//This is the lenstool-HPC image computation area.
 	if (runmode.image == 1){
+
 		galaxy predicted_images[runmode.nsets*MAXIMPERSOURCE];
 
+		//returns predicted images for every constraint (images) given
 		image_prediction(predicted_images, &runmode, lenses_SOA, &frame, nImagesSet, images);
 
+		//writes it the result into .txt file
 		write_output_images(path, &runmode, nImagesSet, predicted_images);
-
 
 	}
 
