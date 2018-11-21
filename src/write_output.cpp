@@ -22,6 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 /// Include
 ///==========================================================================================================
 #include <cstring>
+#include <iostream>
 #include <fstream>
 #include <stdlib.h>
 #include <stdio.h>
@@ -69,15 +70,17 @@ void write_output_config(std::string infile, char* path){
  * @param images images
  */
 
-void write_output_images(char* path, const struct runmode_param *runmode, int nimages[], galaxy images[] ){
-	std::string line1, input_file(path);
-	input_file.append("/predicted_images.txt");
-	std::ofstream OUT(input_file.c_str());  // Output stream
+void write_output_images(std::string path, const struct runmode_param *runmode, int nimages[], galaxy images[] ){
+	std::string line1;
+	std::string file;
+	file = path;
+	file.append("/predicted_images.txt");
+	std::ofstream OUT(file);  // Output stream
 	int index =0;
     if ( OUT ){
 
 		OUT << "#Images of sources lensed unto the lens plane " << std::endl;
-		OUT << "#Corresponding Source, Center_x, Center_y, Shape_a, Shape_b, Shape_ellipticity, Redshift" << std::endl;
+		OUT << "#Source, Center_x, Center_y, Shape_a, Shape_b, Shape_ellipticity, Redshift" << std::endl;
 		OUT << "#[],\t[arcsec],\t[arcsec],\t[arcsec],\t[arcsec],\t[rad],\t[]" << std::endl;
 		OUT << std::setprecision(7);
 		for(int i=0; i < runmode->nsets; i++){

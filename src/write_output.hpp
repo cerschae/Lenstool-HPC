@@ -46,6 +46,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // Function declarations
 //===========================================================================================================
 void write_output_config(std::string infile, char* path);
-void write_output_images(char* path, const struct runmode_param *runmode, int nimages[], galaxy images[] );
+void write_output_images(std::string  path, const struct runmode_param *runmode, int nimages[], galaxy images[] );
 
 #endif

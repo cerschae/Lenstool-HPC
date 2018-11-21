@@ -43,6 +43,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "grid_gradient2_CPU.hpp"
 #include "grid_amplif_CPU.hpp"
 #include "module_writeFits.hpp"
+#include "allocation.hpp"
+
 #ifdef __WITH_GPU
 #include "grid_gradient_GPU.cuh"
 #include "grid_map_ampli_GPU.cuh"
@@ -51,6 +53,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "grid_map_dpl_GPU.cuh"
 #include "grid_map_mass_GPU.cuh"
 #include "grid_gradient2_GPU.cuh"
+#include "allocation_GPU.cuh"
 //#include "gradient_GPU.cuh"
 #endif
 
@@ -221,22 +224,20 @@ int main(int argc, char *argv[])
 	// The runmode_param stores the information of what exactly the user wants to do with lenstool.
 	struct runmode_param runmode;
 	module_readParameters_readRunmode(inputFile, &runmode);
-	module_readParameters_debug_cosmology(runmode.debug, cosmology);
+	module_readParameters_debug_cosmology(1, cosmology);
 	module_readParameters_debug_runmode(1, runmode);
 	//
 	//=== Declaring variables
-	//
 	struct grid_param frame;
-	struct galaxy images[runmode.nimagestot];
+	struct galaxy images [runmode.nimagestot];
 	struct galaxy sources[runmode.nsets];
-	//struct Potential lenses[runmode.n_tot_halos];
-	struct Potential_SOA lenses_SOA_table[NTYPES];
-	struct Potential_SOA lenses_SOA;
+	//struct Potential lenses[runmode.nhalos+runmode.npotfile-1];
+	struct Potential_SOA* lenses_SOA;
 	struct cline_param cline;
 	struct potfile_param potfile[runmode.Nb_potfile];
 	//struct Potential potfilepotentials[runmode.npotfile];
 	struct potentialoptimization host_potentialoptimization[runmode.nhalos];
-	int nImagesSet[runmode.nsets]; // Contains the number of images in each set of images
+	int nImagesSet[runmode.nsets]; // Contains the number of images in each set of imagesnano
 	//Bayesmap specific variables
 	type_t* bayespot;
 	int nparam, nvalues;
@@ -244,26 +245,32 @@ int main(int argc, char *argv[])
 	// This module function reads in the potential form and its parameters (e.g. NFW)
 	// Input: input file
 	// Output: Potentials and its parameters
-
-	module_readParameters_PotentialSOA_direct(inputFile, &lenses_SOA, runmode.nhalos, runmode.n_tot_halos, cosmology);
+#ifdef __WITH_GPU
+	PotentialSOAAllocation_GPU(&lenses_SOA, runmode.n_tot_halos);
+#else
+	PotentialSOAAllocation(&lenses_SOA, runmode.n_tot_halos);
+#endif
+	module_readParameters_PotentialSOA_noalloc(inputFile, lenses_SOA, runmode.nhalos, runmode.n_tot_halos, cosmology);
+	//
 	module_readParameters_debug_potential_SOA(1, lenses_SOA, runmode.nhalos);
 	module_readParameters_limit(inputFile, host_potentialoptimization, runmode.nhalos );
-#if 0
-	for(int ii = 0; ii <runmode.nhalos ; ii++){
-		module_readParameters_debug_limit(1, host_potentialoptimization[ii]);
-	}
-#endif
+
+	// This module function reads in the potfiles parameters
+	// Input: input file
+	// Output: Potentials from potfiles and its parameters
+
 	if (runmode.potfile == 1 )
 	{
-		module_readParameters_readpotfiles_param(inputFile, potfile, cosmology);
-		module_readParameters_debug_potfileparam(1, &potfile[0]);
-		module_readParameters_debug_potfileparam(1, &potfile[1]);
-		module_readParameters_readpotfiles_SOA(&runmode, &cosmology,potfile,&lenses_SOA);
-		module_readParameters_debug_potential_SOA(0, lenses_SOA, runmode.n_tot_halos);
+		module_readParameters_readpotfiles_param (inputFile, potfile, cosmology);
+		for(int ii = 0; ii < runmode.Nb_potfile; ii++){
+		module_readParameters_debug_potfileparam (1, &potfile[ii]);
+		}
+		module_readParameters_readpotfiles_SOA   (&runmode , &cosmology, potfile, lenses_SOA);
+		module_readParameters_debug_potential_SOA(1, lenses_SOA, runmode.n_tot_halos);
 
 	}
 
-	module_readParameters_lens_dslds_calculation(&runmode,&cosmology,&lenses_SOA);
+	module_readParameters_lens_dslds_calculation(&runmode,&cosmology,lenses_SOA);
 
 	// This module function reads in the grid form and its parameters
 	// Input: input file
@@ -276,6 +283,7 @@ int main(int argc, char *argv[])
 	//
 	double t_lt, t_lt_total;
 	int turn = 0;
+#if 1
 #ifdef __WITH_LENSTOOL
 	double **array; // contains the bayes.dat data
 	int nParam;
@@ -434,7 +442,7 @@ int main(int argc, char *argv[])
 				std::cout << " GPU launching for map mass " << ii << std::endl;
 				t_2 = -myseconds();
 				////set bayes potential
-				module_readParameters_setbayesmapmodels(&runmode, &cosmology, host_potentialoptimization, potfile, &lenses_SOA,bayespot,nparam, ii);
+				module_readParameters_setbayesmapmodels(&runmode, &cosmology, host_potentialoptimization, potfile, lenses_SOA,bayespot,nparam, ii);
 				//std::cerr << runmode.n_tot_halos << std::endl;
 				module_readParameters_debug_potential_SOA(0, lenses_SOA, runmode.n_tot_halos);
 				//Init
@@ -445,7 +453,7 @@ int main(int argc, char *argv[])
 				map_gpu_func = select_map_mass_function(&runmode);
 
 				//calculating map using defined function
-				map_grid_mass_GPU(map_gpu_func,mass_GPU,&cosmology, &frame, &lenses_SOA, runmode.n_tot_halos, runmode.mass_gridcells ,runmode.mass, runmode.z_mass, runmode.z_mass_s);
+				map_grid_mass_GPU(map_gpu_func,mass_GPU,&cosmology, &frame, lenses_SOA, runmode.n_tot_halos, runmode.mass_gridcells ,runmode.mass, runmode.z_mass, runmode.z_mass_s);
 
 				std::cerr <<" para : " << runmode.z_mass << " " << runmode.z_mass_s << std::endl;
 				//writing
@@ -466,7 +474,8 @@ int main(int argc, char *argv[])
 				std::cout << " GPU launching for map amplif " << ii << std::endl;
 				t_2 = -myseconds();
 				////set bayes potential
-				module_readParameters_setbayesmapmodels(&runmode, &cosmology, host_potentialoptimization, potfile, &lenses_SOA,bayespot,nparam, ii);
+#if 1
+				module_readParameters_setbayesmapmodels(&runmode, &cosmology, host_potentialoptimization, potfile, lenses_SOA,bayespot,nparam, ii);
 				module_readParameters_debug_potential_SOA(0, lenses_SOA, runmode.n_tot_halos);
 				//Init
 				memset(ampli_GPU, 0, (runmode.amplif_gridcells) * (runmode.amplif_gridcells) * sizeof(type_t));
@@ -476,14 +485,15 @@ int main(int argc, char *argv[])
 				map_gpu_func = select_map_ampli_function(&runmode);
 
 				//calculating map using defined function
-				map_grid_ampli_GPU(map_gpu_func,ampli_GPU,&cosmology, &frame, &lenses_SOA, runmode.n_tot_halos, runmode.amplif_gridcells ,runmode.amplif, runmode.z_amplif);
+				map_grid_ampli_GPU(map_gpu_func,ampli_GPU,&cosmology, &frame, lenses_SOA, runmode.n_tot_halos, runmode.amplif_gridcells ,runmode.amplif, runmode.z_amplif);
 
 				//writing
 				//std::cerr << runmode.amplif_name << std::endl;
 				module_writeFits(path,runmode.amplif_name,ii,ampli_GPU,&runmode,runmode.amplif_gridcells,&frame, runmode.ref_ra, runmode.ref_dec );
+#endif
 				t_2 += myseconds();
 				std::cout << " Time  " << std::setprecision(15) << t_2 << std::endl;
-				//std::cerr << "**" << ampli_GPU[0] << std::endl;
+				std::cerr << "**" << ampli_GPU[0] << std::endl;
 			}
 			//std::cerr << "**" << ampli_GPU[0] << std::endl;
 			free(ampli_GPU);
@@ -496,7 +506,7 @@ int main(int argc, char *argv[])
 				std::cout << " GPU launching for map shear " << ii << std::endl;
 				t_2 = -myseconds();
 				////set bayes potential
-				module_readParameters_setbayesmapmodels(&runmode, &cosmology, host_potentialoptimization, potfile, &lenses_SOA,bayespot,nparam, ii);
+				module_readParameters_setbayesmapmodels(&runmode, &cosmology, host_potentialoptimization, potfile, lenses_SOA,bayespot,nparam, ii);
 				module_readParameters_debug_potential_SOA(0, lenses_SOA, runmode.n_tot_halos);
 				//Init
 				memset(shear_GPU, 0, (runmode.shear_gridcells) * (runmode.shear_gridcells) * sizeof(type_t));
@@ -506,7 +516,7 @@ int main(int argc, char *argv[])
 				map_gpu_func = select_map_shear_function(&runmode);
 
 				//calculating map using defined function
-				map_grid_shear_GPU(map_gpu_func,shear_GPU,&cosmology, &frame, &lenses_SOA, runmode.n_tot_halos, runmode.shear_gridcells ,runmode.shear, runmode.z_shear);
+				map_grid_shear_GPU(map_gpu_func,shear_GPU,&cosmology, &frame, lenses_SOA, runmode.n_tot_halos, runmode.shear_gridcells ,runmode.shear, runmode.z_shear);
 
 				//writing
 				module_writeFits(path,runmode.shear_name,ii,shear_GPU,&runmode,runmode.shear_gridcells,&frame, runmode.ref_ra, runmode.ref_dec );
@@ -526,7 +536,7 @@ int main(int argc, char *argv[])
 				std::cout << " GPU launching for map dpl " << ii << std::endl;
 				t_2 = -myseconds();
 				////set bayes potential
-				module_readParameters_setbayesmapmodels(&runmode, &cosmology, host_potentialoptimization, potfile, &lenses_SOA,bayespot,nparam, ii);
+				module_readParameters_setbayesmapmodels(&runmode, &cosmology, host_potentialoptimization, potfile, lenses_SOA,bayespot,nparam, ii);
 				module_readParameters_debug_potential_SOA(0, lenses_SOA, runmode.n_tot_halos);
 				//Init
 				memset(dpl_x, 0, (runmode.dpl_gridcells) * (runmode.dpl_gridcells) * sizeof(type_t));
@@ -537,7 +547,7 @@ int main(int argc, char *argv[])
 				//map_gpu_func = select_map_dpl_function(&runmode);
 
 				//calculating map using defined function
-				map_grid_dpl_GPU(map_gpu_func, dpl_x, dpl_y, &cosmology, &frame, &lenses_SOA, runmode.n_tot_halos, runmode.dpl_gridcells ,runmode.dpl, runmode.z_dpl);
+				map_grid_dpl_GPU(map_gpu_func, dpl_x, dpl_y, &cosmology, &frame, lenses_SOA, runmode.n_tot_halos, runmode.dpl_gridcells ,runmode.dpl, runmode.z_dpl);
 
 				std::string file_x, file_y;
 				file_x = runmode.dpl_name1;
@@ -565,7 +575,7 @@ int main(int argc, char *argv[])
 				std::cout << " GPU launching for map potential " << ii << std::endl;
 				t_2 = -myseconds();
 				////set bayes potential
-				module_readParameters_setbayesmapmodels(&runmode, &cosmology, host_potentialoptimization, potfile, &lenses_SOA,bayespot,nparam, ii);
+				module_readParameters_setbayesmapmodels(&runmode, &cosmology, host_potentialoptimization, potfile, lenses_SOA,bayespot,nparam, ii);
 				module_readParameters_debug_potential_SOA(0, lenses_SOA, runmode.n_tot_halos);
 				//Init
 				memset(pot_GPU, 0, (runmode.pot_gridcells) * (runmode.pot_gridcells) * sizeof(type_t));
@@ -575,7 +585,7 @@ int main(int argc, char *argv[])
 				map_pot_function = select_map_potential_function(&runmode);
 
 				//calculating map using defined function
-				map_grid_potential_GPU(map_pot_function, pot_GPU, &cosmology, &frame, &lenses_SOA, runmode.n_tot_halos, runmode.pot_gridcells ,runmode.potential, runmode.z_pot);
+				map_grid_potential_GPU(map_pot_function, pot_GPU, &cosmology, &frame, lenses_SOA, runmode.n_tot_halos, runmode.pot_gridcells ,runmode.potential, runmode.z_pot);
 
 				//writing
 				module_writeFits(path,runmode.pot_name,ii,pot_GPU,&runmode,runmode.pot_gridcells,&frame, runmode.ref_ra, runmode.ref_dec );
@@ -591,6 +601,6 @@ int main(int argc, char *argv[])
 	std::cout << "Lenstool Total Time " << std::setprecision(15) << t_lt_total << std::endl;
 	std::cout << "HPC Total Time  " << std::setprecision(15) << t_1 << std::endl;
 #endif
-
+#endif
 }
 

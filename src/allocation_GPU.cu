@@ -35,6 +35,9 @@ void PotentialSOAAllocation_GPU(Potential_SOA **lens_SOA, const int nhalos)
         cudaMallocManaged(&p->z                    , nhalos*sizeof(size_t));
         cudaMallocManaged(&p->anglecos             , nhalos*sizeof(size_t));
         cudaMallocManaged(&p->anglesin             , nhalos*sizeof(size_t));
+        cudaMallocManaged(&p->lum             , nhalos*sizeof(size_t));
+        cudaMallocManaged(&p->mag             , nhalos*sizeof(size_t));
+        cudaMallocManaged(&p->dlsds             , nhalos*sizeof(size_t));
 	cudaMallocManaged(&p->SOA_index            , nhalos*sizeof(int));
 	cudaMallocManaged(&p->N_types              , 100*sizeof(int));
 #else
@@ -55,6 +58,9 @@ void PotentialSOAAllocation_GPU(Potential_SOA **lens_SOA, const int nhalos)
 	p->z 	                 = (double*) malloc(sizeof(double)*nhalos);
 	p->anglecos 		 = (double*) malloc(sizeof(double)*nhalos);
 	p->anglesin 		 = (double*) malloc(sizeof(double)*nhalos);
+	p->lum 		 = (double*) malloc(sizeof(double)*nhalos);
+	p->mag 		 = (double*) malloc(sizeof(double)*nhalos);
+	p->dlsds 		 = (double*) malloc(sizeof(double)*nhalos);
 	p->SOA_index 		 = (int*) malloc(sizeof(int)*nhalos);
 	p->N_types 		 = (int*) malloc(sizeof(int)*100);
 #endif
@@ -81,9 +87,12 @@ void PotentialSOADeallocation_GPU(Potential_SOA *lens_SOA)
 	cudaFree(lens_SOA->z);
 	cudaFree(lens_SOA->anglecos);
 	cudaFree(lens_SOA->anglesin);
+	cudaFree(lens_SOA->lum);
+	cudaFree(lens_SOA->mag);
+	cudaFree(lens_SOA->dlsds);
 	cudaFree(lens_SOA->SOA_index);
 #else
-	PotentialSOADeallocation_GPU(lens_SOA);
+	PotentialSOADeallocation(lens_SOA);
 #if 0
 	free(lens_SOA->type);
 	free(lens_SOA->position_x);
@@ -97,6 +106,11 @@ void PotentialSOADeallocation_GPU(Potential_SOA *lens_SOA)
 	free(lens_SOA->z);             
 	free(lens_SOA->anglecos);
 	free(lens_SOA->anglesin);       
+	free(lens_SOA->lum);
+	free(lens_SOA->mag);
+	free(lens_SOA->dlsds);
+	free(lens_SOA->SOA_index);
+	free(lens_SOA->N_types);
 	free(lens_SOA);
 #endif
 #endif

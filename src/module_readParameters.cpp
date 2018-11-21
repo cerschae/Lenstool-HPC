@@ -230,11 +230,13 @@ void module_readParameters_setbayesmapmodels(const runmode_param* runmode, const
 void module_readParameters_lens_dslds_calculation(const runmode_param* runmode, const cosmo_param* cosmo, Potential_SOA* lens){
 
 	type_t lens_z = lens->z[0];
+	std::cerr << cosmo->model << std::endl;
 	type_t dl0s = module_cosmodistances_objectObject(lens_z, runmode->z_mass_s, *cosmo);
 	type_t dos = module_cosmodistances_observerObject(runmode->z_mass_s, *cosmo);
 	type_t dol = module_cosmodistances_observerObject(lens_z, *cosmo);
 
 	lens->dlsds[0] = dl0s/dos;
+
 
 	for(int ii = 0;ii <runmode->n_tot_halos; ii++){
 		//std::cerr << ii << std::endl;
@@ -1443,18 +1445,18 @@ void module_readParameters_readpotfiles_SOA(const runmode_param *runmode, const 
 				lens->type[i] 			= potfile[jj].type;
 				lens->z[i] 			= potfile[jj].zlens;
 				lens->ellipticity_potential[i]  = lens->ellipticity[i] = 0.;
-				lens->alpha[i] 			= 0.;
+				//lens->alpha[i] 			= 0.;
 				lens->rcut[i] 			= 0.;
 				lens->rcore[i] 			= 0.;
-				lens->rscale[i] 		= 0.;
+				//lens->rscale[i] 		= 0.;
 				lens->mag[i] 			= 0.;
 				lens->lum[i] 			= 0.;
 				lens->vdisp[i] 			= 0.;
 				lens->position_x[i] 		= lens->position_y[i] = 0.;
 				lens->ellipticity_angle[i] 	= 0.;
-				lens->weight[i] 		= 0;
-				lens->exponent[i] 		= 0;
-				lens->einasto_kappacritic[i] 	= 0;
+				//lens->weight[i] 		= 0;
+				//lens->exponent[i] 		= 0;
+				//lens->einasto_kappacritic[i] 	= 0;
 
 				//std::cerr << "Init finished "<< std::endl;
 				//std::cerr << line1 << std::endl;
@@ -1489,21 +1491,21 @@ void module_readParameters_readpotfiles_SOA(const runmode_param *runmode, const 
 
 
 				//Casting
-				lens->name[i] =(type_t)cast_name;
+				//lens->name[i] =(type_t)cast_name;
 				lens->position_x[i] =(type_t)cast_x;
 				lens->position_y[i] =(type_t)cast_y;
 				//Cette partie me fait maaaaaaal au yeux .... buhu. Lenstool-HPC introduit une erreur sur le x a cause de la multiplication par un cosinus pour rester compatible lenstool
 				convertXY_to_abs(&lens->position_x[i], &lens->position_y[i], potfile[jj].reference_mode, potfile[jj].reference_ra, potfile[jj].reference_dec );
 				convertXY_to_rela(&lens->position_x[i], &lens->position_y[i], potfile[jj].reference_mode, potfile[jj].reference_ra, potfile[jj].reference_dec );
 				//module_cosmodistances_relativecoordinates_XY( &lens->position_x[i], &lens->position_y[i], potfile[jj].reference_mode, potfile[jj].reference_ra, potfile[jj].reference_dec );
-				lens->theta[i] =(type_t)cast_theta;
+				//lens->theta[i] =(type_t)cast_theta;
 				lens->lum[i] =(type_t)cast_lum;
 				lens->mag[i] =(type_t)cast_mag;
 				//general parameters
 				//lens->vdisp[i] = potfile[jj].sigma;
 				//lens->rcore[i] = potfile[jj].core;
 				//lens->rcut[i] = potfile[jj].cut;
-				lens->ellipticity_angle[i] = lens->theta[i]* DTR;
+				lens->ellipticity_angle[i] = (type_t)cast_theta * DTR;
 				lens->anglecos[i]	   = cos(lens->ellipticity_angle[i]);
 				lens->anglesin[i] 	   = sin(lens->ellipticity_angle[i]);
 
@@ -2863,7 +2865,7 @@ void module_readParameters_calculatePotentialparameter(Potential *lens){
 			lens->ellipticity_potential = lens->ellipticity / 3;
 			break;
 		default:
-			printf( "ERROR: LENSPARA profil type of clump %s unknown : %d\n",lens->name, lens->type);
+			printf( "ERROR: LENSPARA profil type of clump unknown : %d\n", lens->type);
 			exit (EXIT_FAILURE);
 			break;
 	};

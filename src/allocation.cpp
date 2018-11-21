@@ -27,6 +27,9 @@ void PotentialSOAAllocation(Potential_SOA **lens_SOA, const int nhalos)
 	p->z 	                 = (double*) malloc(sizeof(double)*nhalos);
 	p->anglecos 		 = (double*) malloc(sizeof(double)*nhalos);
 	p->anglesin 		 = (double*) malloc(sizeof(double)*nhalos);
+	p->lum 		 = (double*) malloc(sizeof(double)*nhalos);
+	p->mag 		 = (double*) malloc(sizeof(double)*nhalos);
+	p->dlsds 		 = (double*) malloc(sizeof(double)*nhalos);
 	p->SOA_index 		 = (int*) malloc(sizeof(int)*nhalos);
 	p->N_types 		 = (int*) malloc(sizeof(int)*100);
 }
@@ -47,5 +50,10 @@ void PotentialSOADeallocation(Potential_SOA *lens_SOA)
 	free(lens_SOA->z);             
 	free(lens_SOA->anglecos);
 	free(lens_SOA->anglesin);       
+	free(lens_SOA->lum);
+	free(lens_SOA->mag);
+	free(lens_SOA->dlsds);
+	free(lens_SOA->SOA_index);
+	free(lens_SOA->N_types);
 	free(lens_SOA);
 }

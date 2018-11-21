@@ -26,12 +26,13 @@
 #warning "MPI enabled"
 #include <mpi.h>
 #include "mpi_check.h"
+#include "chi_comm.hpp"
 #endif
 
 #include "delense_CPU_utils.hpp"
 #include "delense_CPU.hpp"
 #include "delense_GPU.cuh"
-#include "chi_comm.hpp"
+
 #include "chi_computation.hpp"
 #ifdef __WITH_GPU
 #include <cuda_runtime.h>
@@ -242,7 +243,9 @@ void mychi_bruteforce_SOA_CPU_grid_gradient_barycentersource(double *chi, int *e
 	memset(&numimagesfound, 0, nsets*sizeof(int));
 	memset(&imagesposition, 0, nsets*MAXIMPERSOURCE*sizeof(point));
 	//
+#ifdef __WITH_MPI
 	delense_comm(&numimagesfound[0], &imagesposition[0][0],  &numimg, nimages_strongLensing, &locimagesfound[0], &image_pos[0][0], nsets, world_rank, world_size);
+#endif
 	//
 	comm_time += myseconds();
 	//

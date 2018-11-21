@@ -6,17 +6,12 @@ echo "Starting Bench A2744"
 #make
 
 #Recompile Lenstool-HPC code
-cd ../../src/
-make clean
+cd ../../
+#make clean
 make
 
-#Recompile Maps code
-cd ../utils/maps
-make -f Makefile.GPU clean
-make -f Makefile.GPU
-
 #Run Test
-cd ../../Benchmarks/ConfigFiles/hff_slmodels/A2744
+cd Benchmarks/ConfigFiles/hff_slmodels/A2744
 rm -r tmp
 rm -r Test
 ../../../../utils/maps/Bayesmap_GPU A2744_SLspec.par Test

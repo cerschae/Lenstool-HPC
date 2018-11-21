@@ -43,6 +43,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "grid_gradient2_CPU.hpp"
 #include "grid_amplif_CPU.hpp"
 #include "module_writeFits.hpp"
+#include "write_output.hpp"
 #include "delense_CPU.hpp"
 #include "allocation.hpp"
 
@@ -271,7 +272,7 @@ int main(int argc, char *argv[])
 	//struct Potential lenses[runmode.nhalos+runmode.npotfile-1];
 	struct Potential_SOA* lenses_SOA;
 	struct cline_param cline;
-	struct potfile_param potfile;
+	struct potfile_param potfile[runmode.Nb_potfile];
 	//struct Potential potfilepotentials[runmode.npotfile];
 	struct potentialoptimization host_potentialoptimization[runmode.nhalos];
 	int nImagesSet[runmode.nsets]; // Contains the number of images in each set of imagesnano
@@ -280,13 +281,14 @@ int main(int argc, char *argv[])
 	// Input: input file
 	// Output: Potentials and its parameters
 #ifdef __WITH_GPU
-	PotentialSOAAllocation_GPU(&lenses_SOA, runmode.nhalos);
+	PotentialSOAAllocation_GPU(&lenses_SOA, runmode.n_tot_halos);
 #else
-	PotentialSOAAllocation(&lenses_SOA, runmode.nhalos);
+	PotentialSOAAllocation(&lenses_SOA, runmode.n_tot_halos);
 #endif
 	module_readParameters_PotentialSOA_noalloc(inputFile, lenses_SOA, runmode.nhalos, runmode.n_tot_halos, cosmology);
 	//
-	//module_readParameters_debug_potential_SOA(0, lenses_SOA, runmode.nhalos);
+	module_readParameters_debug_potential_SOA(1, lenses_SOA, runmode.nhalos);
+	module_readParameters_limit(inputFile, host_potentialoptimization, runmode.nhalos );
 
 	// This module function reads in the potfiles parameters
 	// Input: input file
@@ -294,12 +296,15 @@ int main(int argc, char *argv[])
 
 	if (runmode.potfile == 1 )
 	{
-		module_readParameters_readpotfiles_param (inputFile, &potfile, cosmology);
-		module_readParameters_debug_potfileparam (runmode.debug, &potfile);
-		module_readParameters_readpotfiles_SOA   (&runmode , &cosmology, &potfile, lenses_SOA);
-		//module_readParameters_debug_potential_SOA(runmode.debug, *lenses_SOA, runmode.n_tot_halos);
+		module_readParameters_readpotfiles_param (inputFile, potfile, cosmology);
+		for(int ii = 0; ii < runmode.Nb_potfile; ii++){
+		module_readParameters_debug_potfileparam (1, &potfile[ii]);
+		}
+		module_readParameters_readpotfiles_SOA   (&runmode , &cosmology, potfile, lenses_SOA);
+		module_readParameters_debug_potential_SOA(1, lenses_SOA, runmode.n_tot_halos);
 
 	}
+	module_readParameters_lens_dslds_calculation(&runmode,&cosmology,lenses_SOA);
 
 	// This module function reads in the grid form and its parameters
 	// Input: input file
@@ -480,7 +485,7 @@ int main(int argc, char *argv[])
 
 	//This is the lenstool-HPC image computation area.
 	if (runmode.image == 1){
-		galaxy predicted_images[runmode.nimagestot*MAXIMPERSOURCE];
+		galaxy predicted_images[runmode.nsets*MAXIMPERSOURCE];
 		point predicted_images_pos[runmode.nsets][MAXIMPERSOURCE];
 
 		double *grid_gradient_x, *grid_gradient_y;
@@ -538,14 +543,22 @@ int main(int argc, char *argv[])
 		int numimg    = 0;
 		delense_barycenter(&predicted_images_pos[0][0], &locimagesfound[0], &numimg, &runmode, lenses_SOA, &frame, nImagesSet, sources, grid_gradient_x, grid_gradient_y);
 
+
 		std::cout << "Images:" << std::endl;
-		for(int  source_id = 0; source_id < runmode.nsets; source_id){
-			std::cout << "Sources:" << source_id << " " << std::endl;
+		for(int  source_id = 0; source_id < runmode.nsets; source_id++){
+			std::cout << "Sources:" << source_id << ": " << sources[source_id].center.x << " " << sources[source_id].center.y << std::endl;
 			unsigned short int nimages = nImagesSet[source_id];
 			for(unsigned short int image_id = 0; image_id < nimages; image_id++){
-				std::cout << "Images:" << predicted_images_pos[nimages][image_id].x << " " << predicted_images_pos[nimages][image_id].y << " " <<  std::endl;
+				std::cout << "Images:" << predicted_images_pos[source_id][image_id].x << " " << predicted_images_pos[source_id][image_id].y << " " <<  std::endl;
+				predicted_images[source_id * MAXIMPERSOURCE + image_id].center.x = predicted_images_pos[source_id][image_id].x;
+				predicted_images[source_id * MAXIMPERSOURCE + image_id].center.y = predicted_images_pos[source_id][image_id].y;
+				predicted_images[source_id * MAXIMPERSOURCE + image_id].redshift = sources[source_id].redshift;
+				predicted_images[source_id * MAXIMPERSOURCE + image_id].shape.a = predicted_images[source_id * MAXIMPERSOURCE + image_id].shape.b = predicted_images[source_id * MAXIMPERSOURCE + image_id].shape.theta = (type_t) 0.;
+				predicted_images[source_id * MAXIMPERSOURCE + image_id].mag = 0.;
+
 			}
 		}
+		write_output_images(path, &runmode, nImagesSet, predicted_images);
 
 
 	}

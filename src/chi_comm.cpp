@@ -4,7 +4,7 @@
 #ifdef __WITH_MPI
 #include <mpi.h>
 #include "mpi_check.h"
-#endif
+
 
 //
 void
@@ -82,3 +82,5 @@ delense_comm(int* numimagesfound, struct point* imagesposition, int* numimg, con
 		}
 	}
 }
+
+#endif
