@@ -14,6 +14,9 @@ for development and testing purposes.
 * [CuDNN](https://developer.nvidia.com/cudnn)
 * Intel Compiler
 * ([Lenstool](https://projets.lam.fr/projects/lenstool/wiki))
+* Cfitsio library
+* GSL library
+* Wcstools library
 
 
 ### Installing
@@ -21,18 +24,19 @@ for development and testing purposes.
 The Makefiles have not yet been modified to work with g++, only icpc and mpiicpc. To compile 
 the lenstool-hpc library, run make in the main directory. 
 
-To compile also the subdirectory executables, following environment variables have to be set:
+To compile the executables, following environment variables have to be set:
 
 ``export LENSTOOLHPC_ROOT=/path/lenstool-hpc``
 ``export LD_LIBRARY_PATH+=:/path/lenstool-hpc/src``
 
-To compile with LENSTOOL (necessary for test and benchmarks) the user has to set following 
-environment variables with the path to corresponding libraries:
-``export LENSTOOL_ROOT=/path/lenstool-6.8.1``
 ``export CFITSIO_ROOT=/path/cfitsio``
 ``export WCSTOOL_ROOT=/path/libwcs``
 ``export GSL_ROOT=/path/gsl-2.3``
 ``export LD_LIBRARY_PATH+=:/path/gsl-2.3/lib``
+
+To compile with LENSTOOL (necessary for test and benchmarks) the user has to set following 
+environment variables with the path to corresponding libraries:
+``export LENSTOOL_ROOT=/path/lenstool-6.8.1``
 
 The compilation of the src creates two libraries: liblenstoolhpc and liblenstoolhpc_GPU (if 
 nvcc was found) in the src folder. Compilation of the utils folder creates the executables 
