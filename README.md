@@ -99,7 +99,7 @@ on our code of conduct, and the process for submitting pull requests to us.
 ## Authors
 
 * **Christoph Schäfer** - [cerschae](https://github.com/cerschae)
-* **Gilles Fourestey** [ursache](https://github.com/ursache)
+* **Gilles Fourestey** - [ursache](https://github.com/ursache)
 * **Markus Rexroth** - [MarkusRe](https://github.com/MarkusRe)
 
 ## License
