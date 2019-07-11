@@ -3,6 +3,8 @@
 Mass-modelling tool and fast Lens-map generation based on Lenstool using HPC techniques. 
 Designed for CPU and GPU hardware clusters.
 
+## DISCLAIMER: This repo is out of use. Please go to https://git-cral.univ-lyon1.fr/lenstool/LENSTOOL-HPC for the uptodate version
+
 ## Getting Started
 
 These instructions will get you a copy of the project up and running on your local machine 
